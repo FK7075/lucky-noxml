@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="" />
+    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="2020-03-31 Mac-Maven Mac兼容问题有待解决">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/scan/PackageScan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/scan/PackageScan.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="lucky-noxml" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -15,6 +25,7 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="MavenImportPreferences">
@@ -38,8 +49,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunManager" selected="Application.LuckyTestApplication">
@@ -88,33 +101,59 @@
       <updated>1585656996980</updated>
       <workItem from="1585656998459" duration="1558000" />
       <workItem from="1585666929741" duration="2319000" />
+      <workItem from="1585672497772" duration="1313000" />
+      <workItem from="1585680135109" duration="2819000" />
     </task>
+    <task id="LOCAL-00001" summary="2020-03-31 Mac-Maven Lucky-Noxml">
+      <created>1585672949515</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1585672949516</updated>
+    </task>
+    <task id="LOCAL-00002" summary="2020-03-31 Mac-Maven Mac兼容问题有待解决">
+      <created>1585683504326</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1585683504326</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2020-03-31 Mac-Maven Lucky-Noxml" />
+    <MESSAGE value="2020-03-31 Mac-Maven Mac兼容问题有待解决" />
+    <option name="LAST_COMMIT_MESSAGE" value="2020-03-31 Mac-Maven Mac兼容问题有待解决" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="303" y="52" key="CommitChangelistDialog2" timestamp="1585683568641">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="303" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1585683568641" />
     <state width="444" height="466" key="DebuggerActiveHint" timestamp="1585668021872">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="444" height="466" key="DebuggerActiveHint/0.0.1440.900@0.0.1440.900" timestamp="1585668021872" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1585669367885">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1585683111038">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1585669367885" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1585669367884">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1585683111038" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1585683111037">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1585669367884" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1585669367884">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1585683111037" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1585683111036">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1585669367884" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1585669367885">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1585683111036" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1585683111037">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1585669367885" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1585683111037" />
     <state width="1398" height="303" key="GridCell.Tab.1.bottom" timestamp="1585669367880">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -131,36 +170,35 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="303" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1585669367879" />
-    <state x="397" y="282" key="com.intellij.ide.util.TipDialog" timestamp="1585666929190">
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1585672956212">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="397" y="282" key="com.intellij.ide.util.TipDialog/0.0.1440.900@0.0.1440.900" timestamp="1585666929190" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1585672956212" />
+    <state x="397" y="282" key="com.intellij.ide.util.TipDialog" timestamp="1585672498880">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="397" y="282" key="com.intellij.ide.util.TipDialog/0.0.1440.900@0.0.1440.900" timestamp="1585672498880" />
     <state x="378" y="85" width="837" height="729" key="find.popup" timestamp="1585668993009">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="378" y="85" width="837" height="729" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1585668993009" />
-    <state x="97" y="147" key="new project wizard" timestamp="1585658407780">
+    <state x="97" y="147" key="new project wizard" timestamp="1585673239058">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="97" y="147" key="new project wizard/0.0.1440.900@0.0.1440.900" timestamp="1585658407780" />
+    <state x="97" y="147" key="new project wizard/0.0.1440.900@0.0.1440.900" timestamp="1585673239058" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/scan/PackageScan.java</url>
-          <line>192</line>
+          <line>196</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/config/AppConfig.java</url>
           <line>24</line>
           <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/scan/PackageScan.java</url>
-          <line>214</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

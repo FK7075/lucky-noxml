@@ -36,9 +36,11 @@ import com.lucky.jacklamb.rest.LSON;
  *
  */
 public class PackageScan extends Scan {
-	
+
+	//Wim: E:/project  Mac: /User/loca
 	private String projectPath;
-	
+
+	//Win: E:/project/ Mac: /User/loca/
 	private String fileProjectPath;
 	
 	private static Logger log = Logger.getLogger(PackageScan.class);
@@ -82,7 +84,7 @@ public class PackageScan extends Scan {
 	
 	/**
 	 * 找到所有Ioc组件所在文件夹的包路径，并存入到的集合中
-	 * @param suffix 自定义的包后缀名集合
+	 * @param suffixlist 自定义的包后缀名集合
 	 * @return
 	 */
 	public List<Class<?>> loadComponent(List<String> suffixlist) {
@@ -148,7 +150,7 @@ public class PackageScan extends Scan {
 	 * 找到文件名为suffix的文件夹
 	 * @param defaultPaths 用于存储目标文件夹绝对路径的集合
 	 * @param path 开始文件夹的绝对路径
-	 * @param suffix 需要得到的文件夹名
+	 * @param suffixs 需要得到的文件夹名
 	 */
 	private void findDafaultFolder(List<String> defaultPaths,String path,String...suffixs){
 		List<String> suffixList=Arrays.asList(suffixs);
