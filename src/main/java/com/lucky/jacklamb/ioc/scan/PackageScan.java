@@ -60,11 +60,13 @@ public class PackageScan extends Scan {
 		}
 		if(projectPath.contains(":")){
 			fileProjectPath=projectPath.substring(1);
+			projectPath=projectPath.replaceAll("\\\\", "/").substring(1,projectPath.length()-1);
 		}else{
 			fileProjectPath=projectPath;
+			projectPath=projectPath.replaceAll("\\\\", "/").substring(0,projectPath.length()-1);
 		}
 
-		projectPath=projectPath.replaceAll("\\\\", "/").substring(1,projectPath.length()-1);
+
 	}
 	
 	/**
@@ -115,7 +117,7 @@ public class PackageScan extends Scan {
 			File[] listFiles = file.listFiles();
 			for(File f:listFiles) {
 				if(f.getName().endsWith(".class")) {
-					String clzzpath=f.getAbsolutePath();
+					String clzzpath=f.getAbsolutePath().replaceAll("/","\\\\");
 					clzzpath.substring(0, clzzpath.length()-6);
 					String u=(projectPath+"/").replaceAll("/", "\\\\");
 					clzzpath=clzzpath.replace(u, "");
