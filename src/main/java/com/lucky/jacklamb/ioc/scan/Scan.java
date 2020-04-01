@@ -65,6 +65,8 @@ public abstract class Scan {
 	 * 全局配置类
 	 */
 	private AppConfig configuration;
+
+	protected List<Class<?>> pojoClass;
 	
 	protected boolean isFirst=true;
 	
@@ -76,8 +78,13 @@ public abstract class Scan {
 		componentClass=new ArrayList<>();
 		aspectClass=new ArrayList<>();
 		webSocketClass=new ArrayList<>();
+		pojoClass=new ArrayList<>();
 	}
-	
+
+	public List<Class<?>> getPojoClass() {
+		return pojoClass;
+	}
+
 	public void init() {
 		configuration=AppConfig.getAppConfig();
 		if(configuration.getScanConfig().getScanMode()==com.lucky.jacklamb.enums.Scan.AUTO_SCAN) {
@@ -118,6 +125,7 @@ public abstract class Scan {
 		componentClass=loadComponent(scanConfig.getComponentPackSuffix());
 		aspectClass=loadComponent(scanConfig.getAspectPackSuffix());
 		webSocketClass=loadComponent(scanConfig.getWebSocketPackSuffix());
+		pojoClass=loadComponent(scanConfig.getPojoPackSuffix());
 	}
 	
 	public ApplicationConfig getApplicationConfig() {
@@ -144,7 +152,5 @@ public abstract class Scan {
 	 * 自动扫描
 	 */
 	public abstract void autoScan();
-	
-	
 
 }

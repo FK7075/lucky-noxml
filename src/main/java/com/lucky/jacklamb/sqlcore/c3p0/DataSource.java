@@ -287,7 +287,7 @@ public class DataSource {
 		maxStatementsPerConnection=0;
 		List<String> suffixlist = new ArrayList<>();
 		suffixlist.addAll(AppConfig.getAppConfig().getScanConfig().getPojoPackSuffix());
-		caeateTable=ScanFactory.createScan().loadComponent(suffixlist);
+		caeateTable=ScanFactory.createScan().getPojoClass();
 		log=false;
 		cache=false;
 		poolMethod=false;

@@ -24,10 +24,10 @@ public @interface Column {
 	String value() default "";
 	
 	/**
-	 * 建表时该字段的长度,默认35
+	 * 建表时该字段的长度,默认100
 	 * @return
 	 */
-	int length() default 35;
+	int length() default 100;
 	
 	/**
 	 * 建表时是否允许该字段为NULL，默认true

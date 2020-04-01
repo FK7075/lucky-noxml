@@ -23,10 +23,10 @@ public @interface Key {
 	String value() default "";
 	
 	/**
-	 * 设置建表时的字段长度,默认35
+	 * 设置建表时的字段长度,默认100
 	 * @return
 	 */
-	int length() default 35;
+	int length() default 100;
 	
 	/**
 	 * 建表时是否允许该字段为NULL，默认true

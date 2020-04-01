@@ -120,7 +120,7 @@ public class PojoManage {
 		}else if(field.isAnnotationPresent(Column.class)) {
 			return field.getAnnotation(Column.class).length();
 		}else {
-			return 35;
+			return 100;
 		}
 	}
 	

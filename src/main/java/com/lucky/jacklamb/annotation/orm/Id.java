@@ -38,8 +38,8 @@ public @interface Id {
 	PrimaryType type() default PrimaryType.DEFAULT;
 	
 	/**
-	 * 设置建表时的字段长度,默认35
+	 * 设置建表时的字段长度,默认100
 	 * @return
 	 */
-	int length() default 35;
+	int length() default 100;
 }

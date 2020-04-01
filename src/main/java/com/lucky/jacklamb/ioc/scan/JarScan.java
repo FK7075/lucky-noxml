@@ -13,6 +13,7 @@ import javax.websocket.Endpoint;
 import javax.websocket.server.ServerApplicationConfig;
 import javax.websocket.server.ServerEndpoint;
 
+import com.lucky.jacklamb.annotation.orm.Table;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.aop.Aspect;
@@ -120,6 +121,8 @@ public class JarScan extends Scan {
 							|| fileClass.isAnnotationPresent(LuckyFilter.class)
 							|| fileClass.isAnnotationPresent(LuckyListener.class))
 						componentClass.add(fileClass);
+					else if(fileClass.isAnnotationPresent(Table.class))
+						pojoClass.add(fileClass);
 					else if (fileClass.isAnnotationPresent(Aspect.class) || Point.class.isAssignableFrom(fileClass))
 						aspectClass.add(fileClass);
 					else {
