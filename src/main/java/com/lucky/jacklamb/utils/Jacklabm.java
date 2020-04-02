@@ -69,13 +69,7 @@ public class Jacklabm {
 		System.out.println(d);
 		if(sc.getLogo()!=Logo.MOUSELET&&sc.getLogo()!=Logo.KEYBOARD&&sc.getLogo()!=Logo.LUCKY)
 			System.out.println("\n----------------------------------------------------------------------\n##\n## Lucky[NOXML版]\n## (v1.0.0.RELEASE)\n##\n----------------------------------------------------------------------\n\n");
-		try {
-			Thread.sleep(1000);
-			System.out.println("\n\n");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("\n\n");
 	}
 	
 
@@ -415,7 +409,7 @@ public class Jacklabm {
 				"        |    |   |  |  \\_/ ___\\|  |/ <   |  |\r\n" + 
 				"        |    |___|  |  /\\  \\___|    < \\___  |\r\n" + 
 				"        |_______ \\____/  \\___  >__|_ \\/ ____|\r\n" + 
-				"                \\/           \\/     \\/\\/    \n\n\t::  "+System.getProperty("os.name")+"           ::  (v"+System.getProperty("os.version")+")\n\t::  Java                 ::  (v"+System.getProperty("java.version")+")\r\n\t" + 
+				"                \\/           \\/     \\/\\/    \n\n\t::  "+System.getProperty("os.name")+"           	 ::  (v"+System.getProperty("os.version")+")\n\t::  Java                 ::  (v"+System.getProperty("java.version")+")\r\n\t" +
 				"::  Lucky NoXml          ::  (v1.0.0.RELEASE)";
 		return d;
 	}

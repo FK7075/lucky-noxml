@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * 控制请求转发的Filter
+ */
 public abstract class LuckyJumpFilter implements Filter {
 
 	protected FilterConfig filterConfig;
@@ -83,6 +86,10 @@ public abstract class LuckyJumpFilter implements Filter {
 	 * @throws ServletException
 	 */
 	protected final void passForward(String[] passUrls, String forwardUrl) throws IOException, ServletException {
+		if(passUrls==null) {
+			model.forward(forwardUrl);
+			return;
+		}
 		boolean isPass = true;
 		String type;
 		for (String url : passUrls) {
@@ -112,6 +119,11 @@ public abstract class LuckyJumpFilter implements Filter {
 	 * @throws ServletException
 	 */
 	protected final void passRedirect(String[] passUrls, String redirectUrl) throws IOException, ServletException {
+		if(passUrls==null){
+			model.redirect(redirectUrl);
+			return;
+		}
+
 		boolean isPass = true;
 		String type;
 		for (String url : passUrls) {
