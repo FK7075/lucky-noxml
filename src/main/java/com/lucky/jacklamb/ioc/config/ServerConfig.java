@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.ioc.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
@@ -19,7 +20,7 @@ import com.lucky.jacklamb.start.ServletMapping;
 import com.lucky.jacklamb.utils.LuckyUtils;
 
 public class ServerConfig implements LuckyConfig  {
-	
+
 	public ServerConfig() {
 		servletlist=new ArrayList<>();
 		listeners=new HashSet<>();
@@ -51,14 +52,23 @@ public class ServerConfig implements LuckyConfig  {
 	private String docBase;
 	
 	private String baseDir;
+
+	private boolean webApp;
 	
 	private List<ServletMapping> servletlist;
 	
 	private List<FilterMapping> filterlist;
 	
 	private Set<EventListener> listeners;
-	
-	
+
+	public boolean isWebApp() {
+		return webApp;
+	}
+
+	public void webApp(boolean webApp) {
+		this.webApp = webApp;
+	}
+
 	public boolean isAutoDeploy() {
 		return autoDeploy;
 	}
@@ -250,11 +260,12 @@ public class ServerConfig implements LuckyConfig  {
 			projectPath=System.getProperty("user.dir").replaceAll("\\\\", "/")+"/";
 			serverConfig.addServlet(new LuckyDispatherServlet(), "/");
 			serverConfig.setContextPath("");
-			serverConfig.setBaseDir("Lucky/tomcat/");
-			serverConfig.setDocBase("Lucky/project/");
+			serverConfig.setApBaseDir(System.getProperty("java.io.tmpdir")+"tomcat/");
+			serverConfig.setDocBase("webapp/");
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);
+			serverConfig.webApp(false);
 		}
 		return serverConfig;
 	}

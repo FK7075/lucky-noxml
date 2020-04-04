@@ -585,10 +585,10 @@ public class LuckyMapperProxy {
 				return sqlCore.getOne(LuckyMapperGeneric, params[0]);
 			}
 			if(LuckyMapperGeneric!=null&&"deleteById".equals(method.getName())) {
-				return sqlCore.delete(LuckyMapperGeneric, params[0]);
+				return (Object) sqlCore.delete(LuckyMapperGeneric, params[0]);
 			}
 			if(LuckyMapperGeneric!=null&&"count".equals(method.getName())&&params.length==0) {
-				return sqlCore.count(LuckyMapperGeneric);
+				return (Object) sqlCore.count(LuckyMapperGeneric);
 			}
 			if(LuckyMapperGeneric!=null&&"selectList".equals(method.getName())&&params.length==0) {
 				return sqlCore.getList(LuckyMapperGeneric);
@@ -599,15 +599,15 @@ public class LuckyMapperProxy {
 			if (method.isAnnotationPresent(Select.class))
 				return select(method,params,sql_fp);
 			else if (method.isAnnotationPresent(Update.class))
-				return update(method,params,sql_fp);
+				return (Object) update(method,params,sql_fp);
 			else if (method.isAnnotationPresent(Delete.class))
-				return delete(method,params,sql_fp);
+				return (Object) delete(method,params,sql_fp);
 			else if (method.isAnnotationPresent(Insert.class))
-				return insert(method,params,sql_fp);
+				return (Object) insert(method,params,sql_fp);
 			else if (method.isAnnotationPresent(Query.class))
 				return join(method,params);
 			else if (method.isAnnotationPresent(Count.class))
-				return sqlCore.count(params[0]);
+				return (Object) sqlCore.count(params[0]);
 			else 
 				return notHave(method,params,sql_fp);
 		};

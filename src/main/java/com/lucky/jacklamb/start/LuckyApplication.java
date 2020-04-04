@@ -29,6 +29,7 @@ public class LuckyApplication {
 	}
 	
 	private static void run() {
+
 		ServerConfig serverCfg=AppConfig.getAppConfig().getServerConfig();
 		long start= System.currentTimeMillis();
 		Tomcat tomcat = new Tomcat();
@@ -41,11 +42,13 @@ public class LuckyApplication {
         context.setSessionTimeout(serverCfg.getSessionTimeout());
         context.setPath(serverCfg.getContextPath());
         context.setReloadable(serverCfg.isReloadable());
-        String docBase = serverCfg.getDocBase();
-		File doc=new File(docBase);
-		if(!doc.isDirectory())
-			doc.mkdirs();
-        context.setDocBase(docBase);
+        if(serverCfg.isWebApp()){
+			String docBase = serverCfg.getDocBase();
+			File doc=new File(docBase);
+			if(!doc.isDirectory())
+				doc.mkdirs();
+			context.setDocBase(docBase);
+		}
         context.setSessionCookieName("Lucky-Tomcat");
         context.addLifecycleListener(new Tomcat.DefaultWebXmlListener());
         context.addLifecycleListener(new Tomcat.FixContextListener());
@@ -60,9 +63,11 @@ public class LuckyApplication {
 			sb.append(LuckyUtils.time()+"  Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min\n")
 			  .append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
 			  .append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-DocBase          : "+docBase+"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
+			  .append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n");
+			if(serverCfg.isWebApp()){
+				sb.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n");
+			}
+			sb.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
 			  .append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
 			log.info(sb.toString());
 			tomcat.getServer().await();
