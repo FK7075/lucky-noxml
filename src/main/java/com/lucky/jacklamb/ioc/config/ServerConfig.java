@@ -53,7 +53,7 @@ public class ServerConfig implements LuckyConfig  {
 	
 	private String baseDir;
 
-	private boolean webApp;
+	private boolean autoCreateWebapp;
 	
 	private List<ServletMapping> servletlist;
 	
@@ -61,12 +61,12 @@ public class ServerConfig implements LuckyConfig  {
 	
 	private Set<EventListener> listeners;
 
-	public boolean isWebApp() {
-		return webApp;
+	public boolean isAutoCreateWebapp() {
+		return autoCreateWebapp;
 	}
 
-	public void webApp(boolean webApp) {
-		this.webApp = webApp;
+	public void autoCreateWebapp(boolean autoCreateWebapp) {
+		this.autoCreateWebapp = autoCreateWebapp;
 	}
 
 	public boolean isAutoDeploy() {
@@ -265,7 +265,7 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);
-			serverConfig.webApp(false);
+			serverConfig.autoCreateWebapp(false);
 		}
 		return serverConfig;
 	}

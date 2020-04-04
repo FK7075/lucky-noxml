@@ -2,6 +2,7 @@ package com.lucky.jacklamb.start;
 
 import java.io.File;
 
+import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -42,11 +43,21 @@ public class LuckyApplication {
         context.setSessionTimeout(serverCfg.getSessionTimeout());
         context.setPath(serverCfg.getContextPath());
         context.setReloadable(serverCfg.isReloadable());
-        if(serverCfg.isWebApp()){
-			String docBase = serverCfg.getDocBase();
-			File doc=new File(docBase);
-			if(!doc.isDirectory())
+		String docBase = serverCfg.getDocBase();
+		File doc=new File(docBase);
+		if(!doc.isDirectory()){
+			if(!serverCfg.isAutoCreateWebapp()){
+				System.err.println(LuckyUtils.time()+"  ###");
+				System.err.println(LuckyUtils.time()+"  LUVKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
+				System.err.println(LuckyUtils.time()+"  [ ==WARNING==]：找不到Tomcat的DocBase文件夹：{ "+docBase+"}");
+				System.err.println(LuckyUtils.time()+"  [ == PROMPT== ]：请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
+				System.err.println(LuckyUtils.time()+"  LUVKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
+				System.err.println(LuckyUtils.time()+"  ###");
+			}else{
 				doc.mkdirs();
+				context.setDocBase(docBase);
+			}
+		}else{
 			context.setDocBase(docBase);
 		}
         context.setSessionCookieName("Lucky-Tomcat");
@@ -61,14 +72,12 @@ public class LuckyApplication {
 			long end= System.currentTimeMillis();
 			StringBuilder sb=new StringBuilder();
 			sb.append(LuckyUtils.time()+"  Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min\n")
-			  .append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n");
-			if(serverCfg.isWebApp()){
-				sb.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n");
-			}
-			sb.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
-			  .append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
+				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
+				.append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
 			log.info(sb.toString());
 			tomcat.getServer().await();
 		} catch (LifecycleException e) {

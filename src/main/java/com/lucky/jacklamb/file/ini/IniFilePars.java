@@ -389,8 +389,8 @@ public class IniFilePars {
 		if(sectionMap.containsKey("reloadable")) {
 			server.setReloadable(Boolean.parseBoolean(sectionMap.get("reloadable")));
 		}
-		if(sectionMap.containsKey("webapp")){
-			server.webApp(Boolean.parseBoolean(sectionMap.get("webapp")));
+		if(sectionMap.containsKey("autoCreateWebapp")){
+			server.autoCreateWebapp(Boolean.parseBoolean(sectionMap.get("autoCreateWebapp")));
 		}
 	}
 	

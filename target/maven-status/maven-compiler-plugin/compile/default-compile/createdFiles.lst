@@ -16,6 +16,7 @@ com/lucky/jacklamb/tcconversion/createtable/CreateTable.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/GeneralObjectCore.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlFormatUtil.class
 com/lucky/jacklamb/annotation/mvc/DeleteMapping.class
+com/lucky/jacklamb/exception/NotFindDocBaseFolderException.class
 com/lucky/jacklamb/exception/CreateBeanException.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/StatementCore.class
 com/lucky/jacklamb/tcconversion/reverse/JavaFieldGetSet.class

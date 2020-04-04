@@ -208,6 +208,7 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/orm/mapper/AutoId.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/query/QueryBuilder.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/SqlGroup.java
+/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/NotFindDocBaseFolderException.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/query/PackBoxToPojo.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/tcconversion/createtable/CreateTableSql.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/start/LuckyServletContainerInitializer.java
