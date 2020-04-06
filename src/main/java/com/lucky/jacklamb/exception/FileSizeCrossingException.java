@@ -7,9 +7,9 @@ package com.lucky.jacklamb.exception;
  **/
 
 
-public class FileSizeCrossingEcxeption extends Exception {
+public class FileSizeCrossingException extends RuntimeException {
 
-    public FileSizeCrossingEcxeption(String message) {
+    public FileSizeCrossingException(String message) {
         super(message);
     }
 }

@@ -131,7 +131,10 @@ public class LuckyDispatherServlet extends HttpServlet {
 				}
 			}
 		} catch (Throwable e) {
-			log.error("Lucky异常处理机制捕获到LuckyDispatherServlet异常, Caused by: "+e.getCause());
+			if(e.getCause()!=null)
+				log.error("Lucky异常处理机制捕获到LuckyDispatherServlet异常, Caused by: "+e.getCause());
+			else
+				log.error("Lucky异常处理机制捕获到LuckyDispatherServlet异常, Caused by: "+e);
 			LuckyExceptionDispose luckyExceptionDispose=new LuckyExceptionDispose();
 			luckyExceptionDispose.initialize(model, controllerObj, method, args);
 			luckyExceptionDispose.exceptionHand();

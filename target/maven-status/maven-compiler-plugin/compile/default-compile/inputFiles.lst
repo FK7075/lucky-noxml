@@ -7,7 +7,6 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/enums/JOIN.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/rest/Attr.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java
-/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingEcxeption.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/enums/HttpRequestState.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/NotAddIOCComponent.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/orm/mapper/Delete.java
@@ -66,6 +65,7 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/NotSupportDataBasesException.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/enums/Rest.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/ioc/ComponentIOC.java
+/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingException.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/mvc/CrossOrigin.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/PostgreSqlCore.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/mvc/Download.java

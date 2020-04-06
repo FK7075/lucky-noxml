@@ -216,11 +216,11 @@ com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/StatementCoreImpl.clas
 com/lucky/jacklamb/tcconversion/typechange/TypeConversion.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/cache/LuckyCache.class
 com/lucky/jacklamb/tcconversion/reverse/TableStructure.class
+com/lucky/jacklamb/exception/FileSizeCrossingException.class
 com/lucky/jacklamb/ioc/config/AppConfig.class
 com/lucky/jacklamb/annotation/aop/Cacheable.class
 com/lucky/jacklamb/enums/Sort.class
 com/lucky/jacklamb/exception/TypeConversionException.class
-com/lucky/jacklamb/exception/FileSizeCrossingEcxeption.class
 com/lucky/jacklamb/ioc/scan/JarScan.class
 com/lucky/jacklamb/annotation/orm/mapper/Update.class
 com/lucky/jacklamb/tcconversion/createtable/DeleteKeySql.class

@@ -1,48 +1,34 @@
 package com.lucky.jacklamb.mapping;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-
-import com.lucky.jacklamb.exception.FileSizeCrossingEcxeption;
-import com.lucky.jacklamb.exception.FileTypeIllegalException;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.annotation.mvc.RequestParam;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.annotation.mvc.Upload;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.exception.FileSizeCrossingException;
+import com.lucky.jacklamb.exception.FileTypeIllegalException;
 import com.lucky.jacklamb.exception.NotFindRequestException;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Logger;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class AnnotationOperation {
 	
@@ -148,7 +134,7 @@ public class AnnotationOperation {
 	 * @throws ServletException
 	 */
 	private String upload(Model model, String formName, String path, String type, int maxSize)
-			throws IOException, ServletException, FileSizeCrossingEcxeption ,FileTypeIllegalException{
+			throws IOException, ServletException {
 		Part part = model.getRequest().getPart(formName);
 		String disposition = part.getHeader("Content-Disposition");
 		if (disposition.contains(".")) {
@@ -166,7 +152,7 @@ public class AnnotationOperation {
 				int size = fis.available();
 				int filesize = size / 1024;
 				if (filesize > maxSize) {
-					throw new FileSizeCrossingEcxeption("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
+					throw new FileSizeCrossingException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
 				}
 			}
 			String serverpath = model.getRealPath(path);
@@ -197,7 +183,7 @@ public class AnnotationOperation {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException,FileSizeCrossingEcxeption ,FileTypeIllegalException{
+	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException{
 		Map<String, String> fileMap = new HashMap<String, String>();
 		if (method.isAnnotationPresent(Upload.class)) {
 			Upload upload = method.getAnnotation(Upload.class);
@@ -268,7 +254,7 @@ public class AnnotationOperation {
 							int size = in.available();
 							int filesize = size / 1024;
 							if (filesize > maxSize) {
-								throw new FileSizeCrossingEcxeption("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
+								throw new FileSizeCrossingException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
 							}
 						}
 						
@@ -318,7 +304,7 @@ public class AnnotationOperation {
 	 * @throws ServletException
 	 */
 	private Map<String, Object> pojoParam(Model model, Method method, Map<String, String> uploadMap)
-			throws InstantiationException, IllegalAccessException, IOException, ServletException {
+			throws InstantiationException, IllegalAccessException{
 		Map<String, Object> map = new HashMap<>();
 		Parameter[] parameters = method.getParameters();
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
@@ -418,7 +404,7 @@ public class AnnotationOperation {
 	 * @throws IllegalAccessException
 	 */
 	public Object getControllerMethodParam(Model model, Method method)
-			throws IOException, ServletException, InstantiationException, IllegalAccessException ,FileSizeCrossingEcxeption,FileTypeIllegalException{
+			throws IOException, ServletException, InstantiationException, IllegalAccessException {
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
 		Parameter[] parameters = method.getParameters();
 		Object[] args = new Object[parameters.length];
