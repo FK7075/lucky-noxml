@@ -25,6 +25,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.lucky.jacklamb.exception.FileSizeCrossingEcxeption;
+import com.lucky.jacklamb.exception.FileTypeIllegalException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -146,7 +148,7 @@ public class AnnotationOperation {
 	 * @throws ServletException
 	 */
 	private String upload(Model model, String formName, String path, String type, int maxSize)
-			throws IOException, ServletException {
+			throws IOException, ServletException, FileSizeCrossingEcxeption ,FileTypeIllegalException{
 		Part part = model.getRequest().getPart(formName);
 		String disposition = part.getHeader("Content-Disposition");
 		if (disposition.contains(".")) {
@@ -154,7 +156,7 @@ public class AnnotationOperation {
 			String suffix = disposition.substring(disposition.lastIndexOf("."));
 			if (!"".equals(type)) {
 				if (!type.toLowerCase().contains(suffix.toLowerCase())) {
-					throw new RuntimeException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
+					throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
 				}
 			}
 			String filename = UUID.randomUUID().toString()+ suffix;
@@ -164,7 +166,7 @@ public class AnnotationOperation {
 				int size = fis.available();
 				int filesize = size / 1024;
 				if (filesize > maxSize) {
-					throw new RuntimeException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
+					throw new FileSizeCrossingEcxeption("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
 				}
 			}
 			String serverpath = model.getRealPath(path);
@@ -182,7 +184,7 @@ public class AnnotationOperation {
 			is.close();
 			return filename;
 		} else {
-			throw new RuntimeException("上传的文件格式不正确，系统无法识别！file："+disposition);
+			throw new FileTypeIllegalException("上传的文件格式不正确，系统无法识别！file："+disposition);
 		}
 	}
 
@@ -195,7 +197,7 @@ public class AnnotationOperation {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException {
+	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException,FileSizeCrossingEcxeption ,FileTypeIllegalException{
 		Map<String, String> fileMap = new HashMap<String, String>();
 		if (method.isAnnotationPresent(Upload.class)) {
 			Upload upload = method.getAnnotation(Upload.class);
@@ -257,7 +259,7 @@ public class AnnotationOperation {
 						String filename = item.getName();
 						String suffix=filename.substring(filename.lastIndexOf("."));
 						if(!"".equals(type)&&!type.toLowerCase().contains(suffix.toLowerCase()))
-								throw new RuntimeException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
+								throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
 						String pathSave=fieldAndFolder.get(field);
 						File file = new File(savePath+pathSave);
 						filename = UUID.randomUUID().toString()+suffix;
@@ -266,7 +268,7 @@ public class AnnotationOperation {
 							int size = in.available();
 							int filesize = size / 1024;
 							if (filesize > maxSize) {
-								throw new RuntimeException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
+								throw new FileSizeCrossingEcxeption("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
 							}
 						}
 						
@@ -416,7 +418,7 @@ public class AnnotationOperation {
 	 * @throws IllegalAccessException
 	 */
 	public Object getControllerMethodParam(Model model, Method method)
-			throws IOException, ServletException, InstantiationException, IllegalAccessException {
+			throws IOException, ServletException, InstantiationException, IllegalAccessException ,FileSizeCrossingEcxeption,FileTypeIllegalException{
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
 		Parameter[] parameters = method.getParameters();
 		Object[] args = new Object[parameters.length];
@@ -503,7 +505,7 @@ public class AnnotationOperation {
 	/**
 	 * 为Controller方法中的pojo属性注入request域或RestMap中对应的值
 	 * 
-	 * @param request
+	 * @param model
 	 * @param pojo
 	 * @return
 	 * @throws InstantiationException

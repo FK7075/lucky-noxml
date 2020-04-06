@@ -7,6 +7,7 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/enums/JOIN.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/rest/Attr.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java
+/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingEcxeption.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/enums/HttpRequestState.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/NotAddIOCComponent.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/orm/mapper/Delete.java
@@ -91,6 +92,7 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/util/GeneralSqlGenerator.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/mapping/UrlParsMap.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/servlet/LuckyWebContext.java
+/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/ObjectCore.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/start/LuckyShutdown.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/aop/proxy/ProxyFactory.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/GeneralObjectCore.java
@@ -188,6 +190,7 @@
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/expression/MyTest.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/annotation/orm/mapper/Mapper.java
+/Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalException.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/tcconversion/typechange/TypeConversion.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/c3p0/IniKey.java
 /Users/jackfu/IDEA-WORK/Lucky/lucky-noxml/src/main/java/com/lucky/jacklamb/servlet/LuckyController.java

@@ -53,6 +53,11 @@ public class LuckyApplication {
 				System.err.println(LuckyUtils.time()+"  [ == PROMPT== ]：请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
 				System.err.println(LuckyUtils.time()+"  LUVKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
 				System.err.println(LuckyUtils.time()+"  ###");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}else{
 				doc.mkdirs();
 				context.setDocBase(docBase);

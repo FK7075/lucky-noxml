@@ -42,6 +42,7 @@ com/lucky/jacklamb/ioc/config/LuckyConfig.class
 com/lucky/jacklamb/junit/LuckyJUnit4ClassRunner.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/DB2Core.class
 com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/SqlServerCore.class
+com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/ObjectCore.class
 com/lucky/jacklamb/junit/LuckyRunner.class
 com/lucky/jacklamb/utils/LuckyUtils.class
 com/lucky/jacklamb/tcconversion/reverse/GetJavaSrc.class
@@ -112,6 +113,7 @@ com/lucky/jacklamb/sqlcore/c3p0/C3p0Util.class
 com/lucky/jacklamb/exception/NotFindBeanException.class
 com/lucky/jacklamb/query/Paging.class
 com/lucky/jacklamb/ioc/scan/ScanFactory.class
+com/lucky/jacklamb/exception/FileTypeIllegalException.class
 com/lucky/jacklamb/aop/proxy/LuckyMethodInterceptor.class
 com/lucky/jacklamb/ioc/scan/URClassLoaderJarScan.class
 com/lucky/jacklamb/query/SqlFragProce.class
@@ -218,6 +220,7 @@ com/lucky/jacklamb/ioc/config/AppConfig.class
 com/lucky/jacklamb/annotation/aop/Cacheable.class
 com/lucky/jacklamb/enums/Sort.class
 com/lucky/jacklamb/exception/TypeConversionException.class
+com/lucky/jacklamb/exception/FileSizeCrossingEcxeption.class
 com/lucky/jacklamb/ioc/scan/JarScan.class
 com/lucky/jacklamb/annotation/orm/mapper/Update.class
 com/lucky/jacklamb/tcconversion/createtable/DeleteKeySql.class
