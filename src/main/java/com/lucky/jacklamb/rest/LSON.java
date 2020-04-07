@@ -98,7 +98,7 @@ public class LSON {
 				if(String.class.isAssignableFrom(clzz)||Character.class.isAssignableFrom(clzz)
 				   ||java.sql.Date.class.isAssignableFrom(clzz)||Time.class.isAssignableFrom(clzz)
 				   ||Timestamp.class.isAssignableFrom(clzz))
-					jsonStr="\""+jsonObject.toString()+"\"";
+					jsonStr="\""+jsonObject.toString().replaceAll("\"","\\\\\"")+"\"";
 				else if(java.util.Date.class.isAssignableFrom(clzz))
 					jsonStr="\""+LuckyUtils.getDate((Date)jsonObject)+"\"";
 				else
@@ -245,7 +245,7 @@ public class LSON {
 		map.put("key2", 222);
 		object.setMap(map);
 		BB bb=new BB();
-		bb.setBname("BNAME");
+		bb.setBname("<font color='red'>你好</font>");
 		String[] arr= {"OK","YES","HELLO"};
 		bb.setArray(arr);
 		object.setBb(bb);
