@@ -16,9 +16,6 @@ import com.lucky.jacklamb.utils.LuckyUtils;
 
 public class LuckyApplication {
 	
-	private static Logger log=Logger.getLogger(LuckyApplication.class);
-
-	
 	/**
 	 * 在使用java -jar运行jar包时，Lucky会使用JarFile的方法去遍历并筛选classpath下所有的.class文件来寻找组件。
 	 * 效率较高，但是规定applicationClass类必须写在最外层的包下
@@ -69,21 +66,11 @@ public class LuckyApplication {
         context.addLifecycleListener(new Tomcat.DefaultWebXmlListener());
         context.addLifecycleListener(new Tomcat.FixContextListener());
         context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
-        context.addServletContainerInitializer(new LuckyServletContainerInitializer(), null);
+        context.addServletContainerInitializer(new LuckyServletContainerInitializer(start), null);
         tomcat.getHost().addChild(context);
 		try {
 			tomcat.init();
 			tomcat.start();
-			long end= System.currentTimeMillis();
-			StringBuilder sb=new StringBuilder();
-			sb.append(LuckyUtils.time()+"  Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min\n")
-				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
-				.append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
-			log.info(sb.toString());
 			tomcat.getServer().await();
 		} catch (LifecycleException e) {
 			e.printStackTrace();

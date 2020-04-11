@@ -7,7 +7,7 @@ package com.lucky.jacklamb.exception;
  **/
 
 
-public class FileTypeIllegalException extends RuntimeException {
+public class FileTypeIllegalException extends Exception {
 
     public FileTypeIllegalException(String message) {
         super(message);

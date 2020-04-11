@@ -11,7 +11,6 @@ public abstract class ExceptionDispose {
 	 */
 	protected Model model;
 	
-	
 	/**
 	 * 当前请求响应的Controller对象
 	 */

@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -21,10 +22,13 @@ import com.lucky.jacklamb.ioc.config.ServerConfig;
 public class LuckyServletContainerInitializer implements ServletContainerInitializer {
 	
 	public final ServerConfig serverCfg=AppConfig.getAppConfig().getServerConfig();
+
+	private long start;
 	
 	public static Logger log=Logger.getLogger(LuckyServletContainerInitializer.class);
 	
-	public LuckyServletContainerInitializer() {
+	public LuckyServletContainerInitializer(long start) {
+		this.start=start;
 		serverCfg.init();
 	}
 
@@ -54,6 +58,16 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			ctx.addListener(l);
 			log.info("@Listener   => [class="+l+"]");
 		}
+		long end= System.currentTimeMillis();
+		StringBuilder sb=new StringBuilder();
+		sb.append(LuckyUtils.time()+"  Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min\n")
+				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n")
+				.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
+				.append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
+		log.info(sb.toString());
 
 	}
 

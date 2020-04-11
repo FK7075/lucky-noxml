@@ -5,15 +5,14 @@ import com.lucky.jacklamb.annotation.mvc.RequestParam;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.annotation.mvc.Upload;
 import com.lucky.jacklamb.aop.util.ASMUtil;
-import com.lucky.jacklamb.exception.FileSizeCrossingException;
-import com.lucky.jacklamb.exception.FileTypeIllegalException;
-import com.lucky.jacklamb.exception.NotFindRequestException;
+import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
@@ -134,7 +133,7 @@ public class AnnotationOperation {
 	 * @throws ServletException
 	 */
 	private String upload(Model model, String formName, String path, String type, int maxSize)
-			throws IOException, ServletException {
+			throws IOException, ServletException, FileTypeIllegalException, FileSizeCrossingException {
 		Part part = model.getRequest().getPart(formName);
 		String disposition = part.getHeader("Content-Disposition");
 		if (disposition.contains(".")) {
@@ -183,8 +182,8 @@ public class AnnotationOperation {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException{
-		Map<String, String> fileMap = new HashMap<String, String>();
+	private Map<String, String> moreUpload(Model model, Method method) throws IOException, ServletException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
+		Map<String, String> fileMap = new HashMap<>();
 		if (method.isAnnotationPresent(Upload.class)) {
 			Upload upload = method.getAnnotation(Upload.class);
 			String[] files = upload.names();
@@ -201,7 +200,7 @@ public class AnnotationOperation {
 					for (String str : files) {
 						fileMap.put(str, upload(model, str, savePaths[x++], types, maxSize));
 					}
-				}	
+				}
 			}catch(NullPointerException | IllegalStateException e) {
 				Map<String, String> fieldAndFolder=new HashMap<>();
 				if(savePaths.length == 1) {
@@ -213,7 +212,6 @@ public class AnnotationOperation {
 				}
 				upload(model,fileMap,fieldAndFolder,types,maxSize);
 			}
-
 		}
 		return fileMap;
 	}
@@ -227,67 +225,62 @@ public class AnnotationOperation {
 	 * @param type 允许上传的文件类型
 	 * @param maxSize 允许上传文件的最大大小
 	 */
-	public void upload(Model model,Map<String, String> resultsMap,Map<String,String> fieldAndFolder,String type, int maxSize) {
+	public void upload(Model model,Map<String, String> resultsMap,Map<String,String> fieldAndFolder,String type, int maxSize) throws FileTypeIllegalException, IOException, FileSizeCrossingException, FileUploadException {
 		String savePath = model.getRealPath("/");
-		try{
-			DiskFileItemFactory factory = new DiskFileItemFactory();
-			ServletFileUpload upload = new ServletFileUpload(factory);
-			upload.setHeaderEncoding("UTF-8"); 
-			if(!ServletFileUpload.isMultipartContent(model.getRequest())){
-				return;
-			}
-			List<FileItem> list = upload.parseRequest(model.getRequest());
-			String field="";
-			for(FileItem item : list){
-				if(!item.isFormField()){
-					field=item.getFieldName();
-					if(fieldAndFolder.containsKey(field)) {
-						String filename = item.getName();
-						String suffix=filename.substring(filename.lastIndexOf("."));
-						if(!"".equals(type)&&!type.toLowerCase().contains(suffix.toLowerCase()))
-								throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
-						String pathSave=fieldAndFolder.get(field);
-						File file = new File(savePath+pathSave);
-						filename = UUID.randomUUID().toString()+suffix;
-						InputStream in = item.getInputStream();
-						if (maxSize != 0) {
-							int size = in.available();
-							int filesize = size / 1024;
-							if (filesize > maxSize) {
-								throw new FileSizeCrossingException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
-							}
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		upload.setHeaderEncoding("UTF-8");
+		if(!ServletFileUpload.isMultipartContent(model.getRequest())){
+			return;
+		}
+		List<FileItem> list = upload.parseRequest(model.getRequest());
+		String field="";
+		for(FileItem item : list){
+			if(!item.isFormField()){
+				field=item.getFieldName();
+				if(fieldAndFolder.containsKey(field)) {
+					String filename = item.getName();
+					String suffix=filename.substring(filename.lastIndexOf("."));
+					if(!"".equals(type)&&!type.toLowerCase().contains(suffix.toLowerCase()))
+							throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
+					String pathSave=fieldAndFolder.get(field);
+					File file = new File(savePath+pathSave);
+					filename = UUID.randomUUID().toString()+suffix;
+					InputStream in = item.getInputStream();
+					if (maxSize != 0) {
+						int size = in.available();
+						int filesize = size / 1024;
+						if (filesize > maxSize) {
+							throw new FileSizeCrossingException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
 						}
-						
-						if (!file.isDirectory()) {
-							file.mkdirs();
-						}
-						
-						if(filename==null || filename.trim().equals("")){
-							continue;
-						}
+					}
 
-						FileOutputStream out = new FileOutputStream(savePath+pathSave + "/" + filename);
-						byte buffer[] = new byte[1024];
-						int len = 0;
-						while((len=in.read(buffer))>0){
-							out.write(buffer, 0, len);
-							out.flush();
-						}
-						in.close();
-						out.close();
-						item.delete();
-						resultsMap.put(field, filename);
+					if (!file.isDirectory()) {
+						file.mkdirs();
 					}
-				}else {
-					if(!model.parameterMapContainsKey(item.getFieldName())) {
-						String[] values= {new String(item.get(),"UTF-8")};
-						model.addParameter(item.getFieldName(),values);
+
+					if(filename==null || filename.trim().equals("")){
+						continue;
 					}
+
+					FileOutputStream out = new FileOutputStream(savePath+pathSave + "/" + filename);
+					byte buffer[] = new byte[1024];
+					int len = 0;
+					while((len=in.read(buffer))>0){
+						out.write(buffer, 0, len);
+						out.flush();
+					}
+					in.close();
+					out.close();
+					item.delete();
+					resultsMap.put(field, filename);
+				}
+			}else {
+				if(!model.parameterMapContainsKey(item.getFieldName())) {
+					String[] values= {new String(item.get(),"UTF-8")};
+					model.addParameter(item.getFieldName(),values);
 				}
 			}
-		}catch (Exception e) {
-			e.printStackTrace();
-
 		}
 	}
 
@@ -403,16 +396,23 @@ public class AnnotationOperation {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public Object getControllerMethodParam(Model model, Method method)
-			throws IOException, ServletException, InstantiationException, IllegalAccessException {
+	public Object[] getControllerMethodParam(Model model, Method method)
+			throws IOException, ServletException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
+		//获取当前Controller方法参数列表所有的参数名
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
 		Parameter[] parameters = method.getParameters();
 		Object[] args = new Object[parameters.length];
 		StringBuilder sb =new StringBuilder("[ URL-PARAMS ]\n");
+
+		//得到@Upload文件操作执行后的String类型参数(文件名)
 		Map<String, String> uploadMap = moreUpload(model, method);
 		sb.append(uploadMap.isEmpty()?"":"@Upload-Params       : "+uploadMap.toString()+"\n");
+
+		//得到类型为MultipartFile的参数
 		Map<String, MultipartFile> multiUploadMap = moreUploadMutipar(model, method);
 		sb.append(multiUploadMap.isEmpty()?"":"MultipartFile-Params : "+multiUploadMap.toString()+"\n");
+
+		//得到参数列表中的所有pojo类型参数
 		Map<String, Object> pojoMap = pojoParam(model, method, uploadMap);
 		sb.append(pojoMap.isEmpty()?"":"Pojo-Params          : "+pojoMap.toString()+"\n").append("URL-Params           : \n");
 		String paramName;
