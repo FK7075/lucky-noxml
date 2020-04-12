@@ -47,17 +47,17 @@ public class LuckyDispatherServlet extends HttpServlet {
 
 	
 	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp){
 		this.luckyResponse(req, resp,RequestMethod.DELETE);
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp){
 		this.luckyResponse(req, resp,RequestMethod.PUT);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp){
 		this.luckyResponse(req, resp,RequestMethod.GET);
 	}
 

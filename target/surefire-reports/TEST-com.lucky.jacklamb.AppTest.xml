@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.lucky.jacklamb.AppTest" time="0.202" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.lucky.jacklamb.AppTest" time="0.327" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -18,7 +18,7 @@
     <property name="user.country" value="CN"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_202\jre\bin"/>
-    <property name="sun.java.command" value="C:\Users\chenjun\AppData\Local\Temp\surefire6812990508201147359\surefirebooter2677718162096089963.jar C:\Users\chenjun\AppData\Local\Temp\surefire6812990508201147359 2020-04-12T02-58-58_086-jvmRun1 surefire3693098040931963493tmp surefire_02048841292314413300tmp"/>
+    <property name="sun.java.command" value="C:\Users\chenjun\AppData\Local\Temp\surefire617388549500886360\surefirebooter8923280787839561074.jar C:\Users\chenjun\AppData\Local\Temp\surefire617388549500886360 2020-04-12T12-41-00_350-jvmRun1 surefire780866675841331067tmp surefire_05572985913845962378tmp"/>
     <property name="surefire.test.class.path" value="E:\IDEA-WORK-LUCKY\lucky-noxml\target\test-classes;E:\IDEA-WORK-LUCKY\lucky-noxml\target\classes;E:\Maven\RepMaven\com\mchange\c3p0\0.9.5.5\c3p0-0.9.5.5.jar;E:\Maven\RepMaven\cglib\cglib-nodep\2.2\cglib-nodep-2.2.jar;E:\Maven\RepMaven\log4j\log4j\1.2.17\log4j-1.2.17.jar;E:\Maven\RepMaven\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;E:\Maven\RepMaven\org\slf4j\slf4j-log4j12\1.7.25\slf4j-log4j12-1.7.25.jar;E:\Maven\RepMaven\org\apache\tomcat\annotations-api\6.0.14\annotations-api-6.0.14.jar;E:\Maven\RepMaven\commons-cli\commons-cli\1.2\commons-cli-1.2.jar;E:\Maven\RepMaven\commons-fileupload\commons-fileupload\1.3.3\commons-fileupload-1.3.3.jar;E:\Maven\RepMaven\commons-io\commons-io\2.4\commons-io-2.4.jar;E:\Maven\RepMaven\org\eclipse\jdt\core\compiler\ecj\4.4.2\ecj-4.4.2.jar;E:\Maven\RepMaven\com\mchange\mchange-commons-java\0.2.11\mchange-commons-java-0.2.11.jar;E:\Maven\RepMaven\org\apache\tomcat\tomcat-dbcp\9.0.31\tomcat-dbcp-9.0.31.jar;E:\Maven\RepMaven\org\apache\tomcat\tomcat-juli\9.0.31\tomcat-juli-9.0.31.jar;E:\Maven\RepMaven\org\apache\tomcat\embed\tomcat-embed-core\8.5.34\tomcat-embed-core-8.5.34.jar;E:\Maven\RepMaven\org\apache\tomcat\tomcat-annotations-api\8.5.34\tomcat-annotations-api-8.5.34.jar;E:\Maven\RepMaven\org\apache\tomcat\embed\tomcat-embed-el\8.5.32\tomcat-embed-el-8.5.32.jar;E:\Maven\RepMaven\org\apache\tomcat\embed\tomcat-embed-jasper\8.5.32\tomcat-embed-jasper-8.5.32.jar;E:\Maven\RepMaven\org\eclipse\jdt\ecj\3.12.3\ecj-3.12.3.jar;E:\Maven\RepMaven\org\apache\tomcat\embed\tomcat-embed-websocket\8.5.32\tomcat-embed-websocket-8.5.32.jar;E:\Maven\RepMaven\junit\junit\4.13\junit-4.13.jar;E:\Maven\RepMaven\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;E:\Maven\RepMaven\org\ow2\asm\asm\5.0.4\asm-5.0.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\chenjun"/>
@@ -31,7 +31,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="C:\Users\chenjun\AppData\Local\Temp\surefire6812990508201147359\surefirebooter2677718162096089963.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\chenjun\AppData\Local\Temp\surefire617388549500886360\surefirebooter8923280787839561074.jar"/>
     <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.8.0_202\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_202\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_202\jre\classes"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -62,5 +62,5 @@
     <property name="maven.repo.local" value="E:\Maven\RepMaven"/>
     <property name="java.class.version" value="52.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="com.lucky.jacklamb.AppTest" time="0.009"/>
+  <testcase name="shouldAnswerWithTrue" classname="com.lucky.jacklamb.AppTest" time="0.007"/>
 </testsuite>
