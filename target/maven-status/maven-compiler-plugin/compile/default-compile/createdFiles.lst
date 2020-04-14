@@ -17,6 +17,7 @@ com\lucky\jacklamb\annotation\aop\Before.class
 com\lucky\jacklamb\ioc\ServiceIOC.class
 com\lucky\jacklamb\annotation\mvc\SendRed.class
 com\lucky\jacklamb\start\FilterMapping.class
+com\lucky\jacklamb\httpclient\HttpClientCall.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\abstcore\SqlCore.class
 com\lucky\jacklamb\mapper\SqlAndArray.class
 com\lucky\jacklamb\annotation\mvc\DeleteMapping.class
@@ -126,8 +127,10 @@ com\lucky\jacklamb\annotation\ioc\Configuration.class
 com\lucky\jacklamb\tcconversion\typechange\DB2JavaChange.class
 com\lucky\jacklamb\aop\util\ASMUtil$1.class
 com\lucky\jacklamb\ioc\ControllerAndMethod.class
+com\lucky\jacklamb\annotation\mvc\CallParam.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\util\SqlCoreFactory.class
 com\lucky\jacklamb\annotation\orm\mapper\Like.class
+com\lucky\jacklamb\exception\NotFoundCallUrlException.class
 com\lucky\jacklamb\tcconversion\reverse\TableStructure.class
 com\lucky\jacklamb\annotation\orm\mapper\Select.class
 com\lucky\jacklamb\sqlcore\c3p0\AutoPackage.class
@@ -214,6 +217,7 @@ com\lucky\jacklamb\annotation\orm\mapper\Update.class
 com\lucky\jacklamb\aop\proxy\PointRun$1.class
 com\lucky\jacklamb\sqlcore\c3p0\ReadIni.class
 com\lucky\jacklamb\annotation\orm\mapper\Change.class
+com\lucky\jacklamb\exception\NotFoundMappingAnnotationException.class
 com\lucky\jacklamb\mapping\UrlParsMap.class
 com\lucky\jacklamb\query\QFilter.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\abstcore\ObjectCore.class

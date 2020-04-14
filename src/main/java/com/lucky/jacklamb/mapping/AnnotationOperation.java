@@ -1,12 +1,11 @@
 package com.lucky.jacklamb.mapping;
 
-import com.lucky.jacklamb.annotation.mvc.Download;
-import com.lucky.jacklamb.annotation.mvc.RequestParam;
-import com.lucky.jacklamb.annotation.mvc.RestParam;
-import com.lucky.jacklamb.annotation.mvc.Upload;
+import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
@@ -408,6 +407,8 @@ public class AnnotationOperation {
 		Map<String, String> uploadMap = moreUpload(model, method);
 		sb.append(uploadMap.isEmpty()?"":"@Upload-Params       : "+uploadMap.toString()+"\n");
 
+
+
 		//得到类型为MultipartFile的参数
 		Map<String, MultipartFile> multiUploadMap = moreUploadMutipar(model, method);
 		sb.append(multiUploadMap.isEmpty()?"":"MultipartFile-Params : "+multiUploadMap.toString()+"\n");
@@ -424,7 +425,9 @@ public class AnnotationOperation {
 			} else if (multiUploadMap.containsKey(paramName)
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
-			} else if (pojoMap.containsKey(paramName)) {
+			} else if(parameters[i].isAnnotationPresent(CallParam.class)){
+				args[i]=httpClientParam(method,model,parameters,paramNames,getParamName(parameters[i],paramNames[i]));
+			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
 			} else if (ServletRequest.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model.getRequest();
@@ -443,7 +446,7 @@ public class AnnotationOperation {
 					throw new NotFindRequestException("缺少请求参数：" + restKey+",错误位置："+method);
 				args[i] = JavaConversion.strToBasic(model.getRestMap().get(restKey), parameters[i].getType());
 				sb.append("[Rest-Java] "+restKey+"="+args[i]+"\n");
-			} else {
+			} else if(!parameters[i].isAnnotationPresent(CallParam.class)) {
 				String defparam = getRequeatParamDefValue(parameters[i]);
 				if (parameters[i].getType().isArray() && parameters[i].getType().getClassLoader() == null) {
 					if (model.parameterMapContainsKey(paramName)) {
@@ -566,5 +569,92 @@ public class AnnotationOperation {
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 得到调用远程接口的返回结果
+	 * @param method 当前Controller方法
+	 * @param model Model对象
+	 * @param parameters Parameter数组
+	 * @param paramNames 方法参数名数组
+	 * @param noParam 接受参数
+	 * @return
+	 */
+	private String httpClientParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
+		Map<String,String> callResultParamMap=new HashMap<>();
+		String callResult;
+		String callurl;
+		Map<String,String> requestMap;
+		if(method.isAnnotationPresent(RequestMapping.class)){
+			RequestMapping mapping=method.getAnnotation(RequestMapping.class);
+			if("".equals(mapping.callurl()))
+				new NotFoundCallUrlException("方法 "+method+" 的@RequestMapping注解中没有配置 callurl属性，无法完成远程调用！");
+			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+			callurl=mapping.callurl();
+			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
+			return callResult;
+		}
+
+		if(method.isAnnotationPresent(GetMapping.class)){
+			GetMapping mapping=method.getAnnotation(GetMapping.class);
+			if("".equals(mapping.callurl()))
+				new NotFoundCallUrlException("方法 "+method+" 的@GetMapping注解中没有配置 callurl属性，无法完成远程调用！");
+			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+			callurl=mapping.callurl();
+			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
+			return callResult;
+
+		}
+
+		if(method.isAnnotationPresent(PostMapping.class)){
+			PostMapping mapping=method.getAnnotation(PostMapping.class);
+			if("".equals(mapping.callurl()))
+				new NotFoundCallUrlException("方法 "+method+" 的@PostMapping注解中没有配置 callurl属性，无法完成远程调用！");
+			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+			callurl=mapping.callurl();
+			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
+			return callResult;
+		}
+
+		if(method.isAnnotationPresent(PutMapping.class)){
+			PutMapping mapping=method.getAnnotation(PutMapping.class);
+			if("".equals(mapping.callurl()))
+				new NotFoundCallUrlException("方法 "+method+" 的@PutMapping注解中没有配置 callurl属性，无法完成远程调用！");
+			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+			callurl=mapping.callurl();
+			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
+			return callResult;
+		}
+
+		if(method.isAnnotationPresent(DeleteMapping.class)){
+			DeleteMapping mapping =method.getAnnotation(DeleteMapping.class);
+			if("".equals(mapping.callurl()))
+				new NotFoundCallUrlException("方法 "+method+" 的@DeleteMapping注解中没有配置 callurl属性，无法完成远程调用！");
+			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+			callurl=mapping.callurl();
+			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
+			return callResult;
+		}
+		throw new NotFoundMappingAnnotationException("在方法 "+method+" 中找不到映射注解@xxxMapping");
+	}
+
+	private Map<String,String> getHttpClientRequestParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam){
+		Map<String,String> map = new HashMap<>();
+		String currParam;
+		for(int i=0;i<parameters.length;i++){
+			currParam=getParamName(parameters[i],paramNames[i]);
+			if(!noParam.equals(currParam)){
+				if(model.restMapContainsKey(currParam)){
+					map.put(currParam,model.getRestParam(currParam));
+				}else if(model.parameterMapContainsKey(currParam)){
+					map.put(currParam,model.getRequestPrarmeter(currParam));
+				}else if(getRequeatParamDefValue(parameters[i])!=null){
+					map.put(currParam,getRequeatParamDefValue(parameters[i]));
+				}else{
+					throw new NotFindRequestException("缺少请求参数：" + currParam+",错误位置："+method);
+				}
+			}
+		}
+		return map;
 	}
 }

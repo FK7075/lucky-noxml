@@ -56,6 +56,7 @@ E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\JsonFo
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\cache\LuckyCache.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\dynamiccoreImpl\MySqlCore.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\rest\LSON.java
+E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\mvc\CallParam.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\InjectionPropertiesException.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\dynamiccoreImpl\SybaseCore.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\c3p0\AutoPackage.java
@@ -106,6 +107,7 @@ E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\tcconversion\typ
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\ioc\scan\PackageScan.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\orm\mapper\Update.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\expression\ExpressionEngine.java
+E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\NotFoundMappingAnnotationException.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\servlet\StaticResourceManage.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\util\GeneralSqlGenerator.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\ioc\scan\Scan.java
@@ -207,7 +209,9 @@ E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\junit\LuckyJUnit
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\ioc\Autowired.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\abstcore\ObjectCore.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\enums\JOIN.java
+E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\httpclient\HttpClientCall.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\aop\proxy\Point.java
+E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\NotFoundCallUrlException.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\ioc\Configuration.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\rest\AttrUtil.java
 E:\IDEA-WORK-LUCKY\lucky-noxml\src\main\java\com\lucky\jacklamb\tcconversion\typechange\PostgreJavaChange.java

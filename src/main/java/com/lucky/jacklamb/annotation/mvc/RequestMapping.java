@@ -52,6 +52,12 @@ public @interface RequestMapping {
 	 * @return
 	 */
 	String[] ipSection() default {};
+
+	/**
+	 * 调用远程接口
+	 * @return
+	 */
+	String callurl() default "";
 	
 	/**
 	 * 定义该映射支持的请求类型，默认支持POST GET PUT DELETE
