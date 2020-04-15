@@ -119,11 +119,75 @@ public class HttpClientCall {
         return methodResult;
     }
 
-    public static void main(String[] args) throws IOException {
-        String url="http://localhost:8864/public/query";
-        Map<String,String> map=new HashMap<>();
-        map.put("input","李嘉欣");
-        String result=call(url,RequestMethod.GET,map);
-        System.out.println(result);
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起GET请求，返回字符串类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String getCall(String url,Map<String, String> params, String ...auth) throws IOException {
+        return call(url,RequestMethod.GET,params,auth);
     }
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起GET请求，返回字符串类型结果
+     * @param url 接口地址
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String getCall(String url, String ...auth) throws IOException {
+        return call(url,RequestMethod.GET,new HashMap<>(),auth);
+    }
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起POST请求，返回字符串类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String postCall(String url,Map<String, String> params, String ...auth) throws IOException {
+        return call(url,RequestMethod.POST,params,auth);
+    }
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起PUT请求，返回字符串类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String putCall(String url,Map<String, String> params, String ...auth) throws IOException {
+        return call(url,RequestMethod.PUT,params,auth);
+    }
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起DELETE请求，返回字符串类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String deleteCall(String url,Map<String, String> params, String ...auth) throws IOException {
+        return call(url,RequestMethod.DELETE,params,auth);
+    }
+
+    /**
+     * <pre>
+     * 方法体说明：向远程接口发起DELETE请求，返回字符串类型结果
+     * @param url 接口地址
+     * @return String 返回结果
+     * </pre>
+     */
+    public static String deleteCall(String url,String ...auth) throws IOException {
+        return call(url,RequestMethod.DELETE,new HashMap<>(),auth);
+    }
+
 }
