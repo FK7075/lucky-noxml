@@ -43,6 +43,7 @@ D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstracti
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\query\QFilter.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\util\SqlCoreFactory.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\aop\Around.java
+D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\mvc\CallResult.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\tcconversion\reverse\GetJavaSrc.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\aop\AopParam.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\orm\Id.java
@@ -181,7 +182,6 @@ D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\tcconversion\crea
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\util\PojoManage.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\IllegaAopparametersException.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\sqlcore\abstractionlayer\cache\LuckyCache.java
-D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\mvc\CallParam.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\expression\ExpressionEngine.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\annotation\mvc\PostMapping.java
 D:\GitHub-Project\lucky-noxml\src\main\java\com\lucky\jacklamb\exception\NotFoundMappingAnnotationException.java

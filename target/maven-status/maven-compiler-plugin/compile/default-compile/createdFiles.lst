@@ -95,6 +95,7 @@ com\lucky\jacklamb\rest\LSON.class
 com\lucky\jacklamb\utils\LuckyManager.class
 com\lucky\jacklamb\ioc\ComponentFactory.class
 com\lucky\jacklamb\aop\util\ASMUtil$1$1.class
+com\lucky\jacklamb\annotation\mvc\CallResult.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\util\SqlFormatUtil$FormatProcess.class
 com\lucky\jacklamb\mapper\LuckyMapperProxy.class
 com\lucky\jacklamb\aop\expandpoint\PermissionExpand.class
@@ -127,7 +128,6 @@ com\lucky\jacklamb\annotation\ioc\Configuration.class
 com\lucky\jacklamb\tcconversion\typechange\DB2JavaChange.class
 com\lucky\jacklamb\aop\util\ASMUtil$1.class
 com\lucky\jacklamb\ioc\ControllerAndMethod.class
-com\lucky\jacklamb\annotation\mvc\CallParam.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\util\SqlCoreFactory.class
 com\lucky\jacklamb\annotation\orm\mapper\Like.class
 com\lucky\jacklamb\exception\NotFoundCallUrlException.class

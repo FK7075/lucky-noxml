@@ -424,7 +424,7 @@ public class AnnotationOperation {
 			} else if (multiUploadMap.containsKey(paramName)
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
-			} else if(parameters[i].isAnnotationPresent(CallParam.class)){
+			} else if(parameters[i].isAnnotationPresent(CallResult.class)){
 				args[i]=httpClientParam(method,model,parameters,paramNames,getParamName(parameters[i],paramNames[i]));
 			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
@@ -445,7 +445,7 @@ public class AnnotationOperation {
 					throw new NotFindRequestException("缺少请求参数：" + restKey+",错误位置："+method);
 				args[i] = JavaConversion.strToBasic(model.getRestMap().get(restKey), parameters[i].getType());
 				sb.append("[Rest-Java] "+restKey+"="+args[i]+"\n");
-			} else if(!parameters[i].isAnnotationPresent(CallParam.class)) {
+			} else if(!parameters[i].isAnnotationPresent(CallResult.class)) {
 				String defparam = getRequeatParamDefValue(parameters[i]);
 				if (parameters[i].getType().isArray() && parameters[i].getType().getClassLoader() == null) {
 					if (model.parameterMapContainsKey(paramName)) {
