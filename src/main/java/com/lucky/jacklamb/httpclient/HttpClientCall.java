@@ -71,8 +71,9 @@ public class HttpClientCall {
 
         chineseParam="".equals(chineseParam)?"":"?"+chineseParam;
         if(isGet){
+            parameters="".equals(parameters)?"":"?"+parameters;
             log.info("调用远程接口 ==> [-GET-] "+url+chineseParam);
-            url += "?" + parameters;
+            url += parameters;
             method = new HttpGet(url);
         }else if(isPost){
             method = new HttpPost(url);
@@ -89,8 +90,9 @@ public class HttpClientCall {
             StringEntity entity = new StringEntity(parameters);
             putMethod.setEntity(entity);
         }else if(isDelete){
-            log.info("调用远程接口 ==> [-GET-] "+url+"?"+chineseParam);
-            url += "?" + parameters;
+            parameters="".equals(parameters)?"":"?"+parameters;
+            log.info("调用远程接口 ==> [-GET-] "+url+chineseParam);
+            url += parameters;
             method = new HttpDelete(url);
         }
         method.setConfig(requestConfig);
