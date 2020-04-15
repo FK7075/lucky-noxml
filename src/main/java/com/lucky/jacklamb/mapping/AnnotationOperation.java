@@ -2,7 +2,6 @@ package com.lucky.jacklamb.mapping;
 
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
-import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
@@ -587,20 +586,20 @@ public class AnnotationOperation {
 		Map<String,String> requestMap;
 		if(method.isAnnotationPresent(RequestMapping.class)){
 			RequestMapping mapping=method.getAnnotation(RequestMapping.class);
-			if("".equals(mapping.callurl()))
+			if("".equals(mapping.callapi()))
 				new NotFoundCallUrlException("方法 "+method+" 的@RequestMapping注解中没有配置 callurl属性，无法完成远程调用！");
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callurl();
+			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
 			return callResult;
 		}
 
 		if(method.isAnnotationPresent(GetMapping.class)){
 			GetMapping mapping=method.getAnnotation(GetMapping.class);
-			if("".equals(mapping.callurl()))
+			if("".equals(mapping.callapi()))
 				new NotFoundCallUrlException("方法 "+method+" 的@GetMapping注解中没有配置 callurl属性，无法完成远程调用！");
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callurl();
+			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
 			return callResult;
 
@@ -608,30 +607,30 @@ public class AnnotationOperation {
 
 		if(method.isAnnotationPresent(PostMapping.class)){
 			PostMapping mapping=method.getAnnotation(PostMapping.class);
-			if("".equals(mapping.callurl()))
+			if("".equals(mapping.callapi()))
 				new NotFoundCallUrlException("方法 "+method+" 的@PostMapping注解中没有配置 callurl属性，无法完成远程调用！");
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callurl();
+			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
 			return callResult;
 		}
 
 		if(method.isAnnotationPresent(PutMapping.class)){
 			PutMapping mapping=method.getAnnotation(PutMapping.class);
-			if("".equals(mapping.callurl()))
+			if("".equals(mapping.callapi()))
 				new NotFoundCallUrlException("方法 "+method+" 的@PutMapping注解中没有配置 callurl属性，无法完成远程调用！");
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callurl();
+			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
 			return callResult;
 		}
 
 		if(method.isAnnotationPresent(DeleteMapping.class)){
 			DeleteMapping mapping =method.getAnnotation(DeleteMapping.class);
-			if("".equals(mapping.callurl()))
+			if("".equals(mapping.callapi()))
 				new NotFoundCallUrlException("方法 "+method+" 的@DeleteMapping注解中没有配置 callurl属性，无法完成远程调用！");
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callurl();
+			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
 			return callResult;
 		}

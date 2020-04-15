@@ -57,7 +57,7 @@ public @interface RequestMapping {
 	 * 调用远程接口
 	 * @return
 	 */
-	String callurl() default "";
+	String callapi() default "";
 	
 	/**
 	 * 定义该映射支持的请求类型，默认支持POST GET PUT DELETE
