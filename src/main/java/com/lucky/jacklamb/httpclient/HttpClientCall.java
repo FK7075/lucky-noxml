@@ -69,8 +69,9 @@ public class HttpClientCall {
                 .setConnectTimeout(webConfig.getConnectTimeout()).setConnectionRequestTimeout(webConfig.getConnectionRequestTimeout())
                 .setSocketTimeout(webConfig.getSocketTimeout()).build();
 
+        chineseParam="".equals(chineseParam)?"":"?"+chineseParam;
         if(isGet){
-            log.info("调用远程接口 ==> [-GET-] "+url+"?"+chineseParam);
+            log.info("调用远程接口 ==> [-GET-] "+url+chineseParam);
             url += "?" + parameters;
             method = new HttpGet(url);
         }else if(isPost){
