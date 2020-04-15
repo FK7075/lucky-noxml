@@ -1,10 +1,13 @@
 package com.lucky.jacklamb.httpclient;
 
 import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.ioc.config.AppConfig;
+import com.lucky.jacklamb.ioc.config.WebConfig;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.StringEntity;
@@ -22,6 +25,8 @@ import java.util.Map;
 public class HttpClientCall {
 
     private static Logger log= Logger.getLogger(HttpClientCall.class);
+
+    private static WebConfig webConfig= AppConfig.getAppConfig().getWebConfig();
 
     /**
      * <pre>
@@ -49,7 +54,8 @@ public class HttpClientCall {
             parameters = parameters.substring(0, parameters.length()-1);
             chineseParam=chineseParam.substring(0,chineseParam.length()-1);
         }
-        //是否为GET方式请求
+
+        //请求判断
         boolean isGet = requestMethod==RequestMethod.GET;
         boolean isPost = requestMethod==RequestMethod.POST;
         boolean isPut = requestMethod==RequestMethod.PUT;
@@ -58,6 +64,11 @@ public class HttpClientCall {
         //创建HttpClient连接对象
         CloseableHttpClient client = HttpClients.createDefault();
         HttpRequestBase method = null;
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(webConfig.getConnectTimeout()).setConnectionRequestTimeout(webConfig.getConnectionRequestTimeout())
+                .setSocketTimeout(webConfig.getSocketTimeout()).build();
+
         if(isGet){
             log.info("调用远程接口 ==> [-GET-] "+url+"?"+chineseParam);
             url += "?" + parameters;
@@ -81,6 +92,7 @@ public class HttpClientCall {
             url += "?" + parameters;
             method = new HttpDelete(url);
         }
+        method.setConfig(requestConfig);
         //设置参数内容类型
         method.addHeader("Content-Type","application/x-www-form-urlencoded");
         //httpClient本地上下文

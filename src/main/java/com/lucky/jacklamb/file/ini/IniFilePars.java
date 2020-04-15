@@ -276,6 +276,15 @@ public class IniFilePars {
 	}
 	
 	private void webSetting(WebConfig web,Map<String, String> sectionMap) {
+		if(sectionMap.containsKey("httpclient-connectTimeout")){
+			web.setConnectTimeout(Integer.parseInt(sectionMap.get("httpclient-connectTimeout")));
+		}
+		if(sectionMap.containsKey("httpclient-connectionRequestTimeout")){
+			web.setConnectionRequestTimeout(Integer.parseInt(sectionMap.get("httpclient-connectionRequestTimeout")));
+		}
+		if(sectionMap.containsKey("httpclient-socketTimeout")){
+			web.setSocketTimeout(Integer.parseInt(sectionMap.get("httpclient-socketTimeout")));
+		}
 		if(sectionMap.containsKey("encoding")) {
 			web.setEncoding(sectionMap.get("encoding"));
 		}

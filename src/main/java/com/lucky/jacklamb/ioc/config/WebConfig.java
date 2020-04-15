@@ -49,6 +49,21 @@ public class WebConfig  implements LuckyConfig  {
 	 * 指定资源的IP限制
 	 */
 	private Map<String,List<String>> specifiResourcesIpRestrict;
+
+	/**
+	 * 连接超时时间
+	 */
+	private int connectTimeout;
+
+	/**
+	 *连接请求超时时间
+	 */
+	private int connectionRequestTimeout;
+
+	/**
+	 *socket超时时间
+	 */
+	private int socketTimeout;
 	
 	
 	private WebConfig() {
@@ -61,13 +76,39 @@ public class WebConfig  implements LuckyConfig  {
 		globalResourcesIpRestrict=new ArrayList<>();
 		staticResourcesIpRestrict=new ArrayList<>();
 		specifiResourcesIpRestrict=new HashMap<>();
-		
+		connectTimeout=5000;
+		connectionRequestTimeout=1000;
+		socketTimeout=5000;
 	}
 	
 	public static WebConfig defauleWebConfig() {
 		if(webConfig==null)
 			webConfig=new WebConfig();
 		return webConfig;
+	}
+
+	public int getConnectTimeout() {
+		return connectTimeout;
+	}
+
+	public void setConnectTimeout(int connectTimeout) {
+		this.connectTimeout = connectTimeout;
+	}
+
+	public int getConnectionRequestTimeout() {
+		return connectionRequestTimeout;
+	}
+
+	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
+		this.connectionRequestTimeout = connectionRequestTimeout;
+	}
+
+	public int getSocketTimeout() {
+		return socketTimeout;
+	}
+
+	public void setSocketTimeout(int socketTimeout) {
+		this.socketTimeout = socketTimeout;
 	}
 
 	public String getEncoding() {
