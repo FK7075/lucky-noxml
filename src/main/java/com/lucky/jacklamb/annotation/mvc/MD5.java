@@ -18,13 +18,13 @@ public @interface MD5 {
 	 * 盐
 	 * @return
 	 */
-	String salt() default "";
+	String salt() default "Lucky";
 
 	/**
 	 * 循环加密次数
 	 * @return
 	 */
-	int cycle() default 1;
+	int cycle() default 10;
 
 	/**
 	 * 是否将英文变为大写
