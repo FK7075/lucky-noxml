@@ -68,10 +68,17 @@ public class HttpClientCall {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(webConfig.getConnectTimeout()).setConnectionRequestTimeout(webConfig.getConnectionRequestTimeout())
                 .setSocketTimeout(webConfig.getSocketTimeout()).build();
-
-        chineseParam="".equals(chineseParam)?"":"?"+chineseParam;
+        if(!url.contains("?")){
+            chineseParam="".equals(chineseParam)?"":"?"+chineseParam;
+        }else{
+            chineseParam="".equals(chineseParam)?"":"&"+chineseParam;
+        }
         if(isGet){
-            parameters="".equals(parameters)?"":"?"+parameters;
+            if(!url.contains("?")){
+                parameters="".equals(parameters)?"":"?"+parameters;
+            }else{
+                parameters="".equals(parameters)?"":"&"+parameters;
+            }
             log.info("调用远程接口 ==> [-GET-] "+url+chineseParam);
             url += parameters;
             method = new HttpGet(url);
@@ -90,7 +97,11 @@ public class HttpClientCall {
             StringEntity entity = new StringEntity(parameters);
             putMethod.setEntity(entity);
         }else if(isDelete){
-            parameters="".equals(parameters)?"":"?"+parameters;
+            if(!url.contains("?")){
+                parameters="".equals(parameters)?"":"?"+parameters;
+            }else{
+                parameters="".equals(parameters)?"":"&"+parameters;
+            }
             log.info("调用远程接口 ==> [-GET-] "+url+chineseParam);
             url += parameters;
             method = new HttpDelete(url);
