@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="2020-04-15 :添加了注解式的远程接口调用功能，在Controller注解中添加一个callurl，Lucky将自动访问该远程接口，并会将返回结果封装到被CallParam注解标注的方法中String类型的参数中">
+    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/lucky-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/lucky-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.lucky.jacklamb.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.lucky.jacklamb.AppTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.lucky.jacklamb.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.lucky.jacklamb.AppTest.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -43,7 +37,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/AnnotationOperation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
+            <state relative-caret-position="240">
               <caret line="35" column="7" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
             </state>
           </provider>
@@ -52,7 +46,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="96">
               <caret line="4" column="45" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="45" />
             </state>
           </provider>
@@ -61,7 +55,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundCallUrlException.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="72">
               <caret line="3" selection-start-line="3" selection-end-line="3" />
             </state>
           </provider>
@@ -70,7 +64,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="288">
               <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
             </state>
           </provider>
@@ -79,17 +73,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/GetMapping.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="1008">
               <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/httpclient/HttpClientCall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1670">
-              <caret line="189" column="59" selection-start-line="189" selection-start-column="59" selection-end-line="189" selection-end-column="59" />
+            <state relative-caret-position="825">
+              <caret line="189" column="7" selection-start-line="189" selection-start-column="7" selection-end-line="189" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/md5/MD5Utils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="96">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -97,7 +100,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyDispatherServlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="2520">
               <caret line="128" column="49" selection-start-line="128" selection-start-column="49" selection-end-line="128" selection-end-column="49" />
             </state>
           </provider>
@@ -106,7 +109,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="1176">
               <caret line="55" selection-start-line="55" selection-end-line="59" selection-end-column="32" />
             </state>
           </provider>
@@ -115,7 +118,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PutMapping.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="1008">
               <caret line="46" selection-start-line="46" selection-end-line="50" selection-end-column="32" />
             </state>
           </provider>
@@ -199,11 +202,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-42" />
-    <option name="y" value="8" />
-    <option name="width" value="1346" />
-    <option name="height" value="728" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectId" id="1ZtSezRDLHlk6CRB5u9aIKcq7SH" />
   <component name="ProjectView">
@@ -212,6 +215,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -258,7 +262,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -328,6 +331,7 @@
       <workItem from="1586664780676" duration="3349000" />
       <workItem from="1586875535459" duration="14781000" />
       <workItem from="1586958725487" duration="2980000" />
+      <workItem from="1587008673785" duration="727000" />
     </task>
     <task id="LOCAL-00001" summary="2020-03-31 Mac-Maven Lucky-Noxml">
       <created>1585672949515</created>
@@ -434,11 +438,18 @@
       <option name="project" value="LOCAL" />
       <updated>1586963444668</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="2020-04-16 ： MD5">
+      <created>1587008778184</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1587008778184</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49587000" />
+    <option name="totallyTimeSpent" value="50314000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -450,10 +461,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6111111" visible="true" weight="0.16792738" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6111111" visible="true" weight="0.16950959" />
       <window_info id="Favorites" order="1" sideWeight="0.3888889" side_tool="true" weight="0.20347957" />
       <window_info id="Structure" order="2" sideWeight="0.3888889" side_tool="true" weight="0.20347957" />
       <window_info id="Image Layers" order="3" />
@@ -502,7 +513,8 @@
     <MESSAGE value="2020-04-12 :优化了Controller异常处理机制" />
     <MESSAGE value="2020-04-15 :添加了注解式的远程接口调用功能，在Controller注解中添加一个callurl，Lucky将自动访问该远程接口，并会将返回结果封装到被CallParam注解标注的方法中String类型的参数中" />
     <MESSAGE value="2020-04-15 :丰富了HttpClientCall类的方法" />
-    <option name="LAST_COMMIT_MESSAGE" value="2020-04-15 :丰富了HttpClientCall类的方法" />
+    <MESSAGE value="2020-04-16 ： MD5" />
+    <option name="LAST_COMMIT_MESSAGE" value="2020-04-16 ： MD5" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" width="800" height="717" key="#Intentions" timestamp="1585955484003">
@@ -690,13 +702,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_202/src.zip!/java/lang/RuntimeException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3">
-          <caret line="82" column="73" lean-forward="true" selection-start-line="82" selection-start-column="73" selection-end-line="82" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_202/src.zip!/java/lang/RuntimeException.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingRuntimeException.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalRuntimeException.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/commons-fileupload/commons-fileupload/1.3.3/commons-fileupload-1.3.3.jar!/org/apache/commons/fileupload/servlet/ServletFileUpload.class">
@@ -776,20 +782,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/message/AbstractHttpMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1055">
-          <caret line="164" column="22" selection-start-line="164" selection-start-column="22" selection-end-line="164" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/params/HttpParams.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="66" column="7" lean-forward="true" selection-start-line="66" selection-start-column="7" selection-end-line="66" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/message/AbstractHttpMessage.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/params/HttpParams.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/LuckyExceptionDispose.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="509">
@@ -811,73 +805,74 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/CallParam.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/AnnotationOperation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
+        <state relative-caret-position="240">
           <caret line="35" column="7" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="96">
           <caret line="4" column="45" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundCallUrlException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="72">
           <caret line="3" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="288">
           <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/CallParam.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/GetMapping.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="1008">
           <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyDispatherServlet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="2520">
           <caret line="128" column="49" selection-start-line="128" selection-start-column="49" selection-end-line="128" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="1176">
           <caret line="55" selection-start-line="55" selection-end-line="59" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PutMapping.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="1008">
           <caret line="46" selection-start-line="46" selection-end-line="50" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/httpclient/HttpClientCall.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1670">
-          <caret line="189" column="59" selection-start-line="189" selection-start-column="59" selection-end-line="189" selection-end-column="59" />
+        <state relative-caret-position="825">
+          <caret line="189" column="7" selection-start-line="189" selection-start-column="7" selection-end-line="189" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/md5/MD5Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
         </state>
       </provider>
     </entry>
