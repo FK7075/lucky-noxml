@@ -34,7 +34,6 @@ public class LuckyDispatherServlet extends HttpServlet {
 	private WebConfig webCfg;
 	private UrlParsMap urlParsMap;
 	private ResponseControl responseControl;
-	private LSON lson;
 
 	public void init(ServletConfig config) {
 		ApplicationBeans.createApplicationBeans();
@@ -42,7 +41,6 @@ public class LuckyDispatherServlet extends HttpServlet {
 		webCfg=AppConfig.getAppConfig().getWebConfig();
 		urlParsMap=new UrlParsMap();
 		responseControl=new ResponseControl();
-		lson=new LSON();
 	}
 
 	
@@ -117,8 +115,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 					return;
 				}
 				else {
-					log.info("CURR-REQUEST ==> ["+requestMethod+"] "+uri+"\n" +
-							 "REQUEST-DATA ==> "+lson.toJson(model.getParameterMap()));
+					log.info("CURR-REQUEST ==> ["+requestMethod+"] "+uri);
 					model.setRestMap(controllerAndMethod.getRestKV());
 					urlParsMap.setCross(req,resp, controllerAndMethod);
 					method = controllerAndMethod.getMethod(); 
