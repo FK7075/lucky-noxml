@@ -24,7 +24,7 @@ public @interface MD5 {
 	 * 循环加密次数
 	 * @return
 	 */
-	int cycle() default 10;
+	int cycle() default 1;
 
 	/**
 	 * 是否将英文变为大写
