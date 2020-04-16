@@ -139,6 +139,7 @@ com\lucky\jacklamb\query\SqlAndObject.class
 com\lucky\jacklamb\rest\FormatUtil.class
 com\lucky\jacklamb\servlet\ResponseControl.class
 com\lucky\jacklamb\annotation\aop\After.class
+com\lucky\jacklamb\annotation\mvc\MD5.class
 com\lucky\jacklamb\annotation\orm\mapper\Count.class
 com\lucky\jacklamb\mapper\LuckyMapper.class
 com\lucky\jacklamb\tcconversion\reverse\GetJavaSrc.class
@@ -160,6 +161,7 @@ com\lucky\jacklamb\sqlcore\abstractionlayer\util\SqlLog.class
 com\lucky\jacklamb\tcconversion\reverse\JavaFieldGetSet.class
 com\lucky\jacklamb\annotation\orm\mapper\AutoId.class
 com\lucky\jacklamb\exception\TypeConversionException.class
+com\lucky\jacklamb\md5\MD5Utils.class
 com\lucky\jacklamb\enums\PrimaryType.class
 com\lucky\jacklamb\annotation\mvc\PostMapping.class
 com\lucky\jacklamb\ioc\exception\LuckyExceptionDispose.class
