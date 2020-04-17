@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.httpclient;
 
+import com.google.gson.Gson;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
@@ -18,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,13 +31,12 @@ public class HttpClientCall {
     private static WebConfig webConfig= AppConfig.getAppConfig().getWebConfig();
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起请求，返回字符串类型结果
      * @param url 接口地址
      * @param requestMethod 请求类型
      * @param params 传递参数
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String call(String url, RequestMethod requestMethod, Map<String, String> params, String ...auth) throws IOException {
         //接口返回结果
@@ -134,73 +135,161 @@ public class HttpClientCall {
 
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起GET请求，返回字符串类型结果
      * @param url 接口地址
      * @param params 传递参数
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String getCall(String url,Map<String, String> params, String ...auth) throws IOException {
         return call(url,RequestMethod.GET,params,auth);
     }
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起GET请求，返回字符串类型结果
      * @param url 接口地址
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String getCall(String url, String ...auth) throws IOException {
         return call(url,RequestMethod.GET,new HashMap<>(),auth);
     }
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起POST请求，返回字符串类型结果
      * @param url 接口地址
      * @param params 传递参数
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String postCall(String url,Map<String, String> params, String ...auth) throws IOException {
         return call(url,RequestMethod.POST,params,auth);
     }
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起PUT请求，返回字符串类型结果
      * @param url 接口地址
      * @param params 传递参数
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String putCall(String url,Map<String, String> params, String ...auth) throws IOException {
         return call(url,RequestMethod.PUT,params,auth);
     }
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起DELETE请求，返回字符串类型结果
      * @param url 接口地址
      * @param params 传递参数
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String deleteCall(String url,Map<String, String> params, String ...auth) throws IOException {
         return call(url,RequestMethod.DELETE,params,auth);
     }
 
     /**
-     * <pre>
      * 方法体说明：向远程接口发起DELETE请求，返回字符串类型结果
      * @param url 接口地址
+     * @param auth 访问凭证(username,password)
      * @return String 返回结果
-     * </pre>
      */
     public static String deleteCall(String url,String ...auth) throws IOException {
         return call(url,RequestMethod.DELETE,new HashMap<>(),auth);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起GET请求，返回Object类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object getCall(String url, Map<String, String> params,Type type, String ...auth) throws IOException {
+        String result=call(url,RequestMethod.GET,params,auth);
+        return new Gson().fromJson(result,type);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起GET请求，返回Object类型结果
+     * @param url 接口地址
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object getCall(String url,Type type, String ...auth) throws IOException {
+        String result= call(url,RequestMethod.GET,new HashMap<>(),auth);
+        return new Gson().fromJson(result,type);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起POST请求，返回Object类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object postCall(String url,Map<String, String> params,Type type, String ...auth) throws IOException {
+        String result = call(url,RequestMethod.POST,params,auth);
+        return new Gson().fromJson(result,type);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起PUT请求，返回Object类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object putCall(String url,Map<String, String> params,Type type, String ...auth) throws IOException {
+        String result= call(url,RequestMethod.PUT,params,auth);
+        return new Gson().fromJson(result,type);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起DELETE请求，返回Object类型结果
+     * @param url 接口地址
+     * @param params 传递参数
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object deleteCall(String url,Map<String, String> params,Type type, String ...auth) throws IOException {
+        String result= call(url,RequestMethod.DELETE,params,auth);
+        return new Gson().fromJson(result,type);
+    }
+
+
+    /**
+     * 注：只有返回数据为JSON格式时才有效
+     * 向远程接口发起DELETE请求，返回Object类型结果
+     * @param url 接口地址
+     * @param type 转换的目的类型
+     * @param auth 访问凭证(username,password)
+     * @return 返回对象类型的结果
+     * @throws IOException
+     */
+    public static Object deleteCall(String url,Type type,String ...auth) throws IOException {
+        String result= call(url,RequestMethod.DELETE,new HashMap<>(),auth);
+        return new Gson().fromJson(result,type);
     }
 
 }

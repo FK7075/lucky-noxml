@@ -86,6 +86,18 @@ public class LSON {
 		return gson.fromJson(jsonStr,objectClass);
 	}
 
+
+	/**
+	 * 传入一个Json字符串,返回一个指定类型的对象
+	 * @param typeToken TypeToken类型转换对象
+	 * @param jsonStr Json字符串
+	 * @return
+	 */
+	public Object toObject(TypeToken typeToken,String jsonStr){
+		gson=new Gson();
+		return gson.fromJson(jsonStr,typeToken.getType());
+	}
+
 	
 	
 	
