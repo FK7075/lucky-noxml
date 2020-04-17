@@ -173,6 +173,8 @@
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+
+        <!-- 将配置文件打包进jar包 .properties/.ini/.xml -->
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
@@ -194,12 +196,29 @@
                     <directory>${basedir}/src/main/java</directory>
                     <includes>
                       <include>**/*.properties</include>
+                      <include>**/*.xml</include>
+                      <include>**/*.ini</include>
                     </includes>
                   </resource>
                 </resources>
               </configuration>
             </execution>
           </executions>
+        </plugin>
+
+        <!-- 将依赖包也打包进jar包 -->
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+<!--            <archive>-->
+<!--              <manifest>-->
+<!--                <mainClass>com.allen.capturewebdata.Main</mainClass>-->
+<!--              </manifest>-->
+<!--            </archive>-->
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

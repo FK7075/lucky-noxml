@@ -93,6 +93,7 @@ com\lucky\jacklamb\exception\JsonFormatException.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\fixedcoreImpl\GeneralObjectCoreImpl.class
 com\lucky\jacklamb\rest\LSON.class
 com\lucky\jacklamb\utils\LuckyManager.class
+com\lucky\jacklamb\annotation\mvc\CallBody.class
 com\lucky\jacklamb\ioc\ComponentFactory.class
 com\lucky\jacklamb\aop\util\ASMUtil$1$1.class
 com\lucky\jacklamb\annotation\mvc\CallResult.class
@@ -223,6 +224,7 @@ com\lucky\jacklamb\exception\NotFoundMappingAnnotationException.class
 com\lucky\jacklamb\mapping\UrlParsMap.class
 com\lucky\jacklamb\query\QFilter.class
 com\lucky\jacklamb\sqlcore\abstractionlayer\abstcore\ObjectCore.class
+com\lucky\jacklamb\annotation\mvc\RequestBody.class
 com\lucky\jacklamb\ioc\scan\LuckyClassLoader.class
 com\lucky\jacklamb\annotation\orm\mapper\Delete.class
 com\lucky\jacklamb\query\PageList.class
