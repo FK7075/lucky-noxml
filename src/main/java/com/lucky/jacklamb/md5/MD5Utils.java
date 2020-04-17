@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.md5;
 
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class MD5Utils {
@@ -14,7 +15,7 @@ public class MD5Utils {
      */
     public static String md5(String clear,String salt,int cycle, boolean capital){
         for(int i=0;i<cycle;i++){
-            clear=capital?DigestUtils.md5Hex(salt+clear).toUpperCase():DigestUtils.md5Hex(salt+clear);
+            clear=capital? DigestUtils.md5Hex(salt+clear).toUpperCase():DigestUtils.md5Hex(salt+clear);
         }
         return clear;
     }

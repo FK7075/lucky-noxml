@@ -6,6 +6,7 @@ import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.LuckyUtils;
@@ -425,8 +426,8 @@ public class AnnotationOperation {
 			} else if (multiUploadMap.containsKey(paramName)
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
-			} else if(parameters[i].isAnnotationPresent(CallResult.class)){
-				args[i]=httpClientParam(method,model,parameters,paramNames,getParamName(parameters[i],paramNames[i]));
+			} else if(parameters[i].isAnnotationPresent(CallResult.class)||parameters[i].isAnnotationPresent(CallBody.class)){
+				args[i]=httpClientParam(method,parameters[i],model,parameters,paramNames,getParamName(parameters[i],paramNames[i]));
 			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
 			} else if (ServletRequest.class.isAssignableFrom(parameters[i].getType())) {
@@ -439,6 +440,9 @@ public class AnnotationOperation {
 				args[i] = model.getServletContext();
 			} else if (Model.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model;
+			}else if(parameters[i].isAnnotationPresent(RequestBody.class)){
+				args[i]=new LSON().toObject(parameters[i].getType(),model.getRequestPrarmeter(paramNames[i]));
+
 			} else if (parameters[i].isAnnotationPresent(RestParam.class)) {
 				RestParam rp = parameters[i].getAnnotation(RestParam.class);
 				String restKey = rp.value();
@@ -446,7 +450,7 @@ public class AnnotationOperation {
 					throw new NotFindRequestException("缺少请求参数：" + restKey+",错误位置："+method);
 				args[i] = JavaConversion.strToBasic(model.getRestMap().get(restKey), parameters[i].getType());
 				sb.append("[Rest-Java] "+restKey+"="+args[i]+"\n");
-			} else if(!parameters[i].isAnnotationPresent(CallResult.class)) {
+			} else if(!parameters[i].isAnnotationPresent(CallResult.class)&&!parameters[i].isAnnotationPresent(CallBody.class)) {
 				String defparam = getRequeatParamDefValue(parameters[i]);
 				if (parameters[i].getType().isArray() && parameters[i].getType().getClassLoader() == null) {
 					if (model.parameterMapContainsKey(paramName)) {
@@ -591,7 +595,7 @@ public class AnnotationOperation {
 	 * @param noParam 接受参数
 	 * @return
 	 */
-	private String httpClientParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
+	private Object httpClientParam(Method method,Parameter currParameter,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
 		Map<String,String> callResultParamMap=new HashMap<>();
 		String callResult;
 		String callurl;
@@ -603,7 +607,7 @@ public class AnnotationOperation {
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
 			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callResult;
+			return callRestAndBody(currParameter,callResult);
 		}
 
 		if(method.isAnnotationPresent(GetMapping.class)){
@@ -613,7 +617,7 @@ public class AnnotationOperation {
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
 			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callResult;
+			return callRestAndBody(currParameter,callResult);
 
 		}
 
@@ -624,7 +628,7 @@ public class AnnotationOperation {
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
 			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callResult;
+			return callRestAndBody(currParameter,callResult);
 		}
 
 		if(method.isAnnotationPresent(PutMapping.class)){
@@ -634,7 +638,7 @@ public class AnnotationOperation {
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
 			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callResult;
+			return callRestAndBody(currParameter,callResult);
 		}
 
 		if(method.isAnnotationPresent(DeleteMapping.class)){
@@ -644,9 +648,16 @@ public class AnnotationOperation {
 			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
 			callurl=mapping.callapi();
 			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callResult;
+			return callRestAndBody(currParameter,callResult);
 		}
 		throw new NotFoundMappingAnnotationException("在方法 "+method+" 中找不到映射注解@xxxMapping");
+	}
+
+	private Object callRestAndBody(Parameter currParameter,String strResult){
+		if(currParameter.isAnnotationPresent(CallBody.class)){
+			return new LSON().toObject(currParameter.getType(),strResult);
+		}
+		return strResult;
 	}
 
 	private Map<String,String> getHttpClientRequestParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam){

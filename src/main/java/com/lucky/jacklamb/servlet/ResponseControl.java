@@ -46,15 +46,13 @@ public class ResponseControl {
 		}
 	}
 
+
 	/**
 	 * 处理响应信息
-	 * @param req Request对象
-	 * @param resp Response对象
-	 * @param pre_suf 前后缀配置
+	 * @param model Model对象
+	 * @param controllerAndMethod ControllerAndMethod对象
 	 * @param method 响应请求的方法
-	 * @param obj 执行响应方法的对象
-	 * @throws IOException
-	 * @throws ServletException
+	 * @param obj 方法返回的结果
 	 */
 	public void jump(Model model,ControllerAndMethod controllerAndMethod, Method method, Object obj)
 			{

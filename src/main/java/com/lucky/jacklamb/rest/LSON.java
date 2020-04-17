@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.rest;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.exception.JsonFormatException;
@@ -27,8 +31,20 @@ public class LSON {
 	
 	private static Logger log=Logger.getLogger(LSON.class);
 
+
 	private String jsonStr;
-	
+
+	private GsonBuilder gsonBuilder;
+
+	private Gson gson;
+
+	public LSON() {
+		gsonBuilder = new GsonBuilder();
+		gsonBuilder.setPrettyPrinting();
+		gsonBuilder.serializeNulls();
+	}
+
+
 	/**
 	 * 传入一个对象，返回该对象的Json字符串
 	 * @param jsonObject
@@ -38,7 +54,26 @@ public class LSON {
 		toJsonString(jsonObject);
 		return jsonStr;
 	}
-	
+
+	/**
+	 * 利用Google的GSON将对象转为格式化的Json字符串
+	 * @param pojo 实体类对象
+	 * @return JSON字符串
+	 */
+	public String toFormatJsonByGson(Object pojo){
+		gson = gsonBuilder.create();
+		return gson.toJson(pojo);
+	}
+
+	/**
+	 * 利用Google的GSON将对象转为Json字符串
+	 * @param pojo 实体类对象
+	 * @return JSON字符串
+	 */
+	public String toJsonByGson(Object pojo){
+		gson = gsonBuilder.create();
+		return gson.toJson(pojo);
+	}
 
 	/**
 	 * 传入一个Json字符串,返回一个指定类型的对象
@@ -46,17 +81,11 @@ public class LSON {
 	 * @param jsonStr Json字符串
 	 * @return
 	 */
-	public <T> T toObject(Class<T> objectClass,String jsonStr) {
-		if(!check(jsonStr)) {
-			log.error("错误的Json字符串"+jsonStr,new JsonFormatException("错误的Json字符串"+jsonStr));
-			throw new JsonFormatException("错误的Json字符串"+jsonStr);
-		}
-		return null;
+	public <T> T toObject(Class<T> objectClass, String jsonStr) {
+		gson=new Gson();
+		return gson.fromJson(jsonStr,objectClass);
 	}
-	
-	public boolean check(String jsonStr) {
-		return false;
-	}
+
 	
 	
 	
@@ -235,33 +264,7 @@ public class LSON {
 	}
 	
 	public static void main(String[] args) {
-		TT object=new TT();
-		object.setStr("String属性");
-		List<Double> list=new ArrayList<>();
-		list.add(12.5);list.add(55.7);list.add(99.999);
-		object.setList(list);
-		Map<String,Integer> map=new HashMap<>();
-		map.put("key1", 111);
-		map.put("key2", 222);
-		object.setMap(map);
-		BB bb=new BB();
-		bb.setBname("<font color='red'>你好</font>");
-		String[] arr= {"OK","YES","HELLO"};
-		bb.setArray(arr);
-		object.setBb(bb);
-		List<BB> list_bb=new ArrayList<>();
-		list_bb.add(bb);list_bb.add(new BB("BB2"));
-		object.setList_BB(list_bb);
-		Map<String,BB> map_bb=new HashMap<>();
-		map_bb.put("map1", bb);
-		map_bb.put("map2", bb);
-		map_bb.put("map3", new BB("MAPBB"));
-		object.setMap_BB(map_bb);
-		LSON l=new LSON();
-		System.out.println(l.toJson(object));
-		System.out.println(LuckyUtils.getDate(new Date()));
-		ScanConfig s=ScanConfig.defaultScanConfig();
-		System.out.println(l.toJson(s));
+		System.out.println("HELLO");
 	}
 	
 	public String formatJson(Object jsonObject) {

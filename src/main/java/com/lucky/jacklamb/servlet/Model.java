@@ -292,8 +292,8 @@ public class Model {
 	 */
 	public void witerJson(Object pojo){
 		LSON lson = new LSON();
-		log.debug(lson.formatJson(pojo));
-		writer(lson.toJson(pojo));
+		log.debug(lson.toJsonByGson(pojo));
+		writer(lson.toFormatJsonByGson(pojo));
 	}
 
 	/**
