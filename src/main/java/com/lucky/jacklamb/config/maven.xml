@@ -28,6 +28,7 @@
             </plugin>
 
             <!--打包可运行jar包必要插件  将依赖包也打包进jar包 -->
+            <!--使用命令打包 ==> "mvn assembly:assembly -DskipTests"-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
