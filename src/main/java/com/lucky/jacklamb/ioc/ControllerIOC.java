@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lucky.jacklamb.annotation.ioc.CallController;
+import com.lucky.jacklamb.httpclient.HttpClientControllerProxy;
+import com.lucky.jacklamb.mapping.Mapping;
+import com.lucky.jacklamb.mapping.MappingDetails;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
@@ -140,6 +144,14 @@ public class ControllerIOC extends ComponentFactory{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
 				addControllerMap(beanID, PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "controller", beanID, controller));
+			}else if(controller.isAnnotationPresent(CallController.class)){
+				CallController cont = controller.getAnnotation(CallController.class);
+				if (!"".equals(cont.value())) {
+					beanID=cont.value();
+				}else{
+					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
+				}
+				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
 			}
 
 		}
@@ -170,11 +182,13 @@ public class ControllerIOC extends ComponentFactory{
 			}
 			Method[] publicMethods = clzz.getDeclaredMethods();
 			String ip,ips,rest;
+			MappingDetails md;
 			for (Method method : publicMethods) {
-				if (haveMapping(method)) {
+				if (Mapping.isMappingMethod(method)) {
+					md=Mapping.getMappingDetails(method);
 					ControllerAndMethod come = new ControllerAndMethod();
 					String[] controllerIps=clzz.getAnnotation(Controller.class).ip();
-					String[] mappingIps=getIps(method);
+					String[] mappingIps=md.ip;
 					come.addIds(controllerIps);
 					come.addIds(mappingIps);
 					if(clzz.getAnnotation(Controller.class).rest()!=Rest.NO)
@@ -182,13 +196,13 @@ public class ControllerIOC extends ComponentFactory{
 					if(method.isAnnotationPresent(RestBody.class))
 						come.setRest(method.getAnnotation(RestBody.class).value());
 					come.setIpSection(clzz.getAnnotation(Controller.class).ipSection());
-					come.setIpSection(getIpSection(method));
+					come.setIpSection(md.ipSection);
 					come.setController(entry.getValue());
-					String url_m=getMappingValue(method);
+					String url_m=md.value;
 					if(url_m.startsWith("/"))
 						url_m=url_m.substring(1);
 					come.setMethod(method);
-					RequestMethod[] mappingRequestMethod = getMappingRequestMethod(method);
+					RequestMethod[] mappingRequestMethod = md.method;
 					come.setRequestMethods(mappingRequestMethod);
 					URLAndRequestMethod uRLAndRequestMethod=new URLAndRequestMethod();
 					uRLAndRequestMethod.setUrl(url_c + url_m);
@@ -204,80 +218,4 @@ public class ControllerIOC extends ComponentFactory{
 			}
 		}
 	}
-	
-	/**
-	 * 判断当前请求的请求方法
-	 * @param method
-	 * @return
-	 */
-	private boolean haveMapping(Method method) {
-		if(method.isAnnotationPresent(RequestMapping.class)||method.isAnnotationPresent(GetMapping.class)
-				||method.isAnnotationPresent(PostMapping.class)||method.isAnnotationPresent(PutMapping.class)
-				||method.isAnnotationPresent(DeleteMapping.class))
-			return true;
-		return false;
-	}
-	
-	/**
-	 * 得到当前请求的请求映射
-	 * @param method
-	 * @return
-	 */
-	public String getMappingValue(Method method) {
-		if(method.isAnnotationPresent(RequestMapping.class))
-			return method.getAnnotation(RequestMapping.class).value();
-		if(method.isAnnotationPresent(GetMapping.class))
-			return method.getAnnotation(GetMapping.class).value();
-		if(method.isAnnotationPresent(PostMapping.class))
-			return method.getAnnotation(PostMapping.class).value();
-		if(method.isAnnotationPresent(PutMapping.class))
-			return method.getAnnotation(PutMapping.class).value();
-		if(method.isAnnotationPresent(DeleteMapping.class))
-			return method.getAnnotation(DeleteMapping.class).value();
-		return null;
-	}
-	
-	private String[] getIps(Method method) {
-		if(method.isAnnotationPresent(RequestMapping.class))
-			return method.getAnnotation(RequestMapping.class).ip();
-		if(method.isAnnotationPresent(GetMapping.class)) 
-			return method.getAnnotation(GetMapping.class).ip();
-		if(method.isAnnotationPresent(PostMapping.class))
-			return method.getAnnotation(PostMapping.class).ip();
-		if(method.isAnnotationPresent(PutMapping.class))
-			return method.getAnnotation(PutMapping.class).ip();
-		if(method.isAnnotationPresent(DeleteMapping.class))
-			return method.getAnnotation(DeleteMapping.class).ip();
-		return new String[0];
-	}
-	
-	private String[] getIpSection(Method method) {
-		if(method.isAnnotationPresent(RequestMapping.class))
-			return method.getAnnotation(RequestMapping.class).ipSection();
-		if(method.isAnnotationPresent(GetMapping.class)) 
-			return method.getAnnotation(GetMapping.class).ipSection();
-		if(method.isAnnotationPresent(PostMapping.class))
-			return method.getAnnotation(PostMapping.class).ipSection();
-		if(method.isAnnotationPresent(PutMapping.class))
-			return method.getAnnotation(PutMapping.class).ipSection();
-		if(method.isAnnotationPresent(DeleteMapping.class))
-			return method.getAnnotation(DeleteMapping.class).ipSection();
-		return new String[0];
-	}
-	
-	private RequestMethod[] getMappingRequestMethod(Method method) {
-		RequestMethod[] m=new RequestMethod[1];
-		if(method.isAnnotationPresent(RequestMapping.class))
-			return method.getAnnotation(RequestMapping.class).method();
-		if(method.isAnnotationPresent(GetMapping.class)) 
-			m[0]=RequestMethod.GET;
-		if(method.isAnnotationPresent(PostMapping.class))
-			m[0]=RequestMethod.POST;
-		if(method.isAnnotationPresent(PutMapping.class))
-			m[0]=RequestMethod.PUT;
-		if(method.isAnnotationPresent(DeleteMapping.class))
-			m[0]=RequestMethod.DELETE;
-		return m;
-	}
-
 }

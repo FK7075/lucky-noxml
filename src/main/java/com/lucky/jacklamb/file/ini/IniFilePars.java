@@ -1,18 +1,5 @@
 package com.lucky.jacklamb.file.ini;
 
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_FILTER;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_FILTER_MAPPING;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_HANDERPREFIXANDSUFFIX;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_LISTENER;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_SERVLET;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_SERVLET_MAPPING;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_SPECIFIRESOURCESIPRESTRICT;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_SQL_INI;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_STATICHANDER;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_SUFFIX_SCAN;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_TOMCAT;
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.SECTION_WEB;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +20,8 @@ import com.lucky.jacklamb.enums.Scan;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
+
+import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.*;
 
 public class IniFilePars {
 	
@@ -236,6 +225,11 @@ public class IniFilePars {
 		if(this.isHasSection(SECTION_WEB)) {
 			sectionMap = this.getSectionMap(SECTION_WEB);
 			webSetting(web,sectionMap);
+		}
+
+		if(this.isHasSection(SECTION_CALLAPI)){
+			sectionMap=this.getSectionMap(SECTION_CALLAPI);
+			web.setCallApis(sectionMap);
 		}
 		if(this.isHasSection(SECTION_HANDERPREFIXANDSUFFIX)) {
 			sectionMap = this.getSectionMap(SECTION_HANDERPREFIXANDSUFFIX);

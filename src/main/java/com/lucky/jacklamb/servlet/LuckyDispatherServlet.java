@@ -123,7 +123,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 					controllerObj=controllerAndMethod.getController();
 					urlParsMap.autowReqAdnResp(controllerObj,model);
 					Object obj1;
-					args =anop.getControllerMethodParam(model,method);
+					args =anop.getControllerMethodParam(model,controllerObj.getClass(),method);
 					obj1 = method.invoke(controllerObj, args);
 					if (isDownload == true)//下载操作
 						anop.download(model, method);

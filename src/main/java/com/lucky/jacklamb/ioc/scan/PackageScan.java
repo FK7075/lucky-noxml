@@ -11,16 +11,11 @@ import javax.websocket.Endpoint;
 import javax.websocket.server.ServerApplicationConfig;
 import javax.websocket.server.ServerEndpoint;
 
+import com.lucky.jacklamb.annotation.ioc.*;
 import com.lucky.jacklamb.annotation.orm.Table;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.ioc.Bean;
-import com.lucky.jacklamb.annotation.ioc.Component;
-import com.lucky.jacklamb.annotation.ioc.Configuration;
-import com.lucky.jacklamb.annotation.ioc.Controller;
-import com.lucky.jacklamb.annotation.ioc.Repository;
-import com.lucky.jacklamb.annotation.ioc.Service;
 import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
@@ -280,7 +275,7 @@ public class PackageScan extends Scan {
 				}else{
 					fileClass=Class.forName(className);
 				}
-				if(fileClass.isAnnotationPresent(Controller.class))
+				if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class))
 					controllerClass.add(fileClass);
 				else if(fileClass.isAnnotationPresent(Service.class))
 					serviceClass.add(fileClass);

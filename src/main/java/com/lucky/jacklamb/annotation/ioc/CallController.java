@@ -1,12 +1,8 @@
 package com.lucky.jacklamb.annotation.ioc;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import com.lucky.jacklamb.enums.Rest;
+
+import java.lang.annotation.*;
 
 /**
  * 在MVC中此用于标识一个Controller组件
@@ -22,6 +18,7 @@ import com.lucky.jacklamb.enums.Rest;
  * @author fk-7075
  *
  */
+
 /**
  * 定义一个Controller组价
  * @author fk-7075
@@ -30,7 +27,7 @@ import com.lucky.jacklamb.enums.Rest;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Controller {
+public @interface CallController {
 	
 	/**
 	 * 为该Controller组件指定一个唯一ID，默认会使用[首字母小写类名]作为组件的唯一ID

@@ -44,11 +44,6 @@ public @interface GetMapping {
 	 */
 	String[] ip() default {};
 
-	/**
-	 * 调用远程接口
-	 * @return
-	 */
-	String callapi() default "";
 	
 	/**
 	 * 指定一些合法访问的ip段，来自其他ip地址的请求将会被拒绝

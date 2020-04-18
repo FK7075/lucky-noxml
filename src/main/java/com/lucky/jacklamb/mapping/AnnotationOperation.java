@@ -1,9 +1,11 @@
 package com.lucky.jacklamb.mapping;
 
+import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.httpclient.Api;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.rest.LSON;
@@ -66,7 +68,7 @@ public class AnnotationOperation {
 			String paramName;
 			for(int i=0;i<parameters.length;i++) {
 				if (MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
-					paramName=getParamName(parameters[i],paramNames[i]);
+					paramName=Mapping.getParamName(parameters[i],paramNames[i]);
 					map.put(paramName, uploadMutipar(model, paramName));
 				}
 			}
@@ -74,7 +76,7 @@ public class AnnotationOperation {
 			List<String> paramlist=new ArrayList<>();
 			for(int i=0;i<parameters.length;i++) {
 				if (MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
-					paramlist.add(getParamName(parameters[i],paramNames[i]));
+					paramlist.add(Mapping.getParamName(parameters[i],paramNames[i]));
 				}
 			}
 			setMultipartFileMap(model,map,paramlist);
@@ -322,7 +324,7 @@ public class AnnotationOperation {
 					if (uploadMap.containsKey(fi.getName()) && fi_obj == null)
 						fi.set(pojo, uploadMap.get(fi.getName()));
 				}
-				map.put(getParamName(param,paramNames[i]), pojo);
+				map.put(Mapping.getParamName(param,paramNames[i]), pojo);
 			}
 			i++;
 		}
@@ -396,7 +398,7 @@ public class AnnotationOperation {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public Object[] getControllerMethodParam(Model model, Method method)
+	public Object[] getControllerMethodParam(Model model,Class<?> controllerClass, Method method)
 			throws IOException, ServletException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
 		//获取当前Controller方法参数列表所有的参数名
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
@@ -419,7 +421,7 @@ public class AnnotationOperation {
 		sb.append(pojoMap.isEmpty()?"":"Pojo-Params          : "+pojoMap.toString()+"\n").append("URL-Params           : \n");
 		String paramName;
 		for (int i = 0; i < parameters.length; i++) {
-			paramName=getParamName(parameters[i],paramNames[i]);
+			paramName=Mapping.getParamName(parameters[i],paramNames[i]);
 			if (uploadMap.containsKey(paramName)
 					&& String.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = uploadMap.get(paramName);
@@ -427,7 +429,7 @@ public class AnnotationOperation {
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
 			} else if(parameters[i].isAnnotationPresent(CallResult.class)||parameters[i].isAnnotationPresent(CallBody.class)){
-				args[i]=httpClientParam(method,parameters[i],model,parameters,paramNames,getParamName(parameters[i],paramNames[i]));
+				args[i]=httpClientParam(controllerClass,method,parameters[i],model,parameters,paramNames,Mapping.getParamName(parameters[i],paramNames[i]));
 			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
 			} else if (ServletRequest.class.isAssignableFrom(parameters[i].getType())) {
@@ -442,7 +444,6 @@ public class AnnotationOperation {
 				args[i] = model;
 			}else if(parameters[i].isAnnotationPresent(RequestBody.class)){
 				args[i]=new LSON().toObject(parameters[i].getType(),model.getRequestPrarmeter(paramNames[i]));
-
 			} else if (parameters[i].isAnnotationPresent(RestParam.class)) {
 				RestParam rp = parameters[i].getAnnotation(RestParam.class);
 				String restKey = rp.value();
@@ -539,20 +540,6 @@ public class AnnotationOperation {
 		return pojo;
 	}
 
-	/**
-	 * 得到一个参数的标记参数名
-	 * 
-	 * @param param
-	 * @return
-	 */
-	private String getParamName(Parameter param,String paramName) {
-		if (param.isAnnotationPresent(RequestParam.class)) {
-			RequestParam rp = param.getAnnotation(RequestParam.class);
-			return rp.value();
-		} else {
-			return paramName;
-		}
-	}
 
 	/**
 	 * 得到RequestParam注解中def的值
@@ -588,71 +575,70 @@ public class AnnotationOperation {
 
 	/**
 	 * 得到调用远程接口的返回结果
+	 * @param controllerClass 当前Controller的Class对象
 	 * @param method 当前Controller方法
 	 * @param model Model对象
 	 * @param parameters Parameter数组
 	 * @param paramNames 方法参数名数组
 	 * @param noParam 接受参数
 	 * @return
+	 * @throws IOException
 	 */
-	private Object httpClientParam(Method method,Parameter currParameter,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
-		Map<String,String> callResultParamMap=new HashMap<>();
+	private Object httpClientParam(Class<?> controllerClass,Method method,Parameter currParameter,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
 		String callResult;
-		String callurl;
-		Map<String,String> requestMap;
-		if(method.isAnnotationPresent(RequestMapping.class)){
-			RequestMapping mapping=method.getAnnotation(RequestMapping.class);
-			if("".equals(mapping.callapi()))
-				new NotFoundCallUrlException("方法 "+method+" 的@RequestMapping注解中没有配置 callurl属性，无法完成远程调用！");
-			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callapi();
-			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callRestAndBody(currParameter,callResult);
-		}
-
-		if(method.isAnnotationPresent(GetMapping.class)){
-			GetMapping mapping=method.getAnnotation(GetMapping.class);
-			if("".equals(mapping.callapi()))
-				new NotFoundCallUrlException("方法 "+method+" 的@GetMapping注解中没有配置 callurl属性，无法完成远程调用！");
-			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callapi();
-			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callRestAndBody(currParameter,callResult);
-
-		}
-
-		if(method.isAnnotationPresent(PostMapping.class)){
-			PostMapping mapping=method.getAnnotation(PostMapping.class);
-			if("".equals(mapping.callapi()))
-				new NotFoundCallUrlException("方法 "+method+" 的@PostMapping注解中没有配置 callurl属性，无法完成远程调用！");
-			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callapi();
-			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callRestAndBody(currParameter,callResult);
-		}
-
-		if(method.isAnnotationPresent(PutMapping.class)){
-			PutMapping mapping=method.getAnnotation(PutMapping.class);
-			if("".equals(mapping.callapi()))
-				new NotFoundCallUrlException("方法 "+method+" 的@PutMapping注解中没有配置 callurl属性，无法完成远程调用！");
-			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callapi();
-			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callRestAndBody(currParameter,callResult);
-		}
-
-		if(method.isAnnotationPresent(DeleteMapping.class)){
-			DeleteMapping mapping =method.getAnnotation(DeleteMapping.class);
-			if("".equals(mapping.callapi()))
-				new NotFoundCallUrlException("方法 "+method+" 的@DeleteMapping注解中没有配置 callurl属性，无法完成远程调用！");
-			requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
-			callurl=mapping.callapi();
-			callResult= HttpClientCall.call(callurl,model.getRequestMethod(),requestMap);
-			return callRestAndBody(currParameter,callResult);
-		}
-		throw new NotFoundMappingAnnotationException("在方法 "+method+" 中找不到映射注解@xxxMapping");
+		String api=getCallApi(controllerClass,method);
+		Map<String,String> requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+		callResult=HttpClientCall.call(api,model.getRequestMethod(),requestMap);
+		return callRestAndBody(currParameter,callResult);
 	}
 
+	/**
+	 * 得到远程服务的Url地址
+	 * @param controllerClass 当前ControllerClass
+	 * @param method 当前的ControllerMethod
+	 * @return callapi
+	 */
+	private String getCallApi(Class<?> controllerClass,Method method){
+
+		String controllerApi= Api.getApi(controllerClass.getAnnotation(Controller.class).callapi());
+		String mappingValue=Mapping.getMappingDetails(method).value;
+
+		//方法上不存在@CallApi注解，或者存在@CallApi注解但是value()为"",
+		//此时使用ControllerApi与@xxxMapping的value()拼接得到完整的url
+		if(!method.isAnnotationPresent(CallApi.class)||"".equals(method.getAnnotation(CallApi.class).value())){
+			if("".equals(controllerApi))
+				throw new NotFoundCallUrlException("找不到可使用的远程服务地址，错误的远程服务方法："+method);
+			if(!controllerApi.endsWith("/"))
+				controllerApi+="/";
+			if(mappingValue.startsWith("/"))
+				mappingValue=mappingValue.substring(1);
+			return controllerApi+mappingValue;
+		}
+		CallApi callApi=method.getAnnotation(CallApi.class);
+		String methodCallApi=callApi.value();
+
+		//@CallApi注解中的value()为一个完整的url
+		if(methodCallApi.startsWith("${")||methodCallApi.startsWith("http://")||methodCallApi.startsWith("https://")){
+			return Api.getApi(methodCallApi);
+		}
+
+		//@CallApi注解中的value()不是一个完整的Url，需要与ControllerApi进行拼接
+		if("".equals(controllerApi))
+			throw new NotFoundCallUrlException("找不到可使用的远程服务地址，错误的远程服务方法："+method);
+		if(!controllerApi.endsWith("/"))
+			controllerApi+="/";
+		if(methodCallApi.startsWith("/"))
+			methodCallApi=methodCallApi.substring(1);
+		return controllerApi+methodCallApi;
+
+	}
+
+	/**
+	 * 处理远程服务返回的数据，如果是CallBody则封装为JavaObject，为CallResult则返回字符串类型结果
+	 * @param currParameter 当前方法对应的Parameter
+	 * @param strResult 远程服务响应的String类型结果
+	 * @return
+	 */
 	private Object callRestAndBody(Parameter currParameter,String strResult){
 		if(currParameter.isAnnotationPresent(CallBody.class)){
 			return new LSON().toObject(currParameter.getType(),strResult);
@@ -660,11 +646,20 @@ public class AnnotationOperation {
 		return strResult;
 	}
 
+	/**
+	 * 得到访问远程服务需要的参数
+	 * @param method 当前Controller方法
+	 * @param model Model对象
+	 * @param parameters 参数列表对应的Parameter数组
+	 * @param paramNames 参数列表的参数名
+	 * @param noParam 接受响应结果的参数名
+	 * @return
+	 */
 	private Map<String,String> getHttpClientRequestParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam){
 		Map<String,String> map = new HashMap<>();
 		String currParam;
 		for(int i=0;i<parameters.length;i++){
-			currParam=getParamName(parameters[i],paramNames[i]);
+			currParam=Mapping.getParamName(parameters[i],paramNames[i]);
 			if(!noParam.equals(currParam)){
 				if(model.restMapContainsKey(currParam)){
 					map.put(currParam,model.getRestParam(currParam));

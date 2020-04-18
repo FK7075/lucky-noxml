@@ -64,6 +64,11 @@ public class WebConfig  implements LuckyConfig  {
 	 *socket超时时间
 	 */
 	private int socketTimeout;
+
+	/**
+	 * 配置一系列的远程服务的地址
+	 */
+	private Map<String,String> callApis;
 	
 	
 	private WebConfig() {
@@ -76,6 +81,7 @@ public class WebConfig  implements LuckyConfig  {
 		globalResourcesIpRestrict=new ArrayList<>();
 		staticResourcesIpRestrict=new ArrayList<>();
 		specifiResourcesIpRestrict=new HashMap<>();
+		callApis=new HashMap<>();
 		connectTimeout=5000;
 		connectionRequestTimeout=1000;
 		socketTimeout=5000;
@@ -86,6 +92,26 @@ public class WebConfig  implements LuckyConfig  {
 			webConfig=new WebConfig();
 		return webConfig;
 	}
+
+	public void addCallApi(String name,String api){
+		callApis.put(name,api);
+	}
+
+	public void setCallApis(Map<String,String> apis){
+		for(String key:apis.keySet())
+			callApis.put(key,apis.get(key));
+	}
+
+	public String getApi(String name){
+		if(containsApiKey(name))
+			return callApis.get(name);
+		throw new RuntimeException("callApi中没有与\""+name+"\"相匹配的Api.");
+	}
+
+	public boolean containsApiKey(String name){
+		return callApis.containsKey(name);
+	}
+
 
 	public int getConnectTimeout() {
 		return connectTimeout;

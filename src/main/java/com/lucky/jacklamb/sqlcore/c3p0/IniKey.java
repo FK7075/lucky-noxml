@@ -25,6 +25,8 @@ public class IniKey {
 	public static final String SECTION_FILTER_MAPPING="Filter Mapping";
 	
 	public static final String SECTION_WEB="Web";
+
+	public static final String SECTION_CALLAPI="CallApi";
 	
 	public static final String SECTION_HANDERPREFIXANDSUFFIX="HanderPrefixAndSuffix";
 	

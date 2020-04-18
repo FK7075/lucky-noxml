@@ -1,20 +1,14 @@
 package com.lucky.jacklamb.aop.util;
 
+import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
+import com.lucky.jacklamb.aop.proxy.Chain;
+import com.lucky.jacklamb.servlet.Model;
+import org.objectweb.asm.*;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-
-import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
-import com.lucky.jacklamb.aop.proxy.Chain;
-import com.lucky.jacklamb.servlet.Model;
-
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 /**
  * asm工具
@@ -38,11 +32,7 @@ public class ASMUtil {
 	    }
 	 
 	    /**
-	     * 
-	     * <p>
-	     * 获取方法的参数名
-	     * </p>
-	     * 
+	     * 获取方法的参数名,无法获取接口参数名和JDK自带的类的方法参数名
 	     * @param m
 	     * @return
 	     */
@@ -56,6 +46,7 @@ public class ASMUtil {
 	            throw new RuntimeException(e);
 	        }
 	        cr.accept(new ClassVisitor(Opcodes.ASM5) {
+
 	            @Override
 	            public MethodVisitor visitMethod(final int access,
 	                    final String name, final String desc,
@@ -91,32 +82,37 @@ public class ASMUtil {
 	        }, 0);
 	        return paramNames;
 	    }
+
 	 
 	    public static void main(String[] args) throws SecurityException,
 	            NoSuchMethodException {
-	        String[] s = getMethodParamNames(ASMUtil.class.getMethod(
-	                "getMethodParamNames", Method.class));
-	        System.out.println(Arrays.toString(s));
-	 
-	        s = getMethodParamNames(ASMUtil.class.getDeclaredMethod("sameType",
-	                Type[].class, Class[].class));
-	        System.out.println(Arrays.toString(s));
-	        
-	        int i=0;
-	        for(String str:s) {
-	        	
-	        	System.out.println(str);
-	        	System.out.println(s[i]);
-	        	i++;
-	        	
-	        }
-	 
-	        s=getMethodParamNames(CacheExpandPoint.class.getDeclaredMethod("cacheResult", Chain.class));
-	        System.out.println(Arrays.toString(s));
-	        // 对String，Object，thread等jdk自带类型不起作用
-	        
-	        s=getMethodParamNames(ASMUtil.class.getDeclaredMethod("ttt",Model.class));
-	        System.out.println(Arrays.toString(s));
+//	        String[] s = getMethodParamNames(ASMUtil.class.getMethod(
+//	                "getMethodParamNames", Method.class));
+//	        System.out.println(Arrays.toString(s));
+//
+//	        s = getMethodParamNames(ASMUtil.class.getDeclaredMethod("sameType",
+//	                Type[].class, Class[].class));
+//	        System.out.println(Arrays.toString(s));
+//
+//	        int i=0;
+//	        for(String str:s) {
+//
+//	        	System.out.println(str);
+//	        	System.out.println(s[i]);
+//	        	i++;
+//
+//	        }
+//
+//	        s=getMethodParamNames(CacheExpandPoint.class.getDeclaredMethod("cacheResult", Chain.class));
+//	        System.out.println(Arrays.toString(s));
+//	        // 对String，Object，thread等jdk自带类型不起作用
+//
+//	        s=getMethodParamNames(ASMUtil.class.getDeclaredMethod("ttt",Model.class));
+//	        System.out.println(Arrays.toString(s));
+			String[] s;
+	        Method mmm=ITest.class.getMethod("Get",String.class,Double.class);
+	        s=getMethodParamNames(mmm);
+			System.out.println(Arrays.toString(s));
 	    }
 
 	    public void ttt(Model haha) {

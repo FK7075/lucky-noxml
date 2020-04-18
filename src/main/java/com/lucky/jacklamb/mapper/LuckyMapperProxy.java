@@ -571,7 +571,7 @@ public class LuckyMapperProxy {
 		initIniMap(clazz);
 		initSqlMap(clazz);
 		initSqlMapProperty(clazz);
-		Enhancer enhancer=new Enhancer();
+		final Enhancer enhancer=new Enhancer();
 		enhancer.setSuperclass(clazz);
 		MethodInterceptor interceptor=(object,method,params,methodProxy)->{
 			log.debug("Run ==> "+object.getClass().getName()+"."+method.getName()+"\n params="+Arrays.toString(params));
