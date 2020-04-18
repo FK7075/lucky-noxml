@@ -1,0 +1,48 @@
+<build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+        <plugins>
+
+            <!-- 运行必要插件 添加编译参数-parameters,确保Lucky可以获得接口和抽象类的方法中的参数名 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerVersion>1.8</compilerVersion>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+
+
+
+            <!-- 将配置文件打包进jar包 .properties/.ini/.xml -->
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
+            <!--打包可运行jar包必要插件  将依赖包也打包进jar包 -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+
+                    <!-- 设置启动类 -->
+                    <archive>
+                      <manifest>
+                        <mainClass>com.allen.capturewebdata.Main</mainClass>
+                      </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+</build>

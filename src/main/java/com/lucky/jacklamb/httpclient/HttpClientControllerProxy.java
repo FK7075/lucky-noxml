@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.httpclient;
 
 import com.lucky.jacklamb.annotation.ioc.CallController;
+import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
 import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.mapping.MappingDetails;
@@ -30,13 +31,15 @@ public class HttpClientControllerProxy {
         MethodInterceptor interceptor=(object, method, params, methodProxy)->{
             if(Mapping.isMappingMethod(method)){
                 Parameter[] parameters=method.getParameters();
+                List<String> paramName= ASMUtil.getInterfaceMethodParamNames(method);
                 String key=null;
 
                 Map<String,String> callapiMap=new HashMap<>();
+
                 //获取并封装请求远程接口的参数
                 for(int i=0;i<parameters.length;i++) {
                     if(params[i].getClass().getClassLoader()==null){
-                        key = Mapping.getParamName(parameters[i],parameters[i].getName());
+                        key = Mapping.getParamName(parameters[i],paramName.get(i));
                         callapiMap.put(key, params[i].toString());
                     }else{
                         Field[] fields =params[i].getClass().getDeclaredFields();

@@ -8,7 +8,9 @@ import org.objectweb.asm.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * asm工具
@@ -45,7 +47,7 @@ public class ASMUtil {
 	        } catch (IOException e) {
 	            throw new RuntimeException(e);
 	        }
-	        cr.accept(new ClassVisitor(Opcodes.ASM5) {
+	        cr.accept(new ClassVisitor(Opcodes.ASM6) {
 
 	            @Override
 	            public MethodVisitor visitMethod(final int access,
@@ -60,7 +62,7 @@ public class ASMUtil {
 	                }
 	                MethodVisitor v = super.visitMethod(access, name, desc,
 	                        signature, exceptions);
-	                return new MethodVisitor(Opcodes.ASM5, v) {
+	                return new MethodVisitor(Opcodes.ASM6, v) {
 	                    @Override
 	                    public void visitLocalVariable(String name, String desc,
 	                            String signature, Label start, Label end, int index) {
@@ -83,9 +85,52 @@ public class ASMUtil {
 	        return paramNames;
 	    }
 
-	 
+	/**
+	 * 获取接口方法的参数名（抽象方法也可以）
+	 * 编译时增加参数  -parameters
+	 * @param method
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<String> getInterfaceMethodParamNames(final Method method) throws IOException {
+		final Class<?>[] methodParameterTypes = method.getParameterTypes();
+		final List<String> methodParametersNames = new ArrayList<>();
+		final String className = method.getDeclaringClass().getName();
+		ClassReader cr = new ClassReader(className);
+		ClassVisitor classVisitor=new ClassVisitor(Opcodes.ASM6) {
+			@Override
+			public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+
+				final Type[] args = Type.getArgumentTypes(descriptor);
+
+				// 方法名相同并且参数个数相同
+				if (!name.equals(method.getName())|| !sameType(args, method.getParameterTypes())) {
+					return super.visitMethod(access, name, descriptor, signature,exceptions);
+				}
+
+				MethodVisitor v = super.visitMethod(access, name, descriptor, signature, exceptions);
+
+				return new MethodVisitor(Opcodes.ASM6, v) {
+					/**
+					 * 获取 MethodParameters 参数
+					 */
+					@Override
+					public void visitParameter(String name, int access) {
+						methodParametersNames.add(name);
+						super.visitParameter(name, access);
+					}
+				};
+			}
+		};
+
+		cr.accept(classVisitor,ClassReader.SKIP_FRAMES);
+
+		return methodParametersNames;
+	}
+
+
 	    public static void main(String[] args) throws SecurityException,
-	            NoSuchMethodException {
+				NoSuchMethodException, IOException {
 //	        String[] s = getMethodParamNames(ASMUtil.class.getMethod(
 //	                "getMethodParamNames", Method.class));
 //	        System.out.println(Arrays.toString(s));
@@ -111,8 +156,9 @@ public class ASMUtil {
 //	        System.out.println(Arrays.toString(s));
 			String[] s;
 	        Method mmm=ITest.class.getMethod("Get",String.class,Double.class);
-	        s=getMethodParamNames(mmm);
+			s=getMethodParamNames(mmm);
 			System.out.println(Arrays.toString(s));
+			System.out.println(getInterfaceMethodParamNames(mmm));
 	    }
 
 	    public void ttt(Model haha) {
