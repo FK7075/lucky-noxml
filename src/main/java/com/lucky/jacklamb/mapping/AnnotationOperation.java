@@ -429,7 +429,7 @@ public class AnnotationOperation {
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
 			} else if(parameters[i].isAnnotationPresent(CallResult.class)||parameters[i].isAnnotationPresent(CallBody.class)){
-				args[i]=httpClientParam(controllerClass,method,parameters[i],model,parameters,paramNames,Mapping.getParamName(parameters[i],paramNames[i]));
+				args[i]=httpClientParam(controllerClass,method,pojoMap,parameters[i],model,parameters,paramNames,Mapping.getParamName(parameters[i],paramNames[i]));
 			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
 			} else if (ServletRequest.class.isAssignableFrom(parameters[i].getType())) {
@@ -577,6 +577,8 @@ public class AnnotationOperation {
 	 * 得到调用远程接口的返回结果
 	 * @param controllerClass 当前Controller的Class对象
 	 * @param method 当前Controller方法
+	 * @param pojoMap pojoMap
+	 * @param currParameter 当前参数的Parameter
 	 * @param model Model对象
 	 * @param parameters Parameter数组
 	 * @param paramNames 方法参数名数组
@@ -584,10 +586,12 @@ public class AnnotationOperation {
 	 * @return
 	 * @throws IOException
 	 */
-	private Object httpClientParam(Class<?> controllerClass,Method method,Parameter currParameter,Model model,Parameter[] parameters,String[] paramNames,String noParam) throws IOException {
+	private Object httpClientParam(Class<?> controllerClass,Method method,Map<String, Object> pojoMap,
+								   Parameter currParameter,Model model,Parameter[] parameters,
+								   String[] paramNames,String noParam) throws IOException, IllegalAccessException {
 		String callResult;
 		String api=getCallApi(controllerClass,method);
-		Map<String,String> requestMap=getHttpClientRequestParam(method,model,parameters,paramNames,noParam);
+		Map<String,String> requestMap=getHttpClientRequestParam(method,model,pojoMap,parameters,paramNames,noParam);
 		callResult=HttpClientCall.call(api,model.getRequestMethod(),requestMap);
 		return callRestAndBody(currParameter,callResult);
 	}
@@ -643,7 +647,7 @@ public class AnnotationOperation {
 		if(currParameter.isAnnotationPresent(CallBody.class)){
 			return new LSON().toObject(currParameter.getType(),strResult);
 		}
-		return strResult;
+		return JavaConversion.strToBasic(strResult,currParameter.getType());
 	}
 
 	/**
@@ -655,21 +659,43 @@ public class AnnotationOperation {
 	 * @param noParam 接受响应结果的参数名
 	 * @return
 	 */
-	private Map<String,String> getHttpClientRequestParam(Method method,Model model,Parameter[] parameters,String[] paramNames,String noParam){
+	private Map<String,String> getHttpClientRequestParam(Method method,Model model,Map<String, Object> pojoMap,
+														 Parameter[] parameters,String[] paramNames,String noParam) throws IllegalAccessException {
 		Map<String,String> map = new HashMap<>();
+
+		//获得参数列表中基本类型的接口参数
 		String currParam;
+		Class<?> paramClass;
 		for(int i=0;i<parameters.length;i++){
-			currParam=Mapping.getParamName(parameters[i],paramNames[i]);
-			if(!noParam.equals(currParam)){
-				if(model.restMapContainsKey(currParam)){
-					map.put(currParam,model.getRestParam(currParam));
-				}else if(model.parameterMapContainsKey(currParam)){
-					map.put(currParam,model.getRequestPrarmeter(currParam));
-				}else if(getRequeatParamDefValue(parameters[i])!=null){
-					map.put(currParam,getRequeatParamDefValue(parameters[i]));
-				}else{
-					throw new NotFindRequestException("缺少请求参数：" + currParam+",错误位置："+method);
+			paramClass=parameters[i].getType();
+			if(paramClass.getClassLoader()==null&&!Collection.class.isAssignableFrom(paramClass)&&!Map.class.isAssignableFrom(paramClass)){
+				currParam=Mapping.getParamName(parameters[i],paramNames[i]);
+				if(!noParam.equals(currParam)){
+					if(model.restMapContainsKey(currParam)){
+						map.put(currParam,model.getRestParam(currParam));
+					}else if(model.parameterMapContainsKey(currParam)){
+						map.put(currParam,model.getRequestPrarmeter(currParam));
+					}else if(getRequeatParamDefValue(parameters[i])!=null){
+						map.put(currParam,getRequeatParamDefValue(parameters[i]));
+					}else{
+						throw new NotFindRequestException("缺少请求参数：" + currParam+",错误位置："+method);
+					}
 				}
+			}
+		}
+
+		//获取参数列表中pojo类型中的接口参数
+		Object pojo;
+		Field[] fields;
+		Object fieldValue;
+		for(String key:pojoMap.keySet()){
+			pojo=pojoMap.get(key);
+			fields=pojo.getClass().getDeclaredFields();
+			for(Field field:fields){
+				field.setAccessible(true);
+				fieldValue=field.get(pojo);
+				if(fieldValue!=null)
+					map.put(field.getName(),fieldValue.toString());
 			}
 		}
 		return map;

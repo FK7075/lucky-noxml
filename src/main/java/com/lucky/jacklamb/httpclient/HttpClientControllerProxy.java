@@ -52,7 +52,7 @@ public class HttpClientControllerProxy {
                 }
 
                 //获取远程接口的地址
-                String callControllerApi=Api.getApi(callControllerClass.getAnnotation(CallController.class).callapi());
+                String callControllerApi=Api.getApi(callControllerClass.getAnnotation(CallController.class).value());
                 MappingDetails md=Mapping.getMappingDetails(method);
                 String methodApi=Api.getApi(md.value);
                 if(!callControllerApi.endsWith("/"))

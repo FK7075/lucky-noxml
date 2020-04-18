@@ -146,11 +146,12 @@ public class ControllerIOC extends ComponentFactory{
 				addControllerMap(beanID, PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "controller", beanID, controller));
 			}else if(controller.isAnnotationPresent(CallController.class)){
 				CallController cont = controller.getAnnotation(CallController.class);
-				if (!"".equals(cont.value())) {
-					beanID=cont.value();
+				if (!"".equals(cont.id())) {
+					beanID=cont.id();
 				}else{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
+				log.info("@CallController  =>   {id="+beanID+" ,class="+controller+"}");
 				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
 			}
 
