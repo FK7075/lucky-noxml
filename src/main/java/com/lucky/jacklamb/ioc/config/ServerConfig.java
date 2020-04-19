@@ -253,8 +253,8 @@ public class ServerConfig implements LuckyConfig  {
 		if(serverConfig==null) {
 			serverConfig=new ServerConfig();
 			serverConfig.setPort(8080);
-			serverConfig.setClosePort(8005);
-			serverConfig.setShutdown("SHUTDOWN");
+			serverConfig.setClosePort(0);
+			serverConfig.setShutdown(null);
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");
 			projectPath=System.getProperty("user.dir").replaceAll("\\\\", "/")+"/";

@@ -34,8 +34,10 @@ public class LuckyApplication {
 		tomcat.setPort(serverCfg.getPort());
 		tomcat.setBaseDir(serverCfg.getBaseDir());
 		tomcat.getHost().setAutoDeploy(serverCfg.isAutoDeploy());
-		tomcat.getServer().setPort(serverCfg.getClosePort());
-		tomcat.getServer().setShutdown(serverCfg.getShutdown());
+		if(serverCfg.getClosePort()!=0)
+			tomcat.getServer().setPort(serverCfg.getClosePort());
+		if(serverCfg.getShutdown()!=null)
+			tomcat.getServer().setShutdown(serverCfg.getShutdown());
         StandardContext context =new StandardContext();
         context.setSessionTimeout(serverCfg.getSessionTimeout());
         context.setPath(serverCfg.getContextPath());
@@ -45,10 +47,10 @@ public class LuckyApplication {
 		if(!doc.isDirectory()){
 			if(!serverCfg.isAutoCreateWebapp()){
 				System.err.println(LuckyUtils.time()+"  ###");
-				System.err.println(LuckyUtils.time()+"  LUVKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
+				System.err.println(LuckyUtils.time()+"  LUCKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
 				System.err.println(LuckyUtils.time()+"  [ ==WARNING==]：找不到Tomcat的DocBase文件夹：{ "+docBase+"}");
 				System.err.println(LuckyUtils.time()+"  [ == PROMPT== ]：请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
-				System.err.println(LuckyUtils.time()+"  LUVKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
+				System.err.println(LuckyUtils.time()+"  LUCKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
 				System.err.println(LuckyUtils.time()+"  ###");
 				try {
 					Thread.sleep(1000);
