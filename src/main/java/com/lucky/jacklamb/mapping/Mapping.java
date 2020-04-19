@@ -88,6 +88,8 @@ public class Mapping {
     public static String getParamName(Parameter param, String paramName) {
         if (param.isAnnotationPresent(RequestParam.class)) {
             RequestParam rp = param.getAnnotation(RequestParam.class);
+            if("".equals(rp.value()))
+                return paramName;
             return rp.value();
         } else {
             return paramName;

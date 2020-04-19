@@ -1,7 +1,9 @@
 package com.lucky.jacklamb.httpclient;
 
 import com.lucky.jacklamb.annotation.ioc.CallController;
+import com.lucky.jacklamb.annotation.mvc.CallApi;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.exception.NotFoundCallUrlException;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
 import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.mapping.MappingDetails;
@@ -54,15 +56,28 @@ public class HttpClientControllerProxy {
 
                 }
 
+
                 //获取远程接口的地址
+                MappingDetails md;
+                String apiUrl;
                 String callControllerApi=Api.getApi(callControllerClass.getAnnotation(CallController.class).value());
-                MappingDetails md=Mapping.getMappingDetails(method);
-                String methodApi=Api.getApi(md.value);
-                if(!callControllerApi.endsWith("/"))
-                    callControllerApi+="/";
-                if(methodApi.startsWith("/"))
-                    methodApi=methodApi.substring(1);
-                String apiUrl=callControllerApi+methodApi;
+                if(Mapping.isMappingMethod(method)){
+                    md=Mapping.getMappingDetails(method);
+                    String methodApi=Api.getApi(md.value);
+                    if(methodApi.startsWith("${")||methodApi.startsWith("http://")||methodApi.startsWith("https://")){
+                        apiUrl=Api.getApi(methodApi);
+                    }else{
+                        if(!callControllerApi.endsWith("/"))
+                            callControllerApi+="/";
+                        if(methodApi.startsWith("/"))
+                            methodApi=methodApi.substring(1);
+                        apiUrl=callControllerApi+methodApi;
+                    }
+                }else{
+                    throw new NotFoundCallUrlException("");
+                }
+
+
 
                 //调用远程接口
                 String callResult=HttpClientCall.call(apiUrl,md.method[0],callapiMap);

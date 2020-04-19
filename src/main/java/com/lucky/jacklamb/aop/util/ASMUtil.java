@@ -128,41 +128,13 @@ public class ASMUtil {
 		return methodParametersNames;
 	}
 
-
 	    public static void main(String[] args) throws SecurityException,
 				NoSuchMethodException, IOException {
-//	        String[] s = getMethodParamNames(ASMUtil.class.getMethod(
-//	                "getMethodParamNames", Method.class));
-//	        System.out.println(Arrays.toString(s));
-//
-//	        s = getMethodParamNames(ASMUtil.class.getDeclaredMethod("sameType",
-//	                Type[].class, Class[].class));
-//	        System.out.println(Arrays.toString(s));
-//
-//	        int i=0;
-//	        for(String str:s) {
-//
-//	        	System.out.println(str);
-//	        	System.out.println(s[i]);
-//	        	i++;
-//
-//	        }
-//
-//	        s=getMethodParamNames(CacheExpandPoint.class.getDeclaredMethod("cacheResult", Chain.class));
-//	        System.out.println(Arrays.toString(s));
-//	        // 对String，Object，thread等jdk自带类型不起作用
-//
-//	        s=getMethodParamNames(ASMUtil.class.getDeclaredMethod("ttt",Model.class));
-//	        System.out.println(Arrays.toString(s));
 			String[] s;
 	        Method mmm=ITest.class.getMethod("Get",String.class,Double.class);
 			s=getMethodParamNames(mmm);
 			System.out.println(Arrays.toString(s));
 			System.out.println(getInterfaceMethodParamNames(mmm));
-	    }
-
-	    public void ttt(Model haha) {
-	    	
 	    }
 
 }

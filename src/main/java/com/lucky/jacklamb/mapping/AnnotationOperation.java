@@ -411,7 +411,6 @@ public class AnnotationOperation {
 		sb.append(uploadMap.isEmpty()?"":"@Upload-Params       : "+uploadMap.toString()+"\n");
 
 
-
 		//得到类型为MultipartFile的参数
 		Map<String, MultipartFile> multiUploadMap = moreUploadMutipar(model, method);
 		sb.append(multiUploadMap.isEmpty()?"":"MultipartFile-Params : "+multiUploadMap.toString()+"\n");
@@ -420,73 +419,94 @@ public class AnnotationOperation {
 		Map<String, Object> pojoMap = pojoParam(model, method, uploadMap);
 		sb.append(pojoMap.isEmpty()?"":"Pojo-Params          : "+pojoMap.toString()+"\n").append("URL-Params           : \n");
 		String paramName;
+
+		//ControllerMethod参数赋值
 		for (int i = 0; i < parameters.length; i++) {
 			paramName=Mapping.getParamName(parameters[i],paramNames[i]);
 			if (uploadMap.containsKey(paramName)
 					&& String.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = uploadMap.get(paramName);
+				continue;
 			} else if (multiUploadMap.containsKey(paramName)
 					&& MultipartFile.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = multiUploadMap.get(paramName);
+				continue;
 			} else if(parameters[i].isAnnotationPresent(CallResult.class)||parameters[i].isAnnotationPresent(CallBody.class)){
 				args[i]=httpClientParam(controllerClass,method,pojoMap,parameters[i],model,parameters,paramNames,Mapping.getParamName(parameters[i],paramNames[i]));
+				continue;
 			}else if (pojoMap.containsKey(paramName)) {
 				args[i] = pojoMap.get(paramName);
+				continue;
 			} else if (ServletRequest.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model.getRequest();
+				continue;
 			} else if (HttpSession.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model.getSession();
+				continue;
 			} else if (ServletResponse.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model.getResponse();
+				continue;
 			}else if (ServletContext.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model.getServletContext();
+				continue;
 			} else if (Model.class.isAssignableFrom(parameters[i].getType())) {
 				args[i] = model;
+				continue;
 			}else if(parameters[i].isAnnotationPresent(RequestBody.class)){
 				args[i]=new LSON().toObject(parameters[i].getType(),model.getRequestPrarmeter(paramNames[i]));
+				continue;
 			} else if (parameters[i].isAnnotationPresent(RestParam.class)) {
 				RestParam rp = parameters[i].getAnnotation(RestParam.class);
 				String restKey = rp.value();
 				if (!model.restMapContainsKey(restKey))
-					throw new NotFindRequestException("缺少请求参数：" + restKey+",错误位置："+method);
+					throw new NotFindRequestException("缺少Rest请求参数：#{" + restKey+"} ,错误位置："+method);
 				args[i] = JavaConversion.strToBasic(model.getRestMap().get(restKey), parameters[i].getType());
 				sb.append("[Rest-Java] "+restKey+"="+args[i]+"\n");
+				continue;
 			} else if(!parameters[i].isAnnotationPresent(CallResult.class)&&!parameters[i].isAnnotationPresent(CallBody.class)) {
 				String defparam = getRequeatParamDefValue(parameters[i]);
 				if (parameters[i].getType().isArray() && parameters[i].getType().getClassLoader() == null) {
 					if (model.parameterMapContainsKey(paramName)) {
 						args[i] = model.getArray(paramName, parameters[i].getType());
 						sb.append("[URL-Array] "+paramName+"="+args[i]+"\n");
+						continue;
 					} else {
 						if (defparam == null)
 							throw new NotFindRequestException("缺少请求参数：" + paramName+",错误位置："+method);
 						if("null".equals(defparam)) {
 							args[i]=null;
-							sb.append("[Default-Array] "+paramName+"="+args[i]+"\n");							
+							sb.append("[Default-Array] "+paramName+"="+args[i]+"\n");
+							continue;
 						}else {
 							args[i] = ApplicationBeans.createApplicationBeans().getBean(defparam);
 							sb.append("[Default-Array] "+paramName+"="+args[i]+"\n");
+							continue;
 						}
 					}
 				} else {
 					if (model.parameterMapContainsKey(paramName)) {
 						args[i] = model.getArray(paramName, parameters[i].getType())[0];
 						sb.append("[URL-Java] "+paramName+"="+args[i]+"\n");
+						continue;
 					} else if (model.restMapContainsKey(paramName)) {
 						args[i] = model.getRestParam(paramName, parameters[i].getType());
 						sb.append("[Rest-Java] "+paramName+"="+args[i]+"\n");
+						continue;
 					} else {
 						if (defparam == null)
 							throw new NotFindRequestException("缺少请求参数：" + paramName+",错误位置："+method);
 						if("null".equals(defparam)) {
 							args[i]=null;
 							sb.append("[Default-Java] "+paramName+"="+args[i]+"\n");
+							continue;
 						}else if (parameters[i].getType().getClassLoader() == null) {
 							args[i] = JavaConversion.strToBasic(defparam, parameters[i].getType());
 							sb.append("[Default-Java] "+paramName+"="+args[i]+"\n");
+							continue;
 						} else {
 							args[i] = ApplicationBeans.createApplicationBeans().getBean(defparam);
 							sb.append("[Default-Java] "+paramName+"="+args[i]);
+							continue;
 						}
 					}
 				}
