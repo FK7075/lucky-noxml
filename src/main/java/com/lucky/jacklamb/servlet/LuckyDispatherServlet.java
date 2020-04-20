@@ -115,7 +115,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 					return;
 				}
 				else {
-					log.info("CURR-REQUEST ==> ["+requestMethod+"] "+uri);
+					log.info("CURR-REQUEST ==> ["+requestMethod+"] "+path);
 					model.setRestMap(controllerAndMethod.getRestKV());
 					urlParsMap.setCross(req,resp, controllerAndMethod);
 					method = controllerAndMethod.getMethod(); 
