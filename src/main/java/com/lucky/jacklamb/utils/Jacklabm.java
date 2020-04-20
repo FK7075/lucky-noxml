@@ -402,15 +402,43 @@ public class Jacklabm {
 				"————————————————————————————————————————————————————————————————\r\n";
 		return d;
 	}
-	
+
+
+	private static int getMaxLength(String os,String java,String lucky){
+		int os_l=os.length();
+		int java_l=java.length();
+		int lucky_l=lucky.length();
+		int temp=os_l>java_l?os_l:java_l;
+		return temp>lucky_l?temp:lucky_l;
+	}
+
+	private static String getSameStr(String str,int maxLength){
+		if(str.length()==maxLength){
+			return str;
+		}
+		int poor=maxLength-str.length();
+		for(int i=0;i<poor;i++)
+			str+=" ";
+		return str;
+	}
+
 	public static String str13() {
-		String d="\n        .____                   __           \r\n" + 
-				"        |    |    __ __   ____ |  | _____.__.\r\n" + 
-				"        |    |   |  |  \\_/ ___\\|  |/ <   |  |\r\n" + 
-				"        |    |___|  |  /\\  \\___|    < \\___  |\r\n" + 
-				"        |_______ \\____/  \\___  >__|_ \\/ ____|\r\n" + 
-				"                \\/           \\/     \\/\\/    \n\n\t::  "+System.getProperty("os.name")+"           	 ::  (v"+System.getProperty("os.version")+")\n\t::  Java                 ::  (v"+System.getProperty("java.version")+")\r\n\t" +
-				"::  Lucky NoXml          ::  (v1.0.0.RELEASE)";
+		String d="\n        .____                   __           \r\n" +
+				"        |    |    __ __   ____ |  | _____.__.\r\n" +
+				"        |    |   |  |  \\_/ ___\\|  |/ <   |  |\r\n" +
+				"        |    |___|  |  /\\  \\___|    < \\___  |\r\n" +
+				"        |_______ \\____/  \\___  >__|_ \\/ ____|\r\n" +
+				"                \\/           \\/     \\/\\/    \n";
+		String os=":: "+System.getProperty("os.name");
+		String osvsersion="           :: (v"+System.getProperty("os.version")+")";
+		String java=":: Java";
+		String javaversioin="           :: (v"+System.getProperty("java.version")+")";
+		String lucky=":: Lucky NoXml ";
+		String luckyversion="           :: (v1.0.0.RELEASE)";
+		int maxLength=getMaxLength(os,java,lucky);
+		d+="\n\t\t"+getSameStr(os,maxLength)+osvsersion;
+		d+="\n\t\t"+getSameStr(java,maxLength)+javaversioin;
+		d+="\n\t\t"+getSameStr(lucky,maxLength)+luckyversion;
 		return d;
 	}
 	
