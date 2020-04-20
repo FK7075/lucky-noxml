@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
@@ -399,7 +400,7 @@ public class AnnotationOperation {
 	 * @throws IllegalAccessException
 	 */
 	public Object[] getControllerMethodParam(Model model,Class<?> controllerClass, Method method)
-			throws IOException, ServletException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
+			throws IOException, ServletException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException {
 		//获取当前Controller方法参数列表所有的参数名
 		String[] paramNames=ASMUtil.getMethodParamNames(method);
 		Parameter[] parameters = method.getParameters();
@@ -608,7 +609,7 @@ public class AnnotationOperation {
 	 */
 	private Object httpClientParam(Class<?> controllerClass,Method method,Map<String, Object> pojoMap,
 								   Parameter currParameter,Model model,Parameter[] parameters,
-								   String[] paramNames,String noParam) throws IOException, IllegalAccessException {
+								   String[] paramNames,String noParam) throws IOException, IllegalAccessException, URISyntaxException {
 		String callResult;
 		String api=getCallApi(controllerClass,method);
 		Map<String,String> requestMap=getHttpClientRequestParam(method,model,pojoMap,parameters,paramNames,noParam);
