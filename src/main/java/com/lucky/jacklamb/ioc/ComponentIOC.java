@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.lucky.jacklamb.annotation.conversion.Conversion;
+import com.lucky.jacklamb.tcconversion.todto.ConversionProxy;
+import com.lucky.jacklamb.tcconversion.todto.LuckyConversion;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.ioc.Bean;
@@ -107,7 +110,13 @@ public class ComponentIOC extends ComponentFactory {
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
+				Object aspect;
+				if(component.isAnnotationPresent(Conversion.class)){
+					Class<? extends LuckyConversion> c=(Class<? extends LuckyConversion>)component;
+					aspect= ConversionProxy.getLuckyConversion(c);
+				}else{
+					aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
+				}
 				addAppMap(beanID, aspect);
 				log.info("@Component       =>   [id="+beanID+" class="+aspect+"]");
 			} else if (component.isAnnotationPresent(Configuration.class)) {
