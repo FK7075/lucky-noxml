@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.tcconversion.todto;
+package com.lucky.jacklamb.conversion;
 
 /**
  * Entity与Dto相互转化的泛型接口

@@ -1,5 +1,7 @@
-package com.lucky.jacklamb.annotation.conversion;
+package com.lucky.jacklamb.conversion.annotation;
 
+
+import com.lucky.jacklamb.conversion.annotation.Mapping;
 
 import java.lang.annotation.*;
 

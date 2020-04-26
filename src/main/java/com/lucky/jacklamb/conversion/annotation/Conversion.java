@@ -1,6 +1,6 @@
-package com.lucky.jacklamb.annotation.conversion;
+package com.lucky.jacklamb.conversion.annotation;
 
-import com.lucky.jacklamb.tcconversion.todto.LuckyConversion;
+import com.lucky.jacklamb.conversion.LuckyConversion;
 
 import java.lang.annotation.*;
 

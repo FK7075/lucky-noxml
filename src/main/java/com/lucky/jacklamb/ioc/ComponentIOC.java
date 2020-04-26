@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.lucky.jacklamb.annotation.conversion.Conversion;
-import com.lucky.jacklamb.tcconversion.todto.ConversionProxy;
-import com.lucky.jacklamb.tcconversion.todto.LuckyConversion;
+import com.lucky.jacklamb.conversion.annotation.Conversion;
+import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
+import com.lucky.jacklamb.conversion.LuckyConversion;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.ioc.Bean;

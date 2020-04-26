@@ -1,20 +1,20 @@
-package com.lucky.jacklamb.tcconversion.todto;
+package com.lucky.jacklamb.conversion.proxy;
 
-import com.lucky.jacklamb.annotation.conversion.Conversion;
-import com.lucky.jacklamb.annotation.conversion.Mapping;
-import com.lucky.jacklamb.annotation.conversion.Mappings;
-import com.lucky.jacklamb.utils.FieldUtils;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
+import com.lucky.jacklamb.conversion.LuckyConversion;
+import com.lucky.jacklamb.conversion.annotation.Conversion;
+import com.lucky.jacklamb.conversion.annotation.Mapping;
+import com.lucky.jacklamb.conversion.annotation.Mappings;
+import com.lucky.jacklamb.conversion.util.EntityAndDto;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 得到一个LuckyConversion接口的实现类
+ * 得到一个LuckyConversion接口的实现类JDK实现
  */
-public class ConversionProxy {
+public class EDProxy {
     /*
         一、Entity与Dto之间的转换模式：
         1.编写转换接口，该接口必须继承LuckyConversion<E,D>接口，并指定接口的泛型！
@@ -28,7 +28,7 @@ public class ConversionProxy {
         3.在执行toDto和toEntity方法时会分别做不同的代理
         4.以toDto方法的执行过程为例
             1.找出该接口上@Conversion中配置的LuckyConversion数组
-            2.根据这个数组得到一个EntityAndDao集合，EntityAndDao对象中封装的是LuckyConversion的代理对象、Dto泛型和Entity泛型
+            2.根据这个数组得到一个EntityAndDto集合，EntityAndDto对象中封装的是LuckyConversion的代理对象、Dto泛型和Entity泛型
             3.从传入的参数中获取待转换的Entity对象，并将这个对象转化为一个"全属性名"和属性值组成的Map<String,Object>
             注:原对象中每个自定义类型都会特别生成一个“全类名”=“对象值”的K-V，每个泛型为自定义类型的集合也会特别生成一个“Collection<全类名>”=“集合值”的K-V
             eg：
@@ -53,30 +53,28 @@ public class ConversionProxy {
      * @param <T>
      * @return
      */
-    public static<T extends LuckyConversion> T getLuckyConversion(Class<T> childInterfaceClass){
+    public static <T extends LuckyConversion> T getProxy(Class<T> childInterfaceClass){
         Type[] luckyConversionGenericClass=childInterfaceClass.getGenericInterfaces();
         ParameterizedType interfaceType=(ParameterizedType) luckyConversionGenericClass[0];
         Class<?> entityClass =(Class<?>) interfaceType.getActualTypeArguments()[0];
         Class<?> dtoClass =(Class<?>) interfaceType.getActualTypeArguments()[1];
         Class<? extends LuckyConversion>[] luckyConversionClasses=childInterfaceClass.getAnnotation(Conversion.class).value();
-        final Enhancer enhancer=new Enhancer();
-        enhancer.setSuperclass(childInterfaceClass);
-        MethodInterceptor interceptor=(object, method, params, methodProxy)->{
+        Class<?>[] interfaces={childInterfaceClass};
+        InvocationHandler myInvocationHandler=(proxy,method,params)->{
             String methodName=method.getName();
             if("toEntity".equals(methodName)){
                 return change(method,params[0],luckyConversionClasses,false,entityClass);
             }else if("toDto".equals(methodName)){
                 return change(method,params[0],luckyConversionClasses,true,dtoClass);
             }else {
-                return methodProxy.invokeSuper(object,params);
+                return method.invoke(proxy,params);
             }
         };
-        enhancer.setCallback(interceptor);
-        return  (T)enhancer.create();
+        return (T) Proxy.newProxyInstance(childInterfaceClass.getClassLoader(), interfaces, myInvocationHandler);
     }
 
-    public static List<EntityAndDao> getEntityAndDaoByConversion(Class<? extends LuckyConversion>[] conversionClasses){
-        List<EntityAndDao> eds=new ArrayList<>();
+    public static List<EntityAndDto> getEntityAndDtoByConversion(Class<? extends LuckyConversion>[] conversionClasses){
+        List<EntityAndDto> eds=new ArrayList<>();
         LuckyConversion luckyConversion;
         Type[] conversionGenericTypes;
         ParameterizedType interfaceType;
@@ -85,12 +83,12 @@ public class ConversionProxy {
         for(Class<? extends LuckyConversion> conversionClass:conversionClasses){
             if(conversionClass==LuckyConversion.class)
                 continue;
-            luckyConversion=ConversionProxy.getLuckyConversion(conversionClass);
+            luckyConversion=EDProxy.getProxy(conversionClass);
             conversionGenericTypes=conversionClass.getGenericInterfaces();
             interfaceType=(ParameterizedType) conversionGenericTypes[0];
             entityClass=(Class<?>) interfaceType.getActualTypeArguments()[0];
             dtoClass=(Class<?>) interfaceType.getActualTypeArguments()[1];
-            eds.add(new EntityAndDao(luckyConversion,entityClass,dtoClass));
+            eds.add(new EntityAndDto(luckyConversion,entityClass,dtoClass));
         }
         return eds;
     }
@@ -109,7 +107,7 @@ public class ConversionProxy {
      * @throws NoSuchMethodException
      */
     private static Object change(Method method, Object sourceObj, Class<? extends LuckyConversion>[] luckyConversionClasses,boolean toDto,Class<?> targetClass) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
-        List<EntityAndDao> eds=getEntityAndDaoByConversion(luckyConversionClasses);
+        List<EntityAndDto> eds=getEntityAndDtoByConversion(luckyConversionClasses);
         Constructor<?> constructor = targetClass.getConstructor();
         constructor.setAccessible(true);
         Object targetObj=constructor.newInstance();
@@ -180,7 +178,7 @@ public class ConversionProxy {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public static Object setTargetObject(Object targetObject, Map<String, Object> sourceMap,List<EntityAndDao> eds,boolean toDto, String initialName) throws IllegalAccessException, InstantiationException {
+    public static Object setTargetObject(Object targetObject, Map<String, Object> sourceMap,List<EntityAndDto> eds,boolean toDto, String initialName) throws IllegalAccessException, InstantiationException {
         Class<?> targetClass = targetObject.getClass();
         Field[] targetFields=targetClass.getDeclaredFields();
         Class<?> fieldClass;
@@ -195,7 +193,7 @@ public class ConversionProxy {
                 }
             }else if(fieldClass.getClassLoader()!=null){
                 Object fieldValue=field.getType().newInstance();
-                EntityAndDao ed=toDto?EntityAndDao.getEntityAndDtoByDaoClass(eds,field.getType()):EntityAndDao.getEntityAndDtoByEntityClass(eds,field.getType());
+                EntityAndDto ed=toDto? EntityAndDto.getEntityAndDtoByDaoClass(eds,field.getType()):EntityAndDto.getEntityAndDtoByEntityClass(eds,field.getType());
                 if(ed!=null){
                     String classKey;
                     LuckyConversion conversion=ed.getConversion();
@@ -219,11 +217,11 @@ public class ConversionProxy {
                 }
             }if(Collection.class.isAssignableFrom(field.getType())){
                 Class<?> genericClass=FieldUtils.getGenericType(field)[0];
-                EntityAndDao ed;
+                EntityAndDto ed;
                 String classKey;
                 LuckyConversion conversion;
                 if(toDto){
-                    ed=EntityAndDao.getEntityAndDtoByDaoClass(eds,genericClass);
+                    ed=EntityAndDto.getEntityAndDtoByDaoClass(eds,genericClass);
                     if(ed==null)
                         throw new RuntimeException("在@Conversion注解中找不到"+genericClass+"类相对应的LuckyConversion，无法转换属性（"+field.getType()+"）"+field.getName());
                     conversion=ed.getConversion();
@@ -237,7 +235,7 @@ public class ConversionProxy {
                             field.set(targetObject,new HashSet((List)collect));
                     }
                 }else{
-                    ed=EntityAndDao.getEntityAndDtoByEntityClass(eds,genericClass);
+                    ed=EntityAndDto.getEntityAndDtoByEntityClass(eds,genericClass);
                     conversion=ed.getConversion();
                     classKey="Collection<"+ed.getDtoClass().getName()+">";
                     if(sourceMap.containsKey(classKey)){
@@ -252,186 +250,5 @@ public class ConversionProxy {
             }
         }
         return targetObject;
-    }
-
-    public static void main(String[] args) throws IllegalAccessException {
-        ConversionProxy c=new ConversionProxy();
-        User u=new User();
-        String[] array={"w","d","r","fd"};
-        Map<String,Double> map=new HashMap<>();
-        map.put("ss",12.5);
-        map.put("cc",33.3);
-        TypeO t=new TypeO();
-        t.setTypeID(34);
-        t.setMap(map);
-        t.setTypeName("高效");
-        List<TypeO> list=new ArrayList<>();
-        list.add(t);
-        u.setId(1);
-        u.setStringList(Arrays.asList(array));
-        u.setArray(array);
-        u.setName("Jack");
-        u.setMath(22.5);
-        u.setType(t);
-        u.setType0list(list);
-        Map<String, Object> user = c.getSourceNameValueMap(u, "");
-        System.out.println(u.getClass()==User.class);
-        System.out.println(user);
-        System.out.println(user.get("Collection<"+TypeO.class.getName()+">"));
-    }
-}
-
-class EntityAndDao{
-
-    private LuckyConversion conversion;
-
-    private Class<?> entityClass;
-
-    private Class<?> dtoClass;
-
-    public EntityAndDao(LuckyConversion conversion, Class<?> entityClass, Class<?> dtoClass) {
-        this.conversion = conversion;
-        this.entityClass = entityClass;
-        this.dtoClass = dtoClass;
-    }
-
-    public LuckyConversion getConversion() {
-        return conversion;
-    }
-
-    public void setConversion(LuckyConversion conversion) {
-        this.conversion = conversion;
-    }
-
-    public Class<?> getEntityClass() {
-        return entityClass;
-    }
-
-    public void setEntityClass(Class<?> entityClass) {
-        this.entityClass = entityClass;
-    }
-
-    public Class<?> getDtoClass() {
-        return dtoClass;
-    }
-
-    public void setDtoClass(Class<?> dtoClass) {
-        this.dtoClass = dtoClass;
-    }
-
-    public static EntityAndDao getEntityAndDtoByDaoClass(List<EntityAndDao> eds,Class<?> dtoClass){
-        for(EntityAndDao ed:eds){
-            if(dtoClass==ed.getDtoClass())
-                return ed;
-        }
-        return null;
-    }
-
-    public static EntityAndDao getEntityAndDtoByEntityClass(List<EntityAndDao> eds,Class<?> entityClass){
-        for(EntityAndDao ed:eds){
-            if(ed.getEntityClass()==entityClass)
-                return ed;
-        }
-        return null;
-    }
-}
-
-
-class User{
-    private int id;
-    private String name;
-    private Double math;
-    private List<String> stringList;
-    private String[] array;
-    private List<TypeO> type0list;
-
-    public List<TypeO> getType0list() {
-        return type0list;
-    }
-
-    public void setType0list(List<TypeO> type0list) {
-        this.type0list = type0list;
-    }
-
-    public String[] getArray() {
-        return array;
-    }
-
-    public void setArray(String[] array) {
-        this.array = array;
-    }
-
-    private TypeO type;
-
-
-    public List<String> getStringList() {
-        return stringList;
-    }
-
-    public void setStringList(List<String> stringList) {
-        this.stringList = stringList;
-    }
-
-    public TypeO getType() {
-        return type;
-    }
-
-    public void setType(TypeO type) {
-        this.type = type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getMath() {
-        return math;
-    }
-
-    public void setMath(Double math) {
-        this.math = math;
-    }
-}
-
-class TypeO{
-
-    private int typeID;
-    private String typeName;
-    private Map<String,Double> map;
-
-    public Map<String, Double> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, Double> map) {
-        this.map = map;
-    }
-
-    public int getTypeID() {
-        return typeID;
-    }
-
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
     }
 }

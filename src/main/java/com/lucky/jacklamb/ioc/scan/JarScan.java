@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc.scan;
 
 import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.conversion.Conversion;
+import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.annotation.ioc.*;
 import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;

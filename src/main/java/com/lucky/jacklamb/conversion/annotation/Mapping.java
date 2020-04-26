@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.annotation.conversion;
+package com.lucky.jacklamb.conversion.annotation;
 
 import java.lang.annotation.*;
 
