@@ -333,7 +333,7 @@ public class ScanConfig implements LuckyConfig {
 			scanfig.addControllerPackSuffix("controller");
 			scanfig.addServicePackSuffix("service");
 			scanfig.addRepositoryPackSuffix("dao", "repository", "mapper");
-			scanfig.addComponentPackSuffix("component", "bean","exceptionhander");
+			scanfig.addComponentPackSuffix("component", "bean","exceptionhander","conversion");
 			scanfig.addWebSocketPackSuffix("websocket");
 			scanfig.addAspectPackSuffix("aspect","aop");
 			scanfig.addPojoPackSuffix("pojo", "entity");

@@ -110,16 +110,22 @@ public class ComponentIOC extends ComponentFactory {
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				Object aspect;
-				if(component.isAnnotationPresent(Conversion.class)){
-					Class<? extends LuckyConversion> c=(Class<? extends LuckyConversion>)component;
-					aspect= ConversionProxy.getLuckyConversion(c);
-				}else{
-					aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
-				}
+				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
 				addAppMap(beanID, aspect);
 				log.info("@Component       =>   [id="+beanID+" class="+aspect+"]");
-			} else if (component.isAnnotationPresent(Configuration.class)) {
+				continue;
+			} else if(component.isAnnotationPresent(Conversion.class)){
+				Conversion com = component.getAnnotation(Conversion.class);
+				if (!"".equals(com.id())) {
+					beanID=com.id();
+				} else {
+					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
+				}
+				Object aspect=ConversionProxy.getLuckyConversion((Class<? extends LuckyConversion>) component);
+				addAppMap(beanID, aspect);
+				log.info("@Conversion      =>   [id="+beanID+" class="+aspect+"]");
+				continue;
+			}else if (component.isAnnotationPresent(Configuration.class)) {
 				Object obj = component.newInstance();
 				Method[] methods=component.getDeclaredMethods();
 				for(Method met:methods) {
@@ -141,9 +147,9 @@ public class ComponentIOC extends ComponentFactory {
 							addAppMap(beanID, AppConfig.getAppConfig().getServerConfig());
 						}
 						log.info("@Bean            =>   [id="+beanID+" class="+invoke+"]");
-						
 					}
 				}
+				continue;
 			}else if(component.isAnnotationPresent(ExceptionHander.class)) {
 				ExceptionHander annotation = component.getAnnotation(ExceptionHander.class);
 				if (!"".equals(annotation.id())) {
@@ -154,6 +160,7 @@ public class ComponentIOC extends ComponentFactory {
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@ExceptionHander =>   [id="+beanID+" ,class="+aspect+"]");
+				continue;
 			}else if(component.isAnnotationPresent(LuckyServlet.class)
 					||component.isAnnotationPresent(LuckyFilter.class)
 					||component.isAnnotationPresent(LuckyListener.class)) {
@@ -161,6 +168,7 @@ public class ComponentIOC extends ComponentFactory {
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@Web组件                                =>   [id="+beanID+" ,class="+aspect+"]");
+				continue;
 			}else {
 				continue;
 			}

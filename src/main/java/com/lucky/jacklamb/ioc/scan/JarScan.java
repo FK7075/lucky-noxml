@@ -1,5 +1,23 @@
 package com.lucky.jacklamb.ioc.scan;
 
+import com.lucky.jacklamb.annotation.aop.Aspect;
+import com.lucky.jacklamb.annotation.conversion.Conversion;
+import com.lucky.jacklamb.annotation.ioc.*;
+import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
+import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
+import com.lucky.jacklamb.annotation.mvc.LuckyListener;
+import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
+import com.lucky.jacklamb.annotation.orm.Table;
+import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
+import com.lucky.jacklamb.aop.proxy.Point;
+import com.lucky.jacklamb.ioc.config.ApplicationConfig;
+import com.lucky.jacklamb.ioc.config.LuckyConfig;
+import com.lucky.jacklamb.rest.LSON;
+import org.apache.log4j.Logger;
+
+import javax.websocket.Endpoint;
+import javax.websocket.server.ServerApplicationConfig;
+import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,25 +26,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpoint;
-
-import com.lucky.jacklamb.annotation.ioc.*;
-import com.lucky.jacklamb.annotation.orm.Table;
-import org.apache.log4j.Logger;
-
-import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
-import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
-import com.lucky.jacklamb.annotation.mvc.LuckyListener;
-import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
-import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.proxy.Point;
-import com.lucky.jacklamb.ioc.config.ApplicationConfig;
-import com.lucky.jacklamb.ioc.config.LuckyConfig;
-import com.lucky.jacklamb.rest.LSON;
 
 public class JarScan extends Scan {
 	
@@ -114,7 +113,8 @@ public class JarScan extends Scan {
 							|| fileClass.isAnnotationPresent(ExceptionHander.class)
 							|| fileClass.isAnnotationPresent(LuckyServlet.class)
 							|| fileClass.isAnnotationPresent(LuckyFilter.class)
-							|| fileClass.isAnnotationPresent(LuckyListener.class))
+							|| fileClass.isAnnotationPresent(LuckyListener.class)
+							|| fileClass.isAnnotationPresent(Conversion.class))
 						componentClass.add(fileClass);
 					else if(fileClass.isAnnotationPresent(Table.class))
 						pojoClass.add(fileClass);

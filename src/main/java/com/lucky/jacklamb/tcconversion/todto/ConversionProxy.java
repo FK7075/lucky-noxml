@@ -3,19 +3,37 @@ package com.lucky.jacklamb.tcconversion.todto;
 import com.lucky.jacklamb.annotation.conversion.Conversion;
 import com.lucky.jacklamb.annotation.conversion.Mapping;
 import com.lucky.jacklamb.annotation.conversion.Mappings;
-import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.utils.FieldUtils;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 得到一个LuckyConversion接口的实现类
  */
-@Conversion({LuckyConversion.class})
 public class ConversionProxy {
+
+    /*
+        一、Entity与Dto之间的转换模式：
+        1.编写转换接口，该接口必须继承LuckyConversion<E,D>接口，并指定接口的泛型！
+        2.如果待转换的Entity与Dto之间的属性完全相同则不需要配置！
+        3.指定属性之间相互转换需要借助@Mappings或者@Mapping注解，设置source和target属性指定原字段与目标字段！
+        4.如果带转化的对象之中包含其他带转化对象，可以使用@Conversion注解将该对象的LuckyConversion接口实现类注入，该对象的转化交由此Conversion来转换
+
+        二、Conversion接口代理对象的获取
+        1.传入一个LuckyConversion接口的子接口的Class
+        2.方法内部会获取到该接口的父接口LuckyConversion中的两个泛型
+        3.在执行toDto和toEntity方法时会分别做不同的代理
+        4.以toDto方法的执行过程为例
+            1.找出该接口上@Conversion中配置的LuckyConversion数组
+            2.根据这个数组得到一个EntityAndDao集合，EntityAndDao对象中封装的是LuckyConversion的代理对象、Dto泛型和Entity泛型
+            3.从传入的参数中获取待转换的Entity对象，并将这个对象转化为一个"全属性名"和属性值组成的Map<String,Object>
+            [eg:name=Jack,age=24,type.name=TYPE-NAME，type.id=TYPE-ID com.lucky.Type=com.lucky.Type@a09ee92]
+
+     */
 
 
     /**
@@ -70,8 +88,10 @@ public class ConversionProxy {
      * 原对象转目标对象
      * @param method 调用的方法
      * @param sourceObj 原对象
-     * @param targetClass 目标类的Class对象
-     * @return 目标对象
+     * @param luckyConversionClasses @Conversion注解中的LuckyConversion的Class[]
+     * @param toDto 当前执行的方法是否为toDto
+     * @param targetClass 目标对象的CLass
+     * @return
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      * @throws InstantiationException
@@ -105,6 +125,13 @@ public class ConversionProxy {
     }
 
 
+    /**
+     *
+     * @param sourceObject 原对象
+     * @param initialName 初始属性名，用于递归时获取带层级的属性名
+     * @return
+     * @throws IllegalAccessException
+     */
     public static Map<String,Object> getSourceNameValueMap(Object sourceObject, String initialName) throws IllegalAccessException {
         Map<String,Object> sourceNameValueMap=new HashMap<>();
         Class<?> sourceClass=sourceObject.getClass();
@@ -123,18 +150,22 @@ public class ConversionProxy {
                 for(String key:fieldNameValueMap.keySet()){
                     sourceNameValueMap.put(key,fieldNameValueMap.get(key));
                 }
+            }else if(Collection.class.isAssignableFrom(field.getType())){
+                Class<?> genericClass=FieldUtils.getGenericType(field)[0];
+                sourceNameValueMap.put("Collection<"+genericClass.getName()+">",fieldValue);
             }
         }
         return sourceNameValueMap;
     }
 
-
     /**
      * 为目标对象设置属性
      * @param targetObject 目标对象
      * @param sourceMap 原对象的属性名与属性值所组成的Map
-     * @param initialName 属性的原始属性名
-     * @return 返回一个目标对象
+     * @param eds EntityAndDto对象集合
+     * @param toDto 当前执行的方法是否为toDto
+     * @param initialName 初始属性名，用于递归时获取带层级的属性名
+     * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
@@ -175,6 +206,38 @@ public class ConversionProxy {
                 }else{
                     field.set(targetObject,setTargetObject(fieldValue,sourceMap,eds,toDto,fieldName));
                 }
+            }if(Collection.class.isAssignableFrom(field.getType())){
+                Class<?> genericClass=FieldUtils.getGenericType(field)[0];
+                EntityAndDao ed;
+                String classKey;
+                LuckyConversion conversion;
+                if(toDto){
+                    ed=EntityAndDao.getEntityAndDtoByDaoClass(eds,genericClass);
+                    if(ed==null)
+                        throw new RuntimeException("在@Conversion注解中找不到"+genericClass+"类相对应的LuckyConversion，无法转换属性（"+field.getType()+"）"+field.getName());
+                    conversion=ed.getConversion();
+                    classKey="Collection<"+ed.getEntityClass().getName()+">";
+                    if(sourceMap.containsKey(classKey)){
+                        Collection coll=(Collection) sourceMap.get(classKey);
+                        Object collect = coll.stream().map(a -> conversion.toDto(a)).collect(Collectors.toList());
+                        if(List.class.isAssignableFrom(field.getType()))
+                            field.set(targetObject,collect);
+                        else if(Set.class.isAssignableFrom(field.getType()))
+                            field.set(targetObject,new HashSet((List)collect));
+                    }
+                }else{
+                    ed=EntityAndDao.getEntityAndDtoByEntityClass(eds,genericClass);
+                    conversion=ed.getConversion();
+                    classKey="Collection<"+ed.getDtoClass().getName()+">";
+                    if(sourceMap.containsKey(classKey)){
+                        Collection coll=(Collection) sourceMap.get(classKey);
+                        Object collect = coll.stream().map(a -> conversion.toEntity(a)).collect(Collectors.toList());
+                        if(List.class.isAssignableFrom(field.getType()))
+                            field.set(targetObject,collect);
+                        else if(Set.class.isAssignableFrom(field.getType()))
+                            field.set(targetObject,new HashSet((List)collect));
+                    }
+                }
             }
         }
         return targetObject;
@@ -191,16 +254,19 @@ public class ConversionProxy {
         t.setTypeID(34);
         t.setMap(map);
         t.setTypeName("高效");
+        List<TypeO> list=new ArrayList<>();
+        list.add(t);
         u.setId(1);
         u.setStringList(Arrays.asList(array));
         u.setArray(array);
         u.setName("Jack");
         u.setMath(22.5);
         u.setType(t);
+        u.setType0list(list);
         Map<String, Object> user = c.getSourceNameValueMap(u, "");
         System.out.println(u.getClass()==User.class);
         System.out.println(user);
-        System.out.println(user.get(TypeO.class.getName()));
+        System.out.println(user.get("Collection<"+TypeO.class.getName()+">"));
     }
 }
 
@@ -266,6 +332,15 @@ class User{
     private Double math;
     private List<String> stringList;
     private String[] array;
+    private List<TypeO> type0list;
+
+    public List<TypeO> getType0list() {
+        return type0list;
+    }
+
+    public void setType0list(List<TypeO> type0list) {
+        this.type0list = type0list;
+    }
 
     public String[] getArray() {
         return array;

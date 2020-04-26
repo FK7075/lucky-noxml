@@ -9,5 +9,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Conversion {
 
+    String id() default "";
+
     Class<? extends LuckyConversion>[] value() default LuckyConversion.class;
 }

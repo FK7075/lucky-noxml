@@ -59,7 +59,7 @@ public class LuckyUtils {
 	
 	/**
 	 * 将用','分隔的字符串截取为集合
-	 * @param 用','分隔的字符串
+	 * @param str 用','分隔的字符串
 	 * @return list集合
 	 */
 	public static List<String> strToArray(String str) {
