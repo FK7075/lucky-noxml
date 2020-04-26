@@ -58,7 +58,7 @@ public class ResponseControl {
 			{
 		if (obj != null) {
 			if(controllerAndMethod.getRest()==Rest.JSON) {
-				model.witerJson(obj);
+				model.writerJson(obj);
 				return;
 			}
 			if(controllerAndMethod.getRest()==Rest.XML) {

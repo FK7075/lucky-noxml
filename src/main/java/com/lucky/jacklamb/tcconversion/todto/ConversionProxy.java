@@ -31,8 +31,12 @@ public class ConversionProxy {
             1.找出该接口上@Conversion中配置的LuckyConversion数组
             2.根据这个数组得到一个EntityAndDao集合，EntityAndDao对象中封装的是LuckyConversion的代理对象、Dto泛型和Entity泛型
             3.从传入的参数中获取待转换的Entity对象，并将这个对象转化为一个"全属性名"和属性值组成的Map<String,Object>
+            注:原对象中每个自定义类型都会特别生成一个“全类名”=“对象值”的K-V，每个泛型为自定义类型的集合也会特别生成一个“Collection<全类名>”=“集合值”的K-V
             [eg:name=Jack,age=24,type.name=TYPE-NAME，type.id=TYPE-ID com.lucky.Type=com.lucky.Type@a09ee92]
-
+            4.检查方法上@Mapping注解或者@Mappings注解中配置的转换映射，并使用映射Value代替Map中的映射Key，以达到特殊映射的目的
+            5.通过反射创建一个空的Dto对象，遍历这个对象的所有属性，并使用属性的“全属性名”去Map中拿到该属性的值，如果属性是自定义类型，首先会检查这个类型的LuckyConversion是否已被配置
+            在@Conversion注解中，如果存在，则调用该LuckyConversion对象执行对这个entity的转换，否则创建一个空对象，继续遍历这个属性对象的所有属性
+            6.如果是泛型为定义类型集合，则去找对应的LuckyConversion，找不到则会抛出异常！
      */
 
 

@@ -290,7 +290,7 @@ public class Model {
 	 * @param pojo(数组，对象，Collection,Map)
 	 * @throws IOException
 	 */
-	public void witerJson(Object pojo){
+	public void writerJson(Object pojo){
 		LSON lson = new LSON();
 		log.debug(lson.toJsonByGson(pojo));
 		writer(lson.toFormatJsonByGson(pojo));
