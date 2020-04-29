@@ -38,7 +38,7 @@ public class AutoPackage {
 	 * @return 返回一个泛型的List集合
 	 */
 	public List<?> autoPackageToList(Class<?> c, String sql, Object... obj) {
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<>();
 		return (List<?>) autoPackageToCollection(c,list,sql,obj);
 	}
 	
@@ -51,7 +51,7 @@ public class AutoPackage {
 	 * @return 返回一个泛型的Set集合
 	 */
 	public Set<?> autoPackageToSet(Class<?> c, String sql, Object... obj) {
-		Set<Object> list = new HashSet<Object>();
+		Set<Object> list = new HashSet<>();
 		return (Set<?>) autoPackageToCollection(c,list,sql,obj);
 	}
 	

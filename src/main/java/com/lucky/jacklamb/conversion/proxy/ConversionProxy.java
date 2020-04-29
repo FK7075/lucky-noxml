@@ -14,9 +14,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 得到一个LuckyConversion接口的实现类
+ * 得到一个LuckyConversion接口的实现类Cglib实现
  */
 public class ConversionProxy {
+
     /*
         一、Entity与Dto之间的转换模式：
         1.编写转换接口，该接口必须继承LuckyConversion<E,D>接口，并指定接口的泛型！
@@ -48,6 +49,8 @@ public class ConversionProxy {
             6.如果是泛型为定义类型集合，则去找对应的LuckyConversion，找不到则会抛出异常！
      */
 
+    private  static Map<String,Object> conversionMap;
+
 
     /**
      * 得到一个LuckyConversion接口子接口的代理对象
@@ -56,6 +59,11 @@ public class ConversionProxy {
      * @return
      */
     public static<T extends LuckyConversion> T getLuckyConversion(Class<T> childInterfaceClass){
+        if(conversionMap==null)
+            conversionMap=new HashMap<>();
+        String mapKey=childInterfaceClass.getName();
+        if(conversionMap.containsKey(mapKey))
+            return (T) conversionMap.get(mapKey);
         Type[] luckyConversionGenericClass=childInterfaceClass.getGenericInterfaces();
         ParameterizedType interfaceType=(ParameterizedType) luckyConversionGenericClass[0];
         Class<?> entityClass =(Class<?>) interfaceType.getActualTypeArguments()[0];
@@ -74,7 +82,9 @@ public class ConversionProxy {
             }
         };
         enhancer.setCallback(interceptor);
-        return  (T)enhancer.create();
+        T luckyConversion=(T)enhancer.create();
+        conversionMap.put(mapKey,luckyConversion);
+        return  luckyConversion;
     }
 
     public static List<EntityAndDto> getEntityAndDtoByConversion(Class<? extends LuckyConversion>[] conversionClasses){
