@@ -1,18 +1,19 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.c3p0.SqlOperation;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.c3p0.SqlOperation;
-import com.lucky.jacklamb.utils.LuckyManager;
-
 public class DeleteKeySql {
+
+	private String dbname;
 	private SqlOperation sqlop;
 	private String databasename;
-	private List<String> delkeysql = new ArrayList<String>();
+	private List<String> delkeysql = new ArrayList<>();
 	private List<Class<?>> classlist;
 
 	public String getDatabasename() {
@@ -39,7 +40,7 @@ public class DeleteKeySql {
 			try {
 				String table = PojoManage.getTable(clazz);
 				String sql = "SHOW CREATE TABLE " + table;
-				ResultSet rs = sqlop.getResultSet(sql);
+				ResultSet rs = sqlop.getResultSet(dbname,sql);
 				List<String> keyList=new ArrayList<>();
 				if (rs != null) {
 					while (rs.next()) {
@@ -55,7 +56,7 @@ public class DeleteKeySql {
 				}
 				for (String wkey : keyList) {
 					String sqlStr = "ALTER TABLE " + table + " DROP FOREIGN KEY " + wkey;
-					sqlop.setSql(sqlStr);
+					sqlop.setSql(dbname,sqlStr);
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -68,7 +69,8 @@ public class DeleteKeySql {
 	 * 得到数据库的名字和删除数据库所有表外键的sql语句集合并封装到属性中
 	 */
 	public DeleteKeySql(String dbname,List<Class<?>> classlist) {
-		sqlop = LuckyManager.getSqlOperation(dbname);
+		sqlop = new SqlOperation();
+		this.dbname=dbname;
 		this.classlist = classlist;
 	}
 
@@ -77,7 +79,7 @@ public class DeleteKeySql {
 	 */
 	public void deleteKey1() {
 		for (String sql : this.delkeysql) {
-			sqlop.setSql(sql);
+			sqlop.setSql(dbname,sql);
 		}
 	}
 

@@ -1,49 +1,35 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import com.lucky.jacklamb.exception.AutoPackageException;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
+import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
+
+import java.lang.reflect.Field;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * JDBC相关操作类
  * @author fk-7075
  *
  */
 public class SqlOperation {
-	private Connection conn;
-	private PreparedStatement ps;
-	private SqlLog log;
-	private ResultSet rs;
-	private String dbname;
-	private boolean isOk;
-	private boolean poolMethod;
 
-	public Connection getConn() {
-		return conn;
-	}
-
-	public void setConn(Connection conn) {
-		this.conn = conn;
-	}
-	
-	public SqlOperation(String dbname) {
-		conn=C3p0Util.getConnecion(dbname);
-		this.dbname=dbname;
-		this.poolMethod=ReadIni.getDataSource(dbname).isPoolMethod();
-		log=new SqlLog(dbname);
-	}
 	/**
 	 * 实现对表的曾刪改操作
 	 * @param sql（预编译的sql语句）
 	 * @param obj（替换占位符的数组）
 	 * @return boolean
 	 */
-	public boolean setSql(String sql, Object...obj) {
+	public boolean setSql(String dbname,String sql, Object...obj) {
+		Connection conn=null;
+		PreparedStatement ps=null;
+		SqlLog log=new SqlLog(dbname);
+		boolean isOk=false;
 		try {
-			if(poolMethod)
-				conn=C3p0Util.getConnecion(dbname);
+			conn=C3p0Util.getConnecion(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -58,7 +44,7 @@ public class SqlOperation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			C3p0Util.release(rs, ps, conn);
+			C3p0Util.release(null, ps, conn);
 		}
 		return isOk;
 	}
@@ -71,10 +57,13 @@ public class SqlOperation {
 	 * 填充占位符的一个有一个数组组成的二维数组
 	 * @return
 	 */
-	public boolean setSqlBatch(String sql,Object[]... obj) {
+	public boolean setSqlBatch(String dbname,String sql,Object[]... obj) {
+		Connection conn=null;
+		PreparedStatement ps=null;
+		SqlLog log=new SqlLog(dbname);
+		boolean isOk=false;
 		try {
-			if(poolMethod)
-				conn=C3p0Util.getConnecion(dbname);
+			conn=C3p0Util.getConnecion(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if(obj==null||obj.length==0) {
@@ -93,9 +82,6 @@ public class SqlOperation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		 finally {
-			 C3p0Util.release(rs, ps, conn);
-			}
 		return isOk;
 	}
 
@@ -105,10 +91,13 @@ public class SqlOperation {
 	 * @param obj
 	 * @return
 	 */
-	public ResultSet getResultSet(String sql, Object...obj) {
+	public ResultSet getResultSet(String dbname,String sql, Object...obj) {
+		Connection conn=null;
+		PreparedStatement ps=null;
+		SqlLog log=new SqlLog(dbname);
+		ResultSet rs=null;
 		try {
-			if(poolMethod)
-				conn=C3p0Util.getConnecion(dbname);
+			conn=C3p0Util.getConnecion(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -122,12 +111,109 @@ public class SqlOperation {
 		}
 		return rs;
 	}
+
 	/**
-	 * 关闭资源
+	 *
+	 * @param dbname 数据源名称
+	 * @param c 包装类的Class对象
+	 * @param sql 预编译的sql语句
+	 * @param obj 替换占位符的数组
+	 * @param <T>
+	 * @return
 	 */
-	public void close() {
-		C3p0Util.release(rs, ps, conn);
+	public <T> List<T> autoPackageToList(String dbname,Class<T> c, String sql, Object... obj) {
+		Connection conn=null;
+		PreparedStatement ps=null;
+		SqlLog log=new SqlLog(dbname);
+		ResultSet rs=null;
+		try {
+			conn=C3p0Util.getConnecion(dbname);
+			log.isShowLog(sql, obj);
+			ps = conn.prepareStatement(sql);
+			if (obj != null) {
+				for (int i = 0; i < obj.length; i++) {
+					ps.setObject(i + 1, obj[i]);
+				}
+			}
+			rs = ps.executeQuery();
+		} catch (SQLException e) {
+			throw new RuntimeException("SQL语法错误！错误的SQL:"+sql,e);
+		}
+		List<T> collection=new ArrayList<>();
+		if(c.getClassLoader()!=null) {
+			Field[] fields = c.getDeclaredFields();
+			Object object = null;
+			try {
+				while (rs.next()) {
+					object = c.newInstance();
+					for (Field f : fields) {
+						if (f.getType().getClassLoader()!=null) {
+							Class<?> cl=f.getType();
+							Field[] fils=cl.getDeclaredFields();
+							Object onfk=cl.newInstance();
+							for (Field ff : fils) {
+								String field_tab= PojoManage.getTableField(ff);
+								if (isExistColumn(rs, field_tab)) {
+									ff.setAccessible(true);
+									ff.set(onfk, rs.getObject(field_tab));
+								}
+							}
+							f.setAccessible(true);
+							f.set(object, onfk);
+						} else {
+							String field_tab=PojoManage.getTableField(f);
+							if (isExistColumn(rs, field_tab)) {
+								f.setAccessible(true);
+								f.set(object, rs.getObject(field_tab));
+							}
+						}
+					}
+					collection.add((T) object);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql);
+			}finally {
+				C3p0Util.release(rs,ps,conn);
+			}
+		}else {
+			try {
+				while(rs.next()) {
+					collection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				C3p0Util.release(rs,ps,conn);
+			}
+		}
+		return collection;
 	}
+
+
+
+	/**
+	 * 判断结果集中是否有指定的列
+	 * @param rs 结果集对象
+	 * @param columnName  类名
+	 * @return 结果集中有指定的列则反true
+	 */
+	public boolean isExistColumn(ResultSet rs, String columnName) {
+		try {
+			ResultSetMetaData metaData = rs.getMetaData();
+			int size=metaData.getColumnCount();
+			for(int i=1;i<=size;i++) {
+				if(columnName.equalsIgnoreCase(metaData.getColumnLabel(i))) {
+					return true;
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 
 }

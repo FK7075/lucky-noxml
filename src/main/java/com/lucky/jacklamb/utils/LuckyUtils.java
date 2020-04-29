@@ -40,9 +40,9 @@ public class LuckyUtils {
 	 * @param obj 填充占位符的对象数组
 	 * @return 查询结果集
 	 */
-	public static ResultSet getResultSet(String name,String sql,Object...obj) {
-		SqlOperation sqlop=LuckyManager.getSqlOperation(name);
-		return sqlop.getResultSet(sql, obj);
+	public static ResultSet getResultSet(String dbname,String sql,Object...obj) {
+		SqlOperation sqlop=new SqlOperation();
+		return sqlop.getResultSet(dbname,sql, obj);
 	}
 	/**
 	 * 获得属性的类型去掉长度

@@ -1,14 +1,5 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.MySqlCore;
@@ -17,6 +8,14 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.StatementCoreIm
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 对所有关系型数据库操作的抽象，本抽象类聚合对StatementCore接口和GeneralObjectCore接口的所有实现，

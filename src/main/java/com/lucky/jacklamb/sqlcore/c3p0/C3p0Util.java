@@ -16,6 +16,11 @@ public class C3p0Util {
 	
 	private static List<DataSource> datalist;
 	private static Map<String,ComboPooledDataSource> dbMap;
+
+	static {
+		if(dbMap==null)
+			init();
+	}
 	
 	public static void init() {
 		dbMap=new HashMap<>();
@@ -44,8 +49,6 @@ public class C3p0Util {
 	}
 	
 	public static Connection getConnecion(String name){
-		if(dbMap==null)
-			init();
 		Connection connection;
 		ComboPooledDataSource comboPooledDataSource = null;
 		try {
@@ -66,7 +69,7 @@ public class C3p0Util {
 			if (ps != null) {
 				ps.close();
 			}
-			if (conn != null&&conn.isClosed()) {
+			if (conn != null) {
 				conn.close();
 			}
 		} catch (Exception e) {
