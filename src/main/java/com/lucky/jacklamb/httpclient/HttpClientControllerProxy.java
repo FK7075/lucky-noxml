@@ -3,6 +3,7 @@ package com.lucky.jacklamb.httpclient;
 import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.mvc.CallApi;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.NotFoundCallUrlException;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
 import com.lucky.jacklamb.mapping.Mapping;
@@ -44,7 +45,7 @@ public class HttpClientControllerProxy {
                         key = Mapping.getParamName(parameters[i],paramName.get(i));
                         callapiMap.put(key, params[i].toString());
                     }else{
-                        Field[] fields =params[i].getClass().getDeclaredFields();
+                        Field[] fields = FieldUtils.getAllFields(params[i].getClass());
                         Object fieldValue;
                         for(Field field:fields){
                             field.setAccessible(true);
@@ -74,7 +75,7 @@ public class HttpClientControllerProxy {
                         apiUrl=callControllerApi+methodApi;
                     }
                 }else{
-                    throw new NotFoundCallUrlException("");
+                    throw new NotFoundCallUrlException("该方法不是Mapping方法，无法执行代理！错误位置："+method);
                 }
 
 

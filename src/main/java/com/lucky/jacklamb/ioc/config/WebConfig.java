@@ -105,7 +105,7 @@ public class WebConfig  implements LuckyConfig  {
 	public String getApi(String name){
 		if(containsApiKey(name))
 			return callApis.get(name);
-		throw new RuntimeException("callApi中没有与\""+name+"\"相匹配的Api.");
+		throw new RuntimeException("CallApi列表中不存在与\""+name+"\"相匹配的Api地址，请检查appconfig.ini的[CallApi]节中是否配置了\""+name+"\"、以及WebConfig配置类中是否添加了与\""+name+"\"相关联的Api地址....");
 	}
 
 	public boolean containsApiKey(String name){
