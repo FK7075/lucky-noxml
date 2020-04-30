@@ -158,7 +158,7 @@ public class ConversionProxy {
     public static Map<String,Object> getSourceNameValueMap(Object sourceObject, String initialName) throws IllegalAccessException {
         Map<String,Object> sourceNameValueMap=new HashMap<>();
         Class<?> sourceClass=sourceObject.getClass();
-        Field[] fields=sourceClass.getDeclaredFields();
+        Field[] fields=FieldUtils.getAllFields(sourceClass);
         Object fieldValue;
         String fieldName;
         for(Field field:fields){
@@ -194,7 +194,7 @@ public class ConversionProxy {
      */
     public static Object setTargetObject(Object targetObject, Map<String, Object> sourceMap, List<EntityAndDto> eds, boolean toDto, String initialName) throws IllegalAccessException, InstantiationException {
         Class<?> targetClass = targetObject.getClass();
-        Field[] targetFields=targetClass.getDeclaredFields();
+        Field[] targetFields=FieldUtils.getAllFields(targetClass);
         Class<?> fieldClass;
         String fieldName;
         for(Field field:targetFields){

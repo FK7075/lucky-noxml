@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
@@ -226,9 +227,9 @@ public final class IOCContainers {
 	 */
 	public void autowReqAdnResp(Object object,Model model) throws IllegalArgumentException, IllegalAccessException {
 		Class<?> controllerClass=object.getClass();
-		if(controllerClass.getSimpleName().contains("$$EnhancerByCGLIB$$"))
+		if(controllerClass.getSuperclass()!=Object.class)
 			controllerClass=controllerClass.getSuperclass();
-		Field[] fields=controllerClass.getDeclaredFields();
+		Field[] fields=FieldUtils.getAllFields(controllerClass);
 		for(Field field:fields) {
 			field.setAccessible(true);
 			if(Model.class.isAssignableFrom(field.getType())) {
@@ -260,9 +261,9 @@ public final class IOCContainers {
 		for(Entry<String,Object> entry:componentMap.entrySet()) {
 			Object component=entry.getValue();
 			Class<?> componentClass=component.getClass();
-			if(componentClass.getSimpleName().contains("$$EnhancerByCGLIB$$"))
+			if(componentClass.getSuperclass()!=Object.class)
 				componentClass=componentClass.getSuperclass();
-			Field[] fields=componentClass.getDeclaredFields();
+			Field[] fields= FieldUtils.getAllFields(componentClass);
 			for(Field field:fields) {
 				field.setAccessible(true);
 				Class<?> fieldClass=field.getType();

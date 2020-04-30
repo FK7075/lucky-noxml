@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
+import com.lucky.jacklamb.conversion.util.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +76,7 @@ public class FieldAndValue {
 	public void setNotNullFields(Object pojo) throws IllegalArgumentException, IllegalAccessException {
 		fieldNameAndValue = new HashMap<>();
 		Class<?> pojoClass = pojo.getClass();
-		Field[] fields = pojoClass.getDeclaredFields();
+		Field[] fields = FieldUtils.getAllFields(pojoClass);
 		Object fieldValue;
 		for (Field field : fields) {
 			field.setAccessible(true);

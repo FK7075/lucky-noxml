@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
@@ -141,7 +142,7 @@ public class SqlOperation {
 		}
 		List<T> collection=new ArrayList<>();
 		if(c.getClassLoader()!=null) {
-			Field[] fields = c.getDeclaredFields();
+			Field[] fields = FieldUtils.getAllFields(c);
 			Object object = null;
 			try {
 				while (rs.next()) {
@@ -149,7 +150,7 @@ public class SqlOperation {
 					for (Field f : fields) {
 						if (f.getType().getClassLoader()!=null) {
 							Class<?> cl=f.getType();
-							Field[] fils=cl.getDeclaredFields();
+							Field[] fils=FieldUtils.getAllFields(cl);
 							Object onfk=cl.newInstance();
 							for (Field ff : fils) {
 								String field_tab= PojoManage.getTableField(ff);
