@@ -14,42 +14,64 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SybaseCore;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
 import com.lucky.jacklamb.sqlcore.exception.DatabaseTypeUnableIdentifyException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SqlCoreFactory {
 	
 	private static Logger log=Logger.getLogger(SqlCoreFactory.class);
+
+	private static Map<String,SqlCore> sqlCoreMap;
+
+	static {
+		if(sqlCoreMap==null)
+			sqlCoreMap=new HashMap<>();
+	}
 	
 	public static SqlCore createSqlCore() {
 		return createSqlCore("defaultDB");
 	}
 	
 	public static SqlCore createSqlCore(String dbname) {
+		if(sqlCoreMap.containsKey(dbname))
+			return sqlCoreMap.get(dbname);
 		String dbType=PojoManage.getDatabaseType(dbname);
 		StringBuilder sb=new StringBuilder();
+		SqlCore sqlCore;
 		switch (dbType) {
 		case "MySql":
 			log.debug(sb.append("Create SqlCore ==> dbType=MySql,dbname=").append(dbname).append(",class=").append(MySqlCore.class).toString());
-			return new MySqlCore(dbname);
+			sqlCore= new MySqlCore(dbname);
+			break;
 		case "DB2":
 			log.debug(sb.append("Create SqlCore ==> dbType=DB2,dbname=").append(dbname).append(",class=").append(DB2Core.class).toString());
-			return new DB2Core(dbname);
+			sqlCore= new DB2Core(dbname);
+			break;
 		case "Oracle":
 			log.debug(sb.append("Create SqlCore ==> dbType=Oracle,dbname=").append(dbname).append(",class=").append(OracleCore.class).toString());
-			return new OracleCore(dbname);
+			sqlCore= new OracleCore(dbname);
+			break;
 		case "PostgreSql":
 			log.debug(sb.append("Create SqlCore ==> dbType=PostgreSql,dbname=").append(dbname).append(",class=").append(PostgreSqlCore.class).toString());
-			return new PostgreSqlCore(dbname);
+			sqlCore= new PostgreSqlCore(dbname);
+			break;
 		case "Sql Server":
 			log.debug(sb.append("Create SqlCore ==> dbType=Sql Server,dbname=").append(dbname).append(",class=").append(SqlServerCore.class).toString());
-			return new SqlServerCore(dbname);
+			sqlCore= new SqlServerCore(dbname);
+			break;
 		case "Sybase":
 			log.debug(sb.append("Create SqlCore ==> dbType=Sybase,dbname=").append(dbname).append(",class=").append(SybaseCore.class).toString());
-			return new SybaseCore(dbname);
+			sqlCore= new SybaseCore(dbname);
+			break;
 		case "Access":
 			log.debug(sb.append("Create SqlCore ==> dbType=Access,dbname=").append(dbname).append(",class=").append(AccessSqlCore.class).toString());
-			return new AccessSqlCore(dbname);
+			sqlCore= new AccessSqlCore(dbname);
+			break;
 		default:
 			log.error("无法识别的数据库类型，Lucky目前还不支持该类型的数据库驱动 : "+ReadIni.getDataSource(dbname).getDriverClass());
 			throw new DatabaseTypeUnableIdentifyException("Lucky目前还不支持该类型的数据库，我们正在拼命更新中！DatabaseType:"+ReadIni.getDataSource(dbname).getDriverClass());
 		}
+		sqlCoreMap.put(dbname,sqlCore);
+		return sqlCore;
 	}
 }

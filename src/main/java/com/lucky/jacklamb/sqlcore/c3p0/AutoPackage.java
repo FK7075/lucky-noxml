@@ -16,10 +16,13 @@ public class AutoPackage {
 	private String dbname;
 
 	private SqlOperation sqlOperation;
+
 	
 	public AutoPackage(String dbname) {
 		this.dbname=dbname;
 		sqlOperation=new SqlOperation();
+		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
+		C3p0Util.release(null,null,C3p0Util.getConnecion(dbname));
 	}
 
 	/**
