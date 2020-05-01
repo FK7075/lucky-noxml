@@ -275,7 +275,7 @@ public class HttpClientCall {
      */
     private static HttpRequestBase getHttpRequestObject(String url,Map<String,String> params,RequestMethod requestMethod) throws IOException, URISyntaxException {
         if(requestMethod==RequestMethod.GET){
-            log.info("HttpClient Request => [-GET-] "+url);
+            log.debug("HttpClient Request => [-GET-] "+url);
             if(isNullParam(params)){
                 return new HttpGet(url);
             }else{
@@ -285,7 +285,7 @@ public class HttpClientCall {
                 return new HttpGet(builder.build());
             }
         }else if(requestMethod==RequestMethod.DELETE){
-            log.info("HttpClient Request => [-DELETE-] "+url);
+            log.debug("HttpClient Request => [-DELETE-] "+url);
             if(isNullParam(params)){
                 return new HttpDelete(url);
             }else{
@@ -295,7 +295,7 @@ public class HttpClientCall {
                 return new HttpDelete(builder.build());
             }
         }else if(requestMethod==RequestMethod.POST){
-            log.info("HttpClient Request => [-POST-] "+url);
+            log.debug("HttpClient Request => [-POST-] "+url);
             if(isNullParam(params)){
                 return new HttpPost(url);
             }else{
@@ -304,7 +304,7 @@ public class HttpClientCall {
                 return post;
             }
         }else if(requestMethod==RequestMethod.PUT){
-            log.info("HttpClient Request => [-PUT-] "+url);
+            log.debug("HttpClient Request => [-PUT-] "+url);
             if(isNullParam(params)){
                 return new HttpPut(url);
             }else{

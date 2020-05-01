@@ -227,8 +227,6 @@ public final class IOCContainers {
 	 */
 	public void autowReqAdnResp(Object object,Model model) throws IllegalArgumentException, IllegalAccessException {
 		Class<?> controllerClass=object.getClass();
-		if(controllerClass.getSuperclass()!=Object.class)
-			controllerClass=controllerClass.getSuperclass();
 		Field[] fields=FieldUtils.getAllFields(controllerClass);
 		for(Field field:fields) {
 			field.setAccessible(true);
@@ -261,8 +259,6 @@ public final class IOCContainers {
 		for(Entry<String,Object> entry:componentMap.entrySet()) {
 			Object component=entry.getValue();
 			Class<?> componentClass=component.getClass();
-			if(componentClass.getSuperclass()!=Object.class)
-				componentClass=componentClass.getSuperclass();
 			Field[] fields= FieldUtils.getAllFields(componentClass);
 			for(Field field:fields) {
 				field.setAccessible(true);

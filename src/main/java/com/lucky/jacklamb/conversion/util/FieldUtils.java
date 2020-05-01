@@ -3,11 +3,11 @@ package com.lucky.jacklamb.conversion.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
 public class FieldUtils {
+
 
     public static boolean isArray(Field field){
         return field.getType().isArray();
@@ -57,19 +57,18 @@ public class FieldUtils {
         return true;
     }
 
-    public static Field[] getAllFields(Class<?> clzz){
-        Field[] clzzFields=clzz.getDeclaredFields();
-        Class<?> superClass=clzz.getSuperclass();
-        if(superClass==Object.class)
-            return clzzFields;
-        Field[] superClassFields=superClass.getDeclaredFields();
-        int clzzFieldLength=clzzFields.length;
-        int superClassFieldLength=superClassFields.length;
-        Field[] allFiels=new Field[clzzFieldLength+superClassFieldLength];
-        for(int i=0;i<clzzFieldLength;i++)
-            allFiels[i]=clzzFields[i];
-        for(int i=0;i<superClassFieldLength;i++)
-            allFiels[clzzFieldLength+i]=superClassFields[i];
+    public static Field[] getAllFields(Class<?> clzz) {
+        if (clzz.getSuperclass() == Object.class)
+            return clzz.getDeclaredFields();
+        Field[] clzzFields = clzz.getDeclaredFields();
+        Field[] superFields = getAllFields(clzz.getSuperclass());
+        int clzzFieldLength = clzzFields.length;
+        int superClassFieldLength = superFields.length;
+        Field[] allFiels = new Field[clzzFieldLength + superClassFieldLength];
+        for (int i = 0; i < clzzFieldLength; i++)
+            allFiels[i] = clzzFields[i];
+        for (int i = 0; i < superClassFieldLength; i++)
+            allFiels[clzzFieldLength + i] = superFields[i];
         return allFiels;
     }
 
