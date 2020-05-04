@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
+import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.orm.Id;
@@ -201,13 +202,13 @@ public class LuckyMapperProxy {
 	private SqlAndArray noSqlTo(Object obj,String noSql) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		SqlAndArray sqlArr=new SqlAndArray();
 		List<String> fieldname = LuckyUtils.getSqlField(noSql);
+		Map<String,Object> fieldNameValueMap= ConversionProxy.getSourceNameValueMap(obj,"");
+		//得到预编译的SQL语句
 		noSql = LuckyUtils.getSqlStatem(noSql);
 		List<Object> fields = new ArrayList<>();
-		for (String field : fieldname) {
-			Field fie = obj.getClass().getDeclaredField(field);
-			fie.setAccessible(true);
-			fields.add(fie.get(obj));
-		}
+		for(String fieldName:fieldname)
+			if (fieldNameValueMap.containsKey(fieldName))
+				fields.add(fieldNameValueMap.get(fieldName));
 		sqlArr.setSql(noSql);
 		sqlArr.setArray(fields.toArray());
 		return sqlArr;
