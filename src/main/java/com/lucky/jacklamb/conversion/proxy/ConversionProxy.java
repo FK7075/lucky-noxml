@@ -126,25 +126,23 @@ public class ConversionProxy {
         constructor.setAccessible(true);
         Object targetObj=constructor.newInstance();
         Map<String,Object> sourceFieldNameValueMap =getSourceNameValueMap(sourceObj,"");
-        Map<String,String> changeMap=new HashMap<>();
-        if(method.isAnnotationPresent(Mapping.class)){
-            Mapping mapping=method.getAnnotation(Mapping.class);
-            changeMap.put(mapping.source(),mapping.target());
-        }else if(method.isAnnotationPresent(Mappings.class)){
-            Mapping[] mappings=method.getAnnotation(Mappings.class).value();
-            for(Mapping mapping:mappings)
-                changeMap.put(mapping.source(),mapping.target());
-        }
-
-        Set<String> keySet=changeMap.keySet();
-        for(String key:keySet){
-            if(sourceFieldNameValueMap.containsKey(key)){
-                Object changeValue=sourceFieldNameValueMap.get(key);
-                sourceFieldNameValueMap.remove(key);
-                sourceFieldNameValueMap.put(changeMap.get(key),changeValue);
+        Mapping[] maps = getMappings(method);
+        for(Mapping map:maps){
+            if(sourceFieldNameValueMap.containsKey(map.source())){
+                Object changeValue=sourceFieldNameValueMap.get(map.target());
+                sourceFieldNameValueMap.remove(map.source());
+                sourceFieldNameValueMap.put(map.target(),changeValue);
             }
         }
         return setTargetObject(targetObj,sourceFieldNameValueMap,eds,toDto,"");
+    }
+
+    private static Mapping[] getMappings(Method method){
+        if(method.isAnnotationPresent(Mapping.class))
+            return new Mapping[]{method.getAnnotation(Mapping.class)};
+        if(method.isAnnotationPresent(Mappings.class))
+            return method.getAnnotation(Mappings.class).value();
+        return new Mapping[]{};
     }
 
 

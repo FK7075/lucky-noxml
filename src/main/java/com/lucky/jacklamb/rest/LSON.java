@@ -83,7 +83,7 @@ public class LSON {
 	 * @return
 	 */
 	public <T> T toObject(Class<T> objectClass, String jsonStr) {
-		gson=new Gson();
+		gson=gsonBuilder.create();
 		return gson.fromJson(jsonStr,objectClass);
 	}
 
@@ -95,7 +95,7 @@ public class LSON {
 	 * @return
 	 */
 	public Object toObject(TypeToken typeToken,String jsonStr){
-		gson=new Gson();
+		gson=gsonBuilder.create();
 		return gson.fromJson(jsonStr,typeToken.getType());
 	}
 
