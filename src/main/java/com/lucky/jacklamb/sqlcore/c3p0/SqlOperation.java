@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
+import com.lucky.jacklamb.annotation.orm.NoColumn;
+import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
@@ -148,11 +150,15 @@ public class SqlOperation {
 				while (rs.next()) {
 					object = c.newInstance();
 					for (Field f : fields) {
+						if(f.isAnnotationPresent(NoPackage.class))
+							continue;
 						if (f.getType().getClassLoader()!=null) {
 							Class<?> cl=f.getType();
 							Field[] fils=FieldUtils.getAllFields(cl);
 							Object onfk=cl.newInstance();
 							for (Field ff : fils) {
+								if(ff.isAnnotationPresent(NoPackage.class))
+									continue;
 								String field_tab= PojoManage.getTableField(ff);
 								if (isExistColumn(rs, field_tab)) {
 									ff.setAccessible(true);

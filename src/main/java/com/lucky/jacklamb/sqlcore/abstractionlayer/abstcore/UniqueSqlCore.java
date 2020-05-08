@@ -27,14 +27,14 @@ public interface UniqueSqlCore {
 	 * 逆向工程生成JavaBean,需要在配置文件中配置classpath(src)的绝对路径和所在包的路径
 	 * @param tables 指定需要生成JavaBean的表名
 	 */
-	void createJavaBean(String... tables);
+	void createJavaBeanByTable(String... tables);
 	
 	/**
 	 * 逆向工程生成JavaBean,需要在配置文件中配置所在包的路径
 	 * @param srcPath classpath(src)的绝对路径
 	 * @param tables 指定需要生成JavaBean的表名
 	 */
-	void createJavaBean(String srcPath, String... tables);
+	void createJavaBeanSrc(String srcPath, String... tables);
 	
 	/**
 	 * 启动自动建表机制建表，需要在配置文件中配置需要建表的实体类的包路径

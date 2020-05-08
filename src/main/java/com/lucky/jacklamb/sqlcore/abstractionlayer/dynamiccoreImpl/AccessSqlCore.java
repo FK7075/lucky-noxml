@@ -25,13 +25,13 @@ public final class AccessSqlCore extends SqlCore {
 	}
 
 	@Override
-	public void createJavaBean(String... tables) {
+	public void createJavaBeanByTable(String... tables) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void createJavaBean(String srcPath, String... tables) {
+	public void createJavaBeanSrc(String srcPath, String... tables) {
 		// TODO Auto-generated method stub
 
 	}

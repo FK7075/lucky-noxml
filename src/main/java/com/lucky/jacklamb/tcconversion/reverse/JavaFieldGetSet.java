@@ -64,11 +64,12 @@ public class JavaFieldGetSet {
 	 * @return 对应表的java源代码
 	 */
 	public static GetJavaSrc getOneJavaSrc(TableStructure ts,String name){
+		DataSource data=ReadIni.getDataSource(name);
 		GetJavaSrc javasrc=new GetJavaSrc();
-		List<JavaFieldGetSet> list=new ArrayList<JavaFieldGetSet>();
+		List<JavaFieldGetSet> list=new ArrayList<>();
 		javasrc.setClassName(ts.getTableName());
-		javasrc.setPack("package "+data.getCaeateTable()+";");
-		javasrc.setImpor("import java.util.Date;\nimport java.sql.*;\nimport java.util.*;\nimport com.lucky.annotation.Id;\nimport com.lucky.annotation.Key;");
+		javasrc.setPack("package "+data.getReversePack()+";");
+		javasrc.setImpor("import java.util.Date;\nimport java.sql.*;\nimport java.util.*;\nimport com.lucky.jacklamb.annotation.orm.Id;\nimport com.lucky.jacklamb.annotation.orm.Key;");
 		javasrc.setToString(ts.getToString());
 		javasrc.setConstructor(ts.getConstructor());
 		javasrc.setParameterConstructor(ts.getParameterConstructor());
@@ -97,7 +98,7 @@ public class JavaFieldGetSet {
 	 */
 	public static List<GetJavaSrc> getAssignJavaSrc(String name,String...tables){
 		List<GetJavaSrc> javasrclist=new ArrayList<GetJavaSrc>();
-		List<TableStructure> list=TableStructure.getAssignTableStructure(tables);
+		List<TableStructure> list=TableStructure.getAssignTableStructure(name,tables);
 		for (TableStructure tableStructure : list) {
 			GetJavaSrc java=JavaFieldGetSet.getOneJavaSrc(tableStructure,name);
 			javasrclist.add(java);
@@ -111,7 +112,7 @@ public class JavaFieldGetSet {
 	 */
 	public static List<GetJavaSrc> getMoreJavaSrc(String name){
 		List<GetJavaSrc> javasrclist=new ArrayList<GetJavaSrc>();
-		List<TableStructure> list=TableStructure.getMoreTableStructure(new Tables(dbname));
+		List<TableStructure> list=TableStructure.getMoreTableStructure(dbname,new Tables(dbname));
 		for (TableStructure tableStructure : list) {
 			GetJavaSrc java=JavaFieldGetSet.getOneJavaSrc(tableStructure,name);
 			javasrclist.add(java);

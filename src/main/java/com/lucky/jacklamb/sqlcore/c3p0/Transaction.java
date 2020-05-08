@@ -1,7 +1,7 @@
  package com.lucky.jacklamb.sqlcore.c3p0;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+ import java.sql.Connection;
+ import java.sql.SQLException;
 /**
  * Lucky的事务处理类
  * @author fk-7075
@@ -15,6 +15,7 @@ public class Transaction {
 	public void setConn(Connection conn) {
 		this.conn = conn;
 	}
+
 	
 	//提交事务
 	public void commit() {

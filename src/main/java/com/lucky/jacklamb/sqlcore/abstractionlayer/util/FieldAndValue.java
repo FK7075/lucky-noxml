@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
+import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -79,6 +80,8 @@ public class FieldAndValue {
 		Field[] fields = FieldUtils.getAllFields(pojoClass);
 		Object fieldValue;
 		for (Field field : fields) {
+			if(field.isAnnotationPresent(NoColumn.class))
+				continue;
 			field.setAccessible(true);
 			fieldValue = field.get(pojo);
 			if (fieldValue != null)

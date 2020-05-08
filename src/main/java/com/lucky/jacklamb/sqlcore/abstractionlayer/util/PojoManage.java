@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.lucky.jacklamb.annotation.orm.Column;
-import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.annotation.orm.Key;
-import com.lucky.jacklamb.annotation.orm.Table;
+import com.lucky.jacklamb.annotation.orm.*;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.exception.NotFindFlieException;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
@@ -87,7 +84,9 @@ public class PojoManage {
 			if("".equals(key.value()))
 				return field.getName().toLowerCase();
 			return key.value().toLowerCase();
-		}else {
+		}else if(field.isAnnotationPresent(NoColumn.class)){
+			return "";
+		}else{
 			return field.getName().toLowerCase();
 		}
 	}

@@ -120,7 +120,7 @@ public class TableStructure {
 	 * @param tables 表名
 	 * @return
 	 */
-	public static List<TableStructure> getAssignTableStructure(String...tables){
+	public static List<TableStructure> getAssignTableStructure(String dbname,String...tables){
 		List<TableStructure> list=new ArrayList<TableStructure>();
 		for (String tablename : tables) {
 			TableStructure table=new TableStructure(dbname,tablename);
@@ -133,7 +133,7 @@ public class TableStructure {
 	 * @param tables Tables对象
 	 * @return 
 	 */
-	public static List<TableStructure> getMoreTableStructure(Tables tables){
+	public static List<TableStructure> getMoreTableStructure(String dbname,Tables tables){
 		List<TableStructure> list=new ArrayList<TableStructure>();
 		for (String t_name : tables.getTablenames()) {
 			TableStructure table=new TableStructure(dbname,t_name);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 
@@ -34,7 +35,8 @@ public class QFilter {
 		addFields =new ArrayList<>();
 		Field[] fields= FieldUtils.getAllFields(pojoClass);
 		for(Field field:fields) {
-			this.allFields.add(PojoManage.getTableField(field));
+			if(!field.isAnnotationPresent(NoColumn.class))
+				this.allFields.add(PojoManage.getTableField(field));
 		}
 	}
 

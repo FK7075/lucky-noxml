@@ -38,13 +38,13 @@ public final class MySqlCore extends SqlCore {
 	}
 
 	@Override
-	public void createJavaBean(String... tables) {
+	public void createJavaBeanByTable(String... tables) {
 		log.debug("Run ==> createJavaBean([String...]"+Arrays.toString(tables)+")");
 		tableToJava.b_generateJavaSrc(tables);
 	}
 
 	@Override
-	public void createJavaBean(String srcPath, String... tables) {
+	public void createJavaBeanSrc(String srcPath, String... tables) {
 		log.debug("Run ==> createJavaBean([String]"+srcPath+",[String...]"+Arrays.toString(tables)+")");
 		tableToJava.a_generateJavaSrc(srcPath, tables);
 		
