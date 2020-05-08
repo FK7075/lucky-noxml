@@ -88,7 +88,7 @@ public class ServiceIOC extends ComponentFactory{
 					beanID=LuckyUtils.TableToClass1(service.getSimpleName());
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "service", beanID, service);
 				addServiceMap(beanID, aspect);
-				log.info("@Service         =>   [id="+beanID+" class="+aspect+"]");
+				log.info("@Service : [id="+beanID+" class="+aspect+"]");
 			}
 		}
 	}

@@ -18,7 +18,7 @@ public class LuckyServerApplicationConfig implements ServerApplicationConfig {
 	public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> scan) {
 		for(Class<?> clzz:scan) {
 			if(clzz.isAnnotationPresent(ServerEndpoint.class)) {
-				log.info("@WebSocket  => [mapping="+clzz.getAnnotation(ServerEndpoint.class).value()+" class="+clzz+"]");
+				log.info("@WebSocket : [mapping="+clzz.getAnnotation(ServerEndpoint.class).value()+" class="+clzz+"]");
 			}
 		}
 		return scan;

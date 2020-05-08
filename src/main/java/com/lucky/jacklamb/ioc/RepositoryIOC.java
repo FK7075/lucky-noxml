@@ -147,7 +147,7 @@ public class RepositoryIOC extends ComponentFactory {
 					beanID=LuckyUtils.TableToClass1(repository.getSimpleName());
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "repository", beanID, repository);
 				addRepositoryMap(beanID, aspect);
-				log.info("@Repository      =>   [id="+beanID+" class="+aspect+"]");
+				log.info("@Repository : [id="+beanID+" class="+aspect+"]");
 				
 			} else if (repository.isAnnotationPresent(Mapper.class)) {
 				if (first) {
@@ -156,7 +156,7 @@ public class RepositoryIOC extends ComponentFactory {
 						SqlCore sqlCore=SqlCoreFactory.createSqlCore(data.getName());
 						beanID="lucky#$jacklamb#$&58314@SqlCore-"+data.getName();
 						addRepositoryMap(beanID, sqlCore);
-						log.info("@Repository      =>   [type=SqlCore id="+beanID+" class="+sqlCore+"]");
+						log.info("@Repository : [type=SqlCore id="+beanID+" class="+sqlCore+"]");
 					}
 					first = false;
 				}
@@ -166,12 +166,12 @@ public class RepositoryIOC extends ComponentFactory {
 				if (!"".equals(mapper.id())) {
 					Object mapper2 = currSqlCore.getMapper(repository);
 					addMapperMap(mapper.id(), mapper2);
-					log.info("@Mapper          =>   [type=Mapper id="+mapper.id()+" class="+mapper2.getClass()+"]");
+					log.info("@Mapper : [type=Mapper id="+mapper.id()+" class="+mapper2.getClass()+"]");
 				}else {
 					beanID = LuckyUtils.TableToClass1(repository.getSimpleName());
 					Object mapper2 = currSqlCore.getMapper(repository);
 					addMapperMap(beanID, mapper2);
-					log.info("@Mapper          =>   [type=Mapper id="+beanID+" class="+mapper2.getClass()+"]");
+					log.info("@Mapper : [type=Mapper id="+beanID+" class="+mapper2.getClass()+"]");
 				}
 			}
 		}
