@@ -88,7 +88,7 @@ public abstract class Scan {
 	public void init() {
 		configuration=AppConfig.getAppConfig();
 		if(configuration.getScanConfig().getScanMode()==com.lucky.jacklamb.enums.Scan.AUTO_SCAN) {
-			log.info(LuckyUtils.time()+"   LUCKY-SCAN-MODE => AUTO_SCAN");
+			log.info("LUCKY-SCAN-MODE        => AUTO_SCAN");
 			autoScan();
 		}else {
 			suffixScan();
@@ -110,15 +110,14 @@ public abstract class Scan {
 	 */
 	public void  suffixScan() {
 		ScanConfig scanConfig = configuration.getScanConfig();
-		StringBuilder sb=new StringBuilder(LuckyUtils.time()+"   LUCKY-SCAN-MODE => SUFFIX_SCAN\n");
-		sb.append(LuckyUtils.time()+"   [controller-pack-suffix ] "+scanConfig.getControllerPackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [service-pack-suffix    ] "+scanConfig.getServicePackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [repository-pack-suffix ] "+scanConfig.getRepositoryPackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [component-pack-suffix  ] "+scanConfig.getComponentPackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [aspect-pack-suffix     ] "+scanConfig.getAspectPackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [websocket-pack-suffix  ] "+scanConfig.getWebSocketPackSuffix()+"\n")
-		.append(LuckyUtils.time()+"   [pojo-pack-suffix       ] "+scanConfig.getPojoPackSuffix());
-		log.info(sb.toString());
+		log.info("LUCKY-SCAN-MODE =>   SUFFIX_SCAN");
+		log.info("CONTROLLER-PACK-SUFFIX : "+scanConfig.getControllerPackSuffix());
+		log.info("SERVICE-PACK-SUFFIX    : "+scanConfig.getServicePackSuffix());
+		log.info("REPOSITORY-PACK-SUFFIX : "+scanConfig.getRepositoryPackSuffix());
+		log.info("COMPONENT-PACK-SUFFIX  : "+scanConfig.getComponentPackSuffix());
+		log.info("ASPECT-PACK-SUFFIX     : "+scanConfig.getAspectPackSuffix());
+		log.info("WEBSOCKET-PACK-SUFFIX  : "+scanConfig.getWebSocketPackSuffix());
+		log.info("POJO-PACK-SUFFIX       : "+scanConfig.getPojoPackSuffix());
 		controllerClass=loadComponent(scanConfig.getControllerPackSuffix());
 		serviceClass=loadComponent(scanConfig.getServicePackSuffix());
 		repositoryClass=loadComponent(scanConfig.getRepositoryPackSuffix());

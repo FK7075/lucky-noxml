@@ -43,7 +43,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			mapping=new String[sm.getRequestMapping().size()];
 			mapping=sm.getRequestMapping().toArray(mapping);
 			servlet.addMapping(mapping);
-			log.info("@Servlet    => [name="+sm.getServletName()+" mapping="+Arrays.toString(mapping)+" class="+sm.getServlet()+"]");
+			log.info("@Servlet : [name="+sm.getServletName()+" mapping="+Arrays.toString(mapping)+" class="+sm.getServlet()+"]");
 		}
 		
 		for(FilterMapping fm:serverCfg.getFilterlist()) {
@@ -51,24 +51,21 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			mapping=new String[fm.getRequestMapping().size()];
 			mapping=fm.getRequestMapping().toArray(mapping);
 			filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true,mapping);
-			log.info("@Filter     => [name="+fm.getFilterName()+" mapping="+Arrays.toString(mapping)+" class="+ fm.getFilter()+"]");
+			log.info("@Filter : [name="+fm.getFilterName()+" mapping="+Arrays.toString(mapping)+" class="+ fm.getFilter()+"]");
 		}
 		
 		for(EventListener l:serverCfg.getListeners()) {
 			ctx.addListener(l);
-			log.info("@Listener   => [class="+l+"]");
+			log.info("@Listener : [class="+l+"]");
 		}
 		long end= System.currentTimeMillis();
-		StringBuilder sb=new StringBuilder();
-		sb.append(LuckyUtils.time()+"  Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min\n")
-				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Port    : "+serverCfg.getClosePort()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-Shutdown-Command : "+serverCfg.getShutdown()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-BaseDir          : "+serverCfg.getBaseDir()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-DocBase          : "+serverCfg.getDocBase()+"\n")
-				.append(LuckyUtils.time()+"  Tomcat-ContextPath      : \""+serverCfg.getContextPath()+"\"\n")
-				.append(LuckyUtils.time()+"  Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
-		log.info(sb.toString());
-
+		log.info("Tomcat-SessionTimeOut   : " +serverCfg.getSessionTimeout()+"min");
+		log.info("Tomcat-Shutdown-Port    : " +serverCfg.getClosePort());
+		log.info("Tomcat-Shutdown-Command : " +serverCfg.getShutdown());
+		log.info("Tomcat-BaseDir          : " +serverCfg.getBaseDir());
+		log.info("Tomcat-DocBase          : " +serverCfg.getDocBase());
+		log.info("Tomcat-ContextPath      : \"" +serverCfg.getContextPath()+"\"");
+		log.info("Tomcat-Start [http-nio-"+serverCfg.getPort()+"],"+"Tomcat启动成功！用时"+(end-start)+"ms!");
 	}
 
 }

@@ -212,7 +212,7 @@ public class ControllerIOC extends ComponentFactory{
 					ip=come.getIps().isEmpty()?"":" , IP: "+come.getIps().toString();
 					ips=come.getIpSection().length==0?"":" , IP段: "+Arrays.toString(come.getIpSection());
 					rest=" , Rest: "+come.getRest().toString();
-					log.info("@RequestMapping  =>   {"+"URL: ["+ url_c +url_m+"] , RequestMethod: "+uRLAndRequestMethod.getMethods() +ip+ips+rest+" , Method: "+method+"}");
+					log.info("@Mapping : {"+"URL: ["+ url_c +url_m+"] , RequestMethod: "+uRLAndRequestMethod.getMethods() +ip+ips+rest+" , Method: "+method+"}");
 				} else {
 					continue;
 				}
