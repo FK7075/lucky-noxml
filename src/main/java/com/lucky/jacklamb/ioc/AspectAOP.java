@@ -145,7 +145,7 @@ public class AspectAOP {
 					constructor.setAccessible(true);
 					pointRun = new PointRun((Point) constructor.newInstance());
 					addAspectMap(name, pointRun);
-					log.info("@Aspect : [location=Around id=" + name + " class=" + pointRun + "]");
+					log.info("@Aspect \"[location=Around id=" + name + " class=" + pointRun + "]\"");
 				} else {
 					Method[] enhanceMethods = aspect.getDeclaredMethods();
 					for (Method method : enhanceMethods) {
@@ -161,8 +161,8 @@ public class AspectAOP {
 							constructor.setAccessible(true);
 							pointRun = new PointRun(constructor.newInstance(), method);
 							addAspectMap(Aspectid, pointRun);
-							log.info("@Aspect : [location=Before id=" + Aspectid + " class=" + pointRun
-									+ "]");
+							log.info("@Aspect \"[location=Before id=" + Aspectid + " class=" + pointRun
+									+ "]\"");
 						} else if (method.isAnnotationPresent(After.class)) {
 							after = method.getAnnotation(After.class);
 							if ("".equals(after.value())) {
@@ -174,8 +174,8 @@ public class AspectAOP {
 							constructor.setAccessible(true);
 							pointRun = new PointRun(constructor.newInstance(), method);
 							addAspectMap(Aspectid, pointRun);
-							log.info("@Aspect : [location=After id=" + Aspectid + " class=" + pointRun
-									+ "]");
+							log.info("@Aspect \"[location=After id=" + Aspectid + " class=" + pointRun
+									+ "]\"");
 						} else {
 							continue;
 						}

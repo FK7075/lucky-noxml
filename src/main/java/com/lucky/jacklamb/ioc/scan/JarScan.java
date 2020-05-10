@@ -167,7 +167,7 @@ public class JarScan extends Scan {
 							info=new StringBuilder();
 							method.setAccessible(true);
 							config=method.invoke(fileClass.newInstance());
-							info.append("@").append(config.getClass().getSimpleName()).append("       =>  ").append(lson.toJson(config));
+							info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson(config)).append("\"");
 							log.info(info.toString());
 							
 						}

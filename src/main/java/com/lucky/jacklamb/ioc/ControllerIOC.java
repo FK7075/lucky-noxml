@@ -151,7 +151,7 @@ public class ControllerIOC extends ComponentFactory{
 				}else{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
-				log.info("@CallController  =>   {id="+beanID+" ,class="+controller+"}");
+				log.info("@CallController :\"{id="+beanID+" ,class="+controller+"}\"");
 				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
 			}
 
@@ -212,7 +212,7 @@ public class ControllerIOC extends ComponentFactory{
 					ip=come.getIps().isEmpty()?"":" , IP: "+come.getIps().toString();
 					ips=come.getIpSection().length==0?"":" , IP段: "+Arrays.toString(come.getIpSection());
 					rest=" , Rest: "+come.getRest().toString();
-					log.info("@Mapping : {"+"URL: ["+ url_c +url_m+"] , RequestMethod: "+uRLAndRequestMethod.getMethods() +ip+ips+rest+" , Method: "+method+"}");
+					log.info("@Mapping \"{"+"URL: ["+ url_c +url_m+"] , RequestMethod: "+uRLAndRequestMethod.getMethods() +ip+ips+rest+" , Method: "+method+"}\"");
 				} else {
 					continue;
 				}
