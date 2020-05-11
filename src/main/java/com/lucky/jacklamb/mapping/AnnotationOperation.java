@@ -515,10 +515,15 @@ public class AnnotationOperation {
 		}
 		log.debug(sb.toString());
 
-		//MD5算法加密Controller方法参数
+		//MD5算法加密Controller方法参数,以及格式校验
+		Check check;
 		MD5 md5;
         for (int i = 0; i < parameters.length; i++) {
-            if(parameters[i].isAnnotationPresent(MD5.class)){
+        	if(parameters[i].isAnnotationPresent(Check.class)){
+				check=parameters[i].getAnnotation(Check.class);
+				if(!Regular.check(args[i].toString(),check.value()))
+					throw new IllegalParameterException(args[i].toString(),check.value());
+			}else if(parameters[i].isAnnotationPresent(MD5.class)){
                 md5=parameters[i].getAnnotation(MD5.class);
                 for(int j=0;j<md5.cycle();j++){
                     args[i]= md5.capital()?DigestUtils.md5Hex(md5.salt()+args[i]).toUpperCase():DigestUtils.md5Hex(md5.salt()+args[i]);

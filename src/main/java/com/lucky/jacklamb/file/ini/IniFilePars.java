@@ -395,6 +395,9 @@ public class IniFilePars {
 		if(sectionMap.containsKey("autoCreateWebapp")){
 			server.autoCreateWebapp(Boolean.parseBoolean(sectionMap.get("autoCreateWebapp")));
 		}
+		if(sectionMap.containsKey("requestTargetAllow")){
+			server.setRequestTargetAllow(sectionMap.get("requestTargetAllow"));
+		}
 	}
 	
 	private void setScanConfig(ScanConfig scan,Map<String, String> sectionMap) {

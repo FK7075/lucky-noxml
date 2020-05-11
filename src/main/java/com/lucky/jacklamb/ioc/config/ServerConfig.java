@@ -54,6 +54,8 @@ public class ServerConfig implements LuckyConfig  {
 	private String baseDir;
 
 	private boolean autoCreateWebapp;
+
+	private String requestTargetAllow;
 	
 	private List<ServletMapping> servletlist;
 	
@@ -112,7 +114,19 @@ public class ServerConfig implements LuckyConfig  {
 	public String getBaseDir() {
 		return baseDir;
 	}
-	
+
+
+	public String getRequestTargetAllow() {
+		return requestTargetAllow;
+	}
+
+	/**
+	 * 配置Tomcat中URL可以使用的特殊字符"|{}[]"
+	 * @param requestTargetAllow
+	 */
+	public void setRequestTargetAllow(String requestTargetAllow) {
+		this.requestTargetAllow = requestTargetAllow;
+	}
 
 	/**
 	 * 设置一个Tomcat的临时文件夹(相对项目路径)

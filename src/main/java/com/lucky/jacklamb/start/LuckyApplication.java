@@ -27,7 +27,6 @@ public class LuckyApplication {
 	}
 	
 	private static void run() {
-
 		ServerConfig serverCfg=AppConfig.getAppConfig().getServerConfig();
 		long start= System.currentTimeMillis();
 		Tomcat tomcat = new Tomcat();
@@ -69,6 +68,8 @@ public class LuckyApplication {
         context.addLifecycleListener(new Tomcat.FixContextListener());
         context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
         context.addServletContainerInitializer(new LuckyServletContainerInitializer(start), null);
+		if(serverCfg.getRequestTargetAllow()!=null)
+			System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow",serverCfg.getRequestTargetAllow());
         tomcat.getHost().addChild(context);
 		try {
 			tomcat.init();
