@@ -1,7 +1,5 @@
 package com.lucky.jacklamb.annotation.mvc;
 
-import com.lucky.jacklamb.enums.Rest;
-
 import java.lang.annotation.*;
 
 /**

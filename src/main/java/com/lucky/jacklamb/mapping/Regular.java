@@ -19,14 +19,13 @@ public class Regular {
      */
     public static final String IdCard="^d{15}|d{}18$";
 
-
     /**
      * 域名
      */
     public static final String DomainName="[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?";
 
     /**
-     * InternetURL
+     * URL
      */
     public static final String URL="[a-zA-z]+://[^\\s]*";
 
