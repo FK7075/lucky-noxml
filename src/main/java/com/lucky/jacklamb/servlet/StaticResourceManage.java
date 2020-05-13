@@ -9,6 +9,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 
 public class StaticResourceManage {
@@ -94,25 +96,7 @@ public class StaticResourceManage {
 		String realPath = request.getServletContext().getRealPath(uri);
 		if(realPath!=null) {
 			File targetFile=new File(realPath);
-			if(targetFile.exists()) {
-				byte[] buffer;
-				FileInputStream fos=new FileInputStream(targetFile);
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(fos.available());
-				byte[] bytes = new byte[fos.available()];
-				int temp;
-				while ((temp = fos.read(bytes)) != -1) {
-					baos.write(bytes, 0, temp);
-					baos.flush();
-				}
-				fos.close();
-				baos.close();
-				buffer = baos.toByteArray();
-				ServletOutputStream outputStream = response.getOutputStream();
-				outputStream.write(buffer);
-				outputStream.flush();
-				outputStream.close();
-				baos.close();
-			}
+			FileCopyUtils.copyToServletOutputStream(response,targetFile);
 		}
 	}
 }

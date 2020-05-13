@@ -2,6 +2,7 @@ package com.lucky.jacklamb.servlet;
 
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.ioc.config.AppConfig;
@@ -17,6 +18,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -74,6 +76,11 @@ public class LuckyDispatherServlet extends HttpServlet {
 			String context = req.getContextPath();
 			String path = uri.replace(context, "");
 			String currIp=req.getRemoteAddr();
+			if("/favicon.ico".equals(uri)){
+				resp.setContentType("image/x-icon");
+				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/favicon.ico"));
+				return;
+			}
 			//全局资源的IP限制
 			if(!webCfg.getGlobalResourcesIpRestrict().isEmpty()&&!webCfg.getGlobalResourcesIpRestrict().contains(currIp)) {
 				model.writer(Jacklabm.exception("HTTP Status 403 Blocking Access","不合法的请求ip："+currIp,"该ip地址没有被注册，服务器拒绝响应！"));

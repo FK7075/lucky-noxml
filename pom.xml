@@ -214,6 +214,7 @@
                       <include>**/*.properties</include>
                       <include>**/*.xml</include>
                       <include>**/*.ini</include>
+                      <include>**/*.ico</include>
                     </includes>
                   </resource>
                 </resources>

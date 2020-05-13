@@ -2,6 +2,7 @@ package com.lucky.jacklamb.file.utils;
 
 import com.lucky.jacklamb.servlet.StaticResourceManage;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -246,12 +247,24 @@ public abstract class FileCopyUtils {
         return byteCount;
     }
 
-    public static void copyToServletOutputStream(HttpServletRequest req, HttpServletResponse resp,File in){
+    public static void copyToServletOutputStream(HttpServletResponse resp,File in) throws IOException {
         if(StaticResourceManage.isStaticResource(resp,in.getName())){
             if(in.exists()){
-
+                byte[] buffer=copyToByteArray(in);
+                ServletOutputStream outputStream = resp.getOutputStream();
+                outputStream.write(buffer);
+                outputStream.flush();
+                outputStream.close();
             }
         }
+    }
+
+    public static void copyToServletOutputStream(HttpServletResponse resp,InputStream in) throws IOException {
+        byte[] buffer=copyToByteArray(in);
+        ServletOutputStream outputStream = resp.getOutputStream();
+        outputStream.write(buffer);
+        outputStream.flush();
+        outputStream.close();
     }
 
 }
