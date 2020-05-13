@@ -35,6 +35,11 @@ public class FieldUtils {
         }
     }
 
+    /**
+     * 是否为基本类型的集合
+     * @param field
+     * @return
+     */
     public static boolean isBasicCollection(Field field){
         Class<?>[] genericClasses=getGenericType(field);
         if(genericClasses==null||genericClasses.length!=1)
@@ -43,6 +48,11 @@ public class FieldUtils {
         return generic.getClassLoader()==null;
     }
 
+    /**
+     * 是否为基本数据类型(JDK类型，以及泛型为基本类型的JDK泛型类)
+     * @param field
+     * @return
+     */
     public static boolean isBasicSimpleType(Field field){
         Class<?> fieldClass=field.getType();
         if(fieldClass.getClassLoader()!=null)

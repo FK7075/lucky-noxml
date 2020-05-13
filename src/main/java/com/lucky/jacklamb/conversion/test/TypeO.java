@@ -31,4 +31,14 @@ public class TypeO {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TypeO{");
+        sb.append("typeID=").append(typeID);
+        sb.append(", typeName='").append(typeName).append('\'');
+        sb.append(", map=").append(map);
+        sb.append('}');
+        return sb.toString();
+    }
 }

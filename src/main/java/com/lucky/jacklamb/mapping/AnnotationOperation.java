@@ -5,6 +5,7 @@ import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.httpclient.Api;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -163,13 +164,7 @@ public class AnnotationOperation {
 				file.mkdirs();
 			}
 			FileOutputStream fos = new FileOutputStream(serverpath + "/" + filename);
-			byte[] bty = new byte[1024];
-			int length = 0;
-			while ((length = is.read(bty)) != -1) {
-				fos.write(bty, 0, length);
-			}
-			fos.close();
-			is.close();
+			FileCopyUtils.copy(is,fos);
 			return filename;
 		} else {
 			throw new FileTypeIllegalException("上传的文件格式不正确，系统无法识别！file："+disposition);
@@ -267,14 +262,7 @@ public class AnnotationOperation {
 					}
 
 					FileOutputStream out = new FileOutputStream(savePath+pathSave + "/" + filename);
-					byte buffer[] = new byte[1024];
-					int len = 0;
-					while((len=in.read(buffer))>0){
-						out.write(buffer, 0, len);
-						out.flush();
-					}
-					in.close();
-					out.close();
+					FileCopyUtils.copy(in,out);
 					item.delete();
 					resultsMap.put(field, filename);
 				}
@@ -378,14 +366,7 @@ public class AnnotationOperation {
 		model.getResponse().setCharacterEncoding("utf-8");
 		model.getResponse().setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(downName,"UTF-8"));
 		ServletOutputStream out = model.getResponse().getOutputStream();
-		byte[] bt = new byte[1024];
-		int length;
-		while ((length = fis.read(bt)) != -1) {
-			out.write(bt, 0, length);
-			out.flush();
-		}
-		out.close();
-		fis.close();
+		FileCopyUtils.copy(fis,out);
 	}
 
 	/**

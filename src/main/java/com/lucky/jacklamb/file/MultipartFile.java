@@ -116,14 +116,14 @@ public class MultipartFile {
         response.addHeader("Content-Disposition", "attachment;filename=" + filename);    
         //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型    
         response.setContentType("multipart/form-data");   
-        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());  
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
         int len = 0;
         byte[] bt = new byte[1024*6];
-        while((len = bis.read(bt)) != -1){  
-            out.write(bt,0,len);  
-            out.flush();  
-        }  
-        out.close();  
+        while((len = bis.read(bt)) != -1){
+            out.write(bt,0,len);
+            out.flush();
+        }
+        out.close();
 	}
 	
 	/**
