@@ -3,6 +3,7 @@ package com.lucky.jacklamb.ioc.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.lucky.jacklamb.enums.Logo;
 import com.lucky.jacklamb.enums.Scan;
@@ -16,11 +17,18 @@ import com.lucky.jacklamb.enums.Scan;
 public class ScanConfig implements LuckyConfig {
 	
 	private static ScanConfig scanfig;
+
+
 	
 	/**
 	 * 设置扫描模式
 	 */
 	private Scan scanMode;
+
+	/**
+	 * App节
+	 */
+	private App app;
 
 	/**
 	 * Controller组件所在包的后缀
@@ -99,6 +107,19 @@ public class ScanConfig implements LuckyConfig {
 		componentPackSuffix = new ArrayList<>();
 		pojoPackSuffix = new ArrayList<>();
 		webSocketPackSuffix = new ArrayList<>();
+		app=new App();
+	}
+
+	public App getApp() {
+		return app;
+	}
+
+	public void setApp(Map<String,String> appMap){
+		app.setAppMap(appMap);
+	}
+
+	public void addAppMap(String key,String value){
+		app.addAppMap(key, value);
 	}
 
 	public String getCustomLogo() {

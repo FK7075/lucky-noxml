@@ -1,10 +1,11 @@
 package com.lucky.jacklamb.expression;
 
-import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.mapping.Regular;
+import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class $Expression {
@@ -12,14 +13,30 @@ public abstract class $Expression {
     private static INIConfig ini=new INIConfig();
 
     public static String translation(String original){
-        List<String> key= Regular.getArrayByExpression(original.trim(),Regular.$_$).stream()
-                .map(a->a.substring(2,a.length()-1))
-                .collect(Collectors.toList());
-        Object[] value=new Object[key.size()];
-        for(int i=0;i<value.length;i++){
-            value[i]=tranWord(key.get(i));
+        if(!original.contains("${")||!original.contains("}"))
+            return original;
+        List<String> $_key= Regular.getArrayByExpression(original.trim(),Regular.$_$);
+        List<String> key=$_key.stream().map(a->a.substring(2,a.length()-1)).collect(Collectors.toList());
+        for(int i=0;i<$_key.size();i++){
+            original=original.replace($_key.get(i),tranWord(key.get(i)));
         }
-        return ExpressionEngine.removeSymbol(original,value,"${","}");
+        return original;
+    }
+
+    public static String translation(String original, Map<String,String> source){
+        if(!original.contains("${")||!original.contains("}"))
+            return original;
+        List<String> $_key= Regular.getArrayByExpression(original.trim(),Regular.$_$);
+        List<String> key=$_key.stream().map(a->a.substring(2,a.length()-1)).collect(Collectors.toList());
+        for(int i=0;i<$_key.size();i++){
+            original=original.replace($_key.get(i),source.get(key.get(i)));
+        }
+        return original;
+    }
+
+
+    public static <T> T translation(String original,Class<T> clzz){
+        return (T) JavaConversion.strToBasic(translation(original),clzz);
     }
 
     private static String tranWord(String word){

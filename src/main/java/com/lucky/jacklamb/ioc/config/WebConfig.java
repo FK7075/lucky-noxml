@@ -65,11 +65,6 @@ public class WebConfig  implements LuckyConfig  {
 	 */
 	private int socketTimeout;
 
-	/**
-	 * 配置一系列的远程服务的地址
-	 */
-	private Map<String,String> callApis;
-	
 	
 	private WebConfig() {
 		encoding="ISO-8859-1";
@@ -81,7 +76,6 @@ public class WebConfig  implements LuckyConfig  {
 		globalResourcesIpRestrict=new ArrayList<>();
 		staticResourcesIpRestrict=new ArrayList<>();
 		specifiResourcesIpRestrict=new HashMap<>();
-		callApis=new HashMap<>();
 		connectTimeout=5000;
 		connectionRequestTimeout=1000;
 		socketTimeout=5000;
@@ -92,26 +86,6 @@ public class WebConfig  implements LuckyConfig  {
 			webConfig=new WebConfig();
 		return webConfig;
 	}
-
-	public void addCallApi(String name,String api){
-		callApis.put(name,api);
-	}
-
-	public void setCallApis(Map<String,String> apis){
-		for(String key:apis.keySet())
-			callApis.put(key,apis.get(key));
-	}
-
-	public String getApi(String name){
-		if(containsApiKey(name))
-			return callApis.get(name);
-		throw new RuntimeException("CallApi列表中不存在与\""+name+"\"相匹配的Api地址，请检查appconfig.ini的[CallApi]节中是否配置了\""+name+"\"、以及WebConfig配置类中是否添加了与\""+name+"\"相关联的Api地址....");
-	}
-
-	public boolean containsApiKey(String name){
-		return callApis.containsKey(name);
-	}
-
 
 	public int getConnectTimeout() {
 		return connectTimeout;
@@ -226,7 +200,4 @@ public class WebConfig  implements LuckyConfig  {
 	public void postChangeMethod(boolean postChangeMethod) {
 		this.postChangeMethod = postChangeMethod;
 	}
-	
-	
-	
 }

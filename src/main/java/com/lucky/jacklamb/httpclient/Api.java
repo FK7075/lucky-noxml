@@ -1,6 +1,9 @@
 package com.lucky.jacklamb.httpclient;
 
+import com.lucky.jacklamb.expression.$Expression;
+import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
+import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 
 
@@ -13,10 +16,12 @@ public class Api {
      */
     public static String getApi(String annApiStr){
         if(annApiStr.startsWith("${")&&annApiStr.contains("}")){
-            WebConfig webConfig=AppConfig.getAppConfig().getWebConfig();
-            int bound=annApiStr.indexOf("}");
-            String name=annApiStr.substring(2,bound);
-            return webConfig.getApi(name)+annApiStr.substring(bound+1);
+            INIConfig ini=new INIConfig();
+            if(ini.getAppParamMap()!=null){
+                return $Expression.translation(annApiStr);
+            }
+            ScanConfig scan=AppConfig.getAppConfig().getScanConfig();
+            return $Expression.translation(annApiStr,scan.getApp().getAppMap());
         }
         return annApiStr;
     }

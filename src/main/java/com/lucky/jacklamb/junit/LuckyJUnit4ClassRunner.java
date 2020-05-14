@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -44,15 +45,12 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 				String auval = auto.value();
 				if("".equals(auval)) {
 					allFields[i].set(testObject, applicationBeans.getBean(fieldClass));//类型扫描
-				}else if(auval.startsWith("${")&&auval.endsWith("}")){
+				}else if(auval.contains("${")&&auval.contains("}")){
 					String key=auval.substring(2,auval.length()-1);
 					if(key.startsWith("S:")){
-						allFields[i].set(testObject,new INIConfig().getObject(allFields[i].getType(),key.substring(2)));
-					}else if(key.startsWith("[")){
-						String[] _arr=key.split(":");
-						allFields[i].set(testObject, new INIConfig().getValue(_arr[0].substring(1,_arr[0].length()-1),_arr[1],allFields[i].getType()));
+						allFields[i].set(testObject,new INIConfig().getObject(fieldClass,key.substring(2)));
 					}else{
-						allFields[i].set(testObject, new INIConfig().getAppParam(auval.substring(2,auval.length()-1),allFields[i].getType()));
+						allFields[i].set(testObject, $Expression.translation(auval,fieldClass));
 					}
 				}else{
 					allFields[i].set(testObject, applicationBeans.getBean(auto.value()));//id注入

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
  
@@ -19,14 +20,21 @@ public class INIConfig {
 	private  IniFilePars iniFilePars;
 	
 	private static Map<String,IniFilePars> iniMap;
+
+	public  INIConfig(IniFilePars iniFilePars){
+		this.iniFilePars=iniFilePars;
+	}
 	
 	public INIConfig(){
 		if(iniMap==null) {
 			iniMap=new HashMap<>();
 			iniFilePars=new IniFilePars();
 			iniMap.put("appconfig.ini", iniFilePars);
-		}else {
+		}else if(iniMap.containsKey("appconfig.ini")){
 			iniFilePars=iniMap.get("appconfig.ini");
+		}else{
+			iniFilePars=new IniFilePars();
+			iniMap.put("appconfig.ini", iniFilePars);
 		}
 	}
 	
@@ -67,7 +75,7 @@ public class INIConfig {
 	 * @return
 	 */
 	public  String getAppParam(String key) {
-		return getAppParamMap().get(key);
+		return $Expression.translation(getAppParamMap().get(key));
 	}
 	
 	/**
@@ -124,7 +132,7 @@ public class INIConfig {
 	 * @return
 	 */
 	public  String getValue(String section,String key) {
-		return iniFilePars.getSectionMap(section).get(key);
+		return $Expression.translation(iniFilePars.getSectionMap(section).get(key));
 	}
 	
 	/**
@@ -148,7 +156,7 @@ public class INIConfig {
 	 */
 	public  String[] getArray(String section,String key,String separator) {
 		if(iniFilePars.isHasKey(section, key)) {
-			return iniFilePars.getValue(section, key).split(separator);
+			return $Expression.translation(iniFilePars.getValue(section, key)).split(separator);
 		}
 		return null;
 	}
@@ -266,7 +274,7 @@ public class INIConfig {
 	
 	/**
 	 * 将某个节下的配置信息封装为一个特定的对象
-	 * @param clazz 对象的Class
+	 * @param clzz 对象的Class
 	 * @return
 	 */
 	public  <T> T getObject(Class<T> clzz) {
@@ -296,7 +304,7 @@ public class INIConfig {
 				fieldName=field.getName();
 				if(sectionMap.containsKey(fieldName)) {
 					field.setAccessible(true);
-					String sectionValue = sectionMap.get(fieldName);
+					String sectionValue = $Expression.translation(sectionMap.get(fieldName));
 					if(field.getType().isArray()) {
 						field.set(object, getArray(section,sectionValue,field.getType()));
 					}else if(field.getType().isAssignableFrom(List.class)) {

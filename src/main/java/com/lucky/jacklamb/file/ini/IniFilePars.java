@@ -14,6 +14,7 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServlet;
 
 import com.lucky.jacklamb.enums.Scan;
+import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
@@ -23,7 +24,7 @@ import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.*;
 public class IniFilePars {
 	
 	private static IniFilePars iniFilePars;
-	
+
 	private Map<String,Map<String,String>> iniMap;
 	
 	//当前节
@@ -194,13 +195,17 @@ public class IniFilePars {
 		if(iniMap.isEmpty())
 			return;
 		Map<String, String> sectionMap;
+		if(this.isHasSection(SECTION_APP)){
+			sectionMap=this.getSectionMap(SECTION_APP);
+			scan.setApp(sectionMap);
+		}
 		if(this.isHasSection(SECTION_SUFFIX_SCAN)) {
 			sectionMap = this.getSectionMap(SECTION_SUFFIX_SCAN);
 			scan.setScanMode(Scan.SUFFIX_SCAN);
 			setScanConfig(scan,sectionMap);
 		}
 		if(this.isHasSection(SECTION_SQL_INI)) {
-			scan.setSqlIniPath(this.getSectionMap(SECTION_SQL_INI).get("path"));
+			scan.setSqlIniPath($Expression.translation(this.getSectionMap(SECTION_SQL_INI).get("path")));
 		}
 		if(this.isHasSection(SECTION_TOMCAT)) {
 			sectionMap = this.getSectionMap(SECTION_TOMCAT);
@@ -223,11 +228,6 @@ public class IniFilePars {
 			sectionMap = this.getSectionMap(SECTION_WEB);
 			webSetting(web,sectionMap);
 		}
-
-		if(this.isHasSection(SECTION_CALLAPI)){
-			sectionMap=this.getSectionMap(SECTION_CALLAPI);
-			web.setCallApis(sectionMap);
-		}
 		if(this.isHasSection(SECTION_HANDERPREFIXANDSUFFIX)) {
 			sectionMap = this.getSectionMap(SECTION_HANDERPREFIXANDSUFFIX);
 			addPrefixAndSuffix(web,sectionMap);
@@ -246,50 +246,50 @@ public class IniFilePars {
 	private void addspecifiResourcesIpRestrict(WebConfig web,Map<String, String> sectionMap) {
 		Map<String,List<String>> resAndIpsMap=new HashMap<>();
 		for(Entry<String,String> e:sectionMap.entrySet()) {
-			resAndIpsMap.put(e.getKey(), Arrays.asList(e.getValue().trim().split(",")));
+			resAndIpsMap.put(e.getKey(), Arrays.asList($Expression.translation(e.getValue()).trim().split(",")));
 		}
 		web.setSpecifiResourcesIpRestrict(resAndIpsMap);
 	}
 	
 	private void addStaticHander(WebConfig web,Map<String, String> sectionMap) {
 		for(Entry<String,String> e:sectionMap.entrySet()) {
-			web.addStaticHander(e.getKey(), e.getValue());
+			web.addStaticHander(e.getKey(), $Expression.translation(e.getValue()));
 		}
 	}
 	
 	private void addPrefixAndSuffix(WebConfig web,Map<String, String> sectionMap) {
 		String p="",s="";
 		if(sectionMap.containsKey("prefix"))
-			p=sectionMap.get("prefix");
+			p=$Expression.translation(sectionMap.get("prefix"));
 		if(sectionMap.containsKey("suffix"))
-			s=sectionMap.get("suffix");
+			s=$Expression.translation(sectionMap.get("suffix"));
 		web.setHanderPrefixAndSuffix(p, s);
 	}
 	
 	private void webSetting(WebConfig web,Map<String, String> sectionMap) {
 		if(sectionMap.containsKey("httpclient-connectTimeout")){
-			web.setConnectTimeout(Integer.parseInt(sectionMap.get("httpclient-connectTimeout")));
+			web.setConnectTimeout($Expression.translation(sectionMap.get("httpclient-connectTimeout"),int.class));
 		}
 		if(sectionMap.containsKey("httpclient-connectionRequestTimeout")){
-			web.setConnectionRequestTimeout(Integer.parseInt(sectionMap.get("httpclient-connectionRequestTimeout")));
+			web.setConnectionRequestTimeout($Expression.translation(sectionMap.get("httpclient-connectionRequestTimeout"),int.class));
 		}
 		if(sectionMap.containsKey("httpclient-socketTimeout")){
-			web.setSocketTimeout(Integer.parseInt(sectionMap.get("httpclient-socketTimeout")));
+			web.setSocketTimeout($Expression.translation(sectionMap.get("httpclient-socketTimeout"),int.class));
 		}
 		if(sectionMap.containsKey("encoding")) {
-			web.setEncoding(sectionMap.get("encoding"));
+			web.setEncoding($Expression.translation(sectionMap.get("encoding")));
 		}
 		if(sectionMap.containsKey("openStaticResourceManage")) {
-			web.openStaticResourceManage(Boolean.parseBoolean(sectionMap.get("openStaticResourceManage")));
+			web.openStaticResourceManage($Expression.translation(sectionMap.get("openStaticResourceManage"),boolean.class));
 		}
 		if(sectionMap.containsKey("postChangeMethod")) {
-			web.postChangeMethod(Boolean.parseBoolean(sectionMap.get("postChangeMethod")));
+			web.postChangeMethod($Expression.translation(sectionMap.get("postChangeMethod"),boolean.class));
 		}
 		if(sectionMap.containsKey("globalResourcesIpRestrict")) {
-			web.addGlobalResourcesIpRestrict(sectionMap.get("globalResourcesIpRestrict").trim().split(","));
+			web.addGlobalResourcesIpRestrict($Expression.translation(sectionMap.get("globalResourcesIpRestrict")).trim().split(","));
 		}
 		if(sectionMap.containsKey("staticResourcesIpRestrict")) {
-			web.addStaticResourcesIpRestrict(sectionMap.get("staticResourcesIpRestrict").trim().split(","));
+			web.addStaticResourcesIpRestrict($Expression.translation(sectionMap.get("staticResourcesIpRestrict")).trim().split(","));
 		}
 	}
 	
@@ -351,56 +351,56 @@ public class IniFilePars {
 	
 	private void setTomcat(ServerConfig server,Map<String, String> sectionMap) {
 		if(sectionMap.containsKey("port")) {
-			server.setPort(Integer.parseInt(sectionMap.get("port")));
+			server.setPort($Expression.translation(sectionMap.get("port"),int.class));
 		}
 		if(sectionMap.containsKey("sessionTimeout")) {
-			server.setSessionTimeout(Integer.parseInt(sectionMap.get("sessionTimeout")));
+			server.setSessionTimeout($Expression.translation(sectionMap.get("sessionTimeout"),int.class));
 		}
 		if(sectionMap.containsKey("closePort")) {
-			server.setClosePort(Integer.parseInt(sectionMap.get("closePort")));
+			server.setClosePort($Expression.translation(sectionMap.get("closePort"),int.class));
 		}
 		if(sectionMap.containsKey("shutdown")) {
-			server.setShutdown(sectionMap.get("shutdown"));
+			server.setShutdown($Expression.translation(sectionMap.get("shutdown")));
 		}
 		if(sectionMap.containsKey("docBase")) {
-			server.setDocBase(sectionMap.get("docBase"));
+			server.setDocBase($Expression.translation(sectionMap.get("docBase")));
 		}
 		if(sectionMap.containsKey("ap-docBase")) {
-			server.setApDocBase(sectionMap.get("ap-docBase"));
+			server.setApDocBase($Expression.translation(sectionMap.get("ap-docBase")));
 		}
 		if(sectionMap.containsKey("baseDir")) {
-			server.setBaseDir(sectionMap.get("baseDir"));
+			server.setBaseDir($Expression.translation(sectionMap.get("baseDir")));
 		}
 		if(sectionMap.containsKey("ap-baseDir")) {
-			server.setApBaseDir(sectionMap.get("ap-baseDir"));
+			server.setApBaseDir($Expression.translation(sectionMap.get("ap-baseDir")));
 		}
 		if(sectionMap.containsKey("contextPath")) {
-			server.setContextPath(sectionMap.get("contextPath"));
+			server.setContextPath($Expression.translation(sectionMap.get("contextPath")));
 		}
 		if(sectionMap.containsKey("webapp")) {
-			server.setWebapp(sectionMap.get("webapp"));
+			server.setWebapp($Expression.translation(sectionMap.get("webapp")));
 		}
 		if(sectionMap.containsKey("url-encoding")) {
-			server.setURIEncoding(sectionMap.get("url-encoding"));
+			server.setURIEncoding($Expression.translation(sectionMap.get("url-encoding")));
 		}
 		if(sectionMap.containsKey("autoDeploy")) {
-			server.setAutoDeploy(Boolean.parseBoolean(sectionMap.get("autoDeploy")));
+			server.setAutoDeploy($Expression.translation(sectionMap.get("autoDeploy"),boolean.class));
 		}
 		if(sectionMap.containsKey("reloadable")) {
-			server.setReloadable(Boolean.parseBoolean(sectionMap.get("reloadable")));
+			server.setReloadable($Expression.translation(sectionMap.get("reloadable"),boolean.class));
 		}
 		if(sectionMap.containsKey("autoCreateWebapp")){
-			server.autoCreateWebapp(Boolean.parseBoolean(sectionMap.get("autoCreateWebapp")));
+			server.autoCreateWebapp($Expression.translation(sectionMap.get("autoCreateWebapp"),boolean.class));
 		}
 		if(sectionMap.containsKey("requestTargetAllow")){
-			server.setRequestTargetAllow(sectionMap.get("requestTargetAllow"));
+			server.setRequestTargetAllow($Expression.translation(sectionMap.get("requestTargetAllow")));
 		}
 	}
 	
 	private void setScanConfig(ScanConfig scan,Map<String, String> sectionMap) {
 		String suffixStr;
 		if(sectionMap.containsKey("controller")) {
-			suffixStr=sectionMap.get("controller");
+			suffixStr= $Expression.translation(sectionMap.get("controller"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddControllerPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -408,7 +408,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("service")) {
-			suffixStr=sectionMap.get("service");
+			suffixStr=$Expression.translation(sectionMap.get("service"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddServicePackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -416,7 +416,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("repository")) {
-			suffixStr=sectionMap.get("repository");
+			suffixStr=$Expression.translation(sectionMap.get("repository"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddRepositoryPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -424,7 +424,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("aspect")) {
-			suffixStr=sectionMap.get("aspect");
+			suffixStr=$Expression.translation(sectionMap.get("aspect"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddAspectPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -432,7 +432,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("component")) {
-			suffixStr=sectionMap.get("component");
+			suffixStr=$Expression.translation(sectionMap.get("component"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddComponentPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -440,7 +440,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("pojo")) {
-			suffixStr=sectionMap.get("pojo");
+			suffixStr=$Expression.translation(sectionMap.get("pojo"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddPojoPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
@@ -448,7 +448,7 @@ public class IniFilePars {
 			}
 		}
 		if(sectionMap.containsKey("websocket")) {
-			suffixStr=sectionMap.get("websocket");
+			suffixStr=$Expression.translation(sectionMap.get("websocket"));
 			if(suffixStr.startsWith("reset:")) {
 				scan.emptyAddWebSocketPackSuffix(suffixStr.substring(6).trim().split(","));
 			}else {
