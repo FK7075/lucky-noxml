@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lucky.jacklamb.file.ini.INIConfig;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
@@ -40,12 +41,21 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 			fieldClass=allFields[i].getType();
 			if(allFields[i].isAnnotationPresent(Autowired.class)) {
 				auto=allFields[i].getAnnotation(Autowired.class);
-				allFields[i].setAccessible(true);
-				String id=auto.value();
-				if("".equals(id)) {
-					allFields[i].set(testObject, applicationBeans.getBean(fieldClass));
-				}else {
-					allFields[i].set(testObject,applicationBeans.getBean(id));
+				String auval = auto.value();
+				if("".equals(auval)) {
+					allFields[i].set(testObject, applicationBeans.getBean(fieldClass));//类型扫描
+				}else if(auval.startsWith("${")&&auval.endsWith("}")){
+					String key=auval.substring(2,auval.length()-1);
+					if(key.startsWith("S:")){
+						allFields[i].set(testObject,new INIConfig().getObject(allFields[i].getType(),key.substring(2)));
+					}else if(key.startsWith("[")){
+						String[] _arr=key.split(":");
+						allFields[i].set(testObject, new INIConfig().getValue(_arr[0].substring(1,_arr[0].length()-1),_arr[1],allFields[i].getType()));
+					}else{
+						allFields[i].set(testObject, new INIConfig().getAppParam(auval.substring(2,auval.length()-1),allFields[i].getType()));
+					}
+				}else{
+					allFields[i].set(testObject, applicationBeans.getBean(auto.value()));//id注入
 				}
 			}else if(allFields[i].isAnnotationPresent(Value.class)) {
 				value=allFields[i].getAnnotation(Value.class);

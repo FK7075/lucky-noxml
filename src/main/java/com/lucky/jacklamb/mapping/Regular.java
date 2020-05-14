@@ -1,8 +1,16 @@
 package com.lucky.jacklamb.mapping;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Regular {
+public abstract class Regular {
+
+    /**
+     * ${}
+     */
+    public static final String $_$="\\$\\{[\\w|:|\\[|\\]|.|-]+\\}";
 
     /**
      * 邮箱
@@ -69,4 +77,18 @@ public class Regular {
         return false;
     }
 
+    public static List<String> getArrayByExpression(String original, String reg){
+        List<String> expressions=new ArrayList<>();
+        Pattern patten = Pattern.compile(reg);//编译正则表达式
+        Matcher matcher = patten.matcher(original);// 指定要匹配的字符串
+
+        while (matcher.find()) { //此处find（）每次被调用后，会偏移到下一个匹配
+            expressions.add(matcher.group());//获取当前匹配的值
+        }
+        return expressions;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getArrayByExpression("${app.test}/${[User]:name}/${[Type]:id}", $_$));
+    }
 }

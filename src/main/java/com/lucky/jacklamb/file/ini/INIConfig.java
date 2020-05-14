@@ -94,7 +94,6 @@ public class INIConfig {
 	/**
 	 * 得到App节下的某一个key对应的value值(String[]类型)
 	 * @param key key名
-	 * @param separator 分隔符
 	 * @return
 	 */
 	public  String[] getAppStringArray(String key) {
@@ -306,8 +305,8 @@ public class INIConfig {
 						field.set(object, getCollection(section,fieldName,Set.class,ArrayCast.getClassFieldGenericType(field)[0]));
 					}else if(field.getType().getClassLoader()==null) {
 						field.set(object, JavaConversion.strToBasic(sectionValue, field.getType()));
-					}else if(sectionValue.startsWith("@S:")) {
-						field.set(object,getObject(field.getType(),sectionValue.substring(3)));
+					}else if(sectionValue.startsWith("S:")) {
+						field.set(object,getObject(field.getType(),sectionValue.substring(2)));
 					}else {
 						field.set(object, Class.forName(sectionValue).newInstance());
 					}

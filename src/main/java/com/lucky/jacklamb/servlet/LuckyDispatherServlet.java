@@ -18,9 +18,10 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStreamReader;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 @MultipartConfig
 public class LuckyDispatherServlet extends HttpServlet {
@@ -76,9 +77,14 @@ public class LuckyDispatherServlet extends HttpServlet {
 			String context = req.getContextPath();
 			String path = uri.replace(context, "");
 			String currIp=req.getRemoteAddr();
-			if("/favicon.ico".equals(uri)){
+			if("/favicon1.ico".equals(uri)){
 				resp.setContentType("image/x-icon");
-				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/favicon.ico"));
+				URL icoFile = ApplicationBeans.class.getClassLoader().getResource("/favicon1.ico");
+				if(icoFile!=null){
+					FileCopyUtils.copyToServletOutputStream(resp,new File(icoFile.getPath()));
+					return;
+				}
+				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/favicon1.ico"));
 				return;
 			}
 			//全局资源的IP限制

@@ -1,9 +1,6 @@
 package com.lucky.jacklamb.file.ini;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventListener;
@@ -61,7 +58,7 @@ public class IniFilePars {
 		try {
 			if(iniMap.isEmpty())
 				pars();
-		}catch(ArrayIndexOutOfBoundsException e) {
+		}catch(ArrayIndexOutOfBoundsException | UnsupportedEncodingException e) {
 			throw new RuntimeException(iniName+"配置文件内容格式不正确",e);
 		}
 	}
@@ -73,7 +70,7 @@ public class IniFilePars {
 		try {
 			if(iniMap.isEmpty())
 				pars();
-		}catch(ArrayIndexOutOfBoundsException e) {
+		}catch(ArrayIndexOutOfBoundsException | UnsupportedEncodingException e) {
 			throw new RuntimeException(iniName+"配置文件内容格式不正确",e);
 		}
 	}
@@ -88,9 +85,9 @@ public class IniFilePars {
 		return iniInputStream!=null;
 	}
 	
-	private void pars() {
+	private void pars() throws UnsupportedEncodingException {
 		if(iniInputStream!=null) {
-			InputStreamReader isr = new InputStreamReader(iniInputStream);
+			InputStreamReader isr = new InputStreamReader(iniInputStream,"UTF-8");
 			BufferedReader read = new BufferedReader(isr);
 			Map<String,String> kvMap=new HashMap<>();
 			try {

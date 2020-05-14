@@ -3,13 +3,17 @@ package com.lucky.jacklamb.expression;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 表达式解析引擎
  * @author fk-7075
  *
  */
-public class ExpressionEngine {
+public abstract class ExpressionEngine {
 	
 	/**
 	 * 运算符优先级
@@ -78,7 +82,6 @@ public class ExpressionEngine {
 	}
 	
 	public static String calculate(String expression) {
-		
 		if("".equals(expression))
 			return "";
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
@@ -90,10 +93,10 @@ public class ExpressionEngine {
         	return expression;
         }
     }
-	
+
 	public static void main(String[] args) {
-		String str="aaa#[5 ]bbb#[4]cccc#[5]ddd";
+		String str="aaa${5 }bbb${4}cccc${5}ddd";
 		Object[] arr= {1,"we",23.5,"FKFK",445};
-		System.out.println(removeSymbol(str,arr,"#[","]"));
+		System.out.println(removeSymbol(str,arr,"${","}"));
 	}
 }

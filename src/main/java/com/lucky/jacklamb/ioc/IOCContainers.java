@@ -19,6 +19,7 @@ import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
+import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.Model;
@@ -265,9 +266,20 @@ public final class IOCContainers {
 				Class<?> fieldClass=field.getType();
 				if(field.isAnnotationPresent(Autowired.class)) {
 					auto=field.getAnnotation(Autowired.class);
-					if("".equals(auto.value())) {
+					String auval = auto.value();
+					if("".equals(auval)) {
 						field.set(component, beans.getBean(fieldClass));//类型扫描
-					}else {
+					}else if(auval.startsWith("${")&&auval.endsWith("}")){
+						String key=auval.substring(2,auval.length()-1);
+						if(key.startsWith("S:")){
+							field.set(component,new INIConfig().getObject(field.getType(),key.substring(2)));
+						}else if(key.startsWith("[")){
+							String[] _arr=key.split(":");
+							field.set(component, new INIConfig().getValue(_arr[0].substring(1,_arr[0].length()-1),_arr[1],field.getType()));
+						}else{
+							field.set(component, new INIConfig().getAppParam(auval.substring(2,auval.length()-1),field.getType()));
+						}
+					}else{
 						field.set(component, beans.getBean(auto.value()));//id注入
 					}
 				}else if(field.isAnnotationPresent(Value.class)) {

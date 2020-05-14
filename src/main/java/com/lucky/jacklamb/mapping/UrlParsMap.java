@@ -78,7 +78,7 @@ public class UrlParsMap {
 
 	/**
 	 * 根据POST请求参数"_method"的值改变请求的类型
-	 * @param requestRequest 对象
+	 * @param request 对象
 	 * @param method 当前的请求类型
 	 * @param postChange 是否有权限执行改变
 	 * @return
