@@ -1,12 +1,8 @@
 package com.lucky.jacklamb.file;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
+
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.UUID;
 
@@ -19,37 +15,22 @@ public class MultipartFile {
 	private String uploadFileName;//文件上传到服务器后的文件名
 	private String fileType;//文件类型
 	private String projectPath;//项目的路径
-	
-	/**
-	 * 
-	 * @param part
-	 * @param projectPath
-	 */
-	public MultipartFile(Part part,String projectPath){
-		try {
-			this.originalFileInpueStream=(FileInputStream) part.getInputStream();
-			String disposition=part.getHeader("Content-Disposition");
-			this.fileType=disposition.substring(disposition.lastIndexOf("."));
-			this.uploadFileName=UUID.randomUUID().toString()+getFileType();
-			this.projectPath=projectPath;
-		} catch (ClassCastException | IOException e) {
-			throw new RuntimeException("参数信息不正确，无法构造MultipartFile类实例！");
-		}
-	}
+	private String originalFileName;//原始的文件名
 	
 	/**
 	 * 
 	 * @param originalFileInpueStream
 	 * @param projectPath
-	 * @param fileType
+	 * @param filename
 	 */
-	public MultipartFile(InputStream originalFileInpueStream,String projectPath,String fileType) {
+	public MultipartFile(InputStream originalFileInpueStream,String projectPath,String filename) {
 		this.originalFileInpueStream=originalFileInpueStream;
-		this.fileType=fileType;
+		this.originalFileName=filename;
+		this.fileType=filename.substring(filename.lastIndexOf("."));;
 		this.uploadFileName=UUID.randomUUID().toString()+getFileType();
 		this.projectPath=projectPath;
 	}
-	
+
 	/**
 	 * 获得上传文件的类型
 	 * @return
@@ -65,39 +46,53 @@ public class MultipartFile {
 	public String getFileName() {
 		return uploadFileName;
 	}
+
+	/**
+	 *获得文件的原始文件名
+	 * @return
+	 */
+	public String getOriginalFileName() {
+		return originalFileName;
+	}
+
+	/**
+	 * 设置上传后的文件名
+	 * @param noSuffixFileName
+	 */
+	public void setFileName(String noSuffixFileName){
+		uploadFileName=noSuffixFileName+getFileType();
+	}
 	
 	/**
-	 * 将文件复制到服务器上的path下
+	 * 将文件复制到服务器上的DocBase中的文件夹中
 	 * @param docRelativePath 填写以服务器文件目录为根目录的相对路径
 	 * @throws IOException
 	 */
-	public void copyToDocRelativePath(String docRelativePath) throws IOException {
+	public void copyToDocBaseFolder(String docRelativePath) throws IOException {
 		File file=new File(projectPath+"/"+docRelativePath);
-		copy(file);
+		copyToFolder(file);
 	}
 	
 	/**
-	 * 将文件复制到系统的任意位置上
+	 * 将文件复制到系统的任意位置上文件夹中
 	 * @param filepath 绝对路径
 	 * @throws IOException
 	 */
-	public void copyToFilePath(String filepath) throws IOException {
+	public void copyToFolder(String filepath) throws IOException {
 		File file=new File(filepath);
-		copy(file);
+		copyToFolder(file);
 	}
 	
-	private void copy(File file) throws IOException {
-		if(!file.isDirectory())
-			file.mkdirs();
-		FileOutputStream outfile=new FileOutputStream(file.getAbsoluteFile()+"/"+uploadFileName);//projectPath+"/"+docRelativePath+"/"+uploadFileName);
-		byte[] buffer=new byte[1024*6];
-		int length=0;
-		while((length=originalFileInpueStream.read(buffer))!=-1) {
-			outfile.write(buffer, 0, length);
-			outfile.flush();
+	private void copyToFolder(File folder) throws IOException {
+		if(folder.isFile()){
+			throw new RuntimeException("文件上传错误！ Message : 错误的文件夹："+folder.getAbsolutePath());
 		}
-		outfile.close();
+		if(!folder.exists())
+			folder.mkdirs();
+		FileOutputStream outfile=new FileOutputStream(folder.getAbsoluteFile()+File.separator+uploadFileName);//projectPath+"/"+docRelativePath+"/"+uploadFileName);
+		FileCopyUtils.copy(originalFileInpueStream,outfile);
 	}
+
 	
 	/**
 	 * 文件下载
@@ -108,7 +103,6 @@ public class MultipartFile {
 	public static void downloadFile(HttpServletResponse response,File file) throws IOException {
 		if(!file.exists())
 			throw new RuntimeException("找不到文件,无法完成下载操作！"+file.getAbsolutePath());
-		@SuppressWarnings("resource")
 		InputStream bis = new BufferedInputStream(new FileInputStream(file));
         //转码，免得文件名中文乱码  
         String filename = URLEncoder.encode(file.getName(),"UTF-8");  
@@ -117,13 +111,7 @@ public class MultipartFile {
         //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型    
         response.setContentType("multipart/form-data");   
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-        int len = 0;
-        byte[] bt = new byte[1024*6];
-        while((len = bis.read(bt)) != -1){
-            out.write(bt,0,len);
-            out.flush();
-        }
-        out.close();
+        FileCopyUtils.copy(bis,out);
 	}
 	
 	/**
