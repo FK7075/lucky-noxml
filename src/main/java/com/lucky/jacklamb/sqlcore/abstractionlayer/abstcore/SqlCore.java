@@ -8,7 +8,8 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.StatementCoreIm
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -24,8 +25,8 @@ import java.util.UUID;
  *
  */
 public abstract class SqlCore implements UniqueSqlCore {
-	
-	protected Logger log =Logger.getLogger(MySqlCore.class);
+
+	protected static final Logger log= LogManager.getLogger(MySqlCore.class);
 	
 	protected String dbname;
 	

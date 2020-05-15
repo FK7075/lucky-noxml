@@ -14,7 +14,6 @@ import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.httpclient.HttpClientControllerProxy;
 import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.mapping.MappingDetails;
-import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.DeleteMapping;
@@ -29,10 +28,12 @@ import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ControllerIOC extends ComponentFactory{
-	
-	private static Logger log=Logger.getLogger(ControllerIOC.class);
+
+	private static final Logger log= LogManager.getLogger(ControllerIOC.class);
 
 	private Map<String, Object> controllerMap;
 

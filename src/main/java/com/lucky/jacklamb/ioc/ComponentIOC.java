@@ -10,7 +10,6 @@ import java.util.Map;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import com.lucky.jacklamb.conversion.LuckyConversion;
-import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.ioc.Bean;
 import com.lucky.jacklamb.annotation.ioc.Component;
@@ -28,6 +27,8 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 普通IOC组件集合
@@ -36,8 +37,8 @@ import com.lucky.jacklamb.utils.LuckyUtils;
  *
  */
 public class ComponentIOC extends ComponentFactory {
-	
-	private static Logger log=Logger.getLogger(ComponentIOC.class);
+
+	private static final Logger log= LogManager.getLogger(ComponentIOC.class);
 
 	private Map<String, Object> appMap;
 

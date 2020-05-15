@@ -5,21 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-/**
+ /**
  * 包扫描的基类
  * @author fk-7075
  *
  */
 public abstract class Scan {
-	
-	private static Logger log=Logger.getLogger(Scan.class);
+
+	 private static final Logger log= LogManager.getLogger(Scan.class);
 	
 	/**
 	 * Map<iocCode,iocType>

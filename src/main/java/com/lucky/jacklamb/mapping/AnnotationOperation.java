@@ -18,7 +18,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpSession;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class AnnotationOperation {
 
-    private static Logger log = Logger.getLogger(AnnotationOperation.class);
+    private static final Logger log= LogManager.getLogger(AnnotationOperation.class);
 
     /**
      * 基于MultipartFile的多文件上传

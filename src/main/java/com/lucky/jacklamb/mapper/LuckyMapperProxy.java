@@ -21,7 +21,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
-import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.annotation.orm.mapper.AutoId;
@@ -52,11 +51,13 @@ import com.lucky.jacklamb.utils.LuckyUtils;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("all")
 public class LuckyMapperProxy {
-	
-	private Logger log=Logger.getLogger(LuckyMapperProxy.class);
+
+	private static final Logger log= LogManager.getLogger(LuckyMapperProxy.class);
 	private SqlCore sqlCore;
 	private Map<String,String> sqlMap;
 	private Class<?> LuckyMapperGeneric;

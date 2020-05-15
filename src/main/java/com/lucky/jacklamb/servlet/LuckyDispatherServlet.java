@@ -11,7 +11,8 @@ import com.lucky.jacklamb.ioc.exception.LuckyExceptionDispose;
 import com.lucky.jacklamb.mapping.AnnotationOperation;
 import com.lucky.jacklamb.mapping.UrlParsMap;
 import com.lucky.jacklamb.utils.Jacklabm;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.annotation.MultipartConfig;
@@ -27,7 +28,7 @@ import java.net.URL;
 public class LuckyDispatherServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 3808567874497317419L;
-	private static Logger log=Logger.getLogger(LuckyDispatherServlet.class);
+	private static final Logger log= LogManager.getLogger(LuckyDispatherServlet.class);
 	private AnnotationOperation anop;
 	private WebConfig webCfg;
 	private UrlParsMap urlParsMap;

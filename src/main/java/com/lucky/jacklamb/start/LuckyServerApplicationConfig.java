@@ -1,5 +1,8 @@
 package com.lucky.jacklamb.start;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Set;
 
 import javax.websocket.Endpoint;
@@ -7,11 +10,9 @@ import javax.websocket.server.ServerApplicationConfig;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.server.ServerEndpointConfig;
 
-import org.apache.log4j.Logger;
-
 public class LuckyServerApplicationConfig implements ServerApplicationConfig {
-	
-	private static Logger log=Logger.getLogger(LuckyServerApplicationConfig.class);
+
+	private static final Logger log= LogManager.getLogger(LuckyServerApplicationConfig.class);
 
 	
 	@Override

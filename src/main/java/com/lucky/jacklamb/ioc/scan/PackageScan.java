@@ -13,7 +13,8 @@ import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.rest.LSON;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.websocket.Endpoint;
 import javax.websocket.server.ServerApplicationConfig;
@@ -37,8 +38,8 @@ public class PackageScan extends Scan {
 
 	//Win: E:/project/ Mac: /User/loca/
 	private String fileProjectPath;
-	
-	private static Logger log = Logger.getLogger(PackageScan.class);
+
+	private static final Logger log= LogManager.getLogger(PackageScan.class);
 	
 	private LSON lson;
 	
@@ -238,7 +239,7 @@ public class PackageScan extends Scan {
 							info=new StringBuilder();
 							method.setAccessible(true);
 							config=method.invoke(fileClass.newInstance());
-							info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson(config)).append("\"");
+							info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
 							log.info(info.toString());
 						}
 					}

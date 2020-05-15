@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.Aspect;
 import com.lucky.jacklamb.annotation.aop.Before;
@@ -19,6 +17,8 @@ import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 代理对象集合
@@ -28,7 +28,7 @@ import com.lucky.jacklamb.utils.LuckyUtils;
  */
 public class AspectAOP {
 
-	private static Logger log = Logger.getLogger(AspectAOP.class);
+	private static final Logger log= LogManager.getLogger(AspectAOP.class);
 
 	private static AspectAOP aspectAop;
 

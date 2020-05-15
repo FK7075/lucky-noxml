@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.annotation.ioc.Repository;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
@@ -18,10 +16,12 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RepositoryIOC extends ComponentFactory {
-	
-	private static Logger log=Logger.getLogger(RepositoryIOC.class);
+
+	private static final Logger log= LogManager.getLogger(RepositoryIOC.class);
 
 	private Map<String, Object> repositoryMap;
 

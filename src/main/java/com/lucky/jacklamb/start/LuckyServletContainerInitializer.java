@@ -13,19 +13,20 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import com.lucky.jacklamb.utils.LuckyUtils;
-import org.apache.log4j.Logger;
 
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LuckyServletContainerInitializer implements ServletContainerInitializer {
 	
 	public final ServerConfig serverCfg=AppConfig.getAppConfig().getServerConfig();
 
 	private long start;
-	
-	public static Logger log=Logger.getLogger(LuckyServletContainerInitializer.class);
+
+	private static final Logger log= LogManager.getLogger(LuckyServletContainerInitializer.class);
 	
 	public LuckyServletContainerInitializer(long start) {
 		this.start=start;

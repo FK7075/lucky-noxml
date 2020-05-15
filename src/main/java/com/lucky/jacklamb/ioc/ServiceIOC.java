@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.annotation.ioc.Service;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.utils.LuckyUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ServiceIOC extends ComponentFactory{
-	
-	private static Logger log=Logger.getLogger(ServiceIOC.class);
+
+	private static final Logger log= LogManager.getLogger(ServiceIOC.class);
 
 	private Map<String, Object> serviceMap;
 

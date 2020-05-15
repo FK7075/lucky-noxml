@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 定义一个文件上传操作，执行完上传操作后会返回所有文件的文件名如果需要接收，可以在方法的参数列表中使用与names对应的同名的String类型参数接收
+ * 定义一个文件上传操作，执行完上传操作后会返回所有文件的文件名如果需要接收，可以在方法的参数列表中使用与names对应的同名的String或String[]类型参数接收
  * 
  * @author fk-7075
  *
@@ -27,7 +27,7 @@ public @interface Upload {
 	 * 上传到项目文件夹的位置(对应names)
 	 * @return
 	 */
-	String[] filePath();
+	String[] filePath() default "upload/";
 	
 	/**
 	 * 允许上传的文件类型(eg:  .jpg,.jpeg,.png),默认不做限制

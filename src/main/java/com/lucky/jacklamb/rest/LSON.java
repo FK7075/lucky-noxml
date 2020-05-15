@@ -56,6 +56,10 @@ public class LSON {
 		return jsonStr;
 	}
 
+	public String toJson1(Object jsonObject){
+		return new Gson().toJson(jsonObject);
+	}
+
 	/**
 	 * 利用Google的GSON将对象转为格式化的Json字符串
 	 * @param pojo 实体类对象

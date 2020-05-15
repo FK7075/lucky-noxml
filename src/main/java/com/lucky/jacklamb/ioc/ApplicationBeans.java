@@ -13,7 +13,8 @@ import java.util.Set;
 import javax.websocket.server.ServerApplicationConfig;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -34,8 +35,8 @@ public class ApplicationBeans {
 	private static Set<Class<?>> webSocketSet;
 	
 	static {
-		URL logfile = ApplicationBeans.class.getClassLoader().getResource("/log4j.properties");
-		URL logxmlfile = ApplicationBeans.class.getClassLoader().getResource("/log4j.xml");
+		URL logfile = ApplicationBeans.class.getClassLoader().getResource("/log4j2.properties");
+		URL logxmlfile = ApplicationBeans.class.getClassLoader().getResource("/log4j2.xml");
 		if(logfile!=null) {
 			PropertyConfigurator.configure(logfile.getPath());
 		}else if(logxmlfile!=null){
@@ -43,14 +44,14 @@ public class ApplicationBeans {
 		}else {
 			try {
 				Properties p=new Properties();
-				p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j.properties"),"UTF-8")));
+				p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j2.xml"),"UTF-8")));
 				PropertyConfigurator.configure(p);
 			} catch (Exception e) {
 				e.printStackTrace();
 				BasicConfigurator.configure();
 			} 
 		}
-		log=Logger.getLogger(ApplicationBeans.class);
+		log= LogManager.getLogger(ApplicationBeans.class);
 		iocContainers=new IOCContainers();
 		iocContainers.init();
 		Jacklabm.welcome();

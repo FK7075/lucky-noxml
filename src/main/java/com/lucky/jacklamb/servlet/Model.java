@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * mvc的核心中转类
@@ -32,8 +32,8 @@ import com.lucky.jacklamb.utils.ArrayCast;
  *
  */
 public class Model {
-	
-	private static Logger log=Logger.getLogger(Model.class);
+
+	private static final Logger log= LogManager.getLogger(Model.class);
 
 	private final String HEAD = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 

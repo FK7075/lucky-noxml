@@ -1,9 +1,9 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 日志管理类
@@ -17,7 +17,7 @@ public class SqlLog {
 	private DataSource dataSource;
 	private String jdbcUrl;
 	private SqlFormatUtil sqlFormatUtil;
-	private static Logger loger=Logger.getLogger(SqlLog.class);
+	private static final Logger loger= LogManager.getLogger(SqlLog.class);
 	
 	public SqlLog(String dbname) {
 		dataSource=ReadIni.getDataSource(dbname);
