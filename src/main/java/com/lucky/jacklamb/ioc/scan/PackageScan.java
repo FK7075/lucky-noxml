@@ -50,8 +50,8 @@ public class PackageScan extends Scan {
 		super();
 		lson=new LSON();
 		projectPath=PackageScan.class.getClassLoader().getResource("").getPath();
-		System.out.println("Project Start Path        ==>"+System.getProperty("user.dir"));
-		System.out.println("Class File Root Directory ==>"+projectPath);
+		log.info("Project Start Path "+System.getProperty("user.dir"));
+		log.info("Class File Root Directory "+projectPath);
 		if(projectPath.endsWith("/classes/")) {
 			projectPath=projectPath.substring(0,projectPath.length()-8);
 		}else if(projectPath.endsWith("/test-classes/")) {

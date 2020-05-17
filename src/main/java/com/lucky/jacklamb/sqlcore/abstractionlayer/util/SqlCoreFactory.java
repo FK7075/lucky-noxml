@@ -1,8 +1,6 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
 
-import org.apache.log4j.Logger;
-
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.AccessSqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.DB2Core;
@@ -13,13 +11,15 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SqlServerCore
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SybaseCore;
 import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
 import com.lucky.jacklamb.sqlcore.exception.DatabaseTypeUnableIdentifyException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SqlCoreFactory {
-	
-	private static Logger log=Logger.getLogger(SqlCoreFactory.class);
+
+	private static final Logger log= LogManager.getLogger(SqlCoreFactory.class);
 
 	private static Map<String,SqlCore> sqlCoreMap;
 

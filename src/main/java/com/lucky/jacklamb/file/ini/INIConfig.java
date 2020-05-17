@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
@@ -18,6 +19,8 @@ import com.lucky.jacklamb.utils.ArrayCast;
 public class INIConfig {
 	
 	private  IniFilePars iniFilePars;
+
+	private String iniFile;
 	
 	private static Map<String,IniFilePars> iniMap;
 
@@ -26,6 +29,7 @@ public class INIConfig {
 	}
 	
 	public INIConfig(){
+		iniFile="appconfig.ini";
 		if(iniMap==null) {
 			iniMap=new HashMap<>();
 			iniFilePars=new IniFilePars();
@@ -42,6 +46,7 @@ public class INIConfig {
 		if(path.startsWith("/")) {
 			path=path.substring(1);
 		}
+		iniFile=path;
 		if(iniMap==null) {
 			iniMap=new HashMap<>();
 			iniFilePars=new IniFilePars(path);
@@ -291,14 +296,14 @@ public class INIConfig {
 	@SuppressWarnings("unchecked")
 	public  <T> T getObject(Class<T> clazz,String section) {
 		if(!iniFilePars.isHasSection(section))
-			return null;
+			throw new RuntimeException(iniFile+"中不存在节["+section+"].....");
 		Object object=null;
 		try {
 			Map<String, String> sectionMap = iniFilePars.getSectionMap(section);
 			Constructor<T> constructor = clazz.getConstructor();
 			constructor.setAccessible(true);
 			object=constructor.newInstance(); 
-			Field[] fields=clazz.getDeclaredFields();
+			Field[] fields= FieldUtils.getAllFields(clazz);
 			String fieldName;
 			for(Field field:fields) {
 				fieldName=field.getName();

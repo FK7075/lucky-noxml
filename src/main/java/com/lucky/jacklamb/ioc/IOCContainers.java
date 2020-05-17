@@ -222,7 +222,7 @@ public final class IOCContainers {
 	}
 	
 	/**
-	 * 每次处理请求时为Controller注入Model、Request、Response和Session对象属性
+	 * 每次处理请求时为Controller注入Model、Request、Response和Session、Aplication对象属性
 	 * @param object
 	 * @param model
 	 * @throws IllegalArgumentException

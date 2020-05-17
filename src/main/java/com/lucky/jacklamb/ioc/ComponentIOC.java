@@ -21,6 +21,7 @@ import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
+import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
@@ -127,7 +128,16 @@ public class ComponentIOC extends ComponentFactory {
 				log.info("@Conversion \"[id="+beanID+" class="+aspect+"]\"");
 				continue;
 			}else if (component.isAnnotationPresent(Configuration.class)) {
-				Object obj = component.newInstance();
+				Configuration cfg=component.getAnnotation(Configuration.class);
+				Object obj;
+				if(!"".equals(cfg.section())){
+					obj=new INIConfig(cfg.ini()).getObject(component,cfg.section());
+				}else{
+					obj = component.newInstance();
+				}
+				beanID="".equals(cfg.value())?LuckyUtils.TableToClass1(component.getSimpleName()):cfg.value();
+				addAppMap(beanID,obj);
+				log.info("@Configuration \"[id="+beanID+" class="+obj+"]\"");
 				Method[] methods=component.getDeclaredMethods();
 				for(Method met:methods) {
 					if(met.isAnnotationPresent(Bean.class)) {
