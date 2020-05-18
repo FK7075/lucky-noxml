@@ -41,7 +41,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 		String[] mapping;
 		for(ServletMapping sm:serverCfg.getServletlist()) {
 			servlet=ctx.addServlet(sm.getServletName(), sm.getServlet());
-			sm.getServlet().init(sm.getServlet().getServletConfig());
+			servlet.setLoadOnStartup(sm.getLoadOnStartup());
 			mapping=new String[sm.getRequestMapping().size()];
 			mapping=sm.getRequestMapping().toArray(mapping);
 			servlet.addMapping(mapping);

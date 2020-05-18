@@ -332,11 +332,17 @@ public class IniFilePars {
 	
 	private void addServlet(ServerConfig server,Map<String, String> sectionMap) {
 		Set<String> servletNames = sectionMap.keySet();
+		Map<String, String> loadOnStartUpMap = this.getSectionMap(SECTION_SERVLET_LOADONSTARTUP);
 		for(String servletName:servletNames) {
 			if(!this.isHasKey(SECTION_SERVLET_MAPPING, servletName))
 				throw new RuntimeException("appconfig.ini配置文件中有Servlet没有配置请求映射：[Servlet]->"+servletName+"="+sectionMap.get(servletName));
 			try {
-				server.addServlet((HttpServlet)Class.forName(sectionMap.get(servletName)).newInstance(), this.getValue(SECTION_SERVLET_MAPPING, servletName).split(","));
+				if(loadOnStartUpMap!=null){
+					Integer loadOnStartUp=loadOnStartUpMap.containsKey(servletName)?Integer.parseInt(loadOnStartUpMap.get(servletName)):-1;
+					server.addServlet((HttpServlet)Class.forName(sectionMap.get(servletName)).newInstance(), loadOnStartUp,this.getValue(SECTION_SERVLET_MAPPING, servletName).split(","));
+				}else{
+					server.addServlet((HttpServlet)Class.forName(sectionMap.get(servletName)).newInstance(), this.getValue(SECTION_SERVLET_MAPPING, servletName).split(","));
+				}
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

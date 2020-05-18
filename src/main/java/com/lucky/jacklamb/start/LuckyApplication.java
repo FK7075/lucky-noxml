@@ -67,8 +67,8 @@ public class LuckyApplication {
         context.setSessionCookieName("Lucky-Tomcat");
         context.addLifecycleListener(new Tomcat.DefaultWebXmlListener());
         context.addLifecycleListener(new Tomcat.FixContextListener());
-        context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
         context.addServletContainerInitializer(new LuckyServletContainerInitializer(start), null);
+        context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
         if (serverCfg.getRequestTargetAllow() != null)
             System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", serverCfg.getRequestTargetAllow());
         tomcat.getHost().addChild(context);

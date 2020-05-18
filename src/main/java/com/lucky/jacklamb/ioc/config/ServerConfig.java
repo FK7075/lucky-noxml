@@ -246,6 +246,20 @@ public class ServerConfig implements LuckyConfig  {
 		ServletMapping servletMapping=new ServletMapping(maps,servletName,servlet);
 		servletlist.add(servletMapping);
 	}
+
+	public void addServlet(HttpServlet servlet,int loadOnStartup,String...mappings) {
+		String servletName=LuckyUtils.TableToClass1(servlet.getClass().getSimpleName());
+		Set<String> maps;
+		if(mappings.length==0) {
+			maps=new HashSet<>();
+			maps.add("/"+servletName);
+		}else {
+			maps=new HashSet<>(Arrays.asList(mappings));
+		}
+		ServletMapping servletMapping=new ServletMapping(maps,servletName,servlet,loadOnStartup);
+		servletlist.add(servletMapping);
+	}
+
 	public List<FilterMapping> getFilterlist() {
 		return filterlist;
 	}
@@ -272,7 +286,7 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");
 			projectPath=System.getProperty("user.dir").replaceAll("\\\\", "/")+"/";
-			serverConfig.addServlet(new LuckyDispatherServlet(), "/");
+			serverConfig.addServlet(new LuckyDispatherServlet(),0, "/");
 			serverConfig.setContextPath("");
 			serverConfig.setApBaseDir(System.getProperty("java.io.tmpdir")+"tomcat/");
 			serverConfig.setDocBase("webapp/");
@@ -297,7 +311,7 @@ public class ServerConfig implements LuckyConfig  {
 			servlet=(HttpServlet) servletObj;
 			annServlet=servlet.getClass().getAnnotation(LuckyServlet.class);
 			smapping=new HashSet<>(Arrays.asList(annServlet.value()));
-			servletMap=new ServletMapping(smapping,LuckyUtils.TableToClass1(servlet.getClass().getSimpleName()),servlet);
+			servletMap=new ServletMapping(smapping,LuckyUtils.TableToClass1(servlet.getClass().getSimpleName()),servlet,annServlet.loadOnStartup());
 			servletlist.add(servletMap);
 		}
 	}

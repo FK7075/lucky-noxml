@@ -12,5 +12,7 @@ import java.lang.annotation.Target;
 public @interface LuckyServlet {
 	
 	String[] value();
+
+	int loadOnStartup() default -1;
 	
 }

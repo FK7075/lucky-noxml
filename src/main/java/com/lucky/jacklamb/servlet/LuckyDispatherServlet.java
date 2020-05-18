@@ -46,8 +46,6 @@ public class LuckyDispatherServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) {
-		System.out.println("----:)-----");
-        System.out.println("----:)-----");
 		ApplicationBeans.createApplicationBeans();
 		anop = new AnnotationOperation();
 		webCfg=AppConfig.getAppConfig().getWebConfig();

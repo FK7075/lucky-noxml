@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 public @interface LuckyFilter {
 	
 	String[] value();
-	
+
 }

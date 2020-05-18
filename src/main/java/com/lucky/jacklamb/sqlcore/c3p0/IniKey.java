@@ -17,6 +17,8 @@ public class IniKey {
 	public static final String SECTION_LISTENER="Listener";
 	
 	public static final String SECTION_SERVLET_MAPPING="Servlet Mapping";
+
+	public static final String SECTION_SERVLET_LOADONSTARTUP="LoadOnStartup";
 	
 	public static final String SECTION_FILTER="Filter";
 	
