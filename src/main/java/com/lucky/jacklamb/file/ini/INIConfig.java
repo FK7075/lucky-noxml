@@ -311,7 +311,7 @@ public class INIConfig {
 					field.setAccessible(true);
 					String sectionValue = $Expression.translation(sectionMap.get(fieldName));
 					if(field.getType().isArray()) {
-						field.set(object, getArray(section,sectionValue,field.getType()));
+						field.set(object, getArray(section,fieldName,field.getType()));
 					}else if(field.getType().isAssignableFrom(List.class)) {
 						field.set(object, getCollection(section,fieldName,List.class,ArrayCast.getClassFieldGenericType(field)[0]));
 					}else if(field.getType().isAssignableFrom(Set.class)) {

@@ -33,14 +33,15 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 		serverCfg.init();
 	}
 
+
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
-		ApplicationBeans.createApplicationBeans();
 		ServletRegistration.Dynamic servlet;
 		FilterRegistration.Dynamic filter;
 		String[] mapping;
 		for(ServletMapping sm:serverCfg.getServletlist()) {
 			servlet=ctx.addServlet(sm.getServletName(), sm.getServlet());
+			sm.getServlet().init(sm.getServlet().getServletConfig());
 			mapping=new String[sm.getRequestMapping().size()];
 			mapping=sm.getRequestMapping().toArray(mapping);
 			servlet.addMapping(mapping);
