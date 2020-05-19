@@ -6,7 +6,8 @@ import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.websocket.server.WsSci;
 
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -15,6 +16,9 @@ import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.utils.LuckyUtils;
 
 public class LuckyApplication {
+
+    private static final Logger log= LogManager.getLogger(LuckyApplication.class);
+
 
     /**
      * 在使用java -jar运行jar包时，Lucky会使用JarFile的方法去遍历并筛选classpath下所有的.class文件来寻找组件。
@@ -46,17 +50,7 @@ public class LuckyApplication {
         File doc = new File(docBase);
         if (!doc.isDirectory()) {
             if (!serverCfg.isAutoCreateWebapp()) {
-                System.err.println(LuckyUtils.time() + "  ###");
-                System.err.println(LuckyUtils.time() + "  LUCKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
-                System.err.println(LuckyUtils.time() + "  [ ==WARNING==]：找不到Tomcat的DocBase文件夹：{ " + docBase + "}");
-                System.err.println(LuckyUtils.time() + "  [ == PROMPT== ]：请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
-                System.err.println(LuckyUtils.time() + "  LUCKY-TOMCAT-DOCBASE ==>[ NOT FOUND ]");
-                System.err.println(LuckyUtils.time() + "  ###");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                log.error("找不到Tomcat的DocBase文件夹：{ "+serverCfg.getDocBase()+"},请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
             } else {
                 doc.mkdirs();
                 context.setDocBase(docBase);

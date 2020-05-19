@@ -61,7 +61,7 @@ public abstract class LuckyExceptionHand {
 	 * @param e
 	 */
 	protected void globalExceptionHand(Throwable e) {
-		model.writer(e.getMessage());
+		model.writer(e);
 		e.printStackTrace();
 	}
 	
