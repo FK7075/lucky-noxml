@@ -17,6 +17,7 @@ import com.lucky.jacklamb.enums.Scan;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
+import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 
 import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.*;
@@ -191,10 +192,25 @@ public class IniFilePars {
 		return null;
 	}
 	
-	public void modifyAllocation(ScanConfig scan,WebConfig web,ServerConfig server) {
+	public void modifyAllocation(ScanConfig scan, WebConfig web, ServerConfig server, ServiceConfig service) {
 		if(iniMap.isEmpty())
 			return;
 		Map<String, String> sectionMap;
+		if(this.iniMap.containsKey(SECTION_SERVICE)){
+			sectionMap=this.getSectionMap(SECTION_SERVICE);
+			if(sectionMap.containsKey("serviceName")){
+				service.setServiceName($Expression.translation(sectionMap.get("serviceName")));
+			}
+			if(sectionMap.containsKey("isRegistrycenter")){
+				service.setRegistrycenter($Expression.translation(sectionMap.get("isRegistrycenter"),boolean.class));
+			}
+			if(sectionMap.containsKey("hostName")){
+				service.setHostName($Expression.translation(sectionMap.get("hostName")));
+			}
+			if(sectionMap.containsKey("serviceUrl")){
+				service.setServiceUrl($Expression.translation(sectionMap.get("serviceUrl")));
+			}
+		}
 		if(this.isHasSection(SECTION_APP)){
 			sectionMap=this.getSectionMap(SECTION_APP);
 			scan.setApp(sectionMap);

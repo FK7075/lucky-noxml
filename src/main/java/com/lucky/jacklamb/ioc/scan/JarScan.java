@@ -1,12 +1,9 @@
 package com.lucky.jacklamb.ioc.scan;
 
 import com.lucky.jacklamb.annotation.aop.Aspect;
+import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.annotation.ioc.*;
-import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
-import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
-import com.lucky.jacklamb.annotation.mvc.LuckyListener;
-import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
 import com.lucky.jacklamb.annotation.orm.Table;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.proxy.Point;
@@ -102,7 +99,7 @@ public class JarScan extends Scan {
 					name = name.substring(0, name.length() - 6);
 					String clzzName = name.replaceAll("/", "\\.");
 					Class<?> fileClass = Class.forName(clzzName);
-					if (fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class))
+					if (fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(FeignClient.class))
 						controllerClass.add(fileClass);
 					else if (fileClass.isAnnotationPresent(Service.class))
 						serviceClass.add(fileClass);

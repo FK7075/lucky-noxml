@@ -351,7 +351,7 @@ public class ScanConfig implements LuckyConfig {
 	public static ScanConfig defaultScanConfig() {
 		if (scanfig == null) {
 			scanfig = new ScanConfig();
-			scanfig.addControllerPackSuffix("controller");
+			scanfig.addControllerPackSuffix("controller","api");
 			scanfig.addServicePackSuffix("service");
 			scanfig.addRepositoryPackSuffix("dao", "repository", "mapper");
 			scanfig.addComponentPackSuffix("component", "bean","exceptionhander","conversion");

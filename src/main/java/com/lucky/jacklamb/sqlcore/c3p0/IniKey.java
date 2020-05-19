@@ -29,6 +29,8 @@ public class IniKey {
 	public static final String SECTION_WEB="Web";
 
 	public static final String SECTION_APP="App";
+
+	public static final String SECTION_SERVICE="Service";
 	
 	public static final String SECTION_HANDERPREFIXANDSUFFIX="HanderPrefixAndSuffix";
 	

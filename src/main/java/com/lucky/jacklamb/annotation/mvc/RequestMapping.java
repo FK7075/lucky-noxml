@@ -39,7 +39,7 @@ public @interface RequestMapping {
 	 * 定义一个url请求映射
 	 * @return
 	 */
-	String value() default "";
+	String value();
 	
 	/**
 	 * 指定一些合法访问的ip地址，来自其他ip地址的请求将会被拒绝

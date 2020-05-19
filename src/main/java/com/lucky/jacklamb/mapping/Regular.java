@@ -12,6 +12,8 @@ public abstract class Regular {
      */
     public static final String $_$="\\$\\{[\\w|:|\\[|\\]|.|-]+\\}";
 
+    public static final String Sharp="\\#\\{[\\w|:|\\[|\\]|.|-]+\\}";
+
     /**
      * 邮箱
      */
@@ -89,6 +91,6 @@ public abstract class Regular {
     }
 
     public static void main(String[] args) {
-        System.out.println(getArrayByExpression("${app.test}/${[User]:name}/${[Type]:id}", $_$));
+        System.out.println(getArrayByExpression("${app.test}/#{[User]:name}/${[Type]:id}", Sharp));
     }
 }

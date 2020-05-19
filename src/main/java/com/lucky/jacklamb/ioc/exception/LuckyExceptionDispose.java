@@ -24,6 +24,8 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 		}
 	}
 
+
+
 	/**
 	 * 全局异常处理
 	 */
@@ -39,7 +41,7 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 				return;
 			}
 		}
-		e.printStackTrace();
+		super.globalExceptionHand(e);
 	}
 
 

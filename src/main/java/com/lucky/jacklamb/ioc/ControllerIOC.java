@@ -11,17 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.lucky.jacklamb.annotation.ioc.CallController;
+import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.httpclient.HttpClientControllerProxy;
+import com.lucky.jacklamb.httpclient.service.FeignClientControllerProxy;
 import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.mapping.MappingDetails;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
-import com.lucky.jacklamb.annotation.mvc.DeleteMapping;
-import com.lucky.jacklamb.annotation.mvc.GetMapping;
-import com.lucky.jacklamb.annotation.mvc.PostMapping;
-import com.lucky.jacklamb.annotation.mvc.PutMapping;
-import com.lucky.jacklamb.annotation.mvc.RequestMapping;
-import com.lucky.jacklamb.annotation.mvc.RestBody;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
@@ -154,6 +150,15 @@ public class ControllerIOC extends ComponentFactory{
 				}
 				log.info("@CallController :\"{id="+beanID+" ,class="+controller+"}\"");
 				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
+			} else if(controller.isAnnotationPresent(FeignClient.class)){
+				FeignClient cont = controller.getAnnotation(FeignClient.class);
+				if (!"".equals(cont.id())) {
+					beanID=cont.id();
+				}else{
+					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
+				}
+				log.info("@FeignClient :\"{id="+beanID+" ,class="+controller+"}\"");
+				addControllerMap(beanID, FeignClientControllerProxy.getFeignClientControllerProxyObject(controller));
 			}
 
 		}

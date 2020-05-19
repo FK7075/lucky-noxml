@@ -13,6 +13,8 @@ public class AppConfig {
 	private WebConfig webcfg;
 
 	private ServerConfig servercfg;
+
+	private ServiceConfig servicecfg;
 	
 	public static Class<?> applicationClass;
 
@@ -22,14 +24,15 @@ public class AppConfig {
 		scancfg = ScanConfig.defaultScanConfig();
 		webcfg = WebConfig.defauleWebConfig();
 		servercfg = ServerConfig.defaultServerConfig();
+		servicecfg=ServiceConfig.defaultServiceConfig();
 		ApplicationConfig appconfig = ScanFactory.createScan().getApplicationConfig();
 		if(isFirst) {
 			if (appconfig != null) {
 				System.err.println(LuckyUtils.showtime() + "[HELPFUL HINTS]  发现配置类" + appconfig.getClass().getName()
 						+ "，将使用类中的配置初始化LUCKY...");
-				appconfig.init(scancfg, webcfg, servercfg);
+				appconfig.init(scancfg, webcfg, servercfg,servicecfg);
 			}
-			new IniFilePars().modifyAllocation(scancfg, webcfg, servercfg);
+			new IniFilePars().modifyAllocation(scancfg, webcfg, servercfg,servicecfg);
 			isFirst = false;
 		}
 	}
@@ -50,6 +53,10 @@ public class AppConfig {
 
 	public ServerConfig getServerConfig() {
 		return servercfg;
+	}
+
+	public ServiceConfig getServiceConfig() {
+		return servicecfg;
 	}
 	
 	/**
@@ -74,6 +81,14 @@ public class AppConfig {
 	 */
 	public static ServerConfig getDefaultServerConfig() {
 		return ServerConfig.defaultServerConfig();
+	}
+
+	/**
+	 * 得到默认状态下的ServiceConfig
+	 * @return
+	 */
+	public static ServiceConfig getDefaultServiceConfig() {
+		return ServiceConfig.defaultServiceConfig();
 	}
 
 }

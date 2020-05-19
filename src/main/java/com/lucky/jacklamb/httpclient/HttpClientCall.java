@@ -246,7 +246,7 @@ public class HttpClientCall {
      */
     private static String responseToString(HttpResponse response) throws IOException {
         int code=response.getStatusLine().getStatusCode();
-        log.info("Response Status ==> "+code);
+        log.debug("Response Status ==> "+code);
         if(code==200){
             return EntityUtils.toString(response.getEntity(),"UTF-8");
         }else{
