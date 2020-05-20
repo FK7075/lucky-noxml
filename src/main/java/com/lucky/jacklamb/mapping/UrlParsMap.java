@@ -145,6 +145,19 @@ public class UrlParsMap {
 		Map<String,String> restKV=new HashMap<>();
 		String[] mapArray=participle(mapstr);
 		String[] urlArray=participle(currurl);
+		if(mapstr.endsWith("}*")){
+			int index=mapArray.length-1;
+			String value="";
+			for(int i=index;i<urlArray.length;i++)
+				value=value+"/"+urlArray[i];
+			String lastParam=mapArray[mapArray.length-1];
+			restKV.put(lastParam.substring(2,lastParam.length()-2),value);
+			for(int i=0;i<index;i++){
+				if(mapArray[i].startsWith("#{")&&mapArray[i].endsWith("}")) {
+					restKV.put(mapArray[i].substring(2,mapArray[i].length()-1).trim(), urlArray[i]);
+				}
+			}
+		}
 		for(int i=0;i<mapArray.length;i++) {
 			if(mapArray[i].startsWith("#{")&&mapArray[i].endsWith("}")) {
 				restKV.put(mapArray[i].substring(2,mapArray[i].length()-1).trim(), urlArray[i]);

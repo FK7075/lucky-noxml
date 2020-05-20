@@ -40,7 +40,7 @@ public class RegistrationController extends LuckyController {
     }
 
     @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api}")
+    @RequestMapping("#{serviceName}/#{api}*")
     public String request(@RestParam("serviceName") String serviceName,
                           @RestParam("api")String api,
                           @RequestParam(value="agreement",def = "HTTP")String agreement)
@@ -49,120 +49,4 @@ public class RegistrationController extends LuckyController {
             return "ON SERVICE";
         return serviceCenter.request(agreement,serviceName,api,model);
     }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RestParam("api4")String api4,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3+"/"+api4;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RestParam("api4")String api4,
-                          @RestParam("api5")String api5,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RestParam("api4")String api4,
-                          @RestParam("api5")String api5,
-                          @RestParam("api6")String api6,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}/#{api7}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RestParam("api4")String api4,
-                          @RestParam("api5")String api5,
-                          @RestParam("api6")String api6,
-                          @RestParam("api7")String api7,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6+"/"+api7;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-    @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}/#{api7}/#{api8}")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api1")String api1,
-                          @RestParam("api2")String api2,
-                          @RestParam("api3")String api3,
-                          @RestParam("api4")String api4,
-                          @RestParam("api5")String api5,
-                          @RestParam("api6")String api6,
-                          @RestParam("api7")String api7,
-                          @RestParam("api7")String api8,
-                          @RequestParam(value="agreement",def = "HTTP")String agreement)
-            throws IOException, URISyntaxException {
-        if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
-        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6+"/"+api7+"/"+api8;
-        return serviceCenter.request(agreement,serviceName,api,model);
-    }
-
-
-
-
 }

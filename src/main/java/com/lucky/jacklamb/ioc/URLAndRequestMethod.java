@@ -86,6 +86,9 @@ public class URLAndRequestMethod {
 	public boolean isConform(String mapstr,String currurl) {
 		String[] mapArray=participle(mapstr);
 		String[] urlArray=participle(currurl);
+		if(mapstr.endsWith("}*")&&urlArray.length>=mapArray.length){
+			return true;
+		}
 		if(mapArray.length!=urlArray.length)
 			return false;
 		boolean rest=true;
