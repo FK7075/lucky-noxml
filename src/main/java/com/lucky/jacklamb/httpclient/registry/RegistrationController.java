@@ -108,6 +108,61 @@ public class RegistrationController extends LuckyController {
         return serviceCenter.request(agreement,serviceName,api,model);
     }
 
+    @RestBody(Rest.TXT)
+    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}")
+    public String request(@RestParam("serviceName") String serviceName,
+                          @RestParam("api1")String api1,
+                          @RestParam("api2")String api2,
+                          @RestParam("api3")String api3,
+                          @RestParam("api4")String api4,
+                          @RestParam("api5")String api5,
+                          @RestParam("api6")String api6,
+                          @RequestParam(value="agreement",def = "HTTP")String agreement)
+            throws IOException, URISyntaxException {
+        if(!serviceCenter.isHaveClientName(serviceName))
+            return "ON SERVICE";
+        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6;
+        return serviceCenter.request(agreement,serviceName,api,model);
+    }
+
+    @RestBody(Rest.TXT)
+    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}/#{api7}")
+    public String request(@RestParam("serviceName") String serviceName,
+                          @RestParam("api1")String api1,
+                          @RestParam("api2")String api2,
+                          @RestParam("api3")String api3,
+                          @RestParam("api4")String api4,
+                          @RestParam("api5")String api5,
+                          @RestParam("api6")String api6,
+                          @RestParam("api7")String api7,
+                          @RequestParam(value="agreement",def = "HTTP")String agreement)
+            throws IOException, URISyntaxException {
+        if(!serviceCenter.isHaveClientName(serviceName))
+            return "ON SERVICE";
+        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6+"/"+api7;
+        return serviceCenter.request(agreement,serviceName,api,model);
+    }
+
+    @RestBody(Rest.TXT)
+    @RequestMapping("#{serviceName}/#{api1}/#{api2}/#{api3}/#{api4}/#{api5}/#{api6}/#{api7}/#{api8}")
+    public String request(@RestParam("serviceName") String serviceName,
+                          @RestParam("api1")String api1,
+                          @RestParam("api2")String api2,
+                          @RestParam("api3")String api3,
+                          @RestParam("api4")String api4,
+                          @RestParam("api5")String api5,
+                          @RestParam("api6")String api6,
+                          @RestParam("api7")String api7,
+                          @RestParam("api7")String api8,
+                          @RequestParam(value="agreement",def = "HTTP")String agreement)
+            throws IOException, URISyntaxException {
+        if(!serviceCenter.isHaveClientName(serviceName))
+            return "ON SERVICE";
+        String api=api1+"/"+api2+"/"+api3+"/"+api4+"/"+api5+"/"+api6+"/"+api7+"/"+api8;
+        return serviceCenter.request(agreement,serviceName,api,model);
+    }
+
+
 
 
 }

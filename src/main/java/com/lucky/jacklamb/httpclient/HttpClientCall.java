@@ -2,6 +2,7 @@ package com.lucky.jacklamb.httpclient;
 
 import com.google.gson.Gson;
 import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.exception.HttpClientRequestException;
 import com.lucky.jacklamb.exception.NotFindRequestException;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
@@ -250,7 +251,8 @@ public class HttpClientCall {
         if(code==200){
             return EntityUtils.toString(response.getEntity(),"UTF-8");
         }else{
-            return null;
+            log.error("远程服务异常，未能正常响应..");
+            throw new HttpClientRequestException("远程服务异常，访问失败");
         }
     }
 

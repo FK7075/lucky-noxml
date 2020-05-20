@@ -91,6 +91,11 @@ public class Mapping {
             if("".equals(rp.value()))
                 return paramName;
             return rp.value();
+        }else if(param.isAnnotationPresent(RestParam.class)){
+            RestParam rp = param.getAnnotation(RestParam.class);
+            if("".equals(rp.value()))
+                return paramName;
+            return rp.value();
         } else {
             return paramName;
         }

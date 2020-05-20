@@ -67,7 +67,7 @@ public class WebConfig  implements LuckyConfig  {
 
 	
 	private WebConfig() {
-		encoding="ISO-8859-1";
+		encoding="UTF-8";
 		openStaticResourceManage=false;
 		postChangeMethod=false;
 		handerPrefixAndSuffix=new ArrayList<>();;

@@ -7,6 +7,7 @@ import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.NotFoundCallUrlException;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
+import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.httpclient.Api;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.config.AppConfig;
@@ -74,7 +75,7 @@ public class FeignClientControllerProxy {
                 if(Mapping.isMappingMethod(method)){
                     md=Mapping.getMappingDetails(method);
                     String methodUrl=md.value.startsWith("/")?md.value.substring(1):md.value;
-                    apiUrl=regUrl+serviceName+apiUrl+methodUrl;
+                    apiUrl= $Expression.translationSharp(regUrl+serviceName+apiUrl+methodUrl,callapiMap) ;
                 }else{
                     throw new NotFoundCallUrlException("该方法不是Mapping方法，无法执行代理！错误位置："+method);
                 }
