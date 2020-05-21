@@ -1,21 +1,18 @@
 package com.lucky.jacklamb.httpclient;
 
 import com.lucky.jacklamb.annotation.ioc.CallController;
-import com.lucky.jacklamb.annotation.mvc.CallApi;
 import com.lucky.jacklamb.aop.util.ASMUtil;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.exception.NotFoundCallUrlException;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
 import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.mapping.MappingDetails;
 import com.lucky.jacklamb.rest.LSON;
-import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +42,7 @@ public class HttpClientControllerProxy {
                         key = Mapping.getParamName(parameters[i],paramName.get(i));
                         callapiMap.put(key, params[i].toString());
                     }else{
-                        Field[] fields = FieldUtils.getAllFields(params[i].getClass());
+                        Field[] fields = ClassUtils.getAllFields(params[i].getClass());
                         Object fieldValue;
                         for(Field field:fields){
                             field.setAccessible(true);

@@ -41,11 +41,6 @@ public class LuckyDispatherServlet extends HttpServlet {
 	private ResponseControl responseControl;
 
 	@Override
-	public void destroy() {
-		System.out.println("我关闭了哦~");
-	}
-
-	@Override
 	public void init(){
 		init(null);
 	}
@@ -73,6 +68,8 @@ public class LuckyDispatherServlet extends HttpServlet {
 		urlParsMap=new UrlParsMap();
 		responseControl=new ResponseControl();
 	}
+
+
 
 	
 	@Override

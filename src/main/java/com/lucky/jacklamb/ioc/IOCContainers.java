@@ -1,32 +1,26 @@
 package com.lucky.jacklamb.ioc;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
-import com.lucky.jacklamb.mapping.Regular;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 扫描所有配置包，将所有的IOC组件都加载到相应的IOC容器中
@@ -230,7 +224,7 @@ public final class IOCContainers {
 	 */
 	public void autowReqAdnResp(Object object,Model model) throws IllegalArgumentException, IllegalAccessException {
 		Class<?> controllerClass=object.getClass();
-		Field[] fields=FieldUtils.getAllFields(controllerClass);
+		Field[] fields= ClassUtils.getAllFields(controllerClass);
 		for(Field field:fields) {
 			field.setAccessible(true);
 			if(Model.class.isAssignableFrom(field.getType())) {
@@ -262,7 +256,7 @@ public final class IOCContainers {
 		for(Entry<String,Object> entry:componentMap.entrySet()) {
 			Object component=entry.getValue();
 			Class<?> componentClass=component.getClass();
-			Field[] fields= FieldUtils.getAllFields(componentClass);
+			Field[] fields= ClassUtils.getAllFields(componentClass);
 			for(Field field:fields) {
 				field.setAccessible(true);
 				Class<?> fieldClass=field.getType();

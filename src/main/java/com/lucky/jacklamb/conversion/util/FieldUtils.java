@@ -1,26 +1,47 @@
 package com.lucky.jacklamb.conversion.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
-public class FieldUtils {
+public abstract class FieldUtils {
 
 
+    /**
+     * 属性是否为数组
+     * @param field Field对象
+     * @return
+     */
     public static boolean isArray(Field field){
         return field.getType().isArray();
     }
 
+    /**
+     * 属性是否为集合
+     * @param field Field对象
+     * @return
+     */
     public static boolean isCollection(Field field){
         return Collection.class.isAssignableFrom(field.getType());
     }
 
+    /**
+     * 属性是否为Map
+     * @param field Field对象
+     * @return
+     */
     public static boolean isMap(Field field){
         return Map.class.isAssignableFrom(field.getType());
     }
 
+    /**
+     * 获取带有泛型的属性的泛型类型,不是泛型属性返回null
+     * @param field Field对象
+     * @return Class[] OR null
+     */
     public static Class<?>[] getGenericType(Field field){
         Type type = field.getGenericType();
         if(type!=null && type instanceof ParameterizedType){
@@ -36,8 +57,8 @@ public class FieldUtils {
     }
 
     /**
-     * 是否为基本类型的集合
-     * @param field
+     * 属性是否为基本集合类型(泛型为JDK类型的集合)
+     * @param field Field对象
      * @return
      */
     public static boolean isBasicCollection(Field field){
@@ -67,19 +88,64 @@ public class FieldUtils {
         return true;
     }
 
-    public static Field[] getAllFields(Class<?> clzz) {
-        if (clzz.getSuperclass() == Object.class)
-            return clzz.getDeclaredFields();
-        Field[] clzzFields = clzz.getDeclaredFields();
-        Field[] superFields = getAllFields(clzz.getSuperclass());
-        int clzzFieldLength = clzzFields.length;
-        int superClassFieldLength = superFields.length;
-        Field[] allFiels = new Field[clzzFieldLength + superClassFieldLength];
-        for (int i = 0; i < clzzFieldLength; i++)
-            allFiels[i] = clzzFields[i];
-        for (int i = 0; i < superClassFieldLength; i++)
-            allFiels[clzzFieldLength + i] = superFields[i];
-        return allFiels;
+
+    /**
+     * 反射机制获取Field的值
+     * @param fieldObject 目标对象
+     * @param field Field对象
+     * @return
+     */
+    public static Object getValue(Object fieldObject,Field field){
+        try {
+            field.setAccessible(true);
+            return field.get(field);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("无法通过反射机制获取属性值！Field: "+field+", Object: "+fieldObject,e);
+        }
+    }
+
+    /**
+     * 反射机制设置Field的值
+     * @param fieldObject
+     * @param field
+     */
+    public static void setValue(Object fieldObject,Field field,Object fieldValue){
+        try {
+            field.setAccessible(true);
+            field.set(fieldObject,fieldValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("无法通过反射机制为属性赋值！Field: "+field+", Object: "+fieldObject+", FieldValue: "+fieldObject,e);
+        }
+    }
+
+    /**
+     * 判断目标类型是否为属性类型的子类
+     * @param field Field对象
+     * @param targetClass 目标类型
+     * @return
+     */
+    public static boolean isSubclass(Field field,Class<?> targetClass){
+        return field.getType().isAssignableFrom(targetClass);
+    }
+
+    /**
+     * 判断目标类型是否为属性类型的父类
+     * @param field Field对象
+     * @param targetClass 目标类型
+     * @return
+     */
+    public static boolean isParentClass(Field field,Class<?> targetClass){
+        return targetClass.isAssignableFrom(field.getType());
+    }
+
+    /**
+     * 目标对象是否属于属性对应的类型
+     * @param field Field对象
+     * @param targetObject 目标对象
+     * @return
+     */
+    public static boolean instanceOf(Field field,Object targetObject){
+        return isSubclass(field,targetObject.getClass());
     }
 
 }

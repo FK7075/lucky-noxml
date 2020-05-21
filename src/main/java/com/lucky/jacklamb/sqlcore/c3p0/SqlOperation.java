@@ -1,8 +1,7 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
-import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
@@ -144,7 +143,7 @@ public class SqlOperation {
 		}
 		List<T> collection=new ArrayList<>();
 		if(c.getClassLoader()!=null) {
-			Field[] fields = FieldUtils.getAllFields(c);
+			Field[] fields = ClassUtils.getAllFields(c);
 			Object object = null;
 			try {
 				while (rs.next()) {
@@ -154,7 +153,7 @@ public class SqlOperation {
 							continue;
 						if (f.getType().getClassLoader()!=null) {
 							Class<?> cl=f.getType();
-							Field[] fils=FieldUtils.getAllFields(cl);
+							Field[] fils= ClassUtils.getAllFields(cl);
 							Object onfk=cl.newInstance();
 							for (Field ff : fils) {
 								if(ff.isAnnotationPresent(NoPackage.class))

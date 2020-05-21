@@ -1,8 +1,14 @@
 package com.lucky.jacklamb.start;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
+import com.lucky.jacklamb.httpclient.HttpClientCall;
+import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -27,6 +33,10 @@ public class LuckyApplication {
      * @param applicationClass
      */
     public static void run(Class<?> applicationClass) {
+        ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
+        if(service.getServiceName()!=null&&!service.isRegistrycenter()){
+            doShutDownWork();
+        }
         AppConfig.applicationClass = applicationClass;
         run();
     }
@@ -50,7 +60,7 @@ public class LuckyApplication {
         File doc = new File(docBase);
         if (!doc.isDirectory()) {
             if (!serverCfg.isAutoCreateWebapp()) {
-                log.error("找不到Tomcat的DocBase文件夹：{ "+serverCfg.getDocBase()+"},请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
+                log.warn("找不到Tomcat的DocBase文件夹：{ "+serverCfg.getDocBase()+"},请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
             } else {
                 doc.mkdirs();
                 context.setDocBase(docBase);
@@ -73,6 +83,27 @@ public class LuckyApplication {
         } catch (LifecycleException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private static void doShutDownWork() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
+                    String url=service.getServiceUrl().endsWith("/")?service.getServiceUrl()+"logout":service.getServiceUrl()+"/logout";
+                    Map<String,String> param=new HashMap<>();
+                    param.put("serviceName",service.getServiceName());
+                    param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
+                    HttpClientCall.postCall(url,param);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 }

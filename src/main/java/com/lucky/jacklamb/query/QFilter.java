@@ -1,14 +1,15 @@
 package com.lucky.jacklamb.query;
 
+import com.lucky.jacklamb.annotation.orm.NoColumn;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.lucky.jacklamb.annotation.orm.NoColumn;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 
 /**
  * 设置查询返回列
@@ -33,7 +34,7 @@ public class QFilter {
 	public QFilter(Class<?> pojoClass) {
 		allFields=new ArrayList<>();
 		addFields =new ArrayList<>();
-		Field[] fields= FieldUtils.getAllFields(pojoClass);
+		Field[] fields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:fields) {
 			if(!field.isAnnotationPresent(NoColumn.class))
 				this.allFields.add(PojoManage.getTableField(field));
@@ -50,7 +51,7 @@ public class QFilter {
         setFieldAndObject(pojos);
 		for(Object pojo:pojos){
 			Class<?> pojoClass=pojo.getClass();
-			Field[] pojoFields=FieldUtils.getAllFields(pojoClass);
+			Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 			for(Field field:pojoFields){
                 allFields.add(PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(field));
 			}
@@ -149,7 +150,7 @@ public class QFilter {
 	    pojoAndFields=new HashMap<>();
 	    for(Object pojo:pojos){
 	        Class<?> pojoClass=pojo.getClass();
-	        Field[] fields=FieldUtils.getAllFields(pojoClass);
+	        Field[] fields=ClassUtils.getAllFields(pojoClass);
 	        for(Field f:fields){
 	            String key=PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(f);
                 pojoAndFields.put(key,new PojoAndField(pojo,f));

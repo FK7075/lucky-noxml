@@ -1,20 +1,14 @@
 package com.lucky.jacklamb.file.ini;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.Map.Entry;
  
 public class INIConfig {
 	
@@ -303,7 +297,7 @@ public class INIConfig {
 			Constructor<T> constructor = clazz.getConstructor();
 			constructor.setAccessible(true);
 			object=constructor.newInstance(); 
-			Field[] fields= FieldUtils.getAllFields(clazz);
+			Field[] fields= ClassUtils.getAllFields(clazz);
 			String fieldName;
 			for(Field field:fields) {
 				fieldName=field.getName();

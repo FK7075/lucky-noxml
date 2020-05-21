@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.utils;
 
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ public abstract class BeanUtils {
             if(source.getClass().getClassLoader()==null)
                 return source;
             Object target=source.getClass().newInstance();
-            Field[] allFields = FieldUtils.getAllFields(source.getClass());
+            Field[] allFields = ClassUtils.getAllFields(source.getClass());
             for(Field field: allFields){
                 field.setAccessible(true);
                 if(List.class.isAssignableFrom(field.getType())){
@@ -59,7 +60,7 @@ public abstract class BeanUtils {
     }
 
     private static Object setTargetObj(Object target,Map<String,Object> sourceMap,String initialName) throws IllegalAccessException, InstantiationException {
-        Field[] targetFields = FieldUtils.getAllFields(target.getClass());
+        Field[] targetFields = ClassUtils.getAllFields(target.getClass());
         for(Field field:targetFields){
             field.setAccessible(true);
             String fieldName="".equals(initialName)?field.getName():initialName+"."+field.getName();

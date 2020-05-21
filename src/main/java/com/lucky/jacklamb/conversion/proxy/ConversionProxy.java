@@ -4,6 +4,7 @@ import com.lucky.jacklamb.conversion.LuckyConversion;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.conversion.annotation.Mapping;
 import com.lucky.jacklamb.conversion.annotation.Mappings;
+import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.conversion.util.EntityAndDto;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
 import net.sf.cglib.proxy.Enhancer;
@@ -156,7 +157,7 @@ public class ConversionProxy {
     public static Map<String,Object> getSourceNameValueMap(Object sourceObject, String initialName) throws IllegalAccessException {
         Map<String,Object> sourceNameValueMap=new HashMap<>();
         Class<?> sourceClass=sourceObject.getClass();
-        Field[] fields=FieldUtils.getAllFields(sourceClass);
+        Field[] fields= ClassUtils.getAllFields(sourceClass);
         Object fieldValue;
         String fieldName;
         for(Field field:fields){
@@ -192,7 +193,7 @@ public class ConversionProxy {
      */
     public static Object setTargetObject(Object targetObject, Map<String, Object> sourceMap, List<EntityAndDto> eds, boolean toDto, String initialName) throws IllegalAccessException, InstantiationException {
         Class<?> targetClass = targetObject.getClass();
-        Field[] targetFields=FieldUtils.getAllFields(targetClass);
+        Field[] targetFields=ClassUtils.getAllFields(targetClass);
         Class<?> fieldClass;
         String fieldName;
         for(Field field:targetFields){

@@ -46,7 +46,7 @@ public class RegistrationController extends LuckyController {
                           @RequestParam(value="agreement",def = "HTTP")String agreement)
             throws IOException, URISyntaxException {
         if(!serviceCenter.isHaveClientName(serviceName))
-            return "ON SERVICE";
+            return "ERROR: [ON SERVICE] No service found: \""+serviceName+"\"";
         return serviceCenter.request(agreement,serviceName,api,model);
     }
 }
