@@ -294,6 +294,7 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);
 			serverConfig.autoCreateWebapp(false);
+			serverConfig.setRequestTargetAllow("|{}[]");
 		}
 		return serverConfig;
 	}
