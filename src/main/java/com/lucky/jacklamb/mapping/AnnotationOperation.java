@@ -445,7 +445,7 @@ public class AnnotationOperation {
                         continue;
                     } else {
                         if (defparam == null)
-                            throw new NotFindRequestException("缺少请求参数：" + paramName + ",错误位置：" + method);
+                            args[i] = null;
                         if ("null".equals(defparam)) {
                             args[i] = null;
                             sb.append("[Default-Java] " + paramName + "=" + args[i] + "\n");
@@ -519,6 +519,7 @@ public class AnnotationOperation {
 
     /**
      * 得到RequestParam注解中def的值
+     *
      *
      * @param param
      * @return
