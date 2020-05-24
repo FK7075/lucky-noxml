@@ -68,7 +68,7 @@ public class LuckyApplication {
         } else {
             context.setDocBase(docBase);
         }
-        context.setSessionCookieName("Lucky-Tomcat");
+        context.setSessionCookieName("JackLamb.Lucky.Tomcat");
         context.addLifecycleListener(new Tomcat.DefaultWebXmlListener());
         context.addLifecycleListener(new Tomcat.FixContextListener());
         context.addServletContainerInitializer(new LuckyServletContainerInitializer(start), null);

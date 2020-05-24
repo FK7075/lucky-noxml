@@ -182,7 +182,7 @@ public class ServerConfig implements LuckyConfig  {
 	}
 	
 	/**
-	 * 设置一个静态文件的储存库(项目路径的相对路径)
+	 * 设置一个静态文件的储存库(System.getProperty("user.dir")的相对路径)
 	 * @param docbase
 	 */
 	public void setDocBase(String docbase) {
@@ -348,5 +348,6 @@ public class ServerConfig implements LuckyConfig  {
 		servletInit();
 		filterInit();
 	}
+
 }
 	

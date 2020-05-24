@@ -25,6 +25,7 @@ public @interface Upload {
 	
 	/**
 	 * 上传到项目文件夹的位置(对应names)
+	 * abs:开头表示绝对路径
 	 * @return
 	 */
 	String[] filePath() default "upload/";
