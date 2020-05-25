@@ -120,6 +120,7 @@
       <artifactId>tomcat-embed-el</artifactId>
       <version>8.5.51</version>
     </dependency><!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
@@ -213,6 +214,7 @@
                     <includes>
                       <include>**/*.properties</include>
                       <include>**/*.xml</include>
+                      <include>**/*.html</include>
                       <include>**/*.ini</include>
                       <include>**/*.ico</include>
                     </includes>

@@ -197,7 +197,7 @@ public class AnnotationOperation {
                             continue;
                         }
 
-                        File uploadFile=new File(savePath + pathSave + "/" + filename);
+                        File uploadFile=new File(file.getAbsolutePath()+ File.separator + filename);
                         FileOutputStream out = new FileOutputStream(uploadFile);
                         FileCopyUtils.copy(in, out);
                         item.delete();

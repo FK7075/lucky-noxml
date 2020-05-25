@@ -6,14 +6,19 @@ import com.lucky.jacklamb.annotation.mvc.RequestParam;
 import com.lucky.jacklamb.annotation.mvc.RestBody;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.enums.Rest;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.servlet.LuckyController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller("registrationCenter")
@@ -33,9 +38,21 @@ public class RegistrationController extends LuckyController {
         serviceCenter.logOut(serviceName,model.getIpAddr(),port);
     }
 
-    @RestBody
+    @RequestMapping("photo")
+    public void photo() throws IOException {
+        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/check0.png");
+        FileCopyUtils.copyToServletOutputStream(response,resourceAsStream);
+    }
+
     @RequestMapping("/")
-    public Map<String, Map<String, ServiceInfo>> services(){
+    public void services() throws IOException {
+        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/service.html");
+        FileCopyUtils.copyToServletOutputStream(response,resourceAsStream);
+    }
+
+    @RestBody
+    @RequestMapping("allService")
+    public Map<String, Map<String, ServiceInfo>> allService(){
         return serviceCenter.getClientMap();
     }
 
