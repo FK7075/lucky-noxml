@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <title>Lucy-XFL-Server</title>
+    <title>XFL-LUCY-SERVICES</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 </head>
@@ -172,7 +172,8 @@
             var jsonObj =JSON.parse(responseText);
             var i=1;
             var tableBody=document.getElementById("tableBody");
-            tableBody.innerHTML="";
+            if(Object.keys(jsonObj).length!=0)
+                tableBody.innerHTML="";
             for(var key in jsonObj){
                 var tr=document.createElement("tr");
                 var th=document.createElement("th");
@@ -247,17 +248,10 @@
         </thead>
         <tbody id="tableBody">
         <tr>
-            <th scope="row">1</th>
-            <td>clues</td>
-            <td>192.168.2.64:8081<br>
-                192.168.2.64:8082</td>
-            <td>Running</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>user</td>
-            <td>145.65.23.66:8888</td>
-            <td>Running</td>
+            <th scope="row">--</th>
+            <td>暂无服务</td>
+            <td>暂无服务</td>
+            <td>NO SERVICE</td>
         </tr>
         </tbody>
     </table>
