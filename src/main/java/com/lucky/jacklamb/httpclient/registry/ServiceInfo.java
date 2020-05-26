@@ -37,4 +37,8 @@ public class ServiceInfo {
             return "https://"+ip+":"+port;
         throw new RuntimeException("错误的协议名："+agreement);
     }
+
+    public String getCheckUrl(){
+        return getApiUrl("HTTP")+"/@rqe-lucy-xfl-0721/";
+    }
 }

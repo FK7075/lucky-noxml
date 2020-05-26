@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.lucky.jacklamb.httpclient.registry.RegistrationController;
+import com.lucky.jacklamb.httpclient.service.FeignClientController;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
@@ -92,6 +93,8 @@ public abstract class Scan {
 		configuration=AppConfig.getAppConfig();
 		if(configuration.getServiceConfig().isRegistrycenter()){
 			controllerClass.add(RegistrationController.class);
+		}else if(configuration.getServiceConfig().getServiceName()!=null&&!configuration.getServiceConfig().isRegistrycenter()){
+			controllerClass.add(FeignClientController.class);
 		}
 		if(configuration.getScanConfig().getScanMode()==com.lucky.jacklamb.enums.Scan.AUTO_SCAN) {
 			log.info("LUCKY-SCAN-MODE        => AUTO_SCAN");

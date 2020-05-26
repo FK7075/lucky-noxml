@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.httpclient.registry;
 
+import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.servlet.Model;
@@ -15,8 +16,40 @@ public class ServiceCenter {
     private Map<String, Map<String, ServiceInfo>> clientMap = new HashMap<>();
 
     public Map<String, Map<String, ServiceInfo>> getClientMap() {
+        Map<String, Map<String, ServiceInfo>> clientMapCopy=new HashMap<>();
+        Set<String> clientMapKeys = clientMap.keySet();
+        for(String key:clientMapKeys){
+            Map<String,ServiceInfo> ipportMap=clientMap.get(key);
+            Map<String,ServiceInfo> ipportMapCopy=new HashMap<>();
+            for(Map.Entry<String,ServiceInfo> entry:ipportMap.entrySet())
+                ipportMapCopy.put(entry.getKey(),entry.getValue());
+            clientMapCopy.put(key,ipportMapCopy);
+        }
+
+        Set<String> keys = clientMapCopy.keySet();
+        for(String key:keys){
+            Map<String, ServiceInfo> serviceInfoMap = clientMapCopy.get(key);
+            Set<String> serviceKeys = serviceInfoMap.keySet();
+            for(String serviceKey:serviceKeys){
+                ServiceInfo si=serviceInfoMap.get(serviceKey);
+                try {
+                    String code=HttpClientCall.call(si.getCheckUrl()+key, RequestMethod.POST,new HashMap<>());
+                    if("-1".equals(code)){
+                        logOut(key,si.getIp(),si.getPort());
+                        continue;
+                    }else{
+                        continue;
+                    }
+                }catch (Exception e){
+                    logOut(key,si.getIp(),si.getPort());
+                    continue;
+                }
+            }
+        }
         return clientMap;
     }
+
+
 
     //注册
     public void registry(String clientName, String ip, Integer port) {
