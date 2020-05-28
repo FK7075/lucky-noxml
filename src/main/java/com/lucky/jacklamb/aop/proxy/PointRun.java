@@ -290,15 +290,7 @@ public class PointRun {
 						if(!targetMethodSignature.containsIndex(index))
 							throw new RuntimeException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
 						expandParams[i]=targetMethodSignature.getParamByIndex(index);	
-					}else if(aopParamValue.startsWith("name:")) {
-						indexStr=aopParamValue.substring(5).trim();
-						if(targetMethodSignature.containsParamName(indexStr)) {
-							expandParams[i]=targetMethodSignature.getParamByName(indexStr);
-						}else {
-							expandParams[i]=null;
-						}
-						
-					} else if(aopParamValue.equals("[params]")){//整个参数列表
+					}else if(aopParamValue.equals("[params]")){//整个参数列表
 						expandParams[i]=targetMethodSignature.getParameters();
 					}else if(aopParamValue.equals("[method]")) {//Method对象
 						expandParams[i]=targetMethodSignature.getCurrMethod();
