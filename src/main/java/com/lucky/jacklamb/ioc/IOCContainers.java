@@ -168,6 +168,7 @@ public final class IOCContainers {
 	 */
 	public void initComponentIOC() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		appIOC=new ComponentIOC();
+		appIOC.addAppMap("LUCKY-COMPONENT-IOC",appIOC);
 		appIOC.initComponentIOC(ScanFactory.createScan().getComponentClass("component"));
 	}
 	
@@ -182,6 +183,7 @@ public final class IOCContainers {
 	 */
 	public void initControllerIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		controllerIOC=new ControllerIOC();
+		controllerIOC.addControllerMap("LUCKY-CONTROLLER-IOC",controllerIOC);
 		controllerIOC.initControllerIOC(ScanFactory.createScan().getComponentClass("controller"));
 		controllerIOC.methodHanderSetting();
 		
@@ -198,6 +200,7 @@ public final class IOCContainers {
 	 */
 	public void initServiceIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		serviceIOC=new ServiceIOC();
+		serviceIOC.addServiceMap("LUCKY-SERVICE-IOC",serviceIOC);
 		serviceIOC.initServiceIOC(ScanFactory.createScan().getComponentClass("service"));
 	}
 	
@@ -212,6 +215,7 @@ public final class IOCContainers {
 	 */
 	public void initRepositoryIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		repositoryIOC=new RepositoryIOC();
+		repositoryIOC.addRepositoryMap("LUCKY-REPOSITORY-IOC",repositoryIOC);
 		repositoryIOC.initRepositoryIOC(ScanFactory.createScan().getComponentClass("repository"));
 	}
 	

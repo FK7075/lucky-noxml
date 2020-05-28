@@ -75,7 +75,7 @@ public class ApplicationBeans {
 	
 	/**
 	 * 根据ID得到一个具体的方法映射
-	 * @param id
+	 * @param uRLAndRequestMethod
 	 * @return
 	 */
 	public ControllerAndMethod getHanderMethod(URLAndRequestMethod uRLAndRequestMethod) {

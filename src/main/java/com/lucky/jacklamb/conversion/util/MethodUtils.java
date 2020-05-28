@@ -1,6 +1,8 @@
 package com.lucky.jacklamb.conversion.util;
 
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -37,6 +39,22 @@ public abstract class MethodUtils {
         for(int i=0;i<parameters.length;i++)
             names[i]=parameters[i].getName();
         return names;
+    }
+
+    public static Object[] getRunParam(Method method,String[] StrParam,ApplicationBeans beans){
+        Parameter[] parameters = method.getParameters();
+        if(parameters.length!=StrParam.length){
+            throw new RuntimeException("@InitRun参数错误(runParam提供的参数个数与方法参数列表个数不匹配--[ERROR m:"+parameters.length+" , p:"+StrParam.length+"])，位置："+method);
+        }
+        Object[] runParams=new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            if(StrParam[i].startsWith("ref:")){
+                runParams[i]= beans.getBean(StrParam[i].substring(4));
+            }else{
+                runParams[i]= JavaConversion.strToBasic(StrParam[i],parameters[i].getType());
+            }
+        }
+        return runParams;
     }
 
 }

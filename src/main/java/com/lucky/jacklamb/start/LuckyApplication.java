@@ -43,7 +43,6 @@ public class LuckyApplication {
 
     private static void run() {
         ServerConfig serverCfg = AppConfig.getAppConfig().getServerConfig();
-        long start = System.currentTimeMillis();
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(serverCfg.getPort());
         tomcat.setBaseDir(serverCfg.getBaseDir());
@@ -71,7 +70,7 @@ public class LuckyApplication {
         context.setSessionCookieName("JackLamb.Lucky.Tomcat");
         context.addLifecycleListener(new Tomcat.DefaultWebXmlListener());
         context.addLifecycleListener(new Tomcat.FixContextListener());
-        context.addServletContainerInitializer(new LuckyServletContainerInitializer(start), null);
+        context.addServletContainerInitializer(new LuckyServletContainerInitializer(), null);
         context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
         if (serverCfg.getRequestTargetAllow() != null)
             System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", serverCfg.getRequestTargetAllow());

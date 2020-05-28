@@ -40,13 +40,15 @@ public class LuckyDispatherServlet extends HttpServlet {
 	private UrlParsMap urlParsMap;
 	private ResponseControl responseControl;
 
-	@Override
-	public void init(){
-		init(null);
+	public void initRun(){
+		ApplicationBeans.iocContainers.getControllerIOC().getServerStartRuns()
+				.stream().forEach((a)->{
+					a.runAdd();
+					log.info("##Run-InitRun : \"{id="+a.getComponentName()+", ServerStartRun="+a+"\"}");
+		});
 	}
 
-	@Override
-	public void init(ServletConfig config) {
+	public void ContainerInitialization(){
 		ApplicationBeans.createApplicationBeans();
 		ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
 		//存在[Service]配置，配置类型为服务时，将此服务注册到注册中心
@@ -58,15 +60,21 @@ public class LuckyDispatherServlet extends HttpServlet {
 				param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
 				HttpClientCall.postCall(url,param);
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		anop = new AnnotationOperation();
 		webCfg=AppConfig.getAppConfig().getWebConfig();
 		urlParsMap=new UrlParsMap();
 		responseControl=new ResponseControl();
+	}
+
+	@Override
+	public void init(ServletConfig config) {
+		ContainerInitialization();
+		initRun();
 	}
 
 

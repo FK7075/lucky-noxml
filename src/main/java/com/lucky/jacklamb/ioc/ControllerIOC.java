@@ -23,6 +23,7 @@ import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
+import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +39,12 @@ public class ControllerIOC extends ComponentFactory{
 	private ControllerAndMethodMap handerMap;
 	
 	private Set<String> mappingSet;
-	
+
+	private List<ServerStartRun> serverStartRuns;
+
+	public List<ServerStartRun> getServerStartRuns() {
+		return serverStartRuns;
+	}
 
 	public Set<String> getMappingSet() {
 		return mappingSet;
@@ -66,6 +72,7 @@ public class ControllerIOC extends ComponentFactory{
 		controllerIDS = new ArrayList<>();
 		handerMap = new ControllerAndMethodMap();
 		mappingSet = new HashSet<>();
+		serverStartRuns=new ArrayList<>();
 	}
 	
 	public boolean containHander(URLAndRequestMethod uRLAndRequestMethod) {
@@ -192,6 +199,7 @@ public class ControllerIOC extends ComponentFactory{
 			MappingDetails md;
 			for (Method method : publicMethods) {
 				if (Mapping.isMappingMethod(method)) {
+					method.setAccessible(true);
 					md=Mapping.getMappingDetails(method);
 					ControllerAndMethod come = new ControllerAndMethod();
 					String[] controllerIps=clzz.getAnnotation(Controller.class).ip();
@@ -219,7 +227,12 @@ public class ControllerIOC extends ComponentFactory{
 					ips=come.getIpSection().length==0?"":" , IP段: "+Arrays.toString(come.getIpSection());
 					rest=" , Rest: "+come.getRest().toString();
 					log.info("@Mapping \"{"+"URL: ["+ url_c +url_m+"] , RequestMethod: "+uRLAndRequestMethod.getMethods() +ip+ips+rest+" , Method: "+method+"}\"");
-				} else {
+				} else if(method.isAnnotationPresent(InitRun.class)){
+					InitRun initRun=method.getAnnotation(InitRun.class);
+					String id="".equals(initRun.id())?LuckyUtils.TableToClass1(clzz.getSimpleName())+"."+method.getName():initRun.id();
+					serverStartRuns.add(new ServerStartRun(id,instance,method,initRun.runParam()));
+					log.info("@InitRun \"{id="+id+", Method="+method+" }\"");
+				} else  {
 					continue;
 				}
 			}
