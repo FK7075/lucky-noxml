@@ -1,10 +1,7 @@
 package com.lucky.jacklamb.httpclient.service;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
-import com.lucky.jacklamb.annotation.mvc.InitRun;
-import com.lucky.jacklamb.annotation.mvc.RequestMapping;
-import com.lucky.jacklamb.annotation.mvc.RestBody;
-import com.lucky.jacklamb.annotation.mvc.RestParam;
+import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.config.AppConfig;
@@ -36,6 +33,22 @@ public class FeignClientController {
             param.put("serviceName", service.getServiceName());
             param.put("port", AppConfig.getAppConfig().getServerConfig().getPort() + "");
             HttpClientCall.postCall(url, param);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @CloseRun
+    public void closeRun(){
+        try {
+            ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
+            String url=service.getServiceUrl().endsWith("/")?service.getServiceUrl()+"logout":service.getServiceUrl()+"/logout";
+            Map<String,String> param=new HashMap<>();
+            param.put("serviceName",service.getServiceName());
+            param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
+            HttpClientCall.postCall(url,param);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (URISyntaxException e) {

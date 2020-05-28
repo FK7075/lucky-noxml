@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 @Controller("registrationCenter")
-public class RegistrationController extends LuckyController {
+public final class RegistrationController extends LuckyController {
 
     private static final Logger log= LogManager.getLogger(RegistrationController.class);
 
@@ -53,9 +53,9 @@ public class RegistrationController extends LuckyController {
     }
 
     @RestBody(Rest.TXT)
-    @RequestMapping("#{serviceName}/#{api}*")
-    public String request(@RestParam("serviceName") String serviceName,
-                          @RestParam("api")String api,
+    @RequestMapping("#{SERVIC_ENAME}/#{API}*")
+    public String request(@RestParam("SERVIC_ENAME") String serviceName,
+                          @RestParam("API")String api,
                           @RequestParam(value="agreement",def = "HTTP")String agreement)
             throws IOException, URISyntaxException {
         if(!serviceCenter.isHaveClientName(serviceName))

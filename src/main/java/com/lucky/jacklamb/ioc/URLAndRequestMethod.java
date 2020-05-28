@@ -87,6 +87,14 @@ public class URLAndRequestMethod {
 		String[] mapArray=participle(mapstr);
 		String[] urlArray=participle(currurl);
 		if(mapstr.endsWith("}*")&&urlArray.length>=mapArray.length){
+			if("lucyxfl".equals(urlArray[0]))
+				return  false;
+			for(int i=0;i<mapArray.length-1;i++){
+				if(!mapArray[i].endsWith("}")&&!mapArray[i].startsWith("#{")){
+					if(!mapArray[i].equals(urlArray[i]))
+						return false;
+				}
+			}
 			return true;
 		}
 		if(mapArray.length!=urlArray.length)

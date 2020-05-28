@@ -38,7 +38,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 		ApplicationBeans.iocContainers.getControllerIOC().getServerStartRuns()
 				.stream().forEach((a)->{
 					a.runAdd();
-					log.info("##Run-InitRun : \"{id="+a.getComponentName()+", ServerStartRun="+a+"\"}");
+					log.info("@InitRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
 		});
 	}
 
@@ -52,9 +52,15 @@ public class LuckyDispatherServlet extends HttpServlet {
 		initRun();
 	}
 
+	@Override
+	public void destroy() {
+		ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
+				.stream().forEach((a)->{
+			log.info("@CloseRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+			a.runAdd();
+		});
+	}
 
-
-	
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp){
 		this.luckyResponse(req, resp,RequestMethod.DELETE);

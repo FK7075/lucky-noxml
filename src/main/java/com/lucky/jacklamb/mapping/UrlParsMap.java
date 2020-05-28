@@ -114,7 +114,7 @@ public class UrlParsMap {
 	 * @throws IOException 
 	 */
 	public ControllerAndMethod pars(Model model,String url,RequestMethod requestMethod) throws IOException {
-		ControllerAndMethod come = new ControllerAndMethod();
+		ControllerAndMethod come;
 		URLAndRequestMethod iocURM=getURLAndRequestMethod(model,url,requestMethod);
 		if(iocURM==null)
 			return null;

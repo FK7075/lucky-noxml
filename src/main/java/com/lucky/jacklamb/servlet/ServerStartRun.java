@@ -19,6 +19,10 @@ public class ServerStartRun {
 
     private Method controllerMethod;
 
+    public Method getControllerMethod() {
+        return controllerMethod;
+    }
+
     private String[] params;
 
     public String getComponentName() {

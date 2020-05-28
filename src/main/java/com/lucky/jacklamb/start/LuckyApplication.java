@@ -33,10 +33,7 @@ public class LuckyApplication {
      * @param applicationClass
      */
     public static void run(Class<?> applicationClass) {
-        ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
-        if(service.getServiceName()!=null&&!service.isRegistrycenter()){
-            doShutDownWork();
-        }
+        doShutDownWork();
         AppConfig.applicationClass = applicationClass;
         run();
     }
@@ -88,18 +85,11 @@ public class LuckyApplication {
     private static void doShutDownWork() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                try {
-                    ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
-                    String url=service.getServiceUrl().endsWith("/")?service.getServiceUrl()+"logout":service.getServiceUrl()+"/logout";
-                    Map<String,String> param=new HashMap<>();
-                    param.put("serviceName",service.getServiceName());
-                    param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
-                    HttpClientCall.postCall(url,param);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+                ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
+                        .stream().forEach((a)->{
+                    log.info("@CloseRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+                    a.runAdd();
+                });
             }
         });
 

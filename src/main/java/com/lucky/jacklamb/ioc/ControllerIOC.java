@@ -42,6 +42,12 @@ public class ControllerIOC extends ComponentFactory{
 
 	private List<ServerStartRun> serverStartRuns;
 
+	private List<ServerStartRun> serverCloseRuns;
+
+	public List<ServerStartRun> getServerCloseRuns() {
+		return serverCloseRuns;
+	}
+
 	public List<ServerStartRun> getServerStartRuns() {
 		return serverStartRuns;
 	}
@@ -73,6 +79,7 @@ public class ControllerIOC extends ComponentFactory{
 		handerMap = new ControllerAndMethodMap();
 		mappingSet = new HashSet<>();
 		serverStartRuns=new ArrayList<>();
+		serverCloseRuns=new ArrayList<>();
 	}
 	
 	public boolean containHander(URLAndRequestMethod uRLAndRequestMethod) {
@@ -231,8 +238,10 @@ public class ControllerIOC extends ComponentFactory{
 					InitRun initRun=method.getAnnotation(InitRun.class);
 					String id="".equals(initRun.id())?LuckyUtils.TableToClass1(clzz.getSimpleName())+"."+method.getName():initRun.id();
 					serverStartRuns.add(new ServerStartRun(id,instance,method,initRun.runParam()));
-					log.info("@InitRun \"{id="+id+", Method="+method+" }\"");
-				} else  {
+				} else if(method.isAnnotationPresent(CloseRun.class)){
+					CloseRun closeRun=method.getAnnotation(CloseRun.class);
+					serverCloseRuns.add(new ServerStartRun("CLOSE",instance,method,closeRun.runParam()));
+				}else  {
 					continue;
 				}
 			}
