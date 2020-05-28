@@ -3,11 +3,9 @@ package com.lucky.jacklamb.servlet;
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
-import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.ioc.config.AppConfig;
-import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.ioc.exception.LuckyExceptionDispose;
 import com.lucky.jacklamb.mapping.AnnotationOperation;
@@ -22,13 +20,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 @MultipartConfig
 public class LuckyDispatherServlet extends HttpServlet {
@@ -48,32 +42,13 @@ public class LuckyDispatherServlet extends HttpServlet {
 		});
 	}
 
-	public void ContainerInitialization(){
+	@Override
+	public void init(ServletConfig config) {
 		ApplicationBeans.createApplicationBeans();
-		ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
-		//存在[Service]配置，配置类型为服务时，将此服务注册到注册中心
-		if(service.getServiceName()!=null&&!service.isRegistrycenter()){
-			try {
-				String url=service.getServiceUrl().endsWith("/")?service.getServiceUrl()+"register":service.getServiceUrl()+"/register";
-				Map<String,String> param=new HashMap<>();
-				param.put("serviceName",service.getServiceName());
-				param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
-				HttpClientCall.postCall(url,param);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
-		}
 		anop = new AnnotationOperation();
 		webCfg=AppConfig.getAppConfig().getWebConfig();
 		urlParsMap=new UrlParsMap();
 		responseControl=new ResponseControl();
-	}
-
-	@Override
-	public void init(ServletConfig config) {
-		ContainerInitialization();
 		initRun();
 	}
 
@@ -122,7 +97,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 					FileCopyUtils.copyToServletOutputStream(resp,new File(icoFile.getPath()));
 					return;
 				}
-				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/favicon.ico"));
+				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"));
 				return;
 			}
 			//全局资源的IP限制
