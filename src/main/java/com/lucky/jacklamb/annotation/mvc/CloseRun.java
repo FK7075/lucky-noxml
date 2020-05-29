@@ -13,6 +13,12 @@ import java.lang.annotation.*;
 public @interface CloseRun {
 
     /**
+     * 执行优先级
+     * @return
+     */
+    int priority() default 5;
+
+    /**
      * 提供方法运行时所需要的参数
      * @return
      */

@@ -23,6 +23,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Comparator;
 
 @MultipartConfig
 public class LuckyDispatherServlet extends HttpServlet {
@@ -36,9 +37,9 @@ public class LuckyDispatherServlet extends HttpServlet {
 
 	public void initRun(){
 		ApplicationBeans.iocContainers.getControllerIOC().getServerStartRuns()
-				.stream().forEach((a)->{
-					a.runAdd();
-					log.info("@InitRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+				.stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a)->{
+			log.info("@InitRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+			a.runAdd();
 		});
 	}
 
@@ -55,8 +56,8 @@ public class LuckyDispatherServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
-				.stream().forEach((a)->{
-			log.info("@CloseRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+				.stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a)->{
+			log.info("@CloseRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
 			a.runAdd();
 		});
 	}
@@ -119,10 +120,16 @@ public class LuckyDispatherServlet extends HttpServlet {
 				return;
 			}
 			if(webCfg.isOpenStaticResourceManage()&&StaticResourceManage.isLegalRequest(webCfg,currIp,resp,path)) {
-				//静态资源处理
-				log.debug("STATIC-REQUEST [静态资源请求]  ["+requestMethod+"]  #SR#=> "+uri);
-				StaticResourceManage.response(req, resp, uri);
-				return;
+				try{
+					//静态资源处理
+					log.debug("STATIC-REQUEST [静态资源请求]  ["+requestMethod+"]  #SR#=> "+uri);
+					StaticResourceManage.response(req, resp, uri);
+					return;
+				}catch (Exception e){
+					e.printStackTrace();
+					return;
+				}
+
 			}
 			if (path.endsWith(".lucky")||path.endsWith(".do")||path.endsWith(".xfl")||path.endsWith(".fk")||path.endsWith(".cad")||path.endsWith(".lcl")) {
 				//Lucky默认可以使用的后缀

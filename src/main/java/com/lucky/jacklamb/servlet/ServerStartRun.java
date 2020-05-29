@@ -13,6 +13,12 @@ import java.lang.reflect.Method;
  */
 public class ServerStartRun {
 
+    private int priority;
+
+    public int getPriority() {
+        return priority;
+    }
+
     private String componentName;
 
     private Object controllerObject;
@@ -36,7 +42,8 @@ public class ServerStartRun {
     public ServerStartRun() {
     }
 
-    public ServerStartRun(String componentName, Object controllerObject, Method controllerMethod, String[] params) {
+    public ServerStartRun(int priority,String componentName, Object controllerObject, Method controllerMethod, String[] params) {
+        this.priority=priority;
         this.componentName = componentName;
         this.controllerObject = controllerObject;
         this.controllerMethod = controllerMethod;

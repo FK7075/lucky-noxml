@@ -23,7 +23,7 @@ public class FeignClientController {
         return SERVICE_NAME.equals(serviceName) ? 1 : -1;
     }
 
-    @InitRun(id = "LUCKY-SERVICE-REGISTERED")
+    @InitRun(id = "LUCKY-SERVICE-REGISTERED",priority = 1)
     public void registered() {
         ServiceConfig service = AppConfig.getAppConfig().getServiceConfig();
         //存在[Service]配置，配置类型为服务时，将此服务注册到注册中心
@@ -40,7 +40,7 @@ public class FeignClientController {
         }
     }
 
-    @CloseRun
+    @CloseRun(priority = 10)
     public void closeRun(){
         try {
             ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();

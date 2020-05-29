@@ -85,12 +85,14 @@ public class AnnotationOperation {
         MultipartFile[] multipartFiles;
         for (String fn : fieldNames) {
             fileItemList = sameNameFileItemMap.get(fn);
+            boolean isFile=false;
             multipartFiles = new MultipartFile[fileItemList.size()];
             int fileIndex = 0;
             for (FileItem item : fileItemList) {
                 if (!item.isFormField()) {
                     String filename = item.getName();
                     if (paramlist.contains(fn)) {
+                        isFile=true;
                         InputStream in = item.getInputStream();
                         MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
                         multipartFiles[fileIndex] = mfp;
@@ -103,7 +105,8 @@ public class AnnotationOperation {
                     }
                 }
             }
-            resultsMap.put(fn, multipartFiles);
+            if(isFile)
+                resultsMap.put(fn, multipartFiles);
         }
     }
 
@@ -160,14 +163,17 @@ public class AnnotationOperation {
         Map<String, List<FileItem>> sameNameFileItemMap = list.stream().collect(Collectors.groupingBy(FileItem::getFieldName));
         Set<String> fieldNames = sameNameFileItemMap.keySet();
         List<FileItem> fileItemList;
+
         File[] uploadNames;
         for (String fn : fieldNames) {
             fileItemList = sameNameFileItemMap.get(fn);
+            boolean isFile=false;
             uploadNames = new File[fileItemList.size()];
             int fileIndex = 0;
             for (FileItem item : fileItemList) {
                 if (!item.isFormField()) {
                     if (fieldAndFolder.containsKey(fn)) {
+                        isFile=true;
                         String filename = item.getName();
                         String suffix = filename.substring(filename.lastIndexOf("."));
                         if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase()))
@@ -211,7 +217,8 @@ public class AnnotationOperation {
                     }
                 }
             }
-            resultsMap.put(fn, uploadNames);
+            if(isFile)
+                resultsMap.put(fn, uploadNames);
         }
     }
 

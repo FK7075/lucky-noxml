@@ -237,10 +237,10 @@ public class ControllerIOC extends ComponentFactory{
 				} else if(method.isAnnotationPresent(InitRun.class)){
 					InitRun initRun=method.getAnnotation(InitRun.class);
 					String id="".equals(initRun.id())?LuckyUtils.TableToClass1(clzz.getSimpleName())+"."+method.getName():initRun.id();
-					serverStartRuns.add(new ServerStartRun(id,instance,method,initRun.runParam()));
+					serverStartRuns.add(new ServerStartRun(initRun.priority(),id,instance,method,initRun.runParam()));
 				} else if(method.isAnnotationPresent(CloseRun.class)){
 					CloseRun closeRun=method.getAnnotation(CloseRun.class);
-					serverCloseRuns.add(new ServerStartRun("CLOSE",instance,method,closeRun.runParam()));
+					serverCloseRuns.add(new ServerStartRun(closeRun.priority(),"CLOSE",instance,method,closeRun.runParam()));
 				}else  {
 					continue;
 				}

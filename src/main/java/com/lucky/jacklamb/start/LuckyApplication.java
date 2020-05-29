@@ -3,12 +3,14 @@ package com.lucky.jacklamb.start;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
+import com.lucky.jacklamb.servlet.ServerStartRun;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -50,6 +52,7 @@ public class LuckyApplication {
             tomcat.getServer().setShutdown(serverCfg.getShutdown());
         StandardContext context = new StandardContext();
         context.setSessionTimeout(serverCfg.getSessionTimeout());
+
         context.setPath(serverCfg.getContextPath());
         context.setReloadable(serverCfg.isReloadable());
         String docBase = serverCfg.getDocBase();
@@ -86,8 +89,8 @@ public class LuckyApplication {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
-                        .stream().forEach((a)->{
-                    log.info("@CloseRun ==> Running : \"{id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+                        .stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a)->{
+                    log.info("@CloseRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
                     a.runAdd();
                 });
             }
