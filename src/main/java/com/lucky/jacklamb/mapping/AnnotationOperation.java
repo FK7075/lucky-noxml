@@ -3,6 +3,7 @@ package com.lucky.jacklamb.mapping;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
@@ -21,23 +22,22 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AnnotationOperation {
 
-    private static final Logger log= LogManager.getLogger(AnnotationOperation.class);
+    private static final Logger log = LogManager.getLogger(AnnotationOperation.class);
 
     /**
      * 基于MultipartFile的多文件上传
@@ -48,29 +48,25 @@ public class AnnotationOperation {
      * @throws IOException
      * @throws ServletException
      */
-    private Map<String, MultipartFile[]> moreUploadMutipar(Model model, Method method)
+    private void moreMultipartFil(Model model, Method method)
             throws IOException, FileUploadException {
-        Map<String, MultipartFile[]> map = new HashMap<>();
         Parameter[] parameters = method.getParameters();
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         List<String> paramlist = new ArrayList<>();
         for (int i = 0; i < parameters.length; i++) {
-            if (MultipartFile.class==parameters[i].getType()||MultipartFile[].class==parameters[i].getType()) {
+            if (MultipartFile.class == parameters[i].getType() || MultipartFile[].class == parameters[i].getType()) {
                 paramlist.add(Mapping.getParamName(parameters[i], paramNames[i]));
             }
         }
-        setMultipartFileMap(model, map, paramlist);
-        return map;
+        setMultipartFileMap(model);
     }
 
     /**
      * MultipartFile的多文件上传,基于Apache [commons-fileupload-1.3.1.jar  commons-io-2.4.jar]
      *
-     * @param model      Model对象
-     * @param resultsMap 参数名与MultipartFile对象组成的map
-     * @param paramlist  MultipartFile类型参数名组成的集合
+     * @param model Model对象
      */
-    public void setMultipartFileMap(Model model, Map<String, MultipartFile[]> resultsMap, List<String> paramlist) throws FileUploadException, IOException {
+    public void setMultipartFileMap(Model model) throws FileUploadException, IOException {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
@@ -85,19 +81,17 @@ public class AnnotationOperation {
         MultipartFile[] multipartFiles;
         for (String fn : fieldNames) {
             fileItemList = sameNameFileItemMap.get(fn);
-            boolean isFile=false;
+            boolean isFile = false;
             multipartFiles = new MultipartFile[fileItemList.size()];
             int fileIndex = 0;
             for (FileItem item : fileItemList) {
                 if (!item.isFormField()) {
                     String filename = item.getName();
-                    if (paramlist.contains(fn)) {
-                        isFile=true;
-                        InputStream in = item.getInputStream();
-                        MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
-                        multipartFiles[fileIndex] = mfp;
-                        fileIndex++;
-                    }
+                    isFile = true;
+                    InputStream in = item.getInputStream();
+                    MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
+                    multipartFiles[fileIndex] = mfp;
+                    fileIndex++;
                 } else {
                     if (!model.parameterMapContainsKey(item.getFieldName())) {
                         String[] values = {new String(item.get(), "UTF-8")};
@@ -105,8 +99,8 @@ public class AnnotationOperation {
                     }
                 }
             }
-            if(isFile)
-                resultsMap.put(fn, multipartFiles);
+            if (isFile)
+                model.addMultipartFile(fn, multipartFiles);
         }
     }
 
@@ -119,8 +113,7 @@ public class AnnotationOperation {
      * @throws IOException
      * @throws ServletException
      */
-    private Map<String, File[]> moreUpload(Model model, Method method) throws IOException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
-        Map<String, File[]> fileMap = new HashMap<>();
+    private void moreUpload(Model model, Method method) throws IOException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
         if (method.isAnnotationPresent(Upload.class)) {
             Upload upload = method.getAnnotation(Upload.class);
             String[] files = upload.names();
@@ -135,9 +128,8 @@ public class AnnotationOperation {
                 for (int i = 0; i < savePaths.length; i++)
                     fieldAndFolder.put(files[i], savePaths[i]);
             }
-            upload(model, fileMap, fieldAndFolder, types, maxSize);
+            upload(model, fieldAndFolder, types, maxSize);
         }
-        return fileMap;
     }
 
     /**
@@ -145,12 +137,11 @@ public class AnnotationOperation {
      * 适配内嵌tomcat的文件上传与下载操作
      *
      * @param model          Model对象
-     * @param resultsMap     文件名与表单name属性所组成的Map
      * @param fieldAndFolder name与folder组成的Map
      * @param type           允许上传的文件类型
      * @param maxSize        允许上传文件的最大大小
      */
-    public void upload(Model model, Map<String, File[]> resultsMap, Map<String, String> fieldAndFolder, String type, int maxSize) throws FileTypeIllegalException, IOException, FileSizeCrossingException, FileUploadException {
+    public void upload(Model model, Map<String, String> fieldAndFolder, String type, int maxSize) throws FileTypeIllegalException, IOException, FileSizeCrossingException, FileUploadException {
         String savePath = model.getRealPath("/");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
@@ -167,25 +158,26 @@ public class AnnotationOperation {
         File[] uploadNames;
         for (String fn : fieldNames) {
             fileItemList = sameNameFileItemMap.get(fn);
-            boolean isFile=false;
+            boolean isFile = false;
             uploadNames = new File[fileItemList.size()];
             int fileIndex = 0;
             for (FileItem item : fileItemList) {
                 if (!item.isFormField()) {
                     if (fieldAndFolder.containsKey(fn)) {
-                        isFile=true;
+                        isFile = true;
                         String filename = item.getName();
                         String suffix = filename.substring(filename.lastIndexOf("."));
+                        String NoSuffix=filename.substring(0,filename.lastIndexOf("."));
                         if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase()))
                             throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
                         String pathSave = fieldAndFolder.get(fn);
                         File file;
-                        if(pathSave.startsWith("abs:")){//绝对路径写法
-                            file =new File(pathSave.substring(4));
-                        }else{//相对路径写法
-                            file  = new File(savePath + pathSave);
+                        if (pathSave.startsWith("abs:")) {//绝对路径写法
+                            file = new File(pathSave.substring(4));
+                        } else {//相对路径写法
+                            file = new File(savePath + pathSave);
                         }
-                        filename = UUID.randomUUID().toString() + suffix;
+                        filename = NoSuffix+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() + suffix;
                         InputStream in = item.getInputStream();
                         if (maxSize != 0) {
                             int size = in.available();
@@ -203,7 +195,7 @@ public class AnnotationOperation {
                             continue;
                         }
 
-                        File uploadFile=new File(file.getAbsolutePath()+ File.separator + filename);
+                        File uploadFile = new File(file.getAbsolutePath() + File.separator + filename);
                         FileOutputStream out = new FileOutputStream(uploadFile);
                         FileCopyUtils.copy(in, out);
                         item.delete();
@@ -217,32 +209,30 @@ public class AnnotationOperation {
                     }
                 }
             }
-            if(isFile)
-                resultsMap.put(fn, uploadNames);
+            if (isFile)
+                model.addUploadFile(fn, uploadNames);
         }
     }
 
     /**
      * 返回Controller方法参数名与参数值所组成的Map(针对Pojo类型的参数)
      *
-     * @param model     Model对象
-     * @param method    将要执行的Controller方法
-     * @param uploadMap 上传后的文件名与表单name属性所组成的Map
+     * @param model  Model对象
+     * @param method 将要执行的Controller方法
      * @return Controller方法参数名与参数值所组成的Map(针对Pojo类型的参数)
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IOException
      * @throws ServletException
      */
-    private Map<String, Object> pojoParam(Model model, Method method, Map<String, File[]> uploadMap)
+    private Map<String, Object> pojoParam(Model model, Method method)
             throws InstantiationException, IllegalAccessException {
         Map<String, Object> map = new HashMap<>();
         Parameter[] parameters = method.getParameters();
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         int i = 0;
         for (Parameter param : parameters) {
-
-            if (MultipartFile.class!=param.getType()&&MultipartFile[].class!=param.getType()
+            if (MultipartFile.class != param.getType() && MultipartFile[].class != param.getType()
                     && param.getType().getClassLoader() != null
                     && !ServletRequest.class.isAssignableFrom(param.getType())
                     && !ServletResponse.class.isAssignableFrom(param.getType())
@@ -257,19 +247,19 @@ public class AnnotationOperation {
                     fi.setAccessible(true);
                     Object fi_obj = fi.get(pojo);
                     // pojo中含有@Upload返回的文件名
-                    if (uploadMap.containsKey(fi.getName()) && fi_obj == null){
-                        File[] uploadFiles=uploadMap.get(fi.getName());
-                        if (fi.getType()==String[].class) {
-                            String[] uploadFileNames=new String[uploadFiles.length];
-                            for(int x=0;x<uploadFiles.length;i++)
-                                uploadFileNames[x]=uploadFiles[x].getName();
-                            fi.set(pojo, uploadMap.get(fi.getName()));
-                        } else if(fi.getType()==String.class){
+                    if (model.multipartFileMapContainsKey(fi.getName()) && fi_obj == null) {
+                        File[] uploadFiles = model.getUploadFileArray(fi.getName());
+                        if (fi.getType() == String[].class) {
+                            String[] uploadFileNames = new String[uploadFiles.length];
+                            for (int x = 0; x < uploadFiles.length; i++)
+                                uploadFileNames[x] = uploadFiles[x].getName();
+                            fi.set(pojo, uploadFiles);
+                        } else if (fi.getType() == String.class) {
                             fi.set(pojo, uploadFiles[0].getName());
-                        }else if(fi.getType()==File.class){
+                        } else if (fi.getType() == File.class) {
                             fi.set(pojo, uploadFiles[0]);
-                        }else if(fi.getType()==File[].class){
-                            fi.set(pojo,uploadFiles);
+                        } else if (fi.getType() == File[].class) {
+                            fi.set(pojo, uploadFiles);
                         }
                     }
 
@@ -284,12 +274,11 @@ public class AnnotationOperation {
 
     /**
      * 文件下载操作@Download
-     *
      * @param model  Model对象
      * @param method 将要执行的Controller方法
      * @throws IOException
      */
-    public void download(Model model, Method method) throws IOException {
+    public void download(Model model, Method method) throws IOException, URISyntaxException {
         Download dl = method.getAnnotation(Download.class);
         InputStream fis = null;
         String downName = null;
@@ -299,12 +288,15 @@ public class AnnotationOperation {
         } else if (!"".equals(dl.docPath())) {
             path = model.getRealPath("") + dl.docPath();
         } else if (!"".equals(dl.url())) {
-            downName = dl.url();
-            downName = downName.substring(downName.lastIndexOf("."));
-            downName = UUID.randomUUID().toString() + downName;
-            HttpURLConnection httpurlcon = (HttpURLConnection) new URL(dl.url()).openConnection();
-            httpurlcon.connect();
-            fis = httpurlcon.getInputStream();
+            String url=dl.url();
+            byte[] buffer=HttpClientCall.callByte(url, RequestMethod.GET,new HashMap<>());
+            String fileName=model.getResponse().getHeader("Content-Disposition");
+            if(fileName==null)
+                fileName="lucky_"+LuckyUtils.getRandomNumber()+url.substring(url.lastIndexOf("."));
+            else
+                fileName.replaceAll("attachment;filename=","").trim();
+            FileCopyUtils.download(model.getResponse(),buffer,fileName);
+            return;
         } else {
             String fileName = dl.name();
             String filePath = dl.folder();
@@ -324,10 +316,7 @@ public class AnnotationOperation {
             fis = new FileInputStream(f);
             downName = f.getName();
         }
-        model.getResponse().setCharacterEncoding("utf-8");
-        model.getResponse().setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(downName, "UTF-8"));
-        ServletOutputStream out = model.getResponse().getOutputStream();
-        FileCopyUtils.copy(fis, out);
+        FileCopyUtils.download(model.getResponse(), fis,downName);
     }
 
     /**
@@ -350,43 +339,39 @@ public class AnnotationOperation {
         StringBuilder sb = new StringBuilder("[ URL-PARAMS ]\n");
 
         //得到@Upload文件操作执行后的String类型参数(文件名)
-        Map<String, File[]> uploadMap = moreUpload(model, method);
-        sb.append(uploadMap.isEmpty() ? "" : "@Upload-Params       : " + uploadMap.toString() + "\n");
-
-
-        //得到类型为MultipartFile的参数
-        Map<String, MultipartFile[]> multiUploadMap = moreUploadMutipar(model, method);
-        sb.append(multiUploadMap.isEmpty() ? "" : "MultipartFile-Params : " + multiUploadMap.toString() + "\n");
+        moreUpload(model, method);
+        if(model.getUploadFileMap().isEmpty())
+            moreMultipartFil(model, method);   //得到类型为MultipartFile的参数
 
         //得到参数列表中的所有pojo类型参数
-        Map<String, Object> pojoMap = pojoParam(model, method, uploadMap);
+        Map<String, Object> pojoMap = pojoParam(model, method);
         sb.append(pojoMap.isEmpty() ? "" : "Pojo-Params          : " + pojoMap.toString() + "\n").append("URL-Params           : \n");
         String paramName;
 
         //ControllerMethod参数赋值
         for (int i = 0; i < parameters.length; i++) {
             paramName = Mapping.getParamName(parameters[i], paramNames[i]);
-            if (uploadMap.containsKey(paramName)) {//文件上传操作参数设置--@Upload
-                File[] uploadFiles=uploadMap.get(paramName);
-                if(String.class==parameters[i].getType()){
-                    args[i] = uploadMap.get(paramName)[0].getName();
-                }else if(String[].class==parameters[i].getType()){
-                    String[] uploadFileNames =new String[uploadFiles.length];
-                    for(int x=0;x<uploadFiles.length;x++)
-                        uploadFileNames[x]=uploadFiles[x].getName();
-                    args[i]=uploadFileNames;
-                }else if(File.class==parameters[i].getType()){
-                    args[i]=uploadFiles[0];
-                }else if(File[].class==parameters[i].getType()){
-                    args[i]=uploadFiles;
+            if (model.uploadFileMapContainsKey(paramName)) {//文件上传操作参数设置--@Upload
+                File[] uploadFiles =  model.getUploadFileArray(paramName);
+                if (String.class == parameters[i].getType()) {
+                    args[i] = uploadFiles[0].getName();
+                } else if (String[].class == parameters[i].getType()) {
+                    String[] uploadFileNames = new String[uploadFiles.length];
+                    for (int x = 0; x < uploadFiles.length; x++)
+                        uploadFileNames[x] = uploadFiles[x].getName();
+                    args[i] = uploadFileNames;
+                } else if (File.class == parameters[i].getType()) {
+                    args[i] = uploadFiles[0];
+                } else if (File[].class == parameters[i].getType()) {
+                    args[i] = uploadFiles;
                 }
-
                 continue;
-            } else if (multiUploadMap.containsKey(paramName)) {//文件上传操作参数设置--MultipartFile
+            } else if (model.multipartFileMapContainsKey(paramName)) {//文件上传操作参数设置--MultipartFile
+                MultipartFile[] multipartFiles = model.getMultipartFileArray(paramName);
                 if (MultipartFile.class == parameters[i].getType()) {
-                    args[i] = multiUploadMap.get(paramName)[0];
+                    args[i] = multipartFiles[0];
                 } else if (MultipartFile[].class == parameters[i].getType()) {
-                    args[i] = multiUploadMap.get(paramName);
+                    args[i] = multipartFiles;
                 }
                 continue;
             } else if (parameters[i].isAnnotationPresent(CallResult.class) || parameters[i].isAnnotationPresent(CallBody.class)) {
@@ -527,7 +512,6 @@ public class AnnotationOperation {
     /**
      * 得到RequestParam注解中def的值
      *
-     *
      * @param param
      * @return
      */
@@ -578,7 +562,7 @@ public class AnnotationOperation {
                                    String[] paramNames, String noParam) throws IOException, IllegalAccessException, URISyntaxException {
         String callResult;
         String api = getCallApi(controllerClass, method);
-        Map<String, String> requestMap = getHttpClientRequestParam(method, model, pojoMap, parameters, paramNames, noParam);
+        Map<String, Object> requestMap = getHttpClientRequestParam(method, model, pojoMap, parameters, paramNames, noParam);
         callResult = HttpClientCall.call(api, model.getRequestMethod(), requestMap);
         return callRestAndBody(currParameter, callResult);
     }
@@ -649,9 +633,9 @@ public class AnnotationOperation {
      * @param noParam    接受响应结果的参数名
      * @return
      */
-    private Map<String, String> getHttpClientRequestParam(Method method, Model model, Map<String, Object> pojoMap,
+    private Map<String, Object> getHttpClientRequestParam(Method method, Model model, Map<String, Object> pojoMap,
                                                           Parameter[] parameters, String[] paramNames, String noParam) throws IllegalAccessException {
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         //获得参数列表中基本类型的接口参数
         String currParam;

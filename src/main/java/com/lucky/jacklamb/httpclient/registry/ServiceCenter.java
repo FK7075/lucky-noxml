@@ -2,10 +2,12 @@ package com.lucky.jacklamb.httpclient.registry;
 
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.expression.$Expression;
+import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.servlet.Model;
 import org.apache.http.conn.HttpHostConnectException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -16,39 +18,38 @@ public class ServiceCenter {
     private Map<String, Map<String, ServiceInfo>> clientMap = new HashMap<>();
 
     public Map<String, Map<String, ServiceInfo>> getClientMap() {
-        Map<String, Map<String, ServiceInfo>> clientMapCopy=new HashMap<>();
+        Map<String, Map<String, ServiceInfo>> clientMapCopy = new HashMap<>();
         Set<String> clientMapKeys = clientMap.keySet();
-        for(String key:clientMapKeys){
-            Map<String,ServiceInfo> ipportMap=clientMap.get(key);
-            Map<String,ServiceInfo> ipportMapCopy=new HashMap<>();
-            for(Map.Entry<String,ServiceInfo> entry:ipportMap.entrySet())
-                ipportMapCopy.put(entry.getKey(),entry.getValue());
-            clientMapCopy.put(key,ipportMapCopy);
+        for (String key : clientMapKeys) {
+            Map<String, ServiceInfo> ipportMap = clientMap.get(key);
+            Map<String, ServiceInfo> ipportMapCopy = new HashMap<>();
+            for (Map.Entry<String, ServiceInfo> entry : ipportMap.entrySet())
+                ipportMapCopy.put(entry.getKey(), entry.getValue());
+            clientMapCopy.put(key, ipportMapCopy);
         }
 
         Set<String> keys = clientMapCopy.keySet();
-        for(String key:keys){
+        for (String key : keys) {
             Map<String, ServiceInfo> serviceInfoMap = clientMapCopy.get(key);
             Set<String> serviceKeys = serviceInfoMap.keySet();
-            for(String serviceKey:serviceKeys){
-                ServiceInfo si=serviceInfoMap.get(serviceKey);
+            for (String serviceKey : serviceKeys) {
+                ServiceInfo si = serviceInfoMap.get(serviceKey);
                 try {
-                    String code=HttpClientCall.call(si.getCheckUrl()+key, RequestMethod.POST,new HashMap<>());
-                    if("-1".equals(code)){
-                        logOut(key,si.getIp(),si.getPort());
+                    String code = HttpClientCall.call(si.getCheckUrl() + key, RequestMethod.POST, new HashMap<>());
+                    if ("-1".equals(code)) {
+                        logOut(key, si.getIp(), si.getPort());
                         continue;
-                    }else{
+                    } else {
                         continue;
                     }
-                }catch (Exception e){
-                    logOut(key,si.getIp(),si.getPort());
+                } catch (Exception e) {
+                    logOut(key, si.getIp(), si.getPort());
                     continue;
                 }
             }
         }
         return clientMap;
     }
-
 
 
     //注册
@@ -98,7 +99,7 @@ public class ServiceCenter {
             ServiceInfo serviceInfo = getServiceInfoByRandom(clientName);
             api = api.startsWith("/") ? api : "/" + api;
             String apiUrl = $Expression.translationSharp(serviceInfo.getApiUrl(agreement) + api, model.getRestMap());
-            Map<String, String> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
             Map<String, String[]> parameterMap = model.getParameterMap();
             Set<String> paramKeys = parameterMap.keySet();
             String[] paramValue;
@@ -111,8 +112,18 @@ public class ServiceCenter {
                 }
             }
             try {
-                String result = HttpClientCall.call(apiUrl, model.getRequestMethod(), params);
-                return result;
+                if (model.getMultipartFileMap().isEmpty() && model.getUploadFileMap().isEmpty())
+                    return HttpClientCall.call(apiUrl, model.getRequestMethod(), params);
+                if (!model.getUploadFileMap().isEmpty()) {
+                    for (Map.Entry<String, File[]> e : model.getUploadFileMap().entrySet())
+                        params.put(e.getKey(), e.getValue());
+                } else {
+                    for (Map.Entry<String, MultipartFile[]> e : model.getMultipartFileMap().entrySet())
+                        params.put(e.getKey(), e.getValue());
+                }
+                return HttpClientCall.uploadFile(apiUrl, params);
+
+
             } catch (HttpHostConnectException e) {
                 logOut(clientName, serviceInfo.getIp(), serviceInfo.getPort());
                 return request(agreement, clientName, api, model);
@@ -138,6 +149,7 @@ public class ServiceCenter {
 
     /**
      * 随机的挑选访问的服务
+     *
      * @param clientName 服务名
      * @return
      */
@@ -147,5 +159,17 @@ public class ServiceCenter {
         final double d = Math.random();
         final int index = (int) (d * domainList.size());
         return domainMap.get(domainList.get(index));
+    }
+
+    public String[] getUrlByServiceName(String serviceName) {
+        Map<String, ServiceInfo> domainMap = clientMap.get(serviceName);
+        String[] urls = new String[domainMap.size()];
+        int index = 0;
+        for (Map.Entry<String, ServiceInfo> e : domainMap.entrySet()) {
+            ServiceInfo v = e.getValue();
+            urls[index] = v.getIp() + ":" + v.getPort();
+            index++;
+        }
+        return urls;
     }
 }

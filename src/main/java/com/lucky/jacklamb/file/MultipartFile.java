@@ -1,9 +1,11 @@
 package com.lucky.jacklamb.file;
 
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
+import com.lucky.jacklamb.utils.LuckyUtils;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +29,7 @@ public class MultipartFile {
 		this.originalFileInpueStream=originalFileInpueStream;
 		this.originalFileName=filename;
 		this.fileType=filename.substring(filename.lastIndexOf("."));;
-		this.uploadFileName=UUID.randomUUID().toString()+getFileType();
+		this.uploadFileName=originalFileName.replaceAll(fileType,"")+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() +getFileType();
 		this.projectPath=projectPath;
 	}
 

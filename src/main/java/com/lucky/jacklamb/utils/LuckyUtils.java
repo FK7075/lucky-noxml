@@ -311,5 +311,14 @@ public class LuckyUtils {
 	public static boolean isJavaClass(Class<?> clzz) {
 		return clzz!=null&&clzz.getClassLoader()==null;
 	}
+
+	/**
+	 * 生成一个10000以内的随机数
+	 * @return
+	 */
+	public static int getRandomNumber(){
+		int number=(int)(Math.random()*10000);
+		return number;
+	}
 	
 }

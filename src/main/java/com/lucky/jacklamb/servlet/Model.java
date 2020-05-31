@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
@@ -69,6 +70,16 @@ public class Model {
     private Map<String, String[]> parameterMap;
 
     /**
+     * MultipartFile类型文件参数集合
+     */
+    private Map<String, MultipartFile[]> multipartFileMap;
+
+    /**
+     * File类型的文件参数集合
+     */
+    private Map<String,File[]> uploadFileMap;
+
+    /**
      * Rest风格的参数集合Map<String,String>
      */
     private Map<String, String> restMap;
@@ -92,13 +103,16 @@ public class Model {
         resp = response;
         this.requestMethod = requestMethod;
         this.parameterMap = getRequestParameterMap();
-        restMap = new HashMap<>();
+        this.multipartFileMap=new HashMap<>();
+        this.restMap = new HashMap<>();
+        this.uploadFileMap=new HashMap<>();
     }
 
     public Model(HttpServletRequest request, HttpServletResponse response) throws IOException {
         req = request;
         resp = response;
         this.parameterMap = getRequestParameterMap();
+        this.multipartFileMap=new HashMap<>();
         restMap = new HashMap<>();
     }
 
@@ -111,9 +125,52 @@ public class Model {
         return restMap;
     }
 
+    public boolean uploadFileMapContainsKey(String key){
+        return uploadFileMap.containsKey(key);
+    }
+
+    public File[] getUploadFileArray(String key){
+        return uploadFileMap.get(key);
+    }
+
+    public boolean multipartFileMapContainsKey(String key){
+        return multipartFileMap.containsKey(key);
+    }
+
+    public Map<String, File[]> getUploadFileMap() {
+        return uploadFileMap;
+    }
+
+    public void addUploadFile(String key,File[] uploadFiles){
+        uploadFileMap.put(key,uploadFiles);
+    }
+
+    public void setUploadFileMap(Map<String, File[]> uploadFileMap) {
+        this.uploadFileMap = uploadFileMap;
+    }
+
+    public MultipartFile[] getMultipartFileArray(String key){
+        return multipartFileMap.get(key);
+    }
+
+    public Map<String, MultipartFile[]> getMultipartFileMap() {
+        return multipartFileMap;
+    }
+
+    public void addMultipartFile(String key, MultipartFile[] multipartFiles){
+        this.multipartFileMap.put(key,multipartFiles);
+    }
+
+    /**
+     * 添加一个文件参数
+     * @param multipartFileMap
+     */
+    public void setMultipartFileMap(Map<String, MultipartFile[]> multipartFileMap) {
+        this.multipartFileMap = multipartFileMap;
+    }
+
     /**
      * 设置RestParamMap
-     *
      * @param restMap
      */
     protected void setRestMap(Map<String, String> restMap) {

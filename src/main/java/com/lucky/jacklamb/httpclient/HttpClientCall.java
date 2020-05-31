@@ -54,7 +54,7 @@ public class HttpClientCall {
      * @throws IOException
      * @throws URISyntaxException
      */
-    public static String call(String url, RequestMethod requestMethod, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static String call(String url, RequestMethod requestMethod, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         //创建HttpClient连接对象
         CloseableHttpClient client = HttpClients.createDefault();
         HttpRequestBase method = getHttpRequestObject(url, params, requestMethod);
@@ -77,7 +77,7 @@ public class HttpClientCall {
      * @throws IOException
      * @throws URISyntaxException
      */
-    public static byte[] callByte(String url, RequestMethod requestMethod, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static byte[] callByte(String url, RequestMethod requestMethod, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         //创建HttpClient连接对象
         CloseableHttpClient client = HttpClients.createDefault();
         HttpRequestBase method = getHttpRequestObject(url, params, requestMethod);
@@ -97,7 +97,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return String 返回结果
      */
-    public static String getCall(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static String getCall(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return call(url, RequestMethod.GET, params, auth);
     }
 
@@ -109,7 +109,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return byte[]类型返回结果
      */
-    public static byte[] getCallByte(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static byte[] getCallByte(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return callByte(url, RequestMethod.GET, params, auth);
     }
 
@@ -132,7 +132,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return String 返回结果
      */
-    public static String postCall(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static String postCall(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return call(url, RequestMethod.POST, params, auth);
     }
 
@@ -144,7 +144,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return byte[]类型返回结果
      */
-    public static byte[] postCallByte(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static byte[] postCallByte(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return callByte(url, RequestMethod.POST, params, auth);
     }
 
@@ -156,7 +156,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return String 返回结果
      */
-    public static String putCall(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static String putCall(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return call(url, RequestMethod.PUT, params, auth);
     }
 
@@ -168,7 +168,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return byte[]类型返回结果
      */
-    public static byte[] putCallByte(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static byte[] putCallByte(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return callByte(url, RequestMethod.PUT, params, auth);
     }
 
@@ -180,7 +180,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return String 返回结果
      */
-    public static String deleteCall(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static String deleteCall(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return call(url, RequestMethod.DELETE, params, auth);
     }
 
@@ -192,7 +192,7 @@ public class HttpClientCall {
      * @param auth   访问凭证(username,password)
      * @return byte[]类型返回结果
      */
-    public static byte[] deleteCallByte(String url, Map<String, String> params, String... auth) throws IOException, URISyntaxException {
+    public static byte[] deleteCallByte(String url, Map<String, Object> params, String... auth) throws IOException, URISyntaxException {
         return callByte(url, RequestMethod.DELETE, params, auth);
     }
 
@@ -219,7 +219,7 @@ public class HttpClientCall {
      * @return 返回对象类型的结果
      * @throws IOException
      */
-    public static Object getCall(String url, Map<String, String> params, Type type, String... auth) throws IOException, URISyntaxException {
+    public static Object getCall(String url, Map<String, Object> params, Type type, String... auth) throws IOException, URISyntaxException {
         String result = call(url, RequestMethod.GET, params, auth);
         return new Gson().fromJson(result, type);
     }
@@ -252,7 +252,7 @@ public class HttpClientCall {
      * @return 返回对象类型的结果
      * @throws IOException
      */
-    public static Object postCall(String url, Map<String, String> params, Type type, String... auth) throws IOException, URISyntaxException {
+    public static Object postCall(String url, Map<String, Object> params, Type type, String... auth) throws IOException, URISyntaxException {
         String result = call(url, RequestMethod.POST, params, auth);
         return new Gson().fromJson(result, type);
     }
@@ -269,7 +269,7 @@ public class HttpClientCall {
      * @return 返回对象类型的结果
      * @throws IOException
      */
-    public static Object putCall(String url, Map<String, String> params, Type type, String... auth) throws IOException, URISyntaxException {
+    public static Object putCall(String url, Map<String, Object> params, Type type, String... auth) throws IOException, URISyntaxException {
         String result = call(url, RequestMethod.PUT, params, auth);
         return new Gson().fromJson(result, type);
     }
@@ -286,7 +286,7 @@ public class HttpClientCall {
      * @return 返回对象类型的结果
      * @throws IOException
      */
-    public static Object deleteCall(String url, Map<String, String> params, Type type, String... auth) throws IOException, URISyntaxException {
+    public static Object deleteCall(String url, Map<String, Object> params, Type type, String... auth) throws IOException, URISyntaxException {
         String result = call(url, RequestMethod.DELETE, params, auth);
         return new Gson().fromJson(result, type);
     }
@@ -387,7 +387,7 @@ public class HttpClientCall {
      * @throws IOException
      * @throws URISyntaxException
      */
-    private static HttpRequestBase getHttpRequestObject(String url, Map<String, String> params, RequestMethod requestMethod) throws IOException, URISyntaxException {
+    private static HttpRequestBase getHttpRequestObject(String url, Map<String, Object> params, RequestMethod requestMethod) throws IOException, URISyntaxException {
         if (requestMethod == RequestMethod.GET) {
             log.debug("HttpClient Request => [-GET-] " + url);
             if (isNullParam(params)) {
@@ -395,7 +395,7 @@ public class HttpClientCall {
             } else {
                 URIBuilder builder = new URIBuilder(url);
                 for (String key : params.keySet())
-                    builder.addParameter(key, params.get(key));
+                    builder.addParameter(key, params.get(key).toString());
                 return new HttpGet(builder.build());
             }
         } else if (requestMethod == RequestMethod.DELETE) {
@@ -405,7 +405,7 @@ public class HttpClientCall {
             } else {
                 URIBuilder builder = new URIBuilder(url);
                 for (String key : params.keySet())
-                    builder.addParameter(key, params.get(key));
+                    builder.addParameter(key, params.get(key).toString());
                 return new HttpDelete(builder.build());
             }
         } else if (requestMethod == RequestMethod.POST) {
@@ -438,7 +438,7 @@ public class HttpClientCall {
      * @param params map
      * @return
      */
-    private static boolean isNullParam(Map<String, String> params) {
+    private static boolean isNullParam(Map<String, Object> params) {
         if (params == null || params.isEmpty())
             return true;
         return false;
@@ -451,10 +451,10 @@ public class HttpClientCall {
      * @return
      * @throws UnsupportedEncodingException
      */
-    private static UrlEncodedFormEntity getUrlEncodedFormEntity(Map<String, String> params) throws UnsupportedEncodingException {
+    private static UrlEncodedFormEntity getUrlEncodedFormEntity(Map<String, Object> params) throws UnsupportedEncodingException {
         List<BasicNameValuePair> list = new ArrayList<>();
         for (String key : params.keySet())
-            list.add(new BasicNameValuePair(key, params.get(key)));
+            list.add(new BasicNameValuePair(key, params.get(key).toString()));
         return new UrlEncodedFormEntity(list);
     }
 

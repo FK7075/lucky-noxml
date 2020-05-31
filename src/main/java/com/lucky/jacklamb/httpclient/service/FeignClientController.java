@@ -29,7 +29,7 @@ public class FeignClientController {
         //存在[Service]配置，配置类型为服务时，将此服务注册到注册中心
         try {
             String url = service.getServiceUrl().endsWith("/") ? service.getServiceUrl() + "register" : service.getServiceUrl() + "/register";
-            Map<String, String> param = new HashMap<>();
+            Map<String, Object> param = new HashMap<>();
             param.put("serviceName", service.getServiceName());
             param.put("port", AppConfig.getAppConfig().getServerConfig().getPort() + "");
             HttpClientCall.postCall(url, param);
@@ -45,7 +45,7 @@ public class FeignClientController {
         try {
             ServiceConfig service=AppConfig.getAppConfig().getServiceConfig();
             String url=service.getServiceUrl().endsWith("/")?service.getServiceUrl()+"logout":service.getServiceUrl()+"/logout";
-            Map<String,String> param=new HashMap<>();
+            Map<String,Object> param=new HashMap<>();
             param.put("serviceName",service.getServiceName());
             param.put("port",AppConfig.getAppConfig().getServerConfig().getPort()+"");
             HttpClientCall.postCall(url,param);

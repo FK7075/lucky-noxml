@@ -91,7 +91,7 @@ public class StaticResourceManage {
 		String realPath = request.getServletContext().getRealPath(uri);
 		if(realPath!=null) {
 			File targetFile=new File(realPath);
-			FileCopyUtils.copyToServletOutputStream(response,targetFile);
+			FileCopyUtils.preview(response,targetFile);
 		}
 	}
 }

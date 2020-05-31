@@ -101,10 +101,10 @@ public class LuckyDispatherServlet extends HttpServlet {
 				resp.setContentType("image/x-icon");
 				URL icoFile = ApplicationBeans.class.getClassLoader().getResource("/favicon.ico");
 				if(icoFile!=null){
-					FileCopyUtils.copyToServletOutputStream(resp,new File(icoFile.getPath()));
+					FileCopyUtils.preview(resp,new File(icoFile.getPath()));
 					return;
 				}
-				FileCopyUtils.copyToServletOutputStream(resp,ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"));
+				FileCopyUtils.preview(resp,ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"));
 				return;
 			}
 			//全局资源的IP限制
