@@ -7,8 +7,8 @@ package com.lucky.jacklamb.httpclient.exception;
  */
 public class JsonConversionException extends RuntimeException{
 
-    public JsonConversionException(Class<?> targetClass,String jsonString,Throwable e){
-        super("JSON转换异常！JSON : "+jsonString+", Class : "+targetClass.getName(),e);
+    public JsonConversionException(String serverIp,Class<?> targetClass,String jsonString,Throwable e){
+        super("JSON转换异常！[Server--("+serverIp+")-- Return : "+jsonString+", Class : "+targetClass.getName()+"]",e);
     }
 
 }

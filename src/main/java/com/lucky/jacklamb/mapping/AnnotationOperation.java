@@ -301,13 +301,18 @@ public class AnnotationOperation {
             String fileName = dl.name();
             String filePath = dl.folder();
             String file;
-            if (model.parameterMapContainsKey(fileName))// 客户端传递的需要下载的文件名
-                file = model.getRequestPrarmeter(fileName);
-            else if (model.restMapContainsKey(fileName))
+            if (model.parameterMapContainsKey(fileName)){
+                file = model.getRequestPrarmeter(fileName);// 客户端传递的需要下载的文件名
+            } else if (model.restMapContainsKey(fileName)){
                 file = model.getRestParam(fileName);
-            else
+            }else{
                 throw new RuntimeException("找不到必要属性\"" + fileName + "\"");
-            path = model.getRealPath(filePath) + file; // 默认认为文件在当前项目的根目录
+            }
+            if(filePath.startsWith("abs:")){
+                path=filePath.substring(4)+file;//绝对路径写法
+            }else{
+                path = model.getRealPath(filePath) + file; // 默认认为文件在当前项目的docBase目录
+            }
         }
         if (fis == null) {
             File f = new File(path);

@@ -264,7 +264,7 @@ public abstract class FileCopyUtils {
 
     public static void download(HttpServletResponse response,File in) throws IOException {
         //设置文件下载头
-        response.addHeader("Content-Disposition", "attachment;filename=" + in.getName());
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(in.getName(),"UTF-8"));
         //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setContentType("multipart/form-data");
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
@@ -273,7 +273,7 @@ public abstract class FileCopyUtils {
 
     public static void download(HttpServletResponse response,InputStream in,String fileName) throws IOException {
         //设置文件下载头
-        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName,"UTF-8"));
         //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setContentType("multipart/form-data");
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
@@ -282,7 +282,7 @@ public abstract class FileCopyUtils {
 
     public static void download(HttpServletResponse response,byte[] in,String fileName) throws IOException {
         //设置文件下载头
-        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName,"UTF-8"));
         //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setContentType("multipart/form-data");
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());

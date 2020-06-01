@@ -492,22 +492,22 @@ public class HttpClientCall {
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);//加上此行代码解决返回中文乱码问题
             for (Map.Entry<String, Object> e : multipartFileParams.entrySet()) {
                 Class<?> paramValueClass = e.getValue().getClass();
-                if (File.class==paramValueClass) {
+                if (File.class == paramValueClass) {
                     File file = (File) e.getValue();
-                    builder.addBinaryBody(e.getKey(), new FileInputStream(file), ContentType.MULTIPART_FORM_DATA, file.getName());// 文件流
-                } else if (File[].class==paramValueClass) {
+                    builder.addBinaryBody(e.getKey(), new FileInputStream(file), ContentType.MULTIPART_FORM_DATA, file.getName());//文件参数-File
+                } else if (File[].class == paramValueClass) {
                     File[] files = (File[]) e.getValue();
                     for (File file : files)
-                        builder.addBinaryBody(e.getKey(), new FileInputStream(file), ContentType.MULTIPART_FORM_DATA, file.getName());// 文件流
-                } else if(MultipartFile.class==paramValueClass){
-                    MultipartFile mf= (MultipartFile) e.getValue();
-                    builder.addBinaryBody(e.getKey(), mf.getInputStream(), ContentType.MULTIPART_FORM_DATA, mf.getFileName());// 文件流
-                } else if(MultipartFile[].class==paramValueClass){
-                    MultipartFile[] mfs= (MultipartFile[]) e.getValue();
-                    for(MultipartFile mf:mfs)
-                        builder.addBinaryBody(e.getKey(), mf.getInputStream(), ContentType.MULTIPART_FORM_DATA, mf.getFileName());// 文件流
-                }else {
-                    builder.addTextBody(e.getKey(), e.getValue().toString(),ContentType.APPLICATION_JSON);// 类似浏览器表单提交，对应input的name和value
+                        builder.addBinaryBody(e.getKey(), new FileInputStream(file), ContentType.MULTIPART_FORM_DATA, file.getName());//文件参数-File[]
+                } else if (MultipartFile.class == paramValueClass) {
+                    MultipartFile mf = (MultipartFile) e.getValue();
+                    builder.addBinaryBody(e.getKey(), mf.getInputStream(), ContentType.MULTIPART_FORM_DATA, mf.getFileName());//文件参数-MultipartFile
+                } else if (MultipartFile[].class == paramValueClass) {
+                    MultipartFile[] mfs = (MultipartFile[]) e.getValue();
+                    for (MultipartFile mf : mfs)
+                        builder.addBinaryBody(e.getKey(), mf.getInputStream(), ContentType.MULTIPART_FORM_DATA, mf.getFileName());//文件参数-MultipartFile[]
+                } else {
+                    builder.addTextBody(e.getKey(), e.getValue().toString(), ContentType.APPLICATION_JSON);// 设置请求中String类型的参数
                 }
 
             }

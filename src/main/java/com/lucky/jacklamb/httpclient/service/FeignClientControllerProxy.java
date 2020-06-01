@@ -72,7 +72,7 @@ public class FeignClientControllerProxy {
                 try {
                     return new LSON().toObject(returnClass, callResult);
                 } catch (Exception e) {
-                    throw new JsonConversionException(returnClass, callResult, e);
+                    throw new JsonConversionException(serviceName,returnClass, callResult, e);
                 }
 
             }

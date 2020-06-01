@@ -147,8 +147,7 @@ public class LuckyDispatherServlet extends HttpServlet {
 					model.writer(Jacklabm.exception("HTTP Status 403 Blocking Access","不合法的请求ip："+currIp,"该ip地址没有被注册，服务器拒绝响应！"));
 					log.info("403 : 不合法的请求ip："+currIp+"该ip地址没有被注册，服务器拒绝响应！");
 					return;
-				}
-				else {
+				}else {
 					log.debug("CURR-REQUEST ==> ["+requestMethod+"] "+path);
 					model.setRestMap(controllerAndMethod.getRestKV());
 					urlParsMap.setCross(req,resp, controllerAndMethod);

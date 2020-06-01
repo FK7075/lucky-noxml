@@ -68,7 +68,7 @@ public class HttpClientControllerProxy {
                 try{
                     return new LSON().toObject(returnClass,callResult);
                 }catch (Exception e){
-                    throw new JsonConversionException(returnClass,callResult,e);
+                    throw new JsonConversionException(apiUrl,returnClass,callResult,e);
                 }
 
             }

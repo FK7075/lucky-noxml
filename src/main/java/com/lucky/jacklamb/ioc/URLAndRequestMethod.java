@@ -71,7 +71,7 @@ public class URLAndRequestMethod {
 		}
 		for(RequestMethod currmethod : methods)
 			if(!tempURLAndRequestMethod.getMethods().contains(currmethod)) {
-				model.writer(Jacklabm.exception("HTTP Status 500 Internal Server Error","不合法的请求类型"+this.methods,"您的请求类型"+this.methods+",当前方法并不支持！"));
+				model.writer(Jacklabm.exception("HTTP Status 403 Blocking Access","不合法的请求类型"+this.methods,"您的请求类型"+this.methods+" , 当前方法并不支持！"));
 				return null;
 			}
 		return tempURLAndRequestMethod;

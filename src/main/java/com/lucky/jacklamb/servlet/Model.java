@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
@@ -86,6 +87,8 @@ public class Model {
 
     private ServletOutputStream outputStream;
 
+    private String baseDir;
+
     /**
      * Model构造器
      *
@@ -106,6 +109,7 @@ public class Model {
         this.multipartFileMap=new HashMap<>();
         this.restMap = new HashMap<>();
         this.uploadFileMap=new HashMap<>();
+        baseDir= AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
     public Model(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -114,6 +118,7 @@ public class Model {
         this.parameterMap = getRequestParameterMap();
         this.multipartFileMap=new HashMap<>();
         restMap = new HashMap<>();
+        baseDir= AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
     /**
@@ -621,6 +626,15 @@ public class Model {
             }
         }
         return ipAddress;
+    }
+
+    /**
+     * 得到baseDir中的一个File对象
+     * @param path
+     * @return
+     */
+    public File getBaseDir(String path){
+        return new File(baseDir+path);
     }
 
 
