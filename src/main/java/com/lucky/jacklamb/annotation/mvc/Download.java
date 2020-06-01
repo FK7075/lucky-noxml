@@ -37,13 +37,14 @@ public @interface Download {
 	String docPath() default "";
 	
 	/**
-	 * 暴露一个提供给外界下载的文件夹
+	 * 暴露一个提供给外界下载的文件库
 	 * 默认：docBase文件夹
 	 * 没有前缀：使用docBase的相对路径
 	 * abs:开头表示使用绝对路径
+	 * http开头表示暴露一个网络上的文件库
 	 * @return
 	 */
-	String folder() default "";
+	String library() default "";
 	
 	/**
 	 * 下载网络上的资源（eg:https://github.com/FK7075/lucky-ex/blob/noxml/image/images.png）

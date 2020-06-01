@@ -167,7 +167,7 @@ public class AnnotationOperation {
                         isFile = true;
                         String filename = item.getName();
                         String suffix = filename.substring(filename.lastIndexOf("."));
-                        String NoSuffix=filename.substring(0,filename.lastIndexOf("."));
+                        String NoSuffix = filename.substring(0, filename.lastIndexOf("."));
                         if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase()))
                             throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
                         String pathSave = fieldAndFolder.get(fn);
@@ -177,7 +177,7 @@ public class AnnotationOperation {
                         } else {//相对路径写法
                             file = new File(savePath + pathSave);
                         }
-                        filename = NoSuffix+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() + suffix;
+                        filename = NoSuffix + "_" + new Date().getTime() + "_" + LuckyUtils.getRandomNumber() + suffix;
                         InputStream in = item.getInputStream();
                         if (maxSize != 0) {
                             int size = in.available();
@@ -274,6 +274,7 @@ public class AnnotationOperation {
 
     /**
      * 文件下载操作@Download
+     *
      * @param model  Model对象
      * @param method 将要执行的Controller方法
      * @throws IOException
@@ -288,29 +289,34 @@ public class AnnotationOperation {
         } else if (!"".equals(dl.docPath())) {
             path = model.getRealPath("") + dl.docPath();
         } else if (!"".equals(dl.url())) {
-            String url=dl.url();
-            byte[] buffer=HttpClientCall.callByte(url, RequestMethod.GET,new HashMap<>());
-            String fileName=model.getResponse().getHeader("Content-Disposition");
-            if(fileName==null)
-                fileName="lucky_"+LuckyUtils.getRandomNumber()+url.substring(url.lastIndexOf("."));
+            String url = dl.url();
+            byte[] buffer = HttpClientCall.getCallByte(url, new HashMap<>());
+            String fileName = model.getResponse().getHeader("Content-Disposition");
+            if (fileName == null)
+                fileName = "lucky_" + LuckyUtils.getRandomNumber() + url.substring(url.lastIndexOf("."));
             else
-                fileName.replaceAll("attachment;filename=","").trim();
-            FileCopyUtils.download(model.getResponse(),buffer,fileName);
+                fileName.replaceAll("attachment;filename=", "").trim();
+            FileCopyUtils.download(model.getResponse(), buffer, fileName);
             return;
         } else {
             String fileName = dl.name();
-            String filePath = dl.folder();
+            String filePath = dl.library();
             String file;
-            if (model.parameterMapContainsKey(fileName)){
+            if (model.parameterMapContainsKey(fileName)) {
                 file = model.getRequestPrarmeter(fileName);// 客户端传递的需要下载的文件名
-            } else if (model.restMapContainsKey(fileName)){
+            } else if (model.restMapContainsKey(fileName)) {
                 file = model.getRestParam(fileName);
-            }else{
+            } else {
                 throw new RuntimeException("找不到必要属性\"" + fileName + "\"");
             }
-            if(filePath.startsWith("abs:")){
-                path=filePath.substring(4)+file;//绝对路径写法
-            }else{
+            if (filePath.startsWith("abs:")) {
+                path = filePath.substring(4) + file;//绝对路径写法
+            } else if (filePath.startsWith("http:")) {//暴露一个网络上的文件库
+                String url = filePath + file;
+                byte[] buffer = HttpClientCall.getCallByte(url, new HashMap<>());
+                FileCopyUtils.download(model.getResponse(), buffer, file);
+                return;
+            } else {
                 path = model.getRealPath(filePath) + file; // 默认认为文件在当前项目的docBase目录
             }
         }
@@ -321,7 +327,7 @@ public class AnnotationOperation {
             fis = new FileInputStream(f);
             downName = f.getName();
         }
-        FileCopyUtils.download(model.getResponse(), fis,downName);
+        FileCopyUtils.download(model.getResponse(), fis, downName);
     }
 
     /**
@@ -345,7 +351,7 @@ public class AnnotationOperation {
 
         //得到@Upload文件操作执行后的String类型参数(文件名)
         moreUpload(model, method);
-        if(model.getUploadFileMap().isEmpty())
+        if (model.getUploadFileMap().isEmpty())
             moreMultipartFil(model, method);   //得到类型为MultipartFile的参数
 
         //得到参数列表中的所有pojo类型参数
@@ -357,7 +363,7 @@ public class AnnotationOperation {
         for (int i = 0; i < parameters.length; i++) {
             paramName = Mapping.getParamName(parameters[i], paramNames[i]);
             if (model.uploadFileMapContainsKey(paramName)) {//文件上传操作参数设置--@Upload
-                File[] uploadFiles =  model.getUploadFileArray(paramName);
+                File[] uploadFiles = model.getUploadFileArray(paramName);
                 if (String.class == parameters[i].getType()) {
                     args[i] = uploadFiles[0].getName();
                 } else if (String[].class == parameters[i].getType()) {
