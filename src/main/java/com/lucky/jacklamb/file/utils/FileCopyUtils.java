@@ -251,15 +251,19 @@ public abstract class FileCopyUtils {
         }
     }
 
-    public static void preview(HttpServletResponse resp,InputStream in) throws IOException {
-        byte[] buffer=copyToByteArray(in);
-        ServletOutputStream outputStream = resp.getOutputStream();
-        copy(buffer,outputStream);
+    public static void preview(HttpServletResponse resp,InputStream in,String fileName) throws IOException {
+        if(StaticResourceManage.isStaticResource(resp,fileName)) {
+            byte[] buffer = copyToByteArray(in);
+            ServletOutputStream outputStream = resp.getOutputStream();
+            copy(buffer, outputStream);
+        }
     }
 
-    public static void preview(HttpServletResponse resp,byte[] in) throws IOException {
-        ServletOutputStream outputStream = resp.getOutputStream();
-        copy(in,outputStream);
+    public static void preview(HttpServletResponse resp,byte[] in,String fileName) throws IOException {
+        if(StaticResourceManage.isStaticResource(resp,fileName)) {
+            ServletOutputStream outputStream = resp.getOutputStream();
+            copy(in, outputStream);
+        }
     }
 
     public static void download(HttpServletResponse response,File in) throws IOException {
