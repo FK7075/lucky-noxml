@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.utils.Jacklabm;
@@ -66,12 +67,12 @@ public class URLAndRequestMethod {
 			}
 		}
 		if(!isPass) {
-			model.writer(Jacklabm.exception("HTTP Status 404 Not Found", "不正确的url："+url, "找不与请求相匹配的映射资,请检查您的URL是否正确！"));
+			model.error(Code.NOTFOUND,"不正确的url："+url, "找不与请求相匹配的映射资,请检查您的URL是否正确！");
 			return null;
 		}
 		for(RequestMethod currmethod : methods)
 			if(!tempURLAndRequestMethod.getMethods().contains(currmethod)) {
-				model.writer(Jacklabm.exception("HTTP Status 403 Blocking Access","不合法的请求类型"+this.methods,"您的请求类型"+this.methods+" , 当前方法并不支持！"));
+				model.error(Code.REFUSED,"不合法的请求类型"+this.methods,"您的请求类型"+this.methods+" , 当前方法并不支持！");
 				return null;
 			}
 		return tempURLAndRequestMethod;

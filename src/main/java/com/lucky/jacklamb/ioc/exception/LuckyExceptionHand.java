@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.ioc.exception;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
+import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.utils.Jacklabm;
 import com.lucky.jacklamb.utils.LuckyUtils;
@@ -63,30 +64,7 @@ public abstract class LuckyExceptionHand {
 	 * @param e
 	 */
 	protected void globalExceptionHand(Throwable e){
-		try {
-			File exceptionFile=model.getBaseDir("log/lucky-tomcat-exp.log");
-			if(!exceptionFile.exists()){
-				exceptionFile.getParentFile().mkdirs();
-				exceptionFile.createNewFile();
-			}
-			e.printStackTrace();
-			e.printStackTrace(new PrintStream(exceptionFile));
-			StringBuilder ecpInfo =new StringBuilder("<br/>");
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(exceptionFile), "UTF-8"));
-			String s = null;
-			while((s = br.readLine())!=null){
-				if(s.startsWith("at"))
-					ecpInfo.append("&emsp;&emsp;&emsp;&emsp;"+s+"<br/>");
-				else
-					ecpInfo.append("&emsp;&emsp;"+s+"<br/>");
-			}
-			model.writer(Jacklabm.exception("HTTP Status 500 Internal Server Error",ecpInfo.toString(),e.toString()));
-			br.close();
-		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		model.error(e, Code.ERROR);
 	}
 	
 	/**

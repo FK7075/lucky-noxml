@@ -1,8 +1,6 @@
 package com.lucky.jacklamb.servlet;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
@@ -19,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
@@ -26,6 +25,7 @@ import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
+import com.lucky.jacklamb.utils.Jacklabm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,7 +78,7 @@ public class Model {
     /**
      * File类型的文件参数集合
      */
-    private Map<String,File[]> uploadFileMap;
+    private Map<String, File[]> uploadFileMap;
 
     /**
      * Rest风格的参数集合Map<String,String>
@@ -106,19 +106,19 @@ public class Model {
         resp = response;
         this.requestMethod = requestMethod;
         this.parameterMap = getRequestParameterMap();
-        this.multipartFileMap=new HashMap<>();
+        this.multipartFileMap = new HashMap<>();
         this.restMap = new HashMap<>();
-        this.uploadFileMap=new HashMap<>();
-        baseDir= AppConfig.getAppConfig().getServerConfig().getBaseDir();
+        this.uploadFileMap = new HashMap<>();
+        baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
     public Model(HttpServletRequest request, HttpServletResponse response) throws IOException {
         req = request;
         resp = response;
         this.parameterMap = getRequestParameterMap();
-        this.multipartFileMap=new HashMap<>();
+        this.multipartFileMap = new HashMap<>();
         restMap = new HashMap<>();
-        baseDir= AppConfig.getAppConfig().getServerConfig().getBaseDir();
+        baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
     /**
@@ -130,15 +130,15 @@ public class Model {
         return restMap;
     }
 
-    public boolean uploadFileMapContainsKey(String key){
+    public boolean uploadFileMapContainsKey(String key) {
         return uploadFileMap.containsKey(key);
     }
 
-    public File[] getUploadFileArray(String key){
+    public File[] getUploadFileArray(String key) {
         return uploadFileMap.get(key);
     }
 
-    public boolean multipartFileMapContainsKey(String key){
+    public boolean multipartFileMapContainsKey(String key) {
         return multipartFileMap.containsKey(key);
     }
 
@@ -146,15 +146,15 @@ public class Model {
         return uploadFileMap;
     }
 
-    public void addUploadFile(String key,File[] uploadFiles){
-        uploadFileMap.put(key,uploadFiles);
+    public void addUploadFile(String key, File[] uploadFiles) {
+        uploadFileMap.put(key, uploadFiles);
     }
 
     public void setUploadFileMap(Map<String, File[]> uploadFileMap) {
         this.uploadFileMap = uploadFileMap;
     }
 
-    public MultipartFile[] getMultipartFileArray(String key){
+    public MultipartFile[] getMultipartFileArray(String key) {
         return multipartFileMap.get(key);
     }
 
@@ -162,12 +162,13 @@ public class Model {
         return multipartFileMap;
     }
 
-    public void addMultipartFile(String key, MultipartFile[] multipartFiles){
-        this.multipartFileMap.put(key,multipartFiles);
+    public void addMultipartFile(String key, MultipartFile[] multipartFiles) {
+        this.multipartFileMap.put(key, multipartFiles);
     }
 
     /**
      * 添加一个文件参数
+     *
      * @param multipartFileMap
      */
     public void setMultipartFileMap(Map<String, MultipartFile[]> multipartFileMap) {
@@ -176,6 +177,7 @@ public class Model {
 
     /**
      * 设置RestParamMap
+     *
      * @param restMap
      */
     protected void setRestMap(Map<String, String> restMap) {
@@ -595,6 +597,7 @@ public class Model {
 
     /**
      * 获取访问者IP地址
+     *
      * @return
      */
     public String getIpAddr() {
@@ -630,11 +633,48 @@ public class Model {
 
     /**
      * 得到baseDir中的一个File对象
+     *
      * @param path
      * @return
      */
-    public File getBaseDir(String path){
-        return new File(baseDir+path);
+    public File getBaseDir(String path) {
+        return new File(baseDir + path);
+    }
+
+    /**
+     * 向浏览器返回错误日志
+     * @param e
+     * @param code
+     */
+    public void error(Throwable e,Code code) {
+        try {
+            File exceptionFile = getBaseDir("log/lucky-tomcat-exp.log");
+            if (!exceptionFile.exists()) {
+                exceptionFile.getParentFile().mkdirs();
+                exceptionFile.createNewFile();
+            }
+            e.printStackTrace(new PrintStream(exceptionFile));
+            e.printStackTrace();
+            StringBuilder ecpInfo = new StringBuilder("<br/>");
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(exceptionFile), "UTF-8"));
+            String s = null;
+            while ((s = br.readLine()) != null) {
+                if (s.startsWith("at"))
+                    ecpInfo.append("&emsp;&emsp;&emsp;&emsp;" + s + "<br/>");
+                else
+                    ecpInfo.append("&emsp;&emsp;" + s + "<br/>");
+            }
+            error(code,ecpInfo.toString(),e.toString());
+            br.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void error(Code code,String Message,String Description){
+        writer(Jacklabm.exception(code, Message, Description));
     }
 
 

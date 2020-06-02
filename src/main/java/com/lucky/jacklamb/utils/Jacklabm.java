@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.utils;
 
+import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.Logo;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
@@ -73,19 +74,19 @@ public class Jacklabm {
 	}
 	
 
-	public static String exception(String titleinfo,String m1,String m2) {
+	public static String exception(Code code, String m1, String m2) {
 		String exception="<!doctype html>" + 
 				"<html lang=\"en\">" + 
 				"<head>" + 
-				"<title>"+titleinfo+"</title>" + 
-				"<style type=\"text/css\">h1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} h2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} h3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} body {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} b {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} p {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;} a {color:black;} a.name {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style>" + 
+				"<title>"+code.errTitle+"</title>" +
+				"<style type=\"text/css\">h1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} h2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} h3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} body {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} b {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} p {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:15px;} a {color:black;} a.name {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style>" +
 				"</head>" + 
 				"<body>" + 
-				"<h1>"+titleinfo+"</h1>" + 
-				"<hr class=\"line\" /><p><b>Type</b> Status Report</p>" + 
+				"<h1>"+code.errTitle+"</h1>" +
+				"<hr class=\"line\" /><p><b>Type</b> "+code.code+"</p>" +
 				"<p><b>Message</b> "+m1+"</p>" + 
 				"<p><b>Description</b> "+m2+"</p>" + 
-				"<hr class=\"line\" /><h3>JackLamb Lucky[noxml]/1.0.00</h3></body></html>";
+				"<hr class=\"line\" /><h2>Lucky Noxml/1.0.0</h2></body></html>";
 		return exception;
 	}
 	

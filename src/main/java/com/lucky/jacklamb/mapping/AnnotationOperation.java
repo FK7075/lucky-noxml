@@ -3,6 +3,7 @@ package com.lucky.jacklamb.mapping;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
@@ -307,7 +308,8 @@ public class AnnotationOperation {
             } else if (model.restMapContainsKey(fileName)) {
                 file = model.getRestParam(fileName);
             } else {
-                throw new RuntimeException("找不到必要属性\"" + fileName + "\"");
+                model.error(Code.REFUSED,"找不到文件下载接口的必要参数 \""+fileName + "\"","缺少接口参数..");
+                return;
             }
             if (filePath.startsWith("abs:")) {
                 path = filePath.substring(4) + file;//绝对路径写法
@@ -322,8 +324,11 @@ public class AnnotationOperation {
         }
         if (fis == null) {
             File f = new File(path);
-            if (!f.exists())
-                throw new RuntimeException("找不到文件,无法完成下载操作！" + path);
+            if (!f.exists()){
+                model.error(Code.NOTFOUND,"在服务器上没有发现您想要下载的资源"+f.getName(),"没有对应的资源。");
+                return;
+            }
+
             fis = new FileInputStream(f);
             downName = f.getName();
         }
