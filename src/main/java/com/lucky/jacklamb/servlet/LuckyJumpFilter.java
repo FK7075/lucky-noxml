@@ -104,7 +104,7 @@ public abstract class LuckyJumpFilter implements Filter {
 			}
 		}
 		if (StaticResourceManage.isStaticResource(response, uri)&&isPass) {
-			StaticResourceManage.response(request, response, uri);
+			StaticResourceManage.response(model, uri);
 			return;
 		} else {
 			model.forward(forwardUrl);
@@ -138,7 +138,7 @@ public abstract class LuckyJumpFilter implements Filter {
 			}
 		}
 		if (StaticResourceManage.isStaticResource(response, uri)&&isPass) {
-			StaticResourceManage.response(request, response, uri);
+			StaticResourceManage.response(model, uri);
 			return;
 		} else {
 			model.redirect(redirectUrl);

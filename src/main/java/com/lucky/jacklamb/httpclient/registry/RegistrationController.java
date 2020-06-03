@@ -40,14 +40,14 @@ public final class RegistrationController extends LuckyController {
     @RequestMapping("lucyxfl/file/#{name}")
     public void file(@RestParam("name")String name) throws IOException {
         InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/"+name);
-        FileCopyUtils.preview(response,resourceAsStream,name);
+        FileCopyUtils.preview(model,resourceAsStream,name);
     }
 
     //注册中心页面
     @RequestMapping("/")
     public void services() throws IOException {
         InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/service.html");
-        FileCopyUtils.preview(response,resourceAsStream,"service.html");
+        FileCopyUtils.preview(model,resourceAsStream,"service.html");
     }
 
     //得到所有已经注册的服务的地址

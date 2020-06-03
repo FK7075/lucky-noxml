@@ -31,12 +31,15 @@ public class LSON {
 	
 	private static Logger log=Logger.getLogger(LSON.class);
 
-
 	private String jsonStr;
 
 	private GsonBuilder gsonBuilder;
 
 	private Gson gson;
+
+	public Gson getGson() {
+		return gson;
+	}
 
 	public LSON() {
 		gsonBuilder = new GsonBuilder();

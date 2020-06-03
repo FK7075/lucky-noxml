@@ -45,6 +45,8 @@ public class StaticResourceManage {
     }
 
     public static boolean isStaticResource(HttpServletResponse resp, String uri) {
+        if(!uri.contains("."))
+            return false;
         String lowercaseUri = uri.toLowerCase();
         lowercaseUri=lowercaseUri.substring(lowercaseUri.lastIndexOf("."));
         if(contentTypeMap.containsKey(lowercaseUri)){
@@ -60,10 +62,10 @@ public class StaticResourceManage {
         return file.exists();
     }
 
-    public static void response(HttpServletRequest request, HttpServletResponse response, String uri) throws IOException {
-        String realPath = request.getServletContext().getRealPath(uri);
+    public static void response(Model model, String uri) throws IOException {
+        String realPath = model.getRequest().getServletContext().getRealPath(uri);
         File targetFile = new File(realPath);
-        FileCopyUtils.preview(response, targetFile);
+        FileCopyUtils.preview(model, targetFile);
     }
 
 }

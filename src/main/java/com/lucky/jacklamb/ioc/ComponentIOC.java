@@ -129,14 +129,12 @@ public class ComponentIOC extends ComponentFactory {
 				continue;
 			}else if (component.isAnnotationPresent(Configuration.class)) {
 				Configuration cfg=component.getAnnotation(Configuration.class);
-				Object obj;
+				Object obj = component.newInstance();
 				if(!"".equals(cfg.section())){
 					obj=new INIConfig(cfg.ini()).getObject(component,cfg.section());
 					beanID="".equals(cfg.value())?LuckyUtils.TableToClass1(component.getSimpleName()):cfg.value();
 					addAppMap(beanID,obj);
 					log.info("@Configuration \"[id="+beanID+" class="+obj+"]\"");
-				}else{
-					obj = component.newInstance();
 				}
 				Method[] methods=component.getDeclaredMethods();
 				for(Method met:methods) {

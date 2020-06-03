@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.file.utils;
 
+import com.lucky.jacklamb.enums.Code;
+import com.lucky.jacklamb.servlet.Model;
 import com.lucky.jacklamb.servlet.StaticResourceManage;
 
 import javax.servlet.ServletOutputStream;
@@ -241,28 +243,37 @@ public abstract class FileCopyUtils {
         return byteCount;
     }
 
-    public static void preview(HttpServletResponse resp, File in) throws IOException {
+    public static void preview(Model model, File in) throws IOException {
+        HttpServletResponse resp=model.getResponse();
         if(StaticResourceManage.isStaticResource(resp,in.getName())){
             if(in.exists()){
                 byte[] buffer=copyToByteArray(in);
                 ServletOutputStream outputStream = resp.getOutputStream();
                 copy(buffer,outputStream);
             }
+        }else{
+            model.error(Code.REFUSED,"未知格式的文件，无法预览！","格式未知的文件: "+in.getName());
         }
     }
 
-    public static void preview(HttpServletResponse resp,InputStream in,String fileName) throws IOException {
+    public static void preview(Model model,InputStream in,String fileName) throws IOException {
+        HttpServletResponse resp=model.getResponse();
         if(StaticResourceManage.isStaticResource(resp,fileName)) {
             byte[] buffer = copyToByteArray(in);
             ServletOutputStream outputStream = resp.getOutputStream();
             copy(buffer, outputStream);
+        }else{
+            model.error(Code.REFUSED,"未知格式的文件，无法预览！","格式未知的文件: "+fileName);
         }
     }
 
-    public static void preview(HttpServletResponse resp,byte[] in,String fileName) throws IOException {
+    public static void preview(Model model,byte[] in,String fileName) throws IOException {
+        HttpServletResponse resp=model.getResponse();
         if(StaticResourceManage.isStaticResource(resp,fileName)) {
             ServletOutputStream outputStream = resp.getOutputStream();
             copy(in, outputStream);
+        }else{
+            model.error(Code.REFUSED,"未知格式的文件，无法预览！","格式未知的文件: "+fileName);
         }
     }
 

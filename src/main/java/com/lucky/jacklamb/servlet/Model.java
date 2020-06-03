@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.MultipartFile;
@@ -26,6 +27,7 @@ import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.ArrayCast;
 import com.lucky.jacklamb.utils.Jacklabm;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -356,7 +358,7 @@ public class Model {
     /**
      * 使用response对象的Writer方法将对象模型写出为XML格式数据
      *
-     * @param pojo(数组，对象，Collection,Map)
+     * @param pojo (数组，对象，Collection,Map)
      * @throws IOException
      */
     public void witerXml(Object pojo) {
@@ -380,6 +382,17 @@ public class Model {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 使用response对象的Writer方法将Reader中的数据返回
+     * @param in
+     * @throws IOException
+     */
+    public void writerReader(Reader in) throws IOException {
+        StringWriter sw=new StringWriter();
+        IOUtils.copy(in,sw);
+        writer(sw.toString());
     }
 
     /**
@@ -642,7 +655,7 @@ public class Model {
     }
 
     /**
-     * 向浏览器返回错误日志
+     * 向浏览器返回详细错误日志
      * @param e
      * @param code
      */
@@ -655,7 +668,7 @@ public class Model {
             }
             e.printStackTrace(new PrintStream(exceptionFile));
             e.printStackTrace();
-            StringBuilder ecpInfo = new StringBuilder("<br/>");
+            StringBuilder ecpInfo = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(exceptionFile), "UTF-8"));
             String s = null;
             while ((s = br.readLine()) != null) {
@@ -664,7 +677,7 @@ public class Model {
                 else
                     ecpInfo.append("&emsp;&emsp;" + s + "<br/>");
             }
-            error(code,ecpInfo.toString(),e.toString());
+            error(code,ecpInfo.toString(),e.getMessage());
             br.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -673,8 +686,12 @@ public class Model {
         }
     }
 
-    public void error(Code code,String Message,String Description){
-        writer(Jacklabm.exception(code, Message, Description));
+    public void error(Code code,String Message,String Description) {
+        try {
+            writer(Jacklabm.exception(code, Message, Description));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

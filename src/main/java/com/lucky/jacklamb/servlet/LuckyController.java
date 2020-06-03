@@ -73,7 +73,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(byte[] byteArray,String fileName) throws IOException {
-		FileCopyUtils.preview(response,byteArray,fileName);
+		FileCopyUtils.preview(model,byteArray,fileName);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(File in) throws IOException {
-		FileCopyUtils.preview(response,in);
+		FileCopyUtils.preview(model,in);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(InputStream in,String fileName) throws IOException {
-		FileCopyUtils.preview(response,in,fileName);
+		FileCopyUtils.preview(model,in,fileName);
 	}
 
 }

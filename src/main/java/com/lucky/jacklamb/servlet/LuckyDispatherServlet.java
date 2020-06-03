@@ -11,7 +11,6 @@ import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.ioc.exception.LuckyExceptionDispose;
 import com.lucky.jacklamb.mapping.AnnotationOperation;
 import com.lucky.jacklamb.mapping.UrlParsMap;
-import com.lucky.jacklamb.utils.Jacklabm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,21 +101,21 @@ public class LuckyDispatherServlet extends HttpServlet {
                 resp.setContentType("image/x-icon");
                 URL icoFile = ApplicationBeans.class.getClassLoader().getResource("/favicon.ico");
                 if (icoFile != null) {
-                    FileCopyUtils.preview(resp, new File(icoFile.getPath()));
+                    FileCopyUtils.preview(model, new File(icoFile.getPath()));
                     return;
                 }
-                FileCopyUtils.preview(resp, ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"), "favicon.ico");
+                FileCopyUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"), "favicon.ico");
                 return;
             }
             //全局资源的IP限制
             if (!webCfg.getGlobalResourcesIpRestrict().isEmpty() && !webCfg.getGlobalResourcesIpRestrict().contains(currIp)) {
-                model.error(Code.REFUSED, "不合法的请求ip：" + currIp, "该ip地址没有被注册，服务器拒绝响应！");
+                model.error(Code.REFUSED, "该ip地址没有被注册，服务器拒绝响应！", "不合法的请求ip：" + currIp);
                 log.info("403 : 不合法的请求ip：" + currIp + "该ip地址没有被注册，服务器拒绝响应！");
                 return;
             }
             //指定资源的IP限制
             if (!webCfg.getSpecifiResourcesIpRestrict().isEmpty() && (webCfg.getSpecifiResourcesIpRestrict().containsKey(path) && !webCfg.getSpecifiResourcesIpRestrict().get(path).contains(currIp))) {
-                model.error(Code.REFUSED, "不合法的请求ip：" + currIp, "该ip地址没有被注册，服务器拒绝响应！");
+                model.error(Code.REFUSED, "该ip地址没有被注册，服务器拒绝响应！", "不合法的请求ip：" + currIp);
                 log.info("403 : 不合法的请求ip：" + currIp + "该ip地址没有被注册，服务器拒绝响应！");
                 return;
             }
@@ -125,7 +124,7 @@ public class LuckyDispatherServlet extends HttpServlet {
                     if (StaticResourceManage.resources(model, uri)) {
                         //静态资源处理
                         log.debug("STATIC-REQUEST [静态资源请求]  [" + requestMethod + "]  #SR#=> " + uri);
-                        StaticResourceManage.response(req, resp, uri);
+                        StaticResourceManage.response(model, uri);
                         return;
                     }
                 } catch (Exception e) {
@@ -147,7 +146,7 @@ public class LuckyDispatherServlet extends HttpServlet {
                 if (controllerAndMethod == null)
                     return;
                 if (!controllerAndMethod.ipExistsInRange(currIp) || !controllerAndMethod.ipISCorrect(currIp)) {
-                    model.error(Code.REFUSED, "不合法的请求ip：" + currIp, "该ip地址没有被注册，服务器拒绝响应！");
+                    model.error(Code.REFUSED, "该ip地址没有被注册，服务器拒绝响应！", "不合法的请求ip：" + currIp);
                     log.info("403 : 不合法的请求ip：" + currIp + "该ip地址没有被注册，服务器拒绝响应！");
                     return;
                 } else {

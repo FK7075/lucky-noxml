@@ -33,7 +33,7 @@ public class ReadIni {
 		if(datasStr!=null) {
 			String[] datas=datasStr.split(",");
 			for(String data:datas) {
-				dataList.add(readIni(SECTION_JDBC+":"+data));
+				dataList.add(readIni(data));
 			}
 		}
 		return dataList;

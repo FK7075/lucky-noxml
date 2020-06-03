@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -34,11 +36,12 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	}
 	
 	private Object createTestObject(ApplicationBeans applicationBeans,Object testObject) throws InstantiationException, IllegalAccessException {
-		Field[] allFields = testObject.getClass().getDeclaredFields();
+		Field[] allFields = ClassUtils.getAllFields(testObject.getClass());
 		Autowired auto;
 		Value value;
 		Class<?> fieldClass;
 		for(int i=0;i<allFields.length;i++) {
+			allFields[i].setAccessible(true);
 			fieldClass=allFields[i].getType();
 			if(allFields[i].isAnnotationPresent(Autowired.class)) {
 				auto=allFields[i].getAnnotation(Autowired.class);
@@ -58,7 +61,6 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 			}else if(allFields[i].isAnnotationPresent(Value.class)) {
 				value=allFields[i].getAnnotation(Value.class);
 				String[] val = value.value();
-				allFields[i].setAccessible(true);
 				if(val.length==0) {//类型扫描
 					allFields[i].set(testObject, applicationBeans.getBean(fieldClass));
 				}else {

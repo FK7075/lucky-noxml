@@ -11,4 +11,8 @@ public class JsonConversionException extends RuntimeException{
         super("JSON转换异常！[Server--("+serverIp+")-- Return : "+jsonString+", Class : "+targetClass.getName()+"]",e);
     }
 
+    public JsonConversionException(String jsonStr,Class<?> targetClass,Throwable e){
+        super("JSON转换异常！ String: "+jsonStr+" ,Class: "+targetClass.getName(),e);
+    }
+
 }
