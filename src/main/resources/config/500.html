@@ -18,11 +18,11 @@
         .terminal-window {
             text-align: left;
             width: 60.5rem;
-            height: 40.5rem;
+            height: 35.5rem;
             border-radius: .625rem;
             margin: auto;
             position: relative;
-            top: 10.5rem;
+            top: 7.5rem;
         }
 
         .terminal-window header {
@@ -60,6 +60,7 @@
             padding: .625rem;
             box-sizing: border-box;
             position: absolute;
+            border-radius: 0 0 .5rem .5rem;
             width: 100%;
             top: 1.875rem;
             bottom: 0;
@@ -176,10 +177,17 @@
         .terminal-data { display: none; }
         .terminal-window .gray { color: gray; }
         .terminal-window .green { color: green;}
+        h1 {
+            font-size: 90px;
+            padding: 0;
+            margin: 0;
+            font-weight: 700;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-<div id="particles-js"></div>
+<div id="particles-js"> <h1>@:errType</h1></div>
 <div class="terminal-window">
     <header>
         <div class="button green"></div>
@@ -195,7 +203,7 @@
         <br>
         $&nbsp;@:errTitle
         <br><br>@:Message<br><br></generated>
-        <span class="prompt"> $&nbsp;Please either report this error to an administrator or return back and forget you were here...</span>
+        <span class="prompt">$</span>
         <span class="typed-cursor">|</span>
 
     </section>
