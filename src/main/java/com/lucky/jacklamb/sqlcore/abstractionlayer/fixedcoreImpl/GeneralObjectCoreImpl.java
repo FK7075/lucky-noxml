@@ -1,7 +1,9 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.GeneralObjectCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;
@@ -76,8 +78,15 @@ public final class GeneralObjectCoreImpl implements GeneralObjectCore {
 	}
 
 	public <T> boolean updateBatchByCollection(Collection<T> collection) {
-		for(Object o:collection)
-			update(o);
+		PrecompileSqlAndObject update;
+		StringBuilder sqlStr=new StringBuilder();
+		List<Object> paramList=new ArrayList<>();
+		for (T t : collection) {
+			update = gcg.singleUpdate(t);
+			sqlStr.append(update.getPrecompileSql()).append(";");
+			paramList.addAll(update.getObjects());
+		}
+		statementCore.update(sqlStr.toString(),paramList.toArray());
 		return true;
 	}
 
