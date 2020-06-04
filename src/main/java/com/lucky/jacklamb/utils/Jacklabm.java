@@ -99,6 +99,7 @@ public abstract class Jacklabm {
         String input = isFive?FIVE:FOUR;
         input = input.replaceAll("@:errTitle", code.errTitle.replaceAll("\\$", "LUCKY_RDS_CHAR_DOLLAR_0721"));
         input = input.replaceAll("@:errType", code.code + "");
+        input = input.replaceAll("@:time", LuckyUtils.time());
         input = input.replaceAll("@:Message", Message.replaceAll("\\$", "LUCKY_RDS_CHAR_DOLLAR_0721"));
         input = input.replaceAll("@:Description", Description.replaceAll("\\$", "LUCKY_RDS_CHAR_DOLLAR_0721"));
         return input.replaceAll("LUCKY_RDS_CHAR_DOLLAR_0721", "\\$");
