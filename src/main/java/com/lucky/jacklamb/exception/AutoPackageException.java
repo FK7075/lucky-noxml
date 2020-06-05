@@ -7,8 +7,8 @@ public class AutoPackageException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public AutoPackageException(String messge) {
-		super(messge);
+	public AutoPackageException(String message,Throwable e) {
+		super(message,e);
 	}
 	
 

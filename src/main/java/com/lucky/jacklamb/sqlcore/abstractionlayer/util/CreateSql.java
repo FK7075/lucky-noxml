@@ -1,8 +1,19 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class CreateSql {
 	
 	private String sql=null;
+
+	private static List<String> typeList;
+
+	static{
+		String[] types={"int","Integer","double","Double","long","Long","float","Float","short","Short"};
+		typeList= Arrays.asList(types);
+	}
 	
 	
 	/**
@@ -12,7 +23,7 @@ public class CreateSql {
 	 * @return
 	 */
 	public String getSqlString(String sql1,Object... obj) {
-		if(obj==null) {
+		if(obj==null||obj.length==0) {
 			sql=sql1;
 		}else {
 			String incompleteSql=sql1;
@@ -25,6 +36,30 @@ public class CreateSql {
 			sql=incompleteSql;
 		}
 		return sql;
+	}
+
+	public static String getCompleteSql(String precompileSql,Object...params){
+		if(params.length==0)
+			return precompileSql;
+		String type,sqlParam;
+		for (Object param : params) {
+			type=param.getClass().getSimpleName();
+			if(typeList.contains(type)){
+				sqlParam=param.toString();
+			}else{
+				sqlParam="\""+param.toString()+"\"";
+			}
+			precompileSql=precompileSql.replaceFirst("\\?",sqlParam.replaceAll("\\$","LUCKY_JACK_LUCY_LUCKY_OK"));
+		}
+		return precompileSql.replace("LUCKY_JACK_LUCY_LUCKY_OK","$");
+	}
+
+
+
+	public static void main(String[] args) {
+		String sql="INSERT INTO user(id,name,password,age,math) VALUES （?,?,?,?,?）";
+		Object[] obj={12,"JACK","PA$$W0RD",23,99.9};
+		System.out.println(getCompleteSql(sql, obj));
 	}
 
 }

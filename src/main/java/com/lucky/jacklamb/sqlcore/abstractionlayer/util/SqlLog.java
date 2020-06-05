@@ -41,6 +41,11 @@ public class SqlLog {
 		if(log)
 			logBatch(sql,obj);
 	}
+
+	public void isShowLog(String[] sqls){
+		if(log)
+			logBatch(sqls);
+	}
 	
 	private void log(String sql, Object[] obj) {
 		StringBuilder sb=new StringBuilder("\nDatabase   : ");
@@ -75,6 +80,17 @@ public class SqlLog {
 				sb.append("}");
 			}
 		}
+		loger.println(sb.toString());
+	}
+
+	private void logBatch(String[] sqls){
+		StringBuilder sqlB=new StringBuilder();
+		for (String sql : sqls) {
+			sqlB.append(sql).append("\n");
+		}
+		StringBuilder sb=new StringBuilder("\nDatabase   : ").append(jdbcUrl).append("\n");
+		sb.append("SQL        : ").append("\n");
+		sb.append(sqlB.toString());
 		loger.println(sb.toString());
 	}
 	

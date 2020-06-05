@@ -372,8 +372,10 @@ public class LuckyMapperProxy {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	private boolean update(Method method, Object[] args,SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	private <T> boolean update(Method method, Object[] args,SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Update upd = method.getAnnotation(Update.class);
+		if(upd.batch())
+			return sqlCore.updateBatchByCollection((Collection<T>) args[0]);
 		String sql = upd.value();
 		if ("".equals(sql)) {
 			List<String> list=new ArrayList<>();
@@ -413,17 +415,17 @@ public class LuckyMapperProxy {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	private boolean delete(Method method, Object[] args,SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	private <T> boolean delete(Method method, Object[] args,SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Delete del = method.getAnnotation(Delete.class);
-		if(del.byid()) {
+		if(del.byid())
 			return sqlCore.delete((Class<?>)args[0], args[1]);
-		}else {
-			String sql = del.value();
-			if ("".equals(sql))
-				return sqlCore.delete(args[0]);
-			else
-				return updateSql(method,args,sql_fp,sql);
-		}
+		if(del.batch())
+			return sqlCore.deleteBatchByCollection((Collection<T>)args[0]);
+		String sql = del.value();
+		if ("".equals(sql))
+			return sqlCore.delete(args[0]);
+		else
+			return updateSql(method,args,sql_fp,sql);
 	}
 	
 	

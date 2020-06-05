@@ -1,5 +1,8 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
+import com.lucky.jacklamb.mapping.Regular;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,17 +37,57 @@ public class AutoPackage {
 	 * @return 返回一个泛型的List集合
 	 */
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
-		return sqlOperation.autoPackageToList(dbname,c,sql,obj);
+		SqlAndParams sp=new SqlAndParams(sql,obj);
+		return sqlOperation.autoPackageToList(dbname,c,sp.precompileSql,sp.params);
 	}
 
 	public boolean update(String sql,Object...obj) {
-		return sqlOperation.setSql(dbname,sql, obj);
+		SqlAndParams sp=new SqlAndParams(sql,obj);
+		return sqlOperation.setSql(dbname,sp.precompileSql,sp.params);
 	}
 	
 	public boolean updateBatch(String sql,Object[][] obj) {
 		return sqlOperation.setSqlBatch(dbname,sql, obj);
 	}
 
+	public boolean updateBatch(String...completeSqls){
+		return sqlOperation.setSqlBatch(dbname,completeSqls);
+	}
 
+
+
+}
+
+class SqlAndParams{
+
+	String precompileSql;
+
+	Object[] params;
+
+	public SqlAndParams(String haveNumSql,Object[] params){
+		List<String> nums = Regular.getArrayByExpression(haveNumSql, Regular.NUMSQL);
+		if(nums.isEmpty()){
+			precompileSql=haveNumSql;
+			this.params=params;
+		}else{
+			precompileSql=haveNumSql.replaceAll(Regular.NUMSQL,"?");
+			this.params=validation(nums,params,haveNumSql);
+		}
+	}
+
+	private Object[] validation(List<String> nums,Object[] params,String haveNumSql){
+		int index;
+		int size=nums.size();
+		Object[] targetParams=new Object[size];
+		for (int i=0;i<size;i++) {
+			index=Integer.parseInt(nums.get(i).substring(1));
+			if(0<index&&index<=size){
+
+			}else{
+				throw new LuckySqlGrammarMistakesException(haveNumSql);
+			}
+		}
+		return targetParams;
+	}
 
 }

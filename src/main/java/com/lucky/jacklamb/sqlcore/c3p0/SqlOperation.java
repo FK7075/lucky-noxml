@@ -3,6 +3,7 @@ package com.lucky.jacklamb.sqlcore.c3p0;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
@@ -44,7 +45,7 @@ public class SqlOperation {
 				isOk = true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LuckySqlOperationException(e);
 		} finally {
 			C3p0Util.release(null, ps, conn);
 		}
@@ -82,9 +83,28 @@ public class SqlOperation {
 				isOk=true;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new LuckySqlOperationException(e);
 		}
 		return isOk;
+	}
+
+	public boolean setSqlBatch(String dbname,String...sqls){
+		Connection conn=null;
+		Statement ps=null;
+		SqlLog log=new SqlLog(dbname);
+		boolean isOk=false;
+		try {
+			conn=C3p0Util.getConnecion(dbname);
+			log.isShowLog(sqls);
+			ps = conn.createStatement();
+			for (String sql : sqls) {
+				ps.addBatch(sql);
+			}
+			ps.executeBatch();
+			return true;
+		} catch (SQLException e) {
+			throw new LuckySqlOperationException(e);
+		}
 	}
 
 	/**
@@ -109,7 +129,7 @@ public class SqlOperation {
 			}
 			rs = ps.executeQuery();
 		} catch (SQLException e) {
-			throw new RuntimeException("SQL语法错误！错误的SQL:"+sql,e);
+			throw new LuckySqlOperationException(e);
 		}
 		return rs;
 	}
@@ -139,7 +159,7 @@ public class SqlOperation {
 			}
 			rs = ps.executeQuery();
 		} catch (SQLException e) {
-			throw new RuntimeException("SQL语法错误！错误的SQL:"+sql,e);
+			throw new LuckySqlOperationException(e);
 		}
 		List<T> collection=new ArrayList<>();
 		if(c.getClassLoader()!=null) {
@@ -177,8 +197,7 @@ public class SqlOperation {
 					collection.add((T) object);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql);
+				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
 			}finally {
 				C3p0Util.release(rs,ps,conn);
 			}
@@ -188,7 +207,7 @@ public class SqlOperation {
 					collection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new LuckySqlOperationException(e);
 			}finally {
 				C3p0Util.release(rs,ps,conn);
 			}
@@ -215,8 +234,7 @@ public class SqlOperation {
 			}
 			return false;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new LuckySqlOperationException(e);
 		}
 	}
 

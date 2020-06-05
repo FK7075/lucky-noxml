@@ -69,6 +69,7 @@ public final class PostgreSqlCore extends SqlCore {
 
 	@Override
 	public <T> boolean insertBatchByCollection(Collection<T> collection) {
+		setUUID(collection);
 		BatchInsert bbi=new BatchInsert(collection);
 		return statementCore.update(bbi.getInsertSql(), bbi.getInsertObject());
 	}

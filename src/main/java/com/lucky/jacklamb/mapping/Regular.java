@@ -15,6 +15,13 @@ public abstract class Regular {
     public static final String Sharp="\\#\\{[\\w|:|\\[|\\]|.|-]+\\}";
 
     /**
+     * 带数字标识的预编译SQL
+     */
+    public static final  String NUMSQL="\\?\\d+";
+
+    public static final String $SQL="\\$\\d+";
+
+    /**
      * 邮箱
      */
     public static final String Email="^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
@@ -91,6 +98,8 @@ public abstract class Regular {
     }
 
     public static void main(String[] args) {
-        System.out.println(getArrayByExpression("${app.test}/#{[User]:name}/${[Type]:id}", Sharp));
+        String sql="SELECT * FROM user WHERE a=?1 AND b=?2 AND c=?1 ";
+        System.out.println(getArrayByExpression(sql, NUMSQL));
+        System.out.println(sql.replaceAll(NUMSQL, "?"));
     }
 }

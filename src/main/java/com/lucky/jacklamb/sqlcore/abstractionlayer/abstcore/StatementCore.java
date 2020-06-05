@@ -49,6 +49,13 @@ public interface StatementCore {
 	 * @return
 	 */
 	public boolean updateBatch(String sql,Object[][] obj);
+
+	/**
+	 * 批量SQL操作，使用Statement对象执行多条非查询语句
+	 * @param completeSqls 完整的SQL语句
+	 * @return
+	 */
+	public boolean updateBatch(String...completeSqls);
 	
 	/**
 	 * 清空缓存

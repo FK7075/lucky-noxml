@@ -1,15 +1,10 @@
 package com.lucky.jacklamb.mapper;
 
+import com.lucky.jacklamb.annotation.orm.mapper.*;
+import com.lucky.jacklamb.query.QueryBuilder;
+
 import java.util.Collection;
 import java.util.List;
-
-import com.lucky.jacklamb.annotation.orm.mapper.Count;
-import com.lucky.jacklamb.annotation.orm.mapper.Delete;
-import com.lucky.jacklamb.annotation.orm.mapper.Insert;
-import com.lucky.jacklamb.annotation.orm.mapper.Query;
-import com.lucky.jacklamb.annotation.orm.mapper.Select;
-import com.lucky.jacklamb.annotation.orm.mapper.Update;
-import com.lucky.jacklamb.query.QueryBuilder;
 
 /**
  * 单表操作的Mapper接口模板，可以用来简化Mapper接口开发
@@ -60,7 +55,6 @@ public interface LuckyMapper<T> {
 	
 	/**
 	 * 查询Class对应表的所有数据
-	 * @param pojoClass
 	 * @return
 	 */
 	public List<T> selectList();
@@ -96,6 +90,22 @@ public interface LuckyMapper<T> {
 	 */
 	@Insert(batch=true)
 	public boolean batchInsert(Collection<T> pojos);
+
+	/**
+	 * 批量更新
+	 * @param pojos 包含添加信息的List[pojo]集合
+	 * @return
+	 */
+	@Update(batch = true)
+	public boolean batchUpdate(Collection<T> pojos);
+
+	/**
+	 * 批量删除
+	 * @param pojos 包含添加信息的List[pojo]集合
+	 * @return
+	 */
+	@Delete(batch = true)
+	public boolean batchDelete(Collection<T> pojos);
 	
 	/**
 	 * 分页操作
@@ -125,7 +135,6 @@ public interface LuckyMapper<T> {
 	
 	/**
 	 * 总数统计
-	 * @param pojoClass
 	 * @return
 	 */
 	public int count();

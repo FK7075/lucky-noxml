@@ -68,6 +68,13 @@ public final class StatementCoreImpl implements StatementCore {
 		return autopackage.updateBatch(sql, obj);
 	}
 
+	@Override
+	public boolean updateBatch(String... completeSqls) {
+		if(isCache)
+			cache.empty(dbname);
+		return autopackage.updateBatch(completeSqls);
+	}
+
 
 	@Override
 	public void clear() {

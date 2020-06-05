@@ -67,6 +67,7 @@ public final class OracleCore extends SqlCore {
 
 	@Override
 	public <T> boolean insertBatchByCollection(Collection<T> collection) {
+		setUUID(collection);
 		BatchInsert bbi=new BatchInsert(collection);
 		return statementCore.update(bbi.OrcaleInsetSql(), bbi.getInsertObject());
 	}

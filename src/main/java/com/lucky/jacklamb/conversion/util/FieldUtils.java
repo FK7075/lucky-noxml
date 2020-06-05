@@ -98,7 +98,7 @@ public abstract class FieldUtils {
     public static Object getValue(Object fieldObject,Field field){
         try {
             field.setAccessible(true);
-            return field.get(field);
+            return field.get(fieldObject);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("无法通过反射机制获取属性值！Field: "+field+", Object: "+fieldObject,e);
         }

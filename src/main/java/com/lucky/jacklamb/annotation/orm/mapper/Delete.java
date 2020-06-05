@@ -23,4 +23,6 @@ public @interface Delete {
 	 * @return
 	 */
 	boolean byid() default false;
+
+	boolean batch() default false;
 }
