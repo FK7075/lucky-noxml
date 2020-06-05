@@ -19,7 +19,7 @@ public abstract class Regular {
      */
     public static final  String NUMSQL="\\?\\d+";
 
-    public static final String $SQL="\\$\\d+";
+    public static final String $SQL="\\$[A-Za-z]+";
 
     /**
      * 邮箱
