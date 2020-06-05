@@ -82,7 +82,7 @@ class SqlAndParams{
 		for (int i=0;i<size;i++) {
 			index=Integer.parseInt(nums.get(i).substring(1));
 			if(0<index&&index<=size){
-
+				targetParams[i]=params[index-1];
 			}else{
 				throw new LuckySqlGrammarMistakesException(haveNumSql);
 			}
