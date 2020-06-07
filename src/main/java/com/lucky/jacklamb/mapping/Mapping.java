@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.mapping;
 
 import com.lucky.jacklamb.annotation.mvc.*;
+import com.lucky.jacklamb.annotation.orm.mapper.Param;
 import com.lucky.jacklamb.enums.RequestMethod;
 
 import java.lang.reflect.Method;
@@ -96,7 +97,12 @@ public class Mapping {
             if("".equals(rp.value()))
                 return paramName;
             return rp.value();
-        } else {
+        } else if(param.isAnnotationPresent(Param.class)){
+            Param rp = param.getAnnotation(Param.class);
+            if("".equals(rp.value()))
+                return paramName;
+            return rp.value();
+        }else {
             return paramName;
         }
     }

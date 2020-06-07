@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -19,6 +20,10 @@ public interface StatementCore {
 	 * @return
 	 */
 	public <T> List<T> getList(Class<T> c, String sql, Object... obj);
+
+	public <T> List<T> getListMethod(Class<T> c, Method method, String sql, Object[] obj);
+
+
 	
 	/**
 	 * 预编译SQL方式获得单一对象
@@ -28,6 +33,8 @@ public interface StatementCore {
 	 * @return
 	 */
 	public <T> T getObject(Class<T> c,String sql,Object...obj);
+
+	public <T> T getObjectMethod(Class<T> c,Method method, String sql, Object[] obj);
 	
 	/**
 	 * 预编译SQL非查询操作
@@ -37,7 +44,7 @@ public interface StatementCore {
 	 */
 	public boolean update(String sql,Object...obj);
 
-	
+	public boolean updateMethod(Method method, String sql, Object[] obj);
 	
 	/**
 	 * 批量SQL非查询操作

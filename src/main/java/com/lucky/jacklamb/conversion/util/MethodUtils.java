@@ -2,6 +2,7 @@ package com.lucky.jacklamb.conversion.util;
 
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.mapping.Mapping;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.io.IOException;
@@ -9,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public abstract class MethodUtils {
@@ -55,6 +58,31 @@ public abstract class MethodUtils {
             }
         }
         return runParams;
+    }
+
+    public static Map<String,Object> getInterfaceMethodParamsNV(Method method,Object[] params) throws IOException {
+        Map<String,Object> paramMap=new HashMap<>();
+        List<String> interParams = ASMUtil.getInterfaceMethodParamNames(method);
+        Parameter[] parameters = method.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            paramMap.put(Mapping.getParamName(parameters[i],interParams.get(i)),params[i]);
+        }
+        return paramMap;
+    }
+
+    public static Map<String,Object> getClassMethodParamsNV(Method method, Object[] params) throws IOException {
+        Map<String,Object> paramMap=new HashMap<>();
+        String[] mparams = ASMUtil.getMethodParamNames(method);
+        Parameter[] parameters = method.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            paramMap.put(Mapping.getParamName(parameters[i],mparams[i]),params[i]);
+        }
+        return paramMap;
+    }
+
+    public static Map<String,Object> getMethodParamsNV(Method method, Object[] params) throws IOException {
+        Map<String, Object> interfaceMethodParamsNV = getInterfaceMethodParamsNV(method, params);
+        return interfaceMethodParamsNV.isEmpty()?getClassMethodParamsNV(method,params):interfaceMethodParamsNV;
     }
 
 }

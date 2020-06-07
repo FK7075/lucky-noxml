@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -160,6 +161,10 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	public <T> List<T> getList(Class<T> pojoClass, String sql, Object... obj){
 		return statementCore.getList(pojoClass, sql, obj);
 	}
+
+	public <T> List<T> getListMethod(Class<T> pojoClass,Method method ,String sql, Object[] obj){
+		return statementCore.getListMethod(pojoClass, method,sql, obj);
+	}
 	
 	/**
 	 * 预编译SQL方式获得单一对象
@@ -171,6 +176,10 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	public <T> T getObject(Class<T> pojoClass,String sql,Object...obj) {
 		return statementCore.getObject(pojoClass, sql, obj);
 	}
+
+	public <T> T getObjectMethod(Class<T> pojoClass,Method method,String sql,Object[] obj) {
+		return statementCore.getObjectMethod(pojoClass,method, sql, obj);
+	}
 	
 	/**
 	 * 预编译SQL非查询操作
@@ -180,6 +189,10 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 */
 	public boolean update(String sql,Object...obj) {
 		return statementCore.update(sql, obj);
+	}
+
+	public boolean updateMethod(String sql,Method method,Object[] obj) {
+		return statementCore.updateMethod(method,sql, obj);
 	}
 	
 	/**

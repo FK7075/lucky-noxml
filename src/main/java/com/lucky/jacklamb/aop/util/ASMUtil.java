@@ -90,7 +90,6 @@ public class ASMUtil {
 	 * @throws IOException
 	 */
 	public static List<String> getInterfaceMethodParamNames(final Method method) throws IOException {
-		final Class<?>[] methodParameterTypes = method.getParameterTypes();
 		final List<String> methodParametersNames = new ArrayList<>();
 		final String className = method.getDeclaringClass().getName();
 		ClassReader cr = new ClassReader(className);
@@ -128,7 +127,7 @@ public class ASMUtil {
 	    public static void main(String[] args) throws SecurityException,
 				NoSuchMethodException, IOException {
 			String[] s;
-	        Method mmm=ITest.class.getMethod("Get",String.class,Double.class);
+	        Method mmm=CTest.class.getMethod("Get",String.class,Double.class);
 			s=getMethodParamNames(mmm);
 			System.out.println(Arrays.toString(s));
 			System.out.println(getInterfaceMethodParamNames(mmm));

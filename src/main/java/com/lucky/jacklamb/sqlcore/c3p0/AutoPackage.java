@@ -1,12 +1,12 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
+import com.lucky.jacklamb.conversion.util.MethodUtils;
 import com.lucky.jacklamb.mapping.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * 结果集自动包装类
@@ -41,8 +41,18 @@ public class AutoPackage {
 		return sqlOperation.autoPackageToList(dbname,c,sp.precompileSql,sp.params);
 	}
 
-	public boolean update(String sql,Object...obj) {
+	public boolean updateMethod(String sql, Object...obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
+		return sqlOperation.setSql(dbname,sp.precompileSql,sp.params);
+	}
+
+	public <T> List<T> autoPackageToListMethod(Class<T> c, Method method,String sql, Object[] obj) {
+		SqlAndParams sp=new SqlAndParams(method,sql,obj);
+		return sqlOperation.autoPackageToList(dbname,c,sp.precompileSql,sp.params);
+	}
+
+	public boolean updateMethod(Method method, String sql, Object[]obj) {
+		SqlAndParams sp=new SqlAndParams(method,sql,obj);
 		return sqlOperation.setSql(dbname,sp.precompileSql,sp.params);
 	}
 	
@@ -65,6 +75,25 @@ class SqlAndParams{
 	Object[] params;
 
 	public SqlAndParams(String haveNumSql,Object[] params){
+		numSql(haveNumSql,params);
+	}
+
+	public SqlAndParams(Method method, String haveNumSql, Object[] params){
+		List<String> names = Regular.getArrayByExpression(haveNumSql, Regular.$SQL);
+		if(names.isEmpty()){
+			numSql(haveNumSql,params);
+		}else{
+			nameSQl(method,names,haveNumSql,params);
+		}
+	}
+
+	private void nameSQl(Method method,List<String> names,String haveNumSql, Object[] params){
+		precompileSql=haveNumSql.replaceAll(Regular.$SQL,"?");
+		this.params=validation(method,names,params,haveNumSql);
+	}
+
+
+	private void numSql(String haveNumSql,Object[] params){
 		List<String> nums = Regular.getArrayByExpression(haveNumSql, Regular.NUMSQL);
 		if(nums.isEmpty()){
 			precompileSql=haveNumSql;
@@ -84,10 +113,30 @@ class SqlAndParams{
 			if(0<index&&index<=params.length){
 				targetParams[i]=params[index-1];
 			}else{
-				throw new LuckySqlGrammarMistakesException(haveNumSql);
+				throw new LuckySqlGrammarMistakesException(haveNumSql,index);
 			}
 		}
 		return targetParams;
+	}
+
+	private Object[] validation(Method method,List<String> names,Object[] params,String haveNumSql){
+		try {
+			Map<String,Object> methodParamsNV= MethodUtils.getMethodParamsNV(method,params);
+			int size=names.size();
+			String name;
+			Object[] targetParams=new Object[size];
+			for (int i = 0; i < size; i++) {
+				name=names.get(i).substring(1);
+				if(methodParamsNV.containsKey(name)){
+					targetParams[i]=methodParamsNV.get(name);
+				}else {
+					throw new LuckySqlGrammarMistakesException(method,haveNumSql,name);
+				}
+			}
+			return targetParams;
+		} catch (IOException e) {
+			throw new LuckySqlGrammarMistakesException(method,e);
+		}
 	}
 
 }

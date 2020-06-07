@@ -19,7 +19,7 @@ public abstract class Regular {
      */
     public static final  String NUMSQL="\\?\\d+";
 
-    public static final String $SQL="\\$[A-Za-z]+";
+    public static final String $SQL="\\$[_a-zA-Z][_a-zA-Z0-9]*";
 
     /**
      * 邮箱
@@ -76,6 +76,11 @@ public abstract class Regular {
      */
     public static final String StrongPassword="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$";
 
+    public static boolean check(String tarStr,String regular){
+        Pattern pattern=Pattern.compile(regular);
+        return pattern.matcher(tarStr).matches();
+    }
+
     public static boolean check(String tarStr,String[] regulars){
         Pattern pattern;
         for(String regex:regulars){
@@ -101,5 +106,6 @@ public abstract class Regular {
         String sql="SELECT * FROM user WHERE a=?1 AND b=?2 AND c=?1 ";
         System.out.println(getArrayByExpression(sql, NUMSQL));
         System.out.println(sql.replaceAll(NUMSQL, "?"));
+        System.out.println(check(sql, NUMSQL));
     }
 }
