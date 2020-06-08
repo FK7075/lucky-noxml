@@ -35,7 +35,7 @@ public class ServerConfig implements LuckyConfig  {
 	
 	private boolean reloadable;
 	
-	private int closePort;
+	private Integer closePort;
 	
 	private String shutdown;
 	
@@ -103,7 +103,7 @@ public class ServerConfig implements LuckyConfig  {
 		return sessionTimeout;
 	}
 	
-	public int getClosePort() {
+	public Integer getClosePort() {
 		return closePort;
 	}
 	
@@ -161,7 +161,7 @@ public class ServerConfig implements LuckyConfig  {
 	 * 设置一个用于关闭Tomcat服务的端口
 	 * @param closePort
 	 */
-	public void setClosePort(int closePort) {
+	public void setClosePort(Integer closePort) {
 		this.closePort = closePort;
 	}
 
@@ -281,7 +281,7 @@ public class ServerConfig implements LuckyConfig  {
 		if(serverConfig==null) {
 			serverConfig=new ServerConfig();
 			serverConfig.setPort(8080);
-			serverConfig.setClosePort(0);
+			serverConfig.setClosePort(null);
 			serverConfig.setShutdown(null);
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");

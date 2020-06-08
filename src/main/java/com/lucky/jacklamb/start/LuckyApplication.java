@@ -46,7 +46,7 @@ public class LuckyApplication {
         tomcat.setPort(serverCfg.getPort());
         tomcat.setBaseDir(serverCfg.getBaseDir());
         tomcat.getHost().setAutoDeploy(serverCfg.isAutoDeploy());
-        if (serverCfg.getClosePort() != 0)
+        if (serverCfg.getClosePort() != null)
             tomcat.getServer().setPort(serverCfg.getClosePort());
         if (serverCfg.getShutdown() != null)
             tomcat.getServer().setShutdown(serverCfg.getShutdown());

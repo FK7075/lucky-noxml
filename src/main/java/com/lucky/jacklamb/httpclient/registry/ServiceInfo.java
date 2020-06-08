@@ -6,6 +6,16 @@ public class ServiceInfo {
 
     private Integer port;
 
+    private boolean off;
+
+    public boolean isOff() {
+        return off;
+    }
+
+    public void setOff(boolean off) {
+        this.off = off;
+    }
+
     public String getIp() {
         return ip;
     }
@@ -22,9 +32,10 @@ public class ServiceInfo {
         this.port = port;
     }
 
-    public ServiceInfo(String ip, Integer port) {
+    public ServiceInfo(String ip, Integer port, boolean off) {
         this.ip = ip;
         this.port = port;
+        this.off = off;
     }
 
     public ServiceInfo() {

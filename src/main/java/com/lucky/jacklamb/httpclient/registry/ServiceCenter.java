@@ -53,16 +53,17 @@ public class ServiceCenter {
 
 
     //注册
-    public void registry(String clientName, String ip, Integer port) {
+    public void registry(String clientName, String ip, Integer port,boolean off) {
         if (clientMap.containsKey(clientName)) {
             Map<String, ServiceInfo> domainMap = clientMap.get(clientName);
             String domain = ip + ":" + port;
             if (!domainMap.containsKey(domain)) {
-                domainMap.put(domain, new ServiceInfo(ip, port));
+                domainMap.put(domain, new ServiceInfo(ip, port,off));
+                
             }
         } else {
             Map<String, ServiceInfo> portMap = new HashMap<>();
-            portMap.put(ip + ":" + port, new ServiceInfo(ip, port));
+            portMap.put(ip + ":" + port, new ServiceInfo(ip, port,off));
             clientMap.put(clientName, portMap);
         }
     }
@@ -171,5 +172,18 @@ public class ServiceCenter {
             index++;
         }
         return urls;
+    }
+
+    public String serverClose(String serverName,String ip,Integer port, boolean isOFF, Integer closePort, String off) throws IOException, URISyntaxException {
+        String urlApi="http://"+ip+":"+port+"/@LUCKY-APP-OFF/CL";
+        Map<String, Object> params=new HashMap<>();
+        params.put("isClose",isOFF);
+        params.put("closePort",closePort);
+        params.put("shutdown",off);
+        String result= HttpClientCall.postCall(urlApi,params);
+        if("1".equals(result)){
+            logOut(serverName,ip,port);
+        }
+        return result;
     }
 }
