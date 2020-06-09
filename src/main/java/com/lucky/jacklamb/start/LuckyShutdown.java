@@ -21,8 +21,8 @@ public class LuckyShutdown {
         socket.close();
 	}
 	
-	public void shutdown(String command,int port) throws IOException {
-        Socket socket = new Socket("localhost", port);
+	public void shutdown(String host,int port,String command) throws IOException {
+        Socket socket = new Socket(host, port);
         OutputStream stream = socket.getOutputStream();
         for(int i = 0;i < command.length();i++)
             stream.write(command.charAt(i));

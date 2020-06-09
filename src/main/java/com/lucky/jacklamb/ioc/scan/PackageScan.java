@@ -272,7 +272,7 @@ public class PackageScan extends Scan {
 				}else{
 					fileClass=Class.forName(className);
 				}
-				if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(FeignClient.class))
+				if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class))
 					controllerClass.add(fileClass);
 				else if(fileClass.isAnnotationPresent(Service.class))
 					serviceClass.add(fileClass);

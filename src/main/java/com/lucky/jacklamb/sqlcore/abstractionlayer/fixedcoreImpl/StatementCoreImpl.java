@@ -82,7 +82,7 @@ public final class StatementCoreImpl implements StatementCore {
 	public boolean update(String sql, Object... obj) {
 		if(isCache)
 			cache.empty(dbname);
-		return autopackage.updateMethod(sql, obj);
+		return autopackage.update(sql, obj);
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class JarScan extends Scan {
 					name = name.substring(0, name.length() - 6);
 					String clzzName = name.replaceAll("/", "\\.");
 					Class<?> fileClass = Class.forName(clzzName);
-					if (fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(FeignClient.class))
+					if (fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class))
 						controllerClass.add(fileClass);
 					else if (fileClass.isAnnotationPresent(Service.class))
 						serviceClass.add(fileClass);

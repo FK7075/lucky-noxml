@@ -41,7 +41,7 @@ public class AutoPackage {
 		return sqlOperation.autoPackageToList(dbname,c,sp.precompileSql,sp.params);
 	}
 
-	public boolean updateMethod(String sql, Object...obj) {
+	public boolean update(String sql, Object...obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
 		return sqlOperation.setSql(dbname,sp.precompileSql,sp.params);
 	}

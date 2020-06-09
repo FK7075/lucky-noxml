@@ -1,14 +1,9 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
-import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
-import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
@@ -53,8 +48,13 @@ public final class MySqlCore extends SqlCore {
 	@Override
 	public void createTable() {
 		CreateTable ct = new CreateTable(dbname);
-		ct.creatTable();
-		
+		ct.createTable();
+	}
+
+	@Override
+	public void createTable(Class<?> tableClass) {
+		CreateTable ct = new CreateTable(dbname);
+		ct.createTable(tableClass);
 	}
 
 	@Override

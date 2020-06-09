@@ -55,29 +55,6 @@ public class FeignClientController extends LuckyController {
         }
     }
 
-    //服务注销与关机
-    @RestBody(Rest.TXT)
-    @RequestMapping("@LUCKY-APP-OFF/CL")
-    public int off(@RequestParam(value = "isClose", def = "false") boolean isClose,
-                       @RequestParam(value = "closePort", def = "null") Integer closePort,
-                       @RequestParam(value = "shutdown", def = "null") String shutdown) throws IOException {
-        if (!isClose) {
-            log.info("注册中心已经注销了本服务.....");
-            return 1;
-        } else {
-            Integer cp = AppConfig.getAppConfig().getServerConfig().getClosePort();
-            String cs = AppConfig.getAppConfig().getServerConfig().getShutdown();
-            if (cp != null && cs != null) {
-                if ((cp.equals(closePort)) && (cs.equals(shutdown))) {
-                    new LuckyShutdown().shutdown();
-                    return 1;
-                }
-                return -1;
-            }
-            return -1;
-        }
-    }
-
     //注销
     @CloseRun(priority = 10)
     public void closeRun() {

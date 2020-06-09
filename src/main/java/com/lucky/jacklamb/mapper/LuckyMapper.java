@@ -138,5 +138,10 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	public int count();
+
+	/**
+	 * 创建啊实体对应的数据库表
+	 */
+	public void createTable();
 	
 }

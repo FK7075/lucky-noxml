@@ -622,6 +622,10 @@ public class LuckyMapperProxy {
             if (LuckyMapperGeneric != null && "selectList".equals(method.getName()) && params.length == 0) {
                 return sqlCore.getList(LuckyMapperGeneric);
             }
+            if (LuckyMapperGeneric != null && "createTable".equals(method.getName()) && params.length == 0) {
+                 sqlCore.createTable(LuckyMapperGeneric);
+                 return void.class;
+            }
 
             //用户自定义Mapper接口方法的代理
             SqlFragProce sql_fp = SqlFragProce.getSqlFP();

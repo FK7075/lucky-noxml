@@ -41,6 +41,8 @@ public interface UniqueSqlCore {
 	 * 启动自动建表机制建表，需要在配置文件中配置需要建表的实体类的包路径
 	 */
 	void createTable();
+
+	default void createTable(Class<?> tableClass){};
 	
 
 	/**

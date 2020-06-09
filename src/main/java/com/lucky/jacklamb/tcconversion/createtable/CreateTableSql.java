@@ -71,7 +71,7 @@ public class CreateTableSql {
 		List<String> stlist = new ArrayList<String>();
 		List<Field> keys = (List<Field>) PojoManage.getKeyFields(clzz, true);
 		if (keys.isEmpty()) {
-			return null;
+			return stlist;
 		} else {
 			List<Class<?>> cs = (List<Class<?>>) PojoManage.getKeyFields(clzz, false);
 			for (int i = 0; i < cs.size(); i++) {
@@ -132,7 +132,7 @@ public class CreateTableSql {
 	 * @return
 	 */
 	private static String getRandomStr() {
-		return UUID.randomUUID().toString();
+		return UUID.randomUUID().toString().replaceAll("-","");
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.httpclient.service;
 
-import com.lucky.jacklamb.annotation.mvc.FeignClient;
+import com.lucky.jacklamb.annotation.mvc.LuckyClient;
 import com.lucky.jacklamb.annotation.mvc.FileDownload;
 import com.lucky.jacklamb.annotation.mvc.FileUpload;
 import com.lucky.jacklamb.annotation.mvc.RequestMapping;
@@ -40,7 +40,7 @@ public class FeignClientControllerProxy {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(feignClientControllerClass);
         MethodInterceptor interceptor = (object, method, params, methodProxy) -> {
-            FeignClient fc = feignClientControllerClass.getAnnotation(FeignClient.class);
+            LuckyClient fc = feignClientControllerClass.getAnnotation(LuckyClient.class);
             String regUrl = AppConfig.getAppConfig().getServiceConfig().getServiceUrl();
             regUrl = regUrl.endsWith("/") ? regUrl : regUrl + "/";
             //注册中心的地址 eg: http://127.0.0.1:8761/

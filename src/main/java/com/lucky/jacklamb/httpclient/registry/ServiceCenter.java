@@ -5,6 +5,7 @@ import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.servlet.Model;
+import com.lucky.jacklamb.start.LuckyShutdown;
 import org.apache.http.conn.HttpHostConnectException;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class ServiceCenter {
             for (String serviceKey : serviceKeys) {
                 ServiceInfo si = serviceInfoMap.get(serviceKey);
                 try {
-                    String code = HttpClientCall.call(si.getCheckUrl() + key, RequestMethod.POST, new HashMap<>());
+                    String code = HttpClientCall.postCall(si.getCheckUrl() + key,new HashMap<>());
                     if ("-1".equals(code)) {
                         logOut(key, si.getIp(), si.getPort());
                         continue;
@@ -59,7 +60,7 @@ public class ServiceCenter {
             String domain = ip + ":" + port;
             if (!domainMap.containsKey(domain)) {
                 domainMap.put(domain, new ServiceInfo(ip, port,off));
-                
+
             }
         } else {
             Map<String, ServiceInfo> portMap = new HashMap<>();
@@ -174,16 +175,9 @@ public class ServiceCenter {
         return urls;
     }
 
-    public String serverClose(String serverName,String ip,Integer port, boolean isOFF, Integer closePort, String off) throws IOException, URISyntaxException {
-        String urlApi="http://"+ip+":"+port+"/@LUCKY-APP-OFF/CL";
-        Map<String, Object> params=new HashMap<>();
-        params.put("isClose",isOFF);
-        params.put("closePort",closePort);
-        params.put("shutdown",off);
-        String result= HttpClientCall.postCall(urlApi,params);
-        if("1".equals(result)){
-            logOut(serverName,ip,port);
-        }
-        return result;
+    //远程关机
+    public String serverClose(String ip,Integer closePort, String off) throws IOException, URISyntaxException {
+        new LuckyShutdown().shutdown(ip,closePort,off);
+        return null;
     }
 }

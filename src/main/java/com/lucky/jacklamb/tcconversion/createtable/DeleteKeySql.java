@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.c3p0.SqlOperation;
 
@@ -35,7 +36,8 @@ public class DeleteKeySql {
 	/**
 	 * 建表时删除
 	 */
-	public void deleteKey() {
+	public List<String> deleteKeySql() {
+		List<String> deleteKeySQL=new ArrayList<>();
 		for (Class<?> clazz : classlist) {
 			try {
 				String table = PojoManage.getTable(clazz);
@@ -56,13 +58,13 @@ public class DeleteKeySql {
 				}
 				for (String wkey : keyList) {
 					String sqlStr = "ALTER TABLE " + table + " DROP FOREIGN KEY " + wkey;
-					sqlop.setSql(dbname,sqlStr);
+					deleteKeySQL.add(sqlStr);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
 			}
 		}
+		return deleteKeySQL;
 	}
 
 	/**

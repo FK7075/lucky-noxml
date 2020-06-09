@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller("registrationCenter")
@@ -42,14 +45,14 @@ public final class RegistrationController extends LuckyController {
     @RequestMapping("lucyxfl/file/#{name}")
     public void file(@RestParam("name") String name) throws IOException {
         InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/" + name);
-        FileCopyUtils.preview(model, resourceAsStream, name);
+        preview(resourceAsStream, name);
     }
 
     //注册中心页面
     @RequestMapping("/")
     public void services() throws IOException {
         InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/service.html");
-        FileCopyUtils.preview(model, resourceAsStream, "service.html");
+        preview(resourceAsStream, "service.html");
     }
 
     //得到所有已经注册的服务的地址
@@ -59,15 +62,13 @@ public final class RegistrationController extends LuckyController {
         return serviceCenter.getClientMap();
     }
 
+    //关闭服务器(远程关机)
     @RestBody(Rest.TXT)
     @RequestMapping("lucyxfl/off")
-    public String serverClose(@RequestParam("serverName") String serverName,
-                              @RequestParam("ip") String ip,
-                              @RequestParam("port") Integer port,
-                              @RequestParam(value = "isOFF",def = "false")boolean isOFF,
+    public String serverClose(@RequestParam("ip") String ip,
                               @RequestParam(value = "closePort",def = "null")Integer closePort,
                               @RequestParam(value = "off",def = "null")String off) throws IOException, URISyntaxException {
-        return serviceCenter.serverClose(serverName,ip,port,isOFF,closePort,off);
+        return serviceCenter.serverClose(ip,closePort,off);
     }
 
 

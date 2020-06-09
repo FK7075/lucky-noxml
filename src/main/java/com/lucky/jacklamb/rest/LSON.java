@@ -45,7 +45,7 @@ public class LSON {
 		gsonBuilder = new GsonBuilder();
 		gsonBuilder.setPrettyPrinting();
 		gsonBuilder.serializeNulls();
-		gsonBuilder.setDateFormat("yyyy-MM-dd");
+		gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 

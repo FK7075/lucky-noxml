@@ -677,7 +677,7 @@ public class Model {
                 else
                     ecpInfo.append("&emsp;&emsp;" + s + "<br/>");
             }
-            error(code,ecpInfo.toString(),e.getMessage());
+            error(code,ecpInfo.toString(),e.toString());
             br.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

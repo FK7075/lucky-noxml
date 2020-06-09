@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.httpclient.registry;
 
+import java.util.Date;
+
 public class ServiceInfo {
 
     private String ip;
@@ -7,6 +9,16 @@ public class ServiceInfo {
     private Integer port;
 
     private boolean off;
+
+    private Date ctime;
+
+    public Date getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(Date ctime) {
+        this.ctime = ctime;
+    }
 
     public boolean isOff() {
         return off;
@@ -36,6 +48,7 @@ public class ServiceInfo {
         this.ip = ip;
         this.port = port;
         this.off = off;
+        this.ctime=new Date();
     }
 
     public ServiceInfo() {

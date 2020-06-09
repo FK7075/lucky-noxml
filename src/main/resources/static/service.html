@@ -19,7 +19,7 @@
     }
     #content{
         background-color:#fff;
-        width:750px;
+        width:1000px;
         padding:40px;
         margin:0 auto;
         margin-top: 100px;
@@ -159,9 +159,9 @@
         width: 200px;
         text-shadow:1px 1px 1px #fff;
     }
-    .table1 tbody span.check::before{
-        content : url(/lucyxfl/file/check0.png);
-    }
+    /*.table1 tbody span.check::before{*/
+    /*    content : url(/lucyxfl/file/check0.png);*/
+    /*}*/
 
     tr img{
         height: 20px;
@@ -191,17 +191,25 @@
                 var td1=document.createElement("td");
                 td1.innerHTML=key;
                 var td2=document.createElement("td");
+                var td3=document.createElement("td");
                 var names=jsonObj[key];
                 for(var name in names){
                     td2.innerHTML+=(name+"<br>");
+                    td3.innerHTML+=(names[name].ctime);
+                    if(names[name].off){
+                        td3.innerHTML+=" <a><img src='/lucyxfl/file/shutdown.png' title='关机'></a>";
+                    }else{
+                        td3.innerHTML+="<br>";
+                    }
                 }
 
-                var td3=document.createElement("td");
-                td3.innerHTML="<span class=\"check\"></span>";
+                var td4=document.createElement("td");
+                td4.innerHTML="<img src='/lucyxfl/file/check0.png'>";
                 tr.appendChild(th);
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tr.appendChild(td3);
+                tr.appendChild(td4);
                 tableBody.appendChild(tr);
             }
         }
@@ -269,6 +277,7 @@
             <th scope="col" abbr="Starter">服务编号</th>
             <th scope="col" abbr="Starter">服务名</th>
             <th scope="col" abbr="Medium">地址</th>
+            <th scope="col" abbr="Medium">注册时间</th>
             <th scope="col" abb="Status">状态</th>
         </tr>
         </thead>
@@ -277,6 +286,7 @@
             <th scope="row">--</th>
             <td>暂无服务</td>
             <td>暂无服务</td>
+            <td>--</td>
             <td>NO SERVICE</td>
         </tr>
         </tbody>

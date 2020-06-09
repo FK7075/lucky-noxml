@@ -164,14 +164,14 @@ public class ControllerIOC extends ComponentFactory{
 				}
 				log.info("@CallController :\"{id="+beanID+" ,class="+controller+"}\"");
 				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
-			} else if(controller.isAnnotationPresent(FeignClient.class)){
-				FeignClient cont = controller.getAnnotation(FeignClient.class);
+			} else if(controller.isAnnotationPresent(LuckyClient.class)){
+				LuckyClient cont = controller.getAnnotation(LuckyClient.class);
 				if (!"".equals(cont.id())) {
 					beanID=cont.id();
 				}else{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
-				log.info("@FeignClient :\"{id="+beanID+" ,class="+controller+"}\"");
+				log.info("@LuckyClient :\"{id="+beanID+" ,class="+controller+"}\"");
 				addControllerMap(beanID, FeignClientControllerProxy.getFeignClientControllerProxyObject(controller));
 			}
 
