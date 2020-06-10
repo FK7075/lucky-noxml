@@ -9,6 +9,7 @@ import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
+import com.lucky.jacklamb.ioc.exception.JarScanException;
 import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,8 +43,15 @@ public class JarScan extends Scan {
 		String simpleName=clzz.getSimpleName();
 		prefix=allname.substring(0, allname.length()-simpleName.length()).replaceAll("\\.", "/");
 		jarpath=clzz.getResource("").getPath();
-		if(jarpath.contains(".jar!"))
-			jarpath=jarpath.substring(6, jarpath.indexOf(".jar!")+4);
+		jarpath=jarpath.substring(5);
+		if(jarpath.contains(".jar!")){
+			if(jarpath.contains(":")){
+				jarpath=jarpath.substring(1, jarpath.indexOf(".jar!")+4);
+			}else{
+				jarpath=jarpath.substring(0, jarpath.indexOf(".jar!")+4);
+			}
+		}
+
 	}
 
 	public List<Class<?>> loadComponent(List<String> suffixs) {
@@ -53,8 +61,7 @@ public class JarScan extends Scan {
 		try {
 			jarFile = new JarFile(jarpath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JarScanException("找不到jar文件：["+jarpath+"]",e);
 		}
 		Enumeration<JarEntry> entrys = jarFile.entries();
 		String cpath;
@@ -87,8 +94,7 @@ public class JarScan extends Scan {
 		try {
 			jarFile = new JarFile(jarpath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JarScanException("找不到jar文件：["+jarpath+"]",e);
 		}
 		Enumeration<JarEntry> entrys = jarFile.entries();
 		try {
@@ -142,8 +148,7 @@ public class JarScan extends Scan {
 		try {
 			jarFile = new JarFile(jarpath);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JarScanException("找不到jar文件：["+jarpath+"]",e);
 		}
 		Enumeration<JarEntry> entrys = jarFile.entries();
 		try {
@@ -176,20 +181,8 @@ public class JarScan extends Scan {
 				}
 			}
 		}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ClassNotFoundException | InstantiationException |IllegalAccessException|IllegalArgumentException|InvocationTargetException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
