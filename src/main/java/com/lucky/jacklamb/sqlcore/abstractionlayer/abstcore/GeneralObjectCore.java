@@ -42,7 +42,15 @@ public interface GeneralObjectCore {
 	 * @param ids 要删除的id所组成的集合
 	 * @return
 	 */
-	boolean deleteBatchByID(Class<?> clazz,Object...ids);
+	boolean deleteByIdIn(Class<?> clazz,Object...ids);
+
+	/**
+	 * 批量ID查询
+	 * @param clazz 要操作表对应类的Class
+	 * @param ids 要删除的id所组成的集合
+	 * @return
+	 */
+	<T> List<T> getByIdIn(Class<T> clazz,Object...ids);
 	
 	/**
 	 * 对象查询

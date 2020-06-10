@@ -46,11 +46,30 @@ public class GeneralSqlGenerator {
 	 * @param ids
 	 * @return
 	 */
-	public String deleteIn(Class<?> c,Object...ids) {
+	public String deleteIn(Class<?> c,Object[] ids) {
+		return inSql(c,ids,true);
+	}
+
+	/**
+	 * 批量id查询的SQL
+	 * @param c
+	 * @param ids
+	 * @return
+	 */
+	public String selectIn(Class<?> c,Object[] ids){
+		return inSql(c,ids,false);
+	}
+
+	private String inSql(Class<?> c,Object[]ids,boolean isDel){
 		boolean first=true;
-		StringBuilder sql=new StringBuilder("DELETE FROM ");
+		StringBuilder sql;
+		if(isDel){
+			sql=new StringBuilder("DELETE FROM ");
+		}else{
+			sql=new StringBuilder("SELECT * FROM ");
+		}
 		sql.append(PojoManage.getTable(c)).append(" WHERE ")
-		.append(PojoManage.getIdString(c)).append(" IN ");
+				.append(PojoManage.getIdString(c)).append(" IN ");
 		for(int i=0;i<ids.length;i++) {
 			if(first) {
 				sql.append("(?");

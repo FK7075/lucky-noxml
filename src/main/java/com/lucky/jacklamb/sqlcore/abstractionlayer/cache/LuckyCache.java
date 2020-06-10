@@ -76,7 +76,7 @@ public class LuckyCache {
 	
 	/**
 	 * 非查询操作时删除缓存中对应的内容 
-	 * @param name
+	 * @param dbname
 	 */
 	public void evenChange(String dbname) {
 		empty(dbname);

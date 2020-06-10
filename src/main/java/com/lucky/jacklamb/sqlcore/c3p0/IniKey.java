@@ -73,6 +73,8 @@ public class IniKey {
 	public static final String FORMATSQLLOG="formatSqlLog";
 	
 	public static final String CACHE="cache";
+
+	public static final String CACHECAPACITY="cacheCapacity";
 	
 	public static final String SRCPATH="srcpath";
 	

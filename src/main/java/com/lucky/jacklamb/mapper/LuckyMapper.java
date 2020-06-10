@@ -143,5 +143,19 @@ public interface LuckyMapper<T> {
 	 * 创建啊实体对应的数据库表
 	 */
 	public void createTable();
+
+	/**
+	 * 根据ID批量删除数据
+	 * @param ids
+	 * @return
+	 */
+	public boolean deleteByIdIn(List<?> ids);
+
+	/**
+	 * 根据ID批量查询数据
+	 * @param ids
+	 * @return
+	 */
+	public List<T> selectByIdIn(List<?> ids);
 	
 }

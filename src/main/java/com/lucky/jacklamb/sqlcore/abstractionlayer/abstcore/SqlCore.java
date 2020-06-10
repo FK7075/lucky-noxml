@@ -213,11 +213,41 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param ids 要删除的id所组成的集合
 	 * @return
 	 */
-	public boolean deleteBatchByID(Class<?> pojoClass,Object...ids) {
-		return super.deleteBatchByID(pojoClass, ids);
+	public boolean deleteByIdIn(Class<?> pojoClass,Object[] ids) {
+		return super.deleteByIdIn(pojoClass, ids);
 	}
-	
-	
+
+	/**
+	 * 批量ID删除
+	 * @param pojoClass 要操作表对应类的Class
+	 * @param ids 要删除的id所组成的集合
+	 * @return
+	 */
+	public boolean deleteByIdIn(Class<?> pojoClass,List<?> ids) {
+		return deleteByIdIn(pojoClass, ids.toArray());
+	}
+
+	/**
+	 * 批量ID查询
+	 * @param clazz 要操作表对应类的Class
+	 * @param ids 要删除的id所组成的集合
+	 * @return
+	 */
+	@Override
+	public <T> List<T> getByIdIn(Class<T> clazz, Object[] ids) {
+		return super.getByIdIn(clazz, ids);
+	}
+
+	/**
+	 * 批量ID查询
+	 * @param clazz 要操作表对应类的Class
+	 * @param ids 要删除的id所组成的集合
+	 * @return
+	 */
+	public <T> List<T> getByIdIn(Class<T> clazz,List<?> ids) {
+		return getByIdIn(clazz, ids.toArray());
+	}
+
 	/**
 	 * 批量SQL非查询操作
 	 * @param sql

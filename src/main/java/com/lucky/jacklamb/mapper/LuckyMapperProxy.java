@@ -1,40 +1,8 @@
 package com.lucky.jacklamb.mapper;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
-
 import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.annotation.orm.mapper.AutoId;
-import com.lucky.jacklamb.annotation.orm.mapper.Change;
-import com.lucky.jacklamb.annotation.orm.mapper.Count;
-import com.lucky.jacklamb.annotation.orm.mapper.Delete;
-import com.lucky.jacklamb.annotation.orm.mapper.Insert;
-import com.lucky.jacklamb.annotation.orm.mapper.Like;
-import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.annotation.orm.mapper.Page;
-import com.lucky.jacklamb.annotation.orm.mapper.Query;
-import com.lucky.jacklamb.annotation.orm.mapper.Select;
-import com.lucky.jacklamb.annotation.orm.mapper.Update;
-import com.lucky.jacklamb.annotation.orm.mapper.X;
+import com.lucky.jacklamb.annotation.orm.mapper.*;
+import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.enums.Sort;
@@ -48,11 +16,14 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.exception.NotFindSqlConfigFileException;
 import com.lucky.jacklamb.utils.LuckyUtils;
-
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
 
 @SuppressWarnings("all")
 public class LuckyMapperProxy {
@@ -604,27 +575,34 @@ public class LuckyMapperProxy {
         enhancer.setSuperclass(clazz);
         MethodInterceptor interceptor = (object, method, params, methodProxy) -> {
             log.debug("Run ==> " + object.getClass().getName() + "." + method.getName() + "\n params=" + Arrays.toString(params));
-			
-			
+
 			/*
-			  用户自定义的Mapper如果继承了LuckyMapper<T>,代理selectById,deleteById,count,selectList 方法
+			  用户自定义的Mapper如果继承了LuckyMapper<T>,代理selectById,deleteById,count,selectList,createTable,deleteByIdIn,selectByIdIn方法
 			 这两个方法的执行依赖LuckyMapper接口的泛型类型，所以需要特殊处理
 			*/
-            if (LuckyMapperGeneric != null && "selectById".equals(method.getName())) {
+            boolean isExtendLM = LuckyMapperGeneric != null;
+            if (isExtendLM && "selectById".equals(method.getName())) {
                 return sqlCore.getOne(LuckyMapperGeneric, params[0]);
             }
-            if (LuckyMapperGeneric != null && "deleteById".equals(method.getName())) {
+            if (isExtendLM && "deleteById".equals(method.getName())) {
                 return (Object) sqlCore.delete(LuckyMapperGeneric, params[0]);
             }
-            if (LuckyMapperGeneric != null && "count".equals(method.getName()) && params.length == 0) {
+            if (isExtendLM && "count".equals(method.getName()) && params.length == 0) {
                 return (Object) sqlCore.count(LuckyMapperGeneric);
             }
-            if (LuckyMapperGeneric != null && "selectList".equals(method.getName()) && params.length == 0) {
+            if (isExtendLM && "selectList".equals(method.getName()) && params.length == 0) {
                 return sqlCore.getList(LuckyMapperGeneric);
             }
-            if (LuckyMapperGeneric != null && "createTable".equals(method.getName()) && params.length == 0) {
-                 sqlCore.createTable(LuckyMapperGeneric);
-                 return void.class;
+            if (isExtendLM && "createTable".equals(method.getName()) && params.length == 0) {
+                sqlCore.createTable(LuckyMapperGeneric);
+                return void.class;
+            }
+            if (isExtendLM && "deleteByIdIn".equals(method.getName()) && params.length == 1) {
+                 return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
+
+            }
+            if (isExtendLM && "selectByIdIn".equals(method.getName()) && params.length == 1) {
+                return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
             }
 
             //用户自定义Mapper接口方法的代理

@@ -38,6 +38,8 @@ public class DataSource {
 	private boolean log;
 
 	private boolean cache;
+
+	private Integer cacheCapacity;
 	
 	private boolean poolMethod;
 	
@@ -264,7 +266,19 @@ public class DataSource {
 	public void setCaeateTable(List<Class<?>> caeateTable) {
 		this.caeateTable = caeateTable;
 	}
-	
+
+	public Integer getCacheCapacity() {
+		return cacheCapacity;
+	}
+
+	/**
+	 * 设置缓存大小(默认:50)
+	 * @param cacheCapacity
+	 */
+	public void setCacheCapacity(Integer cacheCapacity) {
+		this.cacheCapacity = cacheCapacity;
+	}
+
 	public void addCaeateTable(Class<?>... pojoClassStr) {
 		if(caeateTable==null) {
 			caeateTable=new ArrayList<>();
@@ -292,6 +306,7 @@ public class DataSource {
 		cache=false;
 		poolMethod=false;
 		formatSqlLog=false;
+		cacheCapacity=50;
 	}
 
 }

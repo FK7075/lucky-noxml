@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 
 import com.lucky.jacklamb.enums.Scan;
 import com.lucky.jacklamb.expression.$Expression;
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
@@ -54,14 +55,21 @@ public class IniFilePars {
 	}
 
 	public IniFilePars() {
-		iniMap=new HashMap<>();
-		iniInputStream=IniFilePars.class.getClassLoader().getResourceAsStream("appconfig.ini");
-		iniName="appconfig.ini";
 		try {
+			iniMap=new HashMap<>();
+			File dirFile=new File(System.getProperty("user.dir")+File.separator+"appconfig.ini");
+			if(dirFile.exists()){
+				iniInputStream=new FileInputStream(dirFile);
+			}else{
+				iniInputStream=IniFilePars.class.getClassLoader().getResourceAsStream("appconfig.ini");
+			}
+			iniName="appconfig.ini";
 			if(iniMap.isEmpty())
 				pars();
 		}catch(ArrayIndexOutOfBoundsException | UnsupportedEncodingException e) {
 			throw new RuntimeException(iniName+"配置文件内容格式不正确",e);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(iniName+"配置文件找不到！",e);
 		}
 	}
 	

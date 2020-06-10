@@ -43,7 +43,7 @@ public class ReadIni {
 		DataSource dataSource = new DataSource();
 		String name, driverClass, jdbcUrl, user, password, acquireIncrement, initialPoolSize, maxPoolSize, minPoolSize,
 		maxidleTime, maxConnectionAge, maxStatements,checkoutTimeout, maxStatementsPerConnection, reversePckage, log, formatSqlLog, cache,
-		srcpath, createTable,poolMethod;
+		cacheCapacity,srcpath, createTable,poolMethod;
 		if(SECTION_JDBC.equals(section))
 			name="defaultDB";
 		else
@@ -66,6 +66,7 @@ public class ReadIni {
 		log = sectionMap.get(LOG);
 		formatSqlLog=sectionMap.get(FORMATSQLLOG);
 		cache = sectionMap.get(CACHE);
+		cacheCapacity=sectionMap.get(CACHECAPACITY);
 		srcpath = sectionMap.get(SRCPATH);
 		createTable = sectionMap.get(CREATE_TABLE);
 		poolMethod=sectionMap.get(POOLMETHOD);
@@ -101,6 +102,8 @@ public class ReadIni {
 			dataSource.setFormatSqlLog(Boolean.parseBoolean(formatSqlLog));
 		if (cache != null && cache != "")
 			dataSource.setCache(Boolean.parseBoolean(cache));
+		if(cacheCapacity!=null&& cacheCapacity!="")
+			dataSource.setCacheCapacity(Integer.parseInt(cacheCapacity));
 		if (reversePckage != null && reversePckage != "")
 			dataSource.setReversePack(reversePckage);
 		if (srcpath != null && srcpath != "")
