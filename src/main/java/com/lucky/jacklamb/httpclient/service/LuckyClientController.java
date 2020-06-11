@@ -2,16 +2,12 @@ package com.lucky.jacklamb.httpclient.service;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.servlet.LuckyController;
-import com.lucky.jacklamb.start.LuckyApplication;
-import com.lucky.jacklamb.start.LuckyShutdown;
-import javafx.application.Application;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,11 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller("lucky-feignClient-xfl")
-public class FeignClientController extends LuckyController {
+public class LuckyClientController extends LuckyController {
 
     public final String SERVICE_NAME = AppConfig.getAppConfig().getServiceConfig().getServiceName();
 
-    private static final Logger log = LogManager.getLogger(FeignClientController.class);
+    private static final Logger log = LogManager.getLogger(LuckyClientController.class);
 
     //服务状态验证
     @RestBody(Rest.TXT)

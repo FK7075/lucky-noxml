@@ -49,8 +49,8 @@ public @interface Mapper {
 	String[] properties() default {};
 	
 	/**
-	 * properties配置文件的编码格式(默认值为gbk)
+	 * properties配置文件的编码格式(默认值为UTF-8)
 	 * @return
 	 */
-	String  codedformat() default "gbk";
+	String  codedformat() default "UTF-8";
 }

@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.expression;
 
 import com.lucky.jacklamb.file.ini.INIConfig;
-import com.lucky.jacklamb.mapping.Regular;
+import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.util.List;

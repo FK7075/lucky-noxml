@@ -1,14 +1,12 @@
-package com.lucky.jacklamb.servlet;
+package com.lucky.jacklamb.servlet.staticsource;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.WebConfig;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import com.lucky.jacklamb.servlet.core.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Type;

@@ -1,10 +1,9 @@
 package com.lucky.jacklamb.httpclient.registry;
 
-import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
-import com.lucky.jacklamb.servlet.Model;
+import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.start.LuckyShutdown;
 import org.apache.http.conn.HttpHostConnectException;
 
@@ -150,8 +149,17 @@ public class ServiceCenter {
     }
 
     /**
+     * 获取项目名下对应的所有地址
+     * @param clientName
+     * @return
+     */
+    private List<ServiceInfo> getAllServiceInfoByName(String clientName){
+        Map<String, ServiceInfo> domainMap = clientMap.get(clientName);
+        return domainMap.keySet().stream().map(a->domainMap.get(a)).collect(Collectors.toList());
+    }
+
+    /**
      * 随机的挑选访问的服务
-     *
      * @param clientName 服务名
      * @return
      */

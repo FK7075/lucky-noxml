@@ -1,32 +1,25 @@
 package com.lucky.jacklamb.ioc;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.lucky.jacklamb.annotation.ioc.CallController;
-import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.httpclient.HttpClientControllerProxy;
-import com.lucky.jacklamb.httpclient.service.FeignClientControllerProxy;
-import com.lucky.jacklamb.mapping.Mapping;
-import com.lucky.jacklamb.mapping.MappingDetails;
-
 import com.lucky.jacklamb.annotation.ioc.Controller;
+import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
+import com.lucky.jacklamb.httpclient.callcontroller.CallControllerProxy;
+import com.lucky.jacklamb.httpclient.luckyclient.LuckyClientControllerProxy;
 import com.lucky.jacklamb.servlet.ServerStartRun;
+import com.lucky.jacklamb.servlet.mapping.Mapping;
+import com.lucky.jacklamb.servlet.mapping.MappingDetails;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class ControllerIOC extends ComponentFactory{
 
@@ -163,7 +156,7 @@ public class ControllerIOC extends ComponentFactory{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
 				log.info("@CallController :\"{id="+beanID+" ,class="+controller+"}\"");
-				addControllerMap(beanID, HttpClientControllerProxy.getCallControllerProxyObject(controller));
+				addControllerMap(beanID, CallControllerProxy.getCallControllerProxyObject(controller));
 			} else if(controller.isAnnotationPresent(LuckyClient.class)){
 				LuckyClient cont = controller.getAnnotation(LuckyClient.class);
 				if (!"".equals(cont.id())) {
@@ -172,7 +165,7 @@ public class ControllerIOC extends ComponentFactory{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
 				log.info("@LuckyClient :\"{id="+beanID+" ,class="+controller+"}\"");
-				addControllerMap(beanID, FeignClientControllerProxy.getFeignClientControllerProxyObject(controller));
+				addControllerMap(beanID, LuckyClientControllerProxy.getLuckyClientControllerProxyObject(controller));
 			}
 
 		}

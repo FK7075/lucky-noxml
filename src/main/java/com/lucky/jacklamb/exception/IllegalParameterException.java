@@ -1,8 +1,7 @@
 package com.lucky.jacklamb.exception;
 
 import com.lucky.jacklamb.enums.Code;
-import com.lucky.jacklamb.servlet.Model;
-import com.lucky.jacklamb.utils.Jacklabm;
+import com.lucky.jacklamb.servlet.core.Model;
 
 import java.util.Arrays;
 

@@ -1,4 +1,5 @@
-package com.lucky.jacklamb.httpclient;
+package com.lucky.jacklamb.httpclient.callcontroller;
+
 
 import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.mvc.FileDownload;
@@ -8,12 +9,13 @@ import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
 import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.exception.JsonConversionException;
-import com.lucky.jacklamb.mapping.Mapping;
-import com.lucky.jacklamb.mapping.MappingDetails;
 import com.lucky.jacklamb.rest.LSON;
-import net.sf.cglib.proxy.Enhancer;
+import com.lucky.jacklamb.servlet.mapping.Mapping;
+import com.lucky.jacklamb.servlet.mapping.MappingDetails;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -24,60 +26,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HttpClientControllerProxy {
+public class CallControllerMethodInterceptor implements MethodInterceptor {
 
-    /**
-     * 获得CallController接口的代理对象
-     * @param callControllerClass
-     * @param <T>
-     * @return
-     */
-    public static <T> T getCallControllerProxyObject(Class<T> callControllerClass){
-        final Enhancer enhancer=new Enhancer();
-        enhancer.setSuperclass(callControllerClass);
-        MethodInterceptor interceptor=(object, method, params, methodProxy)->{
-            if(Mapping.isMappingMethod(method)){
+    private Class<?> callControllerClass;
 
-                Map<String,Object> callapiMap=getParamMap(method,params);
-                //获取远程接口的地址
-                MappingDetails md;
-                String apiUrl;
-                String callControllerApi=Api.getApi(callControllerClass.getAnnotation(CallController.class).value());
-                md=Mapping.getMappingDetails(method);
-                String methodApi=Api.getApi(md.value);
-                if(methodApi.startsWith("${")||methodApi.startsWith("http://")||methodApi.startsWith("https://")){
-                    apiUrl=Api.getApi(methodApi);
-                }else{
-                    if(!callControllerApi.endsWith("/"))
-                        callControllerApi+="/";
-                    if(methodApi.startsWith("/"))
-                        methodApi=methodApi.substring(1);
-                    apiUrl=callControllerApi+methodApi;
-                }
-
-                //文件下载的请求，服务将返回byte[]类型的结果
-                if(method.isAnnotationPresent(FileDownload.class)){
-                   return HttpClientCall.callByte(apiUrl,md.method[0],callapiMap);
-                }
-
-                //调用远程接口
-                String callResult=call(apiUrl,method,callapiMap,md.method[0]);
-
-                //封装返回结果
-                Class<?> returnClass=method.getReturnType();
-                try{
-                    return new LSON().toObject(returnClass,callResult);
-                }catch (Exception e){
-                    throw new JsonConversionException(apiUrl,returnClass,callResult,e);
-                }
-
-            }
-            throw new NotMappingMethodException("该方法不是Mapping方法，无法执行代理！错误位置："+method);
-        };
-
-        enhancer.setCallback(interceptor);
-        return (T) enhancer.create();
+    public CallControllerMethodInterceptor(Class<?> callControllerClass) {
+        this.callControllerClass = callControllerClass;
     }
+
+    @Override
+    public Object intercept(Object o, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+        if(Mapping.isMappingMethod(method)){
+            Map<String,Object> callapiMap=getParamMap(method,params);
+            //获取远程接口的地址
+            MappingDetails md;
+            String apiUrl;
+            String callControllerApi=Api.getApi(callControllerClass.getAnnotation(CallController.class).value());
+            md=Mapping.getMappingDetails(method);
+            String methodApi=Api.getApi(md.value);
+            if(methodApi.startsWith("${")||methodApi.startsWith("http://")||methodApi.startsWith("https://")){
+                apiUrl=Api.getApi(methodApi);
+            }else{
+                if(!callControllerApi.endsWith("/"))
+                    callControllerApi+="/";
+                if(methodApi.startsWith("/"))
+                    methodApi=methodApi.substring(1);
+                apiUrl=callControllerApi+methodApi;
+            }
+
+            //文件下载的请求，服务将返回byte[]类型的结果
+            if(method.isAnnotationPresent(FileDownload.class)){
+                return HttpClientCall.callByte(apiUrl,md.method[0],callapiMap);
+            }
+
+            //调用远程接口
+            String callResult=call(apiUrl,method,callapiMap,md.method[0]);
+
+            //封装返回结果
+            Class<?> returnClass=method.getReturnType();
+            try{
+                return new LSON().toObject(returnClass,callResult);
+            }catch (Exception e){
+                throw new JsonConversionException(apiUrl,returnClass,callResult,e);
+            }
+
+        }
+        throw new NotMappingMethodException("该方法不是Mapping方法，无法执行代理！错误位置："+method);
+    }
+
 
     /**
      * 发起请求

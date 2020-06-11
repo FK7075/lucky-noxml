@@ -2,6 +2,7 @@ package com.lucky.jacklamb.aop.proxy;
 
 import java.util.List;
 
+import com.lucky.jacklamb.cglib.CglibProxy;
 import net.sf.cglib.proxy.Enhancer;
 
 public class ProxyFactory {
@@ -19,27 +20,21 @@ public class ProxyFactory {
 	/**
 	 * 得到一个代理对象
 	 * @param targetClass 真实类的Class
-	 * @param restPoints 增强Points(可变参形式)
+	 * @param pointRuns 增强Points(可变参形式)
 	 * @return
 	 */
 	public Object getProxy(Class<?> targetClass,PointRun...pointRuns) {
-		final Enhancer en=new Enhancer();
-		en.setSuperclass(targetClass);
-		en.setCallback(new LuckyMethodInterceptor(pointRuns));
-		return en.create();
+		return CglibProxy.getCglibProxyObject(targetClass,new LuckyMethodInterceptor(pointRuns));
 	}
 	
 	/**
 	 * 得到一个代理对象
 	 * @param targetClass 真实类的Class
-	 * @param restPoints 增强Points(集合参形式)
+	 * @param pointRuns 增强Points(集合参形式)
 	 * @return
 	 */
 	public Object getProxy(Class<?> targetClass,List<PointRun> pointRuns) {
-		final Enhancer en=new Enhancer();
-		en.setSuperclass(targetClass);
-		en.setCallback(new LuckyMethodInterceptor(pointRuns));
-		return en.create();
+		return CglibProxy.getCglibProxyObject(targetClass,new LuckyMethodInterceptor(pointRuns));
 	}
 
 }

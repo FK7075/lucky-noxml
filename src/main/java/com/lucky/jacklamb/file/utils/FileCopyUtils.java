@@ -1,16 +1,14 @@
 package com.lucky.jacklamb.file.utils;
 
 import com.lucky.jacklamb.enums.Code;
-import com.lucky.jacklamb.servlet.Model;
-import com.lucky.jacklamb.servlet.StaticResourceManage;
+import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Files;
-import java.util.UUID;
 
 
 public abstract class FileCopyUtils {

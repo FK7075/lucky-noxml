@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.mapping;
+package com.lucky.jacklamb.servlet.mapping;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +20,7 @@ import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.ioc.URLAndRequestMethod;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.servlet.LuckyWebContext;
-import com.lucky.jacklamb.servlet.Model;
+import com.lucky.jacklamb.servlet.core.Model;
 
 /**
  * url解析，将url映射为ControllerAndMethod对象,并且负责一些关于请求转化与判定的事务,以及跨域问题的解决

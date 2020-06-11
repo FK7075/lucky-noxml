@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.mapper;
+package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.mapper.*;
 import com.lucky.jacklamb.query.QueryBuilder;

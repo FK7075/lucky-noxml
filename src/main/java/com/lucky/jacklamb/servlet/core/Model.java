@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.servlet;
+package com.lucky.jacklamb.servlet.core;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.Gson;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.MultipartFile;

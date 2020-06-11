@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.mapping;
+package com.lucky.jacklamb.servlet.mapping;
 
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.annotation.orm.mapper.Param;

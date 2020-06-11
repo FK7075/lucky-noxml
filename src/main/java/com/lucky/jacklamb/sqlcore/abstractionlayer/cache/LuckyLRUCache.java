@@ -52,6 +52,10 @@ public class LuckyLRUCache<K, V> {
         return map.entrySet();
     }
 
+    public synchronized boolean isEmpty(){
+        return map.isEmpty();
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

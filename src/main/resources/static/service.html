@@ -195,12 +195,7 @@
                 var names=jsonObj[key];
                 for(var name in names){
                     td2.innerHTML+=(name+"<br>");
-                    td3.innerHTML+=(names[name].ctime);
-                    if(names[name].off){
-                        td3.innerHTML+=" <a><img src='/lucyxfl/file/shutdown.png' title='关机'></a>";
-                    }else{
-                        td3.innerHTML+="<br>";
-                    }
+                    td3.innerHTML+=(names[name].ctime+"<br>");
                 }
 
                 var td4=document.createElement("td");

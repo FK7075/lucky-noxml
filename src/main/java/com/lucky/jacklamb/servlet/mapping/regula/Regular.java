@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.mapping;
+package com.lucky.jacklamb.servlet.mapping.regula;
 
 import java.util.ArrayList;
 import java.util.List;

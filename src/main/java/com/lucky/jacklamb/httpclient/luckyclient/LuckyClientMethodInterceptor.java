@@ -1,8 +1,8 @@
-package com.lucky.jacklamb.httpclient.service;
+package com.lucky.jacklamb.httpclient.luckyclient;
 
-import com.lucky.jacklamb.annotation.mvc.LuckyClient;
 import com.lucky.jacklamb.annotation.mvc.FileDownload;
 import com.lucky.jacklamb.annotation.mvc.FileUpload;
+import com.lucky.jacklamb.annotation.mvc.LuckyClient;
 import com.lucky.jacklamb.annotation.mvc.RequestMapping;
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.conversion.util.ClassUtils;
@@ -12,11 +12,11 @@ import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.exception.JsonConversionException;
 import com.lucky.jacklamb.ioc.config.AppConfig;
-import com.lucky.jacklamb.mapping.Mapping;
-import com.lucky.jacklamb.mapping.MappingDetails;
 import com.lucky.jacklamb.rest.LSON;
-import net.sf.cglib.proxy.Enhancer;
+import com.lucky.jacklamb.servlet.mapping.Mapping;
+import com.lucky.jacklamb.servlet.mapping.MappingDetails;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -27,61 +27,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FeignClientControllerProxy {
+public class LuckyClientMethodInterceptor implements MethodInterceptor {
 
-    /**
-     * 获得FeignClientController接口的代理对象
-     *
-     * @param feignClientControllerClass
-     * @param <T>
-     * @return
-     */
-    public static <T> T getFeignClientControllerProxyObject(Class<T> feignClientControllerClass) {
-        final Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(feignClientControllerClass);
-        MethodInterceptor interceptor = (object, method, params, methodProxy) -> {
-            LuckyClient fc = feignClientControllerClass.getAnnotation(LuckyClient.class);
-            String regUrl = AppConfig.getAppConfig().getServiceConfig().getServiceUrl();
-            regUrl = regUrl.endsWith("/") ? regUrl : regUrl + "/";
-            //注册中心的地址 eg: http://127.0.0.1:8761/
-            regUrl = regUrl.substring(0, regUrl.length() - 8);
-            if (Mapping.isMappingMethod(method)) {
-                Map<String, Object> callapiMap = getParamMap(method, params);
-                callapiMap.put("agreement", fc.agreement());
-                //获取远程接口的地址
-                MappingDetails md;
-                String apiUrl = feignClientControllerClass.isAnnotationPresent(RequestMapping.class) ? feignClientControllerClass.getAnnotation(RequestMapping.class).value() : "/";
-                apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
-                apiUrl = apiUrl.startsWith("/") ? apiUrl : "/" + apiUrl;
-                String serviceName = fc.value();
-                md = Mapping.getMappingDetails(method);
-                String methodUrl = md.value.startsWith("/") ? md.value.substring(1) : md.value;
-                String regApiUrl = regUrl + serviceName + apiUrl + methodUrl;
+    private Class<?> feignClientControllerClass;
 
-
-                //文件下载的请求，服务将返回byte[]类型的结果
-                if (method.isAnnotationPresent(FileDownload.class)) {
-                    return fileDownload(regUrl, serviceName,apiUrl + methodUrl,md.method[0], callapiMap);
-                }
-
-                //调用远程接口
-                String callResult = call(method, regUrl, serviceName, apiUrl + methodUrl, regApiUrl, md.method[0], callapiMap);
-
-                //封装返回结果
-                Class<?> returnClass = method.getReturnType();
-                try {
-                    return new LSON().toObject(returnClass, callResult);
-                } catch (Exception e) {
-                    throw new JsonConversionException(serviceName,returnClass, callResult, e);
-                }
-
-            }
-            throw new NotMappingMethodException("该方法不是Mapping方法，无法执行代理！错误位置：" + method);
-        };
-        enhancer.setCallback(interceptor);
-        return (T) enhancer.create();
+    public LuckyClientMethodInterceptor(Class<?> feignClientControllerClass) {
+        this.feignClientControllerClass = feignClientControllerClass;
     }
 
+    @Override
+    public Object intercept(Object o, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+        LuckyClient fc = feignClientControllerClass.getAnnotation(LuckyClient.class);
+        String regUrl = AppConfig.getAppConfig().getServiceConfig().getServiceUrl();
+        regUrl = regUrl.endsWith("/") ? regUrl : regUrl + "/";
+        //注册中心的地址 eg: http://127.0.0.1:8761/
+        regUrl = regUrl.substring(0, regUrl.length() - 8);
+        if (Mapping.isMappingMethod(method)) {
+            Map<String, Object> callapiMap = getParamMap(method, params);
+            callapiMap.put("agreement", fc.agreement());
+            //获取远程接口的地址
+            MappingDetails md;
+            String apiUrl = feignClientControllerClass.isAnnotationPresent(RequestMapping.class) ? feignClientControllerClass.getAnnotation(RequestMapping.class).value() : "/";
+            apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
+            apiUrl = apiUrl.startsWith("/") ? apiUrl : "/" + apiUrl;
+            String serviceName = fc.value();
+            md = Mapping.getMappingDetails(method);
+            String methodUrl = md.value.startsWith("/") ? md.value.substring(1) : md.value;
+            String regApiUrl = regUrl + serviceName + apiUrl + methodUrl;
+
+
+            //文件下载的请求，服务将返回byte[]类型的结果
+            if (method.isAnnotationPresent(FileDownload.class)) {
+                return fileDownload(regUrl, serviceName,apiUrl + methodUrl,md.method[0], callapiMap);
+            }
+
+            //调用远程接口
+            String callResult = call(method, regUrl, serviceName, apiUrl + methodUrl, regApiUrl, md.method[0], callapiMap);
+
+            //封装返回结果
+            Class<?> returnClass = method.getReturnType();
+            try {
+                return new LSON().toObject(returnClass, callResult);
+            } catch (Exception e) {
+                throw new JsonConversionException(serviceName,returnClass, callResult, e);
+            }
+
+        }
+        throw new NotMappingMethodException("该方法不是Mapping方法，无法执行代理！错误位置：" + method);
+    }
 
     /**
      * @param method        Method对象

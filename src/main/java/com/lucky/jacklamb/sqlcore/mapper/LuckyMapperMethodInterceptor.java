@@ -1,138 +1,41 @@
-package com.lucky.jacklamb.mapper;
+package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.annotation.orm.mapper.*;
+import com.lucky.jacklamb.conversion.proxy.ConversionMethodInterceptor;
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.enums.Sort;
-import com.lucky.jacklamb.exception.NotFindFlieException;
-import com.lucky.jacklamb.file.ini.INIConfig;
-import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.exception.NotFindSqlConfigFileException;
+import com.lucky.jacklamb.sqlcore.exception.NotFoundInterfacesGenericException;
 import com.lucky.jacklamb.utils.LuckyUtils;
-import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-@SuppressWarnings("all")
-public class LuckyMapperProxy {
+public class LuckyMapperMethodInterceptor implements MethodInterceptor {
 
-    private static final Logger log = LogManager.getLogger(LuckyMapperProxy.class);
-    private SqlCore sqlCore;
-    private Map<String, String> sqlMap;
+    private static final Logger log = LogManager.getLogger(LuckyMapperMethodInterceptor.class);
+
     private Class<?> LuckyMapperGeneric;
 
-    public LuckyMapperProxy(SqlCore sql) {
-        sqlCore = sql;
-        sqlMap = new HashMap<>();
-    }
+    private SqlCore sqlCore;
 
-    /**
-     * 初始化sqlMap,将配置类中的SQl语句加载到sqlMap中
-     *
-     * @param clazz 配置类的Class
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private <T> void initSqlMap(Class<T> clazz) throws InstantiationException, IllegalAccessException {
-        if (clazz.isAnnotationPresent(Mapper.class)) {
-            Mapper map = clazz.getAnnotation(Mapper.class);
-            Class<?> sqlClass = map.value();
-            if (!sqlClass.isAssignableFrom(Void.class)) {
-                Object sqlPo = sqlClass.newInstance();
-                Field[] fields = sqlClass.getDeclaredFields();
-                for (Field fi : fields) {
-                    fi.setAccessible(true);
-                    sqlMap.put(fi.getName().toUpperCase(), (String) fi.get(sqlPo));
-                }
-            }
-        }
-    }
+    private Map<String, String> sqlMap;
 
-    /**
-     * 加载写在.ini配置文件中的Sql
-     *
-     * @param clazz
-     * @throws IOException
-     */
-    private <T> void initIniMap(Class<T> clazz) throws IOException {
-        String iniSql = AppConfig.getAppConfig().getScanConfig().getSqlIniPath();
-        InputStream ini = this.getClass().getResourceAsStream("/" + iniSql);
-        if (ini != null) {
-            INIConfig app = new INIConfig(iniSql);
-            Map<String, String> classMap = app.getSectionMap(clazz.getName());
-            if (classMap != null) {
-                for (String key : classMap.keySet()) {
-                    sqlMap.put(key.toUpperCase(), classMap.get(key));
-                }
-            }
-        }
-    }
-
-    /**
-     * 加载写在.properties配置文件中Sql语句
-     *
-     * @param clzz
-     */
-    private <T> void initSqlMapProperty(Class<T> clzz) {
-        if (clzz.isAnnotationPresent(Mapper.class)) {
-            Mapper mapper = clzz.getAnnotation(Mapper.class);
-            String[] propertys = mapper.properties();
-            String coding = mapper.codedformat();
-            for (String path : propertys) {
-                InputStream resource = this.getClass().getResourceAsStream("/" + path);
-                if (resource == null) {
-                    log.error("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-                    throw new NotFindSqlConfigFileException("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-                }
-                loadProperty(clzz, resource, coding);
-
-            }
-        }
-    }
-
-    /**
-     * 加载写在.properties配置文件中Sql语句
-     *
-     * @param clzz
-     * @param propertyPath
-     * @param coding
-     */
-    private void loadProperty(Class<?> clzz, InputStream propertyPath, String coding) {
-        try {
-            Properties p = new Properties();
-            p.load(new BufferedReader(new InputStreamReader(propertyPath, coding)));
-            Method[] methods = clzz.getDeclaredMethods();
-            for (Method method : methods) {
-                if (!method.isAnnotationPresent(Select.class) && !method.isAnnotationPresent(Insert.class)
-                        && !method.isAnnotationPresent(Update.class) && !method.isAnnotationPresent(Delete.class)
-                        && !method.isAnnotationPresent(Query.class) && !method.isAnnotationPresent(Count.class)) {
-                    String key = method.getName();
-                    String value = p.getProperty(key);
-                    if (value != null)
-                        sqlMap.put(key.toUpperCase(), value);
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        } catch (FileNotFoundException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        } catch (IOException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        }
-
-
+    public LuckyMapperMethodInterceptor(Class<?> luckyMapperGeneric, SqlCore sqlCore, Map<String, String> sqlMap) {
+        LuckyMapperGeneric = luckyMapperGeneric;
+        this.sqlCore = sqlCore;
+        this.sqlMap = sqlMap;
     }
 
     /**
@@ -553,78 +456,59 @@ public class LuckyMapperProxy {
         }
     }
 
-    /**
-     * 返回接口的代理对象
-     *
-     * @param clazz 接口的Class
-     * @return T
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws IOException
-     */
-    public <T> T getMapperProxyObject(Class<T> clazz) throws InstantiationException, IllegalAccessException, IOException {
-        Type[] genericInterfaces = clazz.getGenericInterfaces();
-        if (LuckyMapper.class.isAssignableFrom(clazz) && genericInterfaces.length == 1) {
-            ParameterizedType interfacePtype = (ParameterizedType) genericInterfaces[0];
-            LuckyMapperGeneric = (Class<?>) interfacePtype.getActualTypeArguments()[0];
-        }
-        initIniMap(clazz);
-        initSqlMap(clazz);
-        initSqlMapProperty(clazz);
-        final Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(clazz);
-        MethodInterceptor interceptor = (object, method, params, methodProxy) -> {
-            log.debug("Run ==> " + object.getClass().getName() + "." + method.getName() + "\n params=" + Arrays.toString(params));
+
+
+    @Override
+    public Object intercept(Object object, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+        log.debug("Run ==> " + object.getClass().getName() + "." + method.getName() + "\n params=" + Arrays.toString(params));
 
 			/*
 			  用户自定义的Mapper如果继承了LuckyMapper<T>,代理selectById,deleteById,count,selectList,createTable,deleteByIdIn,selectByIdIn方法
-			 这两个方法的执行依赖LuckyMapper接口的泛型类型，所以需要特殊处理
+			 这些方法的执行依赖LuckyMapper接口的泛型类型，所以需要特殊处理
 			*/
-            boolean isExtendLM = LuckyMapperGeneric != null;
-            if (isExtendLM && "selectById".equals(method.getName())) {
-                return sqlCore.getOne(LuckyMapperGeneric, params[0]);
-            }
-            if (isExtendLM && "deleteById".equals(method.getName())) {
-                return (Object) sqlCore.delete(LuckyMapperGeneric, params[0]);
-            }
-            if (isExtendLM && "count".equals(method.getName()) && params.length == 0) {
-                return (Object) sqlCore.count(LuckyMapperGeneric);
-            }
-            if (isExtendLM && "selectList".equals(method.getName()) && params.length == 0) {
-                return sqlCore.getList(LuckyMapperGeneric);
-            }
-            if (isExtendLM && "createTable".equals(method.getName()) && params.length == 0) {
-                sqlCore.createTable(LuckyMapperGeneric);
-                return void.class;
-            }
-            if (isExtendLM && "deleteByIdIn".equals(method.getName()) && params.length == 1) {
-                 return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
+        boolean isExtendLM = LuckyMapperGeneric != null;
+        if (isExtendLM && "selectById".equals(method.getName())) {
+            return sqlCore.getOne(LuckyMapperGeneric, params[0]);
+        }
+        if (isExtendLM && "deleteById".equals(method.getName())) {
+            return (Object) sqlCore.delete(LuckyMapperGeneric, params[0]);
+        }
+        if (isExtendLM && "count".equals(method.getName()) && params.length == 0) {
+            return (Object) sqlCore.count(LuckyMapperGeneric);
+        }
+        if (isExtendLM && "selectList".equals(method.getName()) && params.length == 0) {
+            return sqlCore.getList(LuckyMapperGeneric);
+        }
+        if (isExtendLM && "createTable".equals(method.getName()) && params.length == 0) {
+            sqlCore.createTable(LuckyMapperGeneric);
+            return void.class;
+        }
+        if (isExtendLM && "deleteByIdIn".equals(method.getName()) && params.length == 1) {
+            return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
 
-            }
-            if (isExtendLM && "selectByIdIn".equals(method.getName()) && params.length == 1) {
-                return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
-            }
+        }
+        if (isExtendLM && "selectByIdIn".equals(method.getName()) && params.length == 1) {
+            return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
+        }
 
-            //用户自定义Mapper接口方法的代理
-            SqlFragProce sql_fp = SqlFragProce.getSqlFP();
-            if (method.isAnnotationPresent(Select.class))
-                return select(method, params, sql_fp);
-            else if (method.isAnnotationPresent(Update.class))
-                return (Object) update(method, params, sql_fp);
-            else if (method.isAnnotationPresent(Delete.class))
-                return (Object) delete(method, params, sql_fp);
-            else if (method.isAnnotationPresent(Insert.class))
-                return (Object) insert(method, params, sql_fp);
-            else if (method.isAnnotationPresent(Query.class))
-                return join(method, params);
-            else if (method.isAnnotationPresent(Count.class))
-                return (Object) sqlCore.count(params[0]);
-            else
-                return notHave(method, params, sql_fp);
-        };
-        enhancer.setCallback(interceptor);
-        return (T) enhancer.create();
+        //用户自定义Mapper接口方法的代理
+        SqlFragProce sql_fp = SqlFragProce.getSqlFP();
+        if (method.isAnnotationPresent(Select.class))
+            return select(method, params, sql_fp);
+        else if (method.isAnnotationPresent(Update.class))
+            return (Object) update(method, params, sql_fp);
+        else if (method.isAnnotationPresent(Delete.class))
+            return (Object) delete(method, params, sql_fp);
+        else if (method.isAnnotationPresent(Insert.class))
+            return (Object) insert(method, params, sql_fp);
+        else if (method.isAnnotationPresent(Query.class))
+            return join(method, params);
+        else if (method.isAnnotationPresent(Count.class))
+            return (Object) sqlCore.count(params[0]);
+        else
+            return notHave(method, params, sql_fp);
     }
+
 
     /**
      * 根据配置设置QueryBuilder对象
@@ -754,8 +638,6 @@ public class LuckyMapperProxy {
             }
         }
     }
-
-
 }
 
 class SqlAndArray {

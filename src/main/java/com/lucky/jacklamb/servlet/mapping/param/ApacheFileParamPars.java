@@ -1,6 +1,6 @@
-package com.lucky.jacklamb.mapping.param;
+package com.lucky.jacklamb.servlet.mapping.param;
 
-import com.lucky.jacklamb.servlet.Model;
+import com.lucky.jacklamb.servlet.core.Model;
 
 import java.lang.reflect.Method;
 import java.util.Map;

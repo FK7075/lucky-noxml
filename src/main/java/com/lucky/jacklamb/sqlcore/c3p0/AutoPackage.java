@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.c3p0;
 
 import com.lucky.jacklamb.conversion.util.MethodUtils;
-import com.lucky.jacklamb.mapping.Regular;
+import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LuckyLRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * 结果集自动包装类
- * 
+ *
  * @author fk-7075
  *
  */
@@ -26,19 +26,12 @@ public class AutoPackage {
 
 	private SqlOperation sqlOperation;
 
-	/**
-	 * 为每个数据源开启一个LRU缓存
-	 */
-	private static Map<String, LuckyLRUCache<String,List<?>>> dbLruCacheMap=new HashMap<>();
-
-	
 	public AutoPackage(String dbname) {
 		this.dbname=dbname;
 		isCache=ReadIni.getDataSource(dbname).isCache();
-		if(!dbLruCacheMap.containsKey(dbname)&&isCache){
+		//如果用户开启了缓存配置，测初始化一个LRU缓存
+		if(isCache)
 			lruCache=new LuckyLRUCache<>(ReadIni.getDataSource(dbname).getCacheCapacity());
-			dbLruCacheMap.put(dbname,lruCache);
-		}
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
 		C3p0Util.release(null,null,C3p0Util.getConnecion(dbname));
@@ -46,7 +39,7 @@ public class AutoPackage {
 
 	/**
 	 * 自动将结果集中的内容封装起来
-	 * 
+	 *
 	 * @param c 封装类的Class对象
 	 * @param sql 预编译的sql语句
 	 * @param obj 替换占位符的数组
@@ -62,9 +55,8 @@ public class AutoPackage {
 	public boolean update(String sql, Object...obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
 		boolean result = sqlOperation.setSql(dbname, sp.precompileSql, sp.params);
-		if(isCache){
+		if(isCache)
 			clear();
-		}
 		return result;
 	}
 
@@ -78,23 +70,20 @@ public class AutoPackage {
 	public boolean updateMethod(Method method, String sql, Object[]obj) {
 		SqlAndParams sp=new SqlAndParams(method,sql,obj);
 		boolean result = sqlOperation.setSql(dbname, sp.precompileSql, sp.params);
-		if(isCache){
+		if(isCache)
 			clear();
-		}
 		return result;
 	}
-	
+
 	public boolean updateBatch(String sql,Object[][] obj) {
-		if(isCache){
+		if(isCache)
 			clear();
-		}
 		return sqlOperation.setSqlBatch(dbname,sql, obj);
 	}
 
 	public boolean updateBatch(String...completeSqls){
-		if(isCache){
+		if(isCache)
 			clear();
-		}
 		return sqlOperation.setSqlBatch(dbname,completeSqls);
 	}
 

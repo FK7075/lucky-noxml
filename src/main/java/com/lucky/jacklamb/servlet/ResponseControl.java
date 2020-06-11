@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
+import com.lucky.jacklamb.servlet.core.Model;
 
 /**
  * 处理响应相关的类
@@ -54,7 +55,7 @@ public class ResponseControl {
 	 * @param method 响应请求的方法
 	 * @param obj 方法返回的结果
 	 */
-	public void jump(Model model,ControllerAndMethod controllerAndMethod, Method method, Object obj)
+	public void jump(Model model, ControllerAndMethod controllerAndMethod, Method method, Object obj)
 			{
 		if (obj != null) {
 			if(controllerAndMethod.getRest()==Rest.JSON) {
