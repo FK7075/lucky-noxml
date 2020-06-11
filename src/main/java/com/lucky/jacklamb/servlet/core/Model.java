@@ -41,6 +41,8 @@ public class Model {
 
     private final String HEAD = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 
+    private final Integer port=AppConfig.getAppConfig().getServerConfig().getPort();
+
     /**
      * 解码方式
      */
@@ -660,7 +662,7 @@ public class Model {
      */
     public void error(Throwable e,Code code) {
         try {
-            File exceptionFile = getBaseDir("log/lucky-tomcat-exp.log");
+            File exceptionFile = getBaseDir("log/lucky-tomcat("+port+")-exp.log");
             if (!exceptionFile.exists()) {
                 exceptionFile.getParentFile().mkdirs();
                 exceptionFile.createNewFile();
@@ -677,6 +679,7 @@ public class Model {
                     ecpInfo.append("&emsp;&emsp;" + s + "<br/>");
             }
             error(code,ecpInfo.toString(),e.toString());
+            log.error(ecpInfo.toString());
             br.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -687,6 +690,7 @@ public class Model {
 
     public void error(Code code,String Message,String Description) {
         try {
+            resp.setContentType("text/html");
             writer(Jacklabm.exception(code, Message, Description));
         } catch (IOException e) {
             e.printStackTrace();

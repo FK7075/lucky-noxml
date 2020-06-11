@@ -56,6 +56,8 @@ public class StaticResourceManage {
 
     public static boolean resources(Model model, String uri){
         String realPath = model.getRequest().getServletContext().getRealPath(uri);
+        if(realPath==null)
+            return false;
         File file=new File(realPath);
         return file.exists();
     }

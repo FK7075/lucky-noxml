@@ -129,6 +129,9 @@ public class LuckyDispatherServlet extends HttpServlet {
                         log.debug("STATIC-REQUEST [静态资源请求]  [" + requestMethod + "]  #SR#=> " + uri);
                         StaticResourceManage.response(model, uri);
                         return;
+                    }else{
+                        model.error(Code.NOTFOUND,"服务器中找不到资源文件 "+uri+"！","找不到资源 "+uri);
+                        return;
                     }
                 } catch (Exception e) {
                     model.error(e, Code.ERROR);

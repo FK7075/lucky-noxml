@@ -2,7 +2,8 @@
 <configuration status="OFF">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}  %highlight{[%-5level]} %highlight{%5.5r}{INFO=blue} --- [%15.15t] %highlight{%-38.38c}{INFO=cyan}  : %msg%n"/>
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}  %highlight{[%-5level]} %highlight{%5.5r}{INFO=blue} --- [%15.15t] %highlight{%-38.38c}{INFO=cyan}  : %msg%n"/>
         </Console>
     </appenders>
     <loggers>
