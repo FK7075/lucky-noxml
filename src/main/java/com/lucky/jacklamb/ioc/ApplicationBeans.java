@@ -35,21 +35,13 @@ public class ApplicationBeans {
 	private static Set<Class<?>> webSocketSet;
 	
 	static {
-		URL logfile = ApplicationBeans.class.getClassLoader().getResource("/log4j2.properties");
-		URL logxmlfile = ApplicationBeans.class.getClassLoader().getResource("/log4j2.xml");
-		if(logfile!=null) {
-			PropertyConfigurator.configure(logfile.getPath());
-		}else if(logxmlfile!=null){
-			DOMConfigurator.configure(logxmlfile.getPath());
-		}else {
-			try {
-				Properties p=new Properties();
-				p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j2.xml"),"UTF-8")));
-				PropertyConfigurator.configure(p);
-			} catch (Exception e) {
-				e.printStackTrace();
-				BasicConfigurator.configure();
-			} 
+		try {
+			Properties p=new Properties();
+			p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j2.xml"),"UTF-8")));
+			PropertyConfigurator.configure(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+			BasicConfigurator.configure();
 		}
 		log= LogManager.getLogger(ApplicationBeans.class);
 		iocContainers=new IOCContainers();

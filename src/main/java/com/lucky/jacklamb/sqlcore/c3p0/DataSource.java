@@ -303,7 +303,7 @@ public class DataSource {
 		suffixlist.addAll(AppConfig.getAppConfig().getScanConfig().getPojoPackSuffix());
 		caeateTable=ScanFactory.createScan().getPojoClass();
 		log=false;
-		cache=false;
+		cache=true;
 		poolMethod=false;
 		formatSqlLog=false;
 		cacheCapacity=50;

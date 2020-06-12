@@ -223,6 +223,7 @@
                       <include>**/*.html</include>
                       <include>**/*.ini</include>
                       <include>**/*.ico</include>
+                      <include>**/*.txt</include>
                     </includes>
                   </resource>
                 </resources>

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -102,9 +103,9 @@ public class LuckyDispatherServlet extends HttpServlet {
             String currIp = model.getIpAddr();
             if ("/favicon.ico".equals(uri)) {
                 resp.setContentType("image/x-icon");
-                URL icoFile = ApplicationBeans.class.getClassLoader().getResource("/favicon.ico");
-                if (icoFile != null) {
-                    FileCopyUtils.preview(model, new File(icoFile.getPath()));
+                InputStream favStream = ApplicationBeans.class.getResourceAsStream("/favicon.ico");
+                if (favStream != null) {
+                    FileCopyUtils.preview(model, favStream,"favicon.ico");
                     return;
                 }
                 FileCopyUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"), "favicon.ico");
