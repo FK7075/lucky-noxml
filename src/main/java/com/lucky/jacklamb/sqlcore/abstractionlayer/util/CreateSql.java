@@ -47,7 +47,7 @@ public class CreateSql {
 			if(typeList.contains(type)){
 				sqlParam=param.toString();
 			}else{
-				sqlParam="\""+param.toString()+"\"";
+				sqlParam="'"+param.toString()+"'";
 			}
 			precompileSql=precompileSql.replaceFirst("\\?",sqlParam.replaceAll("\\$","LUCKY_JACK_LUCY_LUCKY_OK"));
 		}

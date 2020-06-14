@@ -36,7 +36,7 @@ public class IniKey {
 	
 	public static final String SECTION_SPECIFIRESOURCESIPRESTRICT="specifiResourcesIpRestrict";
 	
-	public static final String DATA="dataSources";
+	public static final String DATA="dbname";
 	
 	public static final String DEFAULT_NAME="defaultDB";
 	

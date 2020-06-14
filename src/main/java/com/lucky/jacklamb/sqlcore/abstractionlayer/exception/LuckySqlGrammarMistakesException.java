@@ -9,7 +9,7 @@ public class LuckySqlGrammarMistakesException extends RuntimeException {
     }
 
     public LuckySqlGrammarMistakesException(Method method,String errsql, String name){
-        super("错误的预编译SQl,SQL中的参数描述错误！找不到可以匹配的参数[$"+name+"], SQL: "+errsql+" , Method:"+method);
+        super("错误的预编译SQl,SQL中的参数描述错误！找不到可以匹配的参数[@:"+name+"], SQL: "+errsql+" , Method:"+method);
     }
 
     public LuckySqlGrammarMistakesException(Method method,Throwable e){
