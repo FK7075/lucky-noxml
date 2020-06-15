@@ -15,13 +15,12 @@ import javax.servlet.http.HttpServlet;
 
 import com.lucky.jacklamb.enums.Scan;
 import com.lucky.jacklamb.expression.$Expression;
-import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.*;
+import static com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0IniKey.*;
 
 public class IniFilePars {
 	

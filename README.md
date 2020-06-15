@@ -711,7 +711,7 @@ public class HelloController {
 
 CURR-REQUEST ==> [GET] /lucky/controllerField
     
-Model ==> com.lucky.jacklamb.servlet.Model@79dc4515
+Model ==> com.lucky.jacklamb.servlet.core.Model@79dc4515
 HttpServletRequest ==> org.apache.catalina.connector.RequestFacade@4c70a46a
 HttpServletResponseorg.apache.catalina.connector.ResponseFacade@52a4fae5
 HttpSessionorg.apache.catalina.session.StandardSessionFacade@d1b38ae
@@ -885,7 +885,7 @@ public class HelloController {
 ```
 CURR-REQUEST ==> [POST] /lucky/forwoardMethod1
 forwoardMethod1 ==> username=Lucy
-2020-03-21 20:26:41,522 [INFO ] 8572 --- [http-nio-8080-exec-2:8572 ] com.lucky.jacklamb.servlet.LuckyDispatherServlet.luckyResponse(LuckyDispatherServlet.java:118)
+2020-03-21 20:26:41,522 [INFO ] 8572 --- [http-nio-8080-exec-2:8572 ] com.lucky.jacklamb.servlet.core.LuckyDispatherServlet.luckyResponse(LuckyDispatherServlet.java:118)
 CURR-REQUEST ==> [POST] /lucky/forwoardMethod2
 forwoardMethod ==> username=Lucy
 ```

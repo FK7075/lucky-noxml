@@ -1,0 +1,8 @@
+{
+  "MYSQL": "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
+  "DB2": "com.ibm.db2.jcc.DB2SimpleDataSource",
+  "ORACLE": "oracle.jdbc.pool.OracleDataSource",
+  "POSTGRESQL": "org.postgresql.ds.PGSimpleDataSource",
+  "SQL SERVER": "com.microsoft.sqlserver.jdbc.SQLServerDataSource",
+  "SYBASE": "com.sybase.jdbc4.jdbc.SybDataSource"
+}

@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import com.lucky.jacklamb.annotation.orm.*;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.exception.NotFindFlieException;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 
 /**
  * 实体类管理工具
@@ -33,19 +33,19 @@ public class PojoManage {
 	public static String getDatabaseType(String dbname) {
 		String jdbcDriver=ReadIni.getDataSource(dbname).getDriverClass();
 		if(jdbcDriver.contains("mysql"))
-			return "MySql";
+			return "MYSQL";
 		if(jdbcDriver.contains("db2"))
 			return "DB2";
 		if(jdbcDriver.contains("oracle"))
-			return "Oracle";
+			return "ORACLE";
 		if(jdbcDriver.contains("postgresql"))
-			return "PostgreSql";
+			return "POSTGRESQL";
 		if(jdbcDriver.contains("sqlserver"))
-			return "Sql Server";
+			return "SQL SERVER";
 		if(jdbcDriver.contains("sybase"))
-			return "Sybase";
+			return "SYBASE";
 		if(jdbcDriver.contains("access"))
-			return "Access";
+			return "ACCESS";
 		return null;
 	}
 	

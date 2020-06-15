@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.c3p0;
+package com.lucky.jacklamb.sqlcore.datasource.c3p0;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,8 +6,11 @@ import java.util.List;
 
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
+import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
 
-public class DataSource {
+public class C3p0DataSource implements LuckyDataSource {
+
+	private String poolType;
 
 	private String name;
 	
@@ -62,6 +65,18 @@ public class DataSource {
 		this.formatSqlLog = formatSqlLog;
 		if(!this.log)
 			this.log=formatSqlLog;
+	}
+
+	public String getPoolType() {
+		return poolType;
+	}
+
+	/**
+	 * c3p0 OR HikariCP
+	 * @param poolType
+	 */
+	public void setPoolType(String poolType) {
+		this.poolType = poolType;
 	}
 
 	public String getName() {
@@ -289,8 +304,9 @@ public class DataSource {
 		}
 	}
 
-	public DataSource() {
-		checkoutTimeout=0;
+	public C3p0DataSource() {
+		checkoutTimeout=1000*30;
+		poolType="c3p0";
 		acquireIncrement=3;
 		initialPoolSize=3;
 		minPoolSize=1;

@@ -4,10 +4,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LuckyCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.c3p0.AutoPackage;
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.AutoPackage;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 
 @SuppressWarnings("unchecked")
 public final class StatementCoreImpl implements StatementCore {
@@ -19,7 +18,7 @@ public final class StatementCoreImpl implements StatementCore {
 	protected AutoPackage autopackage;
 	
 	
-	public StatementCoreImpl(DataSource dataSource) {
+	public StatementCoreImpl(C3p0DataSource dataSource) {
 		this.createSql= new CreateSql();
 		this.dbname=dataSource.getName();
 		this.autopackage=new AutoPackage(dbname);

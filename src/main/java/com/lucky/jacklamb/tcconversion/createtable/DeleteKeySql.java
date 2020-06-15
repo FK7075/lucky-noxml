@@ -1,8 +1,7 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.c3p0.SqlOperation;
+import com.lucky.jacklamb.sqlcore.datasource.SqlOperation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

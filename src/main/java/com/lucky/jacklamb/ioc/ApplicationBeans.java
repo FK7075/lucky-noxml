@@ -2,7 +2,6 @@ package com.lucky.jacklamb.ioc;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +15,10 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
 
 import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.Jacklabm;
 
@@ -229,13 +227,13 @@ public class ApplicationBeans {
 	 * 得到容器中所有的DataSource对象
 	 * @return
 	 */
-	public List<DataSource> getDataSources() {
-		List<DataSource> list=new ArrayList<>();
+	public List<C3p0DataSource> getDataSources() {
+		List<C3p0DataSource> list=new ArrayList<>();
 		for(Entry<String,Object> entry:getComponentBeans().entrySet()) {
 			Object obj=entry.getValue();
 			Class<?> mapClass=obj.getClass();
-			if(DataSource.class.isAssignableFrom(mapClass))
-				list.add((DataSource)entry.getValue());
+			if(C3p0DataSource.class.isAssignableFrom(mapClass))
+				list.add((C3p0DataSource)entry.getValue());
 		}
 		return list;
 	}

@@ -9,14 +9,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.lucky.jacklamb.sqlcore.c3p0.SqlOperation;
+import com.lucky.jacklamb.sqlcore.datasource.SqlOperation;
 
 /**
  * Lucky的工具类
  * @author fk-7075
  *
  */
-public class LuckyUtils {
+public abstract class LuckyUtils {
 	/**
 	 * 单词的首字母大写
 	 * @param tableName 原始单词

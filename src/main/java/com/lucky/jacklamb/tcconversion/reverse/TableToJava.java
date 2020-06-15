@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 
 /**
  * 负责将数据库中的表转化为对应的JavaBean
@@ -18,7 +18,7 @@ import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
  */
 public class TableToJava {
 
-	private DataSource data;
+	private C3p0DataSource data;
 	private String dbname;
 
 	public TableToJava(String dbname) {

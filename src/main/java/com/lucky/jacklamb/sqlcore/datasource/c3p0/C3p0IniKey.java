@@ -1,8 +1,10 @@
-package com.lucky.jacklamb.sqlcore.c3p0;
+package com.lucky.jacklamb.sqlcore.datasource.c3p0;
 
-public class IniKey {
+public class C3p0IniKey {
 	
 	public static final String SECTION_DATASOURCES="DataSources";
+
+	public static final String POOL_TYPE="poolType";
 	
 	public static final String SECTION_JDBC="Jdbc";
 	

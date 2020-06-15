@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.c3p0;
+package com.lucky.jacklamb.sqlcore.datasource;
 
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.conversion.util.ClassUtils;
@@ -6,6 +6,7 @@ import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.lang.reflect.Field;
@@ -32,7 +33,7 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		boolean isOk=false;
 		try {
-			conn=C3p0Util.getConnecion(dbname);
+			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -43,11 +44,10 @@ public class SqlOperation {
 			int i = ps.executeUpdate();
 			if (i != 0)
 				isOk = true;
-
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(e);
+			throw new LuckySqlOperationException(sql,obj,e);
 		} finally {
-			C3p0Util.release(null, ps, conn);
+			DataSourceManage.release(null, ps, conn);
 		}
 		return isOk;
 	}
@@ -66,7 +66,7 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		boolean isOk=false;
 		try {
-			conn=C3p0Util.getConnecion(dbname);
+			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if(obj==null||obj.length==0) {
@@ -83,7 +83,9 @@ public class SqlOperation {
 				isOk=true;
 			}
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(e);
+			throw new LuckySqlOperationException(sql,obj,e);
+		}finally {
+			DataSourceManage.release(null, ps, conn);
 		}
 		return isOk;
 	}
@@ -94,7 +96,7 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		boolean isOk=false;
 		try {
-			conn=C3p0Util.getConnecion(dbname);
+			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
 			log.isShowLog(sqls);
 			ps = conn.createStatement();
 			for (String sql : sqls) {
@@ -103,7 +105,9 @@ public class SqlOperation {
 			ps.executeBatch();
 			return true;
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(e);
+			throw new LuckySqlOperationException(sqls,e);
+		}finally {
+			DataSourceManage.release(null, null, conn);
 		}
 	}
 
@@ -119,7 +123,7 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		ResultSet rs=null;
 		try {
-			conn=C3p0Util.getConnecion(dbname);
+			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -129,7 +133,7 @@ public class SqlOperation {
 			}
 			rs = ps.executeQuery();
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(e);
+			throw new LuckySqlOperationException(sql,obj,e);
 		}
 		return rs;
 	}
@@ -149,7 +153,7 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		ResultSet rs=null;
 		try {
-			conn=C3p0Util.getConnecion(dbname);
+			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -159,7 +163,7 @@ public class SqlOperation {
 			}
 			rs = ps.executeQuery();
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(e);
+			throw new LuckySqlOperationException(sql,obj,e);
 		}
 		List<T> collection=new ArrayList<>();
 		if(c.getClassLoader()!=null) {
@@ -199,7 +203,7 @@ public class SqlOperation {
 			} catch (Exception e) {
 				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
 			}finally {
-				C3p0Util.release(rs,ps,conn);
+				C3p0DataSourceManage.release(rs,ps,conn);
 			}
 		}else {
 			try {
@@ -207,9 +211,9 @@ public class SqlOperation {
 					collection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));
 				}
 			} catch (SQLException e) {
-				throw new LuckySqlOperationException(e);
+				throw new LuckySqlOperationException(sql,obj,e);
 			}finally {
-				C3p0Util.release(rs,ps,conn);
+				C3p0DataSourceManage.release(rs,ps,conn);
 			}
 		}
 		return collection;

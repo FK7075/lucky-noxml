@@ -9,7 +9,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.OracleCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.PostgreSqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SqlServerCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SybaseCore;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 import com.lucky.jacklamb.sqlcore.exception.DatabaseTypeUnableIdentifyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +39,7 @@ public class SqlCoreFactory {
 		StringBuilder sb=new StringBuilder();
 		SqlCore sqlCore;
 		switch (dbType) {
-		case "MySql":
+		case "MYSQL":
 			log.debug(sb.append("Create SqlCore ==> dbType=MySql,dbname=").append(dbname).append(",class=").append(MySqlCore.class).toString());
 			sqlCore= new MySqlCore(dbname);
 			break;
@@ -47,23 +47,23 @@ public class SqlCoreFactory {
 			log.debug(sb.append("Create SqlCore ==> dbType=DB2,dbname=").append(dbname).append(",class=").append(DB2Core.class).toString());
 			sqlCore= new DB2Core(dbname);
 			break;
-		case "Oracle":
+		case "ORACLE":
 			log.debug(sb.append("Create SqlCore ==> dbType=Oracle,dbname=").append(dbname).append(",class=").append(OracleCore.class).toString());
 			sqlCore= new OracleCore(dbname);
 			break;
-		case "PostgreSql":
+		case "POSTGRESQL":
 			log.debug(sb.append("Create SqlCore ==> dbType=PostgreSql,dbname=").append(dbname).append(",class=").append(PostgreSqlCore.class).toString());
 			sqlCore= new PostgreSqlCore(dbname);
 			break;
-		case "Sql Server":
+		case "SQL SERVER":
 			log.debug(sb.append("Create SqlCore ==> dbType=Sql Server,dbname=").append(dbname).append(",class=").append(SqlServerCore.class).toString());
 			sqlCore= new SqlServerCore(dbname);
 			break;
-		case "Sybase":
+		case "SYBASE":
 			log.debug(sb.append("Create SqlCore ==> dbType=Sybase,dbname=").append(dbname).append(",class=").append(SybaseCore.class).toString());
 			sqlCore= new SybaseCore(dbname);
 			break;
-		case "Access":
+		case "ACCESS":
 			log.debug(sb.append("Create SqlCore ==> dbType=Access,dbname=").append(dbname).append(",class=").append(AccessSqlCore.class).toString());
 			sqlCore= new AccessSqlCore(dbname);
 			break;

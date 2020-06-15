@@ -1,6 +1,6 @@
-package com.lucky.jacklamb.sqlcore.c3p0;
+package com.lucky.jacklamb.sqlcore.datasource;
 
-import static com.lucky.jacklamb.sqlcore.c3p0.IniKey.*;
+import static com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0IniKey.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,20 +9,21 @@ import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.exception.NotFindBeanPropertyException;
 import com.lucky.jacklamb.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 
 public class ReadIni {
 
-	private static List<DataSource> allDataSource;
+	private static List<C3p0DataSource> allDataSource;
 	
 	private static IniFilePars iniFilePars;
 	
-	public static List<DataSource> getAllDataSource() {
+	public static List<C3p0DataSource> getAllDataSource() {
 		allDataSources();
 		return allDataSource;
 	}
  
-	public static List<DataSource> readList() {
-		List<DataSource> dataList = new ArrayList<>();
+	public static List<C3p0DataSource> readList() {
+		List<C3p0DataSource> dataList = new ArrayList<>();
 		iniFilePars=IniFilePars.getIniFilePars();
 		if(!iniFilePars.iniExist()||!iniFilePars.isHasSection(SECTION_JDBC))
 			return null;
@@ -39,9 +40,9 @@ public class ReadIni {
 		return dataList;
 	}
 
-	public static DataSource readIni(String section) {
-		DataSource dataSource = new DataSource();
-		String name, driverClass, jdbcUrl, user, password, acquireIncrement, initialPoolSize, maxPoolSize, minPoolSize,
+	public static C3p0DataSource readIni(String section) {
+		C3p0DataSource dataSource = new C3p0DataSource();
+		String poolType,name, driverClass, jdbcUrl, user, password, acquireIncrement, initialPoolSize, maxPoolSize, minPoolSize,
 		maxidleTime, maxConnectionAge, maxStatements,checkoutTimeout, maxStatementsPerConnection, reversePckage, log, formatSqlLog, cache,
 		cacheCapacity,srcpath, createTable,poolMethod;
 		if(SECTION_JDBC.equals(section))
@@ -49,6 +50,7 @@ public class ReadIni {
 		else
 			name=section;
 		Map<String, String> sectionMap = iniFilePars.getSectionMap(section);
+		poolType=sectionMap.get(POOL_TYPE);
 		driverClass = sectionMap.get(DRIVER_CLASS);
 		jdbcUrl = sectionMap.get(JDBC_URL);
 		user = sectionMap.get(USER);
@@ -78,6 +80,8 @@ public class ReadIni {
 		dataSource.setJdbcUrl(jdbcUrl);
 		dataSource.setUser(user);
 		dataSource.setPassword(password);
+		if(poolType!=null && poolType!="")
+			dataSource.setPoolType(poolType);
 		if (acquireIncrement != null && acquireIncrement != "")
 			dataSource.setAcquireIncrement(Integer.parseInt(acquireIncrement));
 		if (initialPoolSize != null && initialPoolSize != "")
@@ -125,9 +129,9 @@ public class ReadIni {
 		return dataSource;
 	}
 
-	public static DataSource getDataSource(String name) {
+	public static C3p0DataSource getDataSource(String name) {
 		allDataSources();
-		for (DataSource curr : allDataSource) {
+		for (C3p0DataSource curr : allDataSource) {
 			if (name.equals(curr.getName()))
 				return curr;
 		}
@@ -137,11 +141,11 @@ public class ReadIni {
 	public static void allDataSources() {
 		if (allDataSource == null) {
 			boolean haveDefaultDB=false;
-			List<DataSource> iocDataSources = ApplicationBeans.createApplicationBeans().getDataSources();
-			List<DataSource> dbDataSource = readList();
+			List<C3p0DataSource> iocDataSources = ApplicationBeans.createApplicationBeans().getDataSources();
+			List<C3p0DataSource> dbDataSource = readList();
 			if (dbDataSource != null)
 				dbDataSource.stream().filter(f -> filter(iocDataSources, f.getName())).forEach(iocDataSources::add);
-			for(DataSource data:iocDataSources) {
+			for(C3p0DataSource data:iocDataSources) {
 				if(DEFAULT_NAME.equals(data.getName())) {
 					haveDefaultDB=true;
 					break;
@@ -155,8 +159,8 @@ public class ReadIni {
 		}
 	}
 
-	public static boolean filter(List<DataSource> list, String name) {
-		for (DataSource data : list) {
+	public static boolean filter(List<C3p0DataSource> list, String name) {
+		for (C3p0DataSource data : list) {
 			if (name.equals(data.getName()))
 				return false;
 		}

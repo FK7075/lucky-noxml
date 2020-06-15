@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
-import com.lucky.jacklamb.sqlcore.c3p0.AutoPackage;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.AutoPackage;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 
 import java.util.ArrayList;
 import java.util.List;

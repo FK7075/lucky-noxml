@@ -1,9 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Stream;
 
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.conversion.util.FieldUtils;
@@ -15,8 +13,8 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.GeneralSqlGenerator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PrecompileSqlAndObject;
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 
 public abstract class GeneralObjectCoreBase implements GeneralObjectCore, UniqueSqlCore {
 	
@@ -24,7 +22,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	
 	protected StatementCore statementCore;
 
-	protected DataSource dataSource;
+	protected C3p0DataSource dataSource;
 
 	protected String dbname;
 	

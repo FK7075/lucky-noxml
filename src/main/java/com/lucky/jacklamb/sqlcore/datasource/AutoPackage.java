@@ -1,10 +1,11 @@
-package com.lucky.jacklamb.sqlcore.c3p0;
+package com.lucky.jacklamb.sqlcore.datasource;
 
 import com.lucky.jacklamb.conversion.util.MethodUtils;
 import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -34,7 +35,7 @@ public class AutoPackage {
 			lruCache=new LRUCache<>(ReadIni.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
-		C3p0Util.release(null,null,C3p0Util.getConnecion(dbname));
+		C3p0DataSourceManage.release(null,null, DataSourceManage.getDataSourceManage(dbname).getConnection(dbname));
 	}
 
 	/**

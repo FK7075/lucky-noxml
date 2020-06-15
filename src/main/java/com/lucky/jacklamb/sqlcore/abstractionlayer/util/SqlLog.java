@@ -1,9 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 
 import java.io.PrintStream;
 
@@ -16,7 +14,7 @@ import java.io.PrintStream;
 public class SqlLog {
 	
 	private boolean log;
-	private DataSource dataSource;
+	private C3p0DataSource dataSource;
 	private String jdbcUrl;
 	private SqlFormatUtil sqlFormatUtil;
 	private static final PrintStream loger= System.out;

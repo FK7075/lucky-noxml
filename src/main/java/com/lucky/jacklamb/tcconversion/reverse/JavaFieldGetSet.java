@@ -3,8 +3,8 @@ package com.lucky.jacklamb.tcconversion.reverse;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lucky.jacklamb.sqlcore.c3p0.DataSource;
-import com.lucky.jacklamb.sqlcore.c3p0.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
 import com.lucky.jacklamb.utils.LuckyUtils;
 
 /**
@@ -17,7 +17,7 @@ public class JavaFieldGetSet {
 	private String getField;
 	private String setField;
 	private static String dbname;
-	private static DataSource data;
+	private static C3p0DataSource data;
 	public String getField() {
 		return field;
 	}
@@ -64,7 +64,7 @@ public class JavaFieldGetSet {
 	 * @return 对应表的java源代码
 	 */
 	public static GetJavaSrc getOneJavaSrc(TableStructure ts,String name){
-		DataSource data=ReadIni.getDataSource(name);
+		C3p0DataSource data=ReadIni.getDataSource(name);
 		GetJavaSrc javasrc=new GetJavaSrc();
 		List<JavaFieldGetSet> list=new ArrayList<>();
 		javasrc.setClassName(ts.getTableName());

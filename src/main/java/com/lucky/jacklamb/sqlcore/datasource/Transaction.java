@@ -1,4 +1,4 @@
- package com.lucky.jacklamb.sqlcore.c3p0;
+ package com.lucky.jacklamb.sqlcore.datasource;
 
  import java.sql.Connection;
  import java.sql.SQLException;
