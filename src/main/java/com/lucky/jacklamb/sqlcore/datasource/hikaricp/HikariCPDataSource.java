@@ -13,7 +13,7 @@ public class HikariCPDataSource implements LuckyDataSource {
     public String password;
     public String driverClass;
 
-    public boolean autoCommit;
+    public Boolean autoCommit;
     public Integer connectionTimeout;
     public Integer idleTimeout;
     public Integer maxLifetime;
@@ -25,10 +25,10 @@ public class HikariCPDataSource implements LuckyDataSource {
     public Object healthCheckRegistry;
 
     public Integer initializationFailTimeout;
-    public boolean isolateInternalQueries;
-    public boolean allowPoolSuspensio;
-    public boolean readOnly;
-    public boolean registerMbeans;
+    public Boolean isolateInternalQueries;
+    public Boolean allowPoolSuspensio;
+    public Boolean readOnly;
+    public Boolean registerMbeans;
     public String catalog;
     public String connectionInitSql;
     public String transactionIsolation;
@@ -40,5 +40,5 @@ public class HikariCPDataSource implements LuckyDataSource {
     public String ScheduledExecutorService;
 
 
-
 }
+
