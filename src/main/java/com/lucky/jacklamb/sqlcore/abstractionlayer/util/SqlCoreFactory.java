@@ -9,7 +9,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.OracleCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.PostgreSqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SqlServerCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.SybaseCore;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.exception.DatabaseTypeUnableIdentifyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,8 +68,8 @@ public class SqlCoreFactory {
 			sqlCore= new AccessSqlCore(dbname);
 			break;
 		default:
-			log.error("无法识别的数据库类型，Lucky目前还不支持该类型的数据库驱动 : "+ReadIni.getDataSource(dbname).getDriverClass());
-			throw new DatabaseTypeUnableIdentifyException("Lucky目前还不支持该类型的数据库，我们正在拼命更新中！DatabaseType:"+ReadIni.getDataSource(dbname).getDriverClass());
+			log.error("无法识别的数据库类型，Lucky目前还不支持该类型的数据库驱动 : "+ ReaderInI.getDataSource(dbname).getDriverClass());
+			throw new DatabaseTypeUnableIdentifyException("Lucky目前还不支持该类型的数据库，我们正在拼命更新中！DatabaseType:"+ ReaderInI.getDataSource(dbname).getDriverClass());
 		}
 		sqlCoreMap.put(dbname,sqlCore);
 		return sqlCore;

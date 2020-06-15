@@ -1,123 +1,36 @@
 package com.lucky.jacklamb.sqlcore.datasource.c3p0;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 
-public class C3p0DataSource implements LuckyDataSource {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
-	private String poolType;
+public class C3p0DataSource extends LuckyDataSource {
 
-	private String name;
-	
-	private String driverClass;
 
-	private String jdbcUrl;
+	private Integer acquireIncrement;
 
-	private String user;
+	private Integer initialPoolSize;
 
-	private String password;
+	private Integer maxPoolSize;
 
-	private int acquireIncrement;
+	private Integer minPoolSize;
 
-	private int initialPoolSize;
-	
-	private int maxPoolSize;
+	private Integer maxidleTime;
 
-	private int minPoolSize;
-	
-	private int maxidleTime;
+	private Integer maxConnectionAge;
 
-	private int maxConnectionAge;
-	
-	private int maxStatements;
+	private Integer maxStatements;
 
-	private int maxStatementsPerConnection;
+	private Integer maxStatementsPerConnection;
 
-	private boolean log;
+	private Integer checkoutTimeout;
 
-	private boolean cache;
-
-	private Integer cacheCapacity;
-	
-	private boolean poolMethod;
-	
-	private boolean formatSqlLog;
-	
-	private int checkoutTimeout;
-
-	private String reversePack;
-
-	private String srcPath;
-
-	private List<Class<?>> caeateTable;
-	
-	
-	public boolean isFormatSqlLog() {
-		return formatSqlLog;
-	}
-
-	public void setFormatSqlLog(boolean formatSqlLog) {
-		this.formatSqlLog = formatSqlLog;
-		if(!this.log)
-			this.log=formatSqlLog;
-	}
-
-	public String getPoolType() {
-		return poolType;
-	}
-
-	/**
-	 * c3p0 OR HikariCP
-	 * @param poolType
-	 */
-	public void setPoolType(String poolType) {
-		this.poolType = poolType;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDriverClass() {
-		return driverClass;
-	}
-
-	public void setDriverClass(String driverClass) {
-		this.driverClass = driverClass;
-	}
-
-	public String getJdbcUrl() {
-		return jdbcUrl;
-	}
-
-	public void setJdbcUrl(String jdbcUrl) {
-		this.jdbcUrl = jdbcUrl;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public int getAcquireIncrement() {
 		return acquireIncrement;
@@ -208,18 +121,7 @@ public class C3p0DataSource implements LuckyDataSource {
 	public int getMaxStatementsPerConnection() {
 		return maxStatementsPerConnection;
 	}
-	
-	public boolean isPoolMethod() {
-		return poolMethod;
-	}
 
-	/**
-	 * 设置为true时，每一次SQL操作都将会使用不同的Connection对象，默认false
-	 * @param poolMethod
-	 */
-	public void setPoolMethod(boolean poolMethod) {
-		this.poolMethod = poolMethod;
-	}
 
 	/**
 	 * maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。Default: 0
@@ -242,71 +144,13 @@ public class C3p0DataSource implements LuckyDataSource {
 		this.checkoutTimeout = checkoutTimeout;
 	}
 
-	public boolean isLog() {
-		return log;
-	}
 
-	public void setLog(boolean log) {
-		this.log = log;
-	}
 
-	public boolean isCache() {
-		return cache;
-	}
-
-	public void setCache(boolean cache) {
-		this.cache = cache;
-	}
-
-	public String getReversePack() {
-		return reversePack;
-	}
-
-	public void setReversePack(String reversePack) {
-		this.reversePack = reversePack;
-	}
-
-	public String getSrcPath() {
-		return srcPath;
-	}
-
-	public void setSrcPath(String srcPath) {
-		this.srcPath = srcPath;
-	}
-
-	public List<Class<?>> getCaeateTable() {
-		return caeateTable;
-	}
-
-	public void setCaeateTable(List<Class<?>> caeateTable) {
-		this.caeateTable = caeateTable;
-	}
-
-	public Integer getCacheCapacity() {
-		return cacheCapacity;
-	}
-
-	/**
-	 * 设置缓存大小(默认:50)
-	 * @param cacheCapacity
-	 */
-	public void setCacheCapacity(Integer cacheCapacity) {
-		this.cacheCapacity = cacheCapacity;
-	}
-
-	public void addCaeateTable(Class<?>... pojoClassStr) {
-		if(caeateTable==null) {
-			caeateTable=new ArrayList<>();
-			caeateTable.addAll(Arrays.asList(pojoClassStr));
-		}else{
-			caeateTable.clear();
-			caeateTable.addAll(Arrays.asList(pojoClassStr));
-		}
-	}
 
 	public C3p0DataSource() {
-		checkoutTimeout=1000*30;
-		poolType="c3p0";
+		super();
+		setPoolType(Pool.C3P0);
+		checkoutTimeout=30000;
 		acquireIncrement=3;
 		initialPoolSize=3;
 		minPoolSize=1;
@@ -315,14 +159,6 @@ public class C3p0DataSource implements LuckyDataSource {
 		maxConnectionAge=0;
 		maxStatements=0;
 		maxStatementsPerConnection=0;
-		List<String> suffixlist = new ArrayList<>();
-		suffixlist.addAll(AppConfig.getAppConfig().getScanConfig().getPojoPackSuffix());
-		caeateTable=ScanFactory.createScan().getPojoClass();
-		log=false;
-		cache=true;
-		poolMethod=false;
-		formatSqlLog=false;
-		cacheCapacity=50;
 	}
 
 }

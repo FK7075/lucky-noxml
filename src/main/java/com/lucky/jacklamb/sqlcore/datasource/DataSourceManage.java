@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.datasource;
 
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikaroCPDataSourceManage;
 
 import java.sql.Connection;
@@ -29,10 +30,10 @@ public abstract class DataSourceManage {
     }
 
     public static DataSourceManage getDataSourceManage(String dbname){
-        String poolType=ReadIni.getDataSource(dbname).getPoolType();
-        if("c3p0".equalsIgnoreCase(poolType))
+        Pool poolType= ReaderInI.getDataSource(dbname).getPoolType();
+        if(poolType==Pool.C3P0)
             return new C3p0DataSourceManage();
-        if("HikariCP".equalsIgnoreCase(poolType))
+        if(poolType==Pool.HIKARICP)
             return new HikaroCPDataSourceManage();
         throw new RuntimeException("目前不支持该数据库连接池["+poolType+"],请使用c3p0或者HikariCP");
     }

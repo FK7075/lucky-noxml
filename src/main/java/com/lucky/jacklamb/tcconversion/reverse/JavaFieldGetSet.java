@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 
 /**
@@ -46,7 +46,7 @@ public class JavaFieldGetSet {
 		JavaFieldGetSet.dbname=dbname;
 		String Id="";
 		String key="";
-		data=ReadIni.getDataSource(dbname);
+		data= ReaderInI.getDataSource(dbname);
 		if(id.equals(field)) {
 			Id="\t@Id\n";
 		}
@@ -64,7 +64,7 @@ public class JavaFieldGetSet {
 	 * @return 对应表的java源代码
 	 */
 	public static GetJavaSrc getOneJavaSrc(TableStructure ts,String name){
-		C3p0DataSource data=ReadIni.getDataSource(name);
+		C3p0DataSource data= ReaderInI.getDataSource(name);
 		GetJavaSrc javasrc=new GetJavaSrc();
 		List<JavaFieldGetSet> list=new ArrayList<>();
 		javasrc.setClassName(ts.getTableName());

@@ -4,5 +4,15 @@
   "ORACLE": "oracle.jdbc.pool.OracleDataSource",
   "POSTGRESQL": "org.postgresql.ds.PGSimpleDataSource",
   "SQL SERVER": "com.microsoft.sqlserver.jdbc.SQLServerDataSource",
-  "SYBASE": "com.sybase.jdbc4.jdbc.SybDataSource"
+  "SYBASE": "com.sybase.jdbc4.jdbc.SybDataSource",
+  "Apache Derby": "org.apache.derby.jdbc.ClientDataSource",
+  "Firebird": "org.firebirdsql.ds.FBSimpleDataSource",
+  "H2": "org.h2.jdbcx.JdbcDataSource",
+  "HSQLDB": "org.hsqldb.jdbc.JDBCDataSource",
+  "Informix": "com.informix.jdbcx.IfxDataSource",
+  "MariaDB": "org.mariadb.jdbc.MariaDbDataSource",
+  "OrientDB": "com.orientechnologies.orient.jdbc.OrientDataSource",
+  "SAP": "com.sap.dbtech.jdbc.DriverSapDB",
+  "SQLite": "org.sqlite.SQLiteDataSource",
+  "PostgreSQL-NG": "com.impossibl.postgres.jdbc.PGDataSource"
 }

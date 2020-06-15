@@ -29,10 +29,10 @@ public class AutoPackage {
 
 	public AutoPackage(String dbname) {
 		this.dbname=dbname;
-		isCache=ReadIni.getDataSource(dbname).isCache();
+		isCache= ReaderInI.getDataSource(dbname).isCache();
 		//如果用户开启了缓存配置，测初始化一个LRU缓存
 		if(isCache)
-			lruCache=new LRUCache<>(ReadIni.getDataSource(dbname).getCacheCapacity());
+			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
 		C3p0DataSourceManage.release(null,null, DataSourceManage.getDataSourceManage(dbname).getConnection(dbname));

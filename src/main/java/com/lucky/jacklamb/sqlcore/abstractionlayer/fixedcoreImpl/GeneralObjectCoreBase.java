@@ -14,7 +14,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.util.GeneralSqlGenerator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PrecompileSqlAndObject;
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 public abstract class GeneralObjectCoreBase implements GeneralObjectCore, UniqueSqlCore {
 	
@@ -30,7 +30,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	public GeneralObjectCoreBase(String dbname) {
 		this.dbname=dbname;
 		gcg=new GeneralSqlGenerator();
-		this.dataSource=ReadIni.getDataSource(dbname);
+		this.dataSource= ReaderInI.getDataSource(dbname);
 		this.statementCore=new StatementCoreImpl(dataSource);
 	}
 

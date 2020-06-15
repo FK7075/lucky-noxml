@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
 import com.lucky.jacklamb.sqlcore.datasource.AutoPackage;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class CreateTable {
 
     public CreateTable(String dbname) {
         this.dbname = dbname;
-        classlist = ReadIni.getDataSource(dbname).getCaeateTable();
+        classlist = ReaderInI.getDataSource(dbname).getCreateTable();
         autoPackage = new AutoPackage(dbname);
     }
 

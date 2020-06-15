@@ -2,7 +2,7 @@ package com.lucky.jacklamb.tcconversion.reverse;
 
 import java.util.List;
 
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 
 /**
@@ -72,7 +72,7 @@ public class PackBoxSrc {
 	public static PackBoxSrc getPackBoxSrc(String dbname,String... classnames) {
 		PackBoxSrc pack = new PackBoxSrc();
 		pack.setClassName("PackBox");
-		pack.setPack("package " + ReadIni.getDataSource(dbname).getCaeateTable() + ";\n\n/**\n * 万能打包器，任何数据库的操作都可以由此类来包装\n * @author FK7075\n */");
+		pack.setPack("package " + ReaderInI.getDataSource(dbname).getCreateTable() + ";\n\n/**\n * 万能打包器，任何数据库的操作都可以由此类来包装\n * @author FK7075\n */");
 		pack.setImpor("\npublic class PackBox {\n\n");
 		pack.setField("");
 		pack.setGetset("");

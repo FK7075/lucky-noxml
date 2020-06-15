@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 import java.io.PrintStream;
 
@@ -20,7 +20,7 @@ public class SqlLog {
 	private static final PrintStream loger= System.out;
 	
 	public SqlLog(String dbname) {
-		dataSource=ReadIni.getDataSource(dbname);
+		dataSource= ReaderInI.getDataSource(dbname);
 		log=dataSource.isLog();
 		sqlFormatUtil=new SqlFormatUtil();
 		jdbcUrl=dataSource.getJdbcUrl();

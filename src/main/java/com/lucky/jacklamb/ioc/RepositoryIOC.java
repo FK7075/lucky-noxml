@@ -14,7 +14,7 @@ import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -151,7 +151,7 @@ public class RepositoryIOC extends ComponentFactory {
 				
 			} else if (repository.isAnnotationPresent(Mapper.class)) {
 				if (first) {
-					List<C3p0DataSource> datalist=ReadIni.getAllDataSource();
+					List<C3p0DataSource> datalist= ReaderInI.getAllDataSource();
 					for(C3p0DataSource data:datalist) {
 						SqlCore sqlCore=SqlCoreFactory.createSqlCore(data.getName());
 						beanID="lucky#$jacklamb#$&58314@SqlCore-"+data.getName();

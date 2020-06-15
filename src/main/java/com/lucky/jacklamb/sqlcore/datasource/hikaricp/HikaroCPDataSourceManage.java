@@ -2,8 +2,9 @@ package com.lucky.jacklamb.sqlcore.datasource.hikaricp;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.sqlcore.datasource.DataSourceManage;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -16,36 +17,26 @@ import java.util.stream.Collectors;
 
 public class HikaroCPDataSourceManage extends DataSourceManage {
 
-    private static List<C3p0DataSource> datalist;
+    private static List<HikariCPDataSource> datalist;
     private static Map<String, HikariDataSource> dbMap;
-//    private static Map<String,String> hikaroCPDercirClassNames;
 
     static {
-//        try {
-//            InputStreamReader reader = new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/hikarocp.json"), "UTF-8");
-//            Type type=new TypeToken<Map<String,String>>(){}.getType();
-//            hikaroCPDercirClassNames=new Gson().fromJson(reader,type);
-            init();
-//        } catch (UnsupportedEncodingException e) {
-//            throw new RuntimeException(e);
-//        }
-
-
+        init();
     }
 
     public static void init() {
         dbMap = new HashMap<>();
-        datalist = ReadIni.getAllDataSource().stream().filter(a->"HikariCP".equalsIgnoreCase(a.getPoolType())).collect(Collectors.toList());
-        for (C3p0DataSource data : datalist) {
+        datalist = ReaderInI.getAllDataSource().stream().filter(a-> Pool.HIKARICP==a.getPoolType()).map(a->(HikariCPDataSource)a).collect(Collectors.toList());
+        for (HikariCPDataSource data : datalist) {
             HikariConfig hikariCfg=new HikariConfig();
             hikariCfg.setDriverClassName(data.getDriverClass());
-            hikariCfg.setUsername(data.getUser());
+            hikariCfg.setUsername(data.getUsername());
             hikariCfg.setJdbcUrl(data.getJdbcUrl());
             hikariCfg.setPassword(data.getPassword());
-            hikariCfg.setConnectionTimeout(data.getCheckoutTimeout());
-            hikariCfg.setMaximumPoolSize(data.getMaxPoolSize());
+            hikariCfg.setConnectionTimeout(data.getConnectionTimeout());
+            hikariCfg.setMaximumPoolSize(data.getMaximumPoolSize());
             HikariDataSource ds = new HikariDataSource(hikariCfg);
-            dbMap.put(data.getName(), ds);
+            dbMap.put(data.getDbname(), ds);
         }
     }
 

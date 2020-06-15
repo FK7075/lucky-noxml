@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.sqlcore.datasource.DataSourceManage;
-import com.lucky.jacklamb.sqlcore.datasource.ReadIni;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class C3p0DataSourceManage extends DataSourceManage {
@@ -25,7 +26,7 @@ public class C3p0DataSourceManage extends DataSourceManage {
 
     public static void init() {
         dbMap = new HashMap<>();
-        datalist = ReadIni.getAllDataSource().stream().filter(a->"c3p0".equalsIgnoreCase(a.getPoolType())).collect(Collectors.toList());
+        datalist = ReaderInI.getAllDataSource().stream().filter(a-> Pool.C3P0==a.getPoolType()).map(a->(C3p0DataSource)a).collect(Collectors.toList());
         for (C3p0DataSource data : datalist) {
             ComboPooledDataSource db = new ComboPooledDataSource();
             try {
@@ -34,7 +35,7 @@ public class C3p0DataSourceManage extends DataSourceManage {
                 throw new NoDataSourceException("找不到数据库的驱动程序" + data.getDriverClass());
             }
             db.setJdbcUrl(data.getJdbcUrl());
-            db.setUser(data.getUser());
+            db.setUser(data.getUsername());
             db.setPassword(data.getPassword());
             db.setAcquireIncrement(data.getAcquireIncrement());
             db.setInitialPoolSize(data.getInitialPoolSize());
@@ -45,7 +46,7 @@ public class C3p0DataSourceManage extends DataSourceManage {
             db.setMaxConnectionAge(data.getMaxConnectionAge());
             db.setCheckoutTimeout(data.getCheckoutTimeout());
             db.setMaxStatementsPerConnection(data.getMaxStatementsPerConnection());
-            dbMap.put(data.getName(), db);
+            dbMap.put(data.getDbname(), db);
         }
     }
 

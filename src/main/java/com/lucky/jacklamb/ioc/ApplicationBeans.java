@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.websocket.server.ServerApplicationConfig;
 
+import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -227,12 +228,12 @@ public class ApplicationBeans {
 	 * 得到容器中所有的DataSource对象
 	 * @return
 	 */
-	public List<C3p0DataSource> getDataSources() {
-		List<C3p0DataSource> list=new ArrayList<>();
+	public List<LuckyDataSource> getDataSources() {
+		List<LuckyDataSource> list=new ArrayList<>();
 		for(Entry<String,Object> entry:getComponentBeans().entrySet()) {
 			Object obj=entry.getValue();
 			Class<?> mapClass=obj.getClass();
-			if(C3p0DataSource.class.isAssignableFrom(mapClass))
+			if(LuckyDataSource.class.isAssignableFrom(mapClass))
 				list.add((C3p0DataSource)entry.getValue());
 		}
 		return list;
