@@ -1,7 +1,16 @@
 package com.lucky.jacklamb.sqlcore.datasource.c3p0;
 
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.exception.NoDataSourceException;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class C3p0DataSource extends LuckyDataSource {
 
@@ -151,6 +160,50 @@ public class C3p0DataSource extends LuckyDataSource {
 		maxConnectionAge=0;
 		maxStatements=0;
 		maxStatementsPerConnection=0;
+	}
+
+	public void init() {
+		dbMap = new HashMap<>();
+		datalist = ReaderInI.getAllDataSource().stream().filter(a-> Pool.C3P0==a.getPoolType()).map(a->(C3p0DataSource)a).collect(Collectors.toList());
+		for (LuckyDataSource ldata : datalist) {
+			ComboPooledDataSource db = new ComboPooledDataSource();
+			C3p0DataSource data=(C3p0DataSource)ldata;
+			try {
+				db.setDriverClass(data.getDriverClass());
+			} catch (PropertyVetoException e) {
+				throw new NoDataSourceException("找不到数据库的驱动程序" + data.getDriverClass());
+			}
+			db.setJdbcUrl(data.getJdbcUrl());
+			db.setUser(data.getUsername());
+			db.setPassword(data.getPassword());
+			db.setAcquireIncrement(data.getAcquireIncrement());
+			db.setInitialPoolSize(data.getInitialPoolSize());
+			db.setMaxPoolSize(data.getMaxPoolSize());
+			db.setMinPoolSize(data.getMinPoolSize());
+			db.setMaxIdleTime(data.getMaxidleTime());
+			db.setMaxStatements(data.getMaxStatements());
+			db.setMaxConnectionAge(data.getMaxConnectionAge());
+			db.setCheckoutTimeout(data.getCheckoutTimeout());
+			db.setMaxStatementsPerConnection(data.getMaxStatementsPerConnection());
+			dbMap.put(data.getDbname(), db);
+		}
+	}
+
+	@Override
+	public Connection getConnection() {
+		if(dbMap==null){
+			init();
+		}
+		Connection connection;
+		ComboPooledDataSource comboPooledDataSource = null;
+		try {
+			comboPooledDataSource = (ComboPooledDataSource)dbMap.get(getDbname());
+			connection = comboPooledDataSource.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new NoDataSourceException("错误的数据库连接[databaseURL:" + comboPooledDataSource.getJdbcUrl() + "] 或 错误用户名和密码[username:" + comboPooledDataSource.getUser() + "  password=" + comboPooledDataSource.getPassword() + "]");
+		}
+		return connection;
 	}
 
 }

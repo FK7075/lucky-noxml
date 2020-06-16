@@ -1,12 +1,20 @@
 package com.lucky.jacklamb.sqlcore.datasource.hikaricp;
 
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.exception.NoDataSourceException;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.stream.Collectors;
 
 public class HikariCPDataSource extends LuckyDataSource {
 
@@ -238,23 +246,78 @@ public class HikariCPDataSource extends LuckyDataSource {
         this.scheduledExecutorService = scheduledExecutorService;
     }
 
-    public HikariCPDataSource(){
+    public HikariCPDataSource() {
         super();
         setPoolType(Pool.HIKARICP);
-        connectionTestQuery="SELECT 1";
-        autoCommit=true;
-        connectionTimeout=30000;
-        idleTimeout=600000;
-        maxLifetime=1800000;
-        maximumPoolSize=10;
-        minimumIdle=maximumPoolSize;
-        initializationFailTimeout=1;
-        isolateInternalQueries=false;
-        allowPoolSuspension=false;
-        readOnly=false;
-        registerMbeans=false;
-        validationTimeout=5000;
-        leakDetectionThreshold=0;
+        connectionTestQuery = "SELECT 1";
+        autoCommit = true;
+        connectionTimeout = 30000;
+        idleTimeout = 600000;
+        maxLifetime = 1800000;
+        maximumPoolSize = 10;
+        minimumIdle = maximumPoolSize;
+        initializationFailTimeout = 1;
+        isolateInternalQueries = false;
+        allowPoolSuspension = false;
+        readOnly = false;
+        registerMbeans = false;
+        validationTimeout = 5000;
+        leakDetectionThreshold = 0;
+    }
+
+    public void init() {
+        dbMap = new HashMap<>();
+        datalist = ReaderInI.getAllDataSource().stream().filter(a -> Pool.HIKARICP == a.getPoolType()).map(a -> (HikariCPDataSource) a).collect(Collectors.toList());
+        for (LuckyDataSource hdata : datalist) {
+            HikariCPDataSource data = (HikariCPDataSource) hdata;
+            HikariConfig hikariCfg = new HikariConfig();
+            hikariCfg.setDriverClassName(data.getDriverClass());
+            hikariCfg.setJdbcUrl(data.getJdbcUrl());
+            hikariCfg.setUsername(data.getUsername());
+            hikariCfg.setPassword(data.getPassword());
+            hikariCfg.setAutoCommit(data.getAutoCommit());
+            hikariCfg.setConnectionTimeout(data.getConnectionTimeout());
+            hikariCfg.setIdleTimeout(data.getIdleTimeout());
+            hikariCfg.setMaxLifetime(data.getMaxLifetime());
+            hikariCfg.setConnectionTestQuery(data.getConnectionTestQuery());//Object
+            hikariCfg.setMinimumIdle(data.getMinimumIdle());
+            hikariCfg.setMaximumPoolSize(data.getMaximumPoolSize());
+            hikariCfg.setMetricRegistry(data.getMetricRegistry());//Object
+            if (data.getHealthCheckRegistry() != null)
+                hikariCfg.setHealthCheckProperties(data.getHealthCheckRegistry());//Object
+            if (data.getPoolName() != null)
+                hikariCfg.setPoolName(data.getPoolName());
+            hikariCfg.setIsolateInternalQueries(data.getIsolateInternalQueries());
+            hikariCfg.setAllowPoolSuspension(data.getAllowPoolSuspension());
+            hikariCfg.setReadOnly(data.getReadOnly());
+            hikariCfg.setRegisterMbeans(data.getRegisterMbeans());
+            hikariCfg.setConnectionInitSql(data.getConnectionInitSql());
+            hikariCfg.setLeakDetectionThreshold(data.getLeakDetectionThreshold());
+            hikariCfg.setDataSource(data.getDataSource());
+            hikariCfg.setSchema(data.getSchema());
+            hikariCfg.setThreadFactory(data.getThreadFactory());
+            hikariCfg.setScheduledExecutor(data.getScheduledExecutorService());
+            HikariDataSource ds = new HikariDataSource(hikariCfg);
+            dbMap.put(data.getDbname(), ds);
+        }
+    }
+
+    @Override
+    public Connection getConnection() {
+        if(dbMap==null){
+            init();
+        }
+        Connection connection;
+        HikariDataSource ds = null;
+        try {
+            ds = (HikariDataSource) dbMap.get(getDbname());
+            connection = ds.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NoDataSourceException("错误的数据库连接[databaseURL:" + ds.getJdbcUrl() + "] 或 错误用户名和密码[username:" + ds.getUsername() + "  password=" + ds.getPassword() + "]");
+        }
+        return connection;
     }
 }
+
 

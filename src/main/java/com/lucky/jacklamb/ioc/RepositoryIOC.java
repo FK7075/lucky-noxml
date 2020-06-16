@@ -13,7 +13,7 @@ import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.logging.log4j.LogManager;

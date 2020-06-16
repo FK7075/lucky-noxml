@@ -6,8 +6,8 @@ import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
-import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.abs.DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.lang.reflect.Field;
@@ -20,22 +20,24 @@ import java.util.List;
  * @author fk-7075
  *
  */
+@SuppressWarnings("unchecked")
 public class SqlOperation {
+
 
 	/**
 	 * 实现对表的曾刪改操作
+	 * @param dataSource 数据源
 	 * @param sql（预编译的sql语句）
 	 * @param obj（替换占位符的数组）
 	 * @return boolean
 	 */
-	public boolean setSql(String dbname,String sql, Object...obj) {
+	public boolean setSql(LuckyDataSource dataSource,String sql, Object...obj) {
 		Connection conn=null;
 		PreparedStatement ps=null;
-		SqlLog log=new SqlLog(dbname);
 		boolean isOk=false;
 		try {
-			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
-			log.isShowLog(sql, obj);
+			conn= dataSource.getConnection();
+			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
 				for (int i = 0; i < obj.length; i++) {
@@ -52,23 +54,21 @@ public class SqlOperation {
 		}
 		return isOk;
 	}
-	
+
 	/**
 	 * 增删改操作批处理
-	 * @param sql
-	 * 预编译的SQL语句
-	 * @param obj
-	 * 填充占位符的一个有一个数组组成的二维数组
+	 * @param dataSource 数据源
+	 * @param sql 预编译的SQL语句
+	 * @param obj 预编译的SQL语句
 	 * @return
 	 */
-	public boolean setSqlBatch(String dbname,String sql,Object[]... obj) {
+	public boolean setSqlBatch(LuckyDataSource dataSource,String sql,Object[]... obj) {
 		Connection conn=null;
 		PreparedStatement ps=null;
-		SqlLog log=new SqlLog(dbname);
 		boolean isOk=false;
 		try {
-			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
-			log.isShowLog(sql, obj);
+			conn= dataSource.getConnection();
+			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if(obj==null||obj.length==0) {
 				ps.executeUpdate();
@@ -87,18 +87,22 @@ public class SqlOperation {
 			throw new LuckySqlOperationException(sql,obj,e);
 		}finally {
 			DataSourceManage.release(null, ps, conn);
+			return isOk;
 		}
-		return isOk;
 	}
 
-	public boolean setSqlBatch(String dbname,String...sqls){
+	/**
+	 * SQL批量执行
+	 * @param dataSource 数据源
+	 * @param sqls 一系列完整SQL组成的数组
+	 * @return
+	 */
+	public boolean setSqlBatch(LuckyDataSource dataSource,String...sqls){
 		Connection conn=null;
-		Statement ps=null;
-		SqlLog log=new SqlLog(dbname);
-		boolean isOk=false;
+		Statement ps;
 		try {
-			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
-			log.isShowLog(sqls);
+			conn= dataSource.getConnection();
+			new SqlLog(dataSource.getDbname()).isShowLog(sqls);
 			ps = conn.createStatement();
 			for (String sql : sqls) {
 				ps.addBatch(sql);
@@ -113,48 +117,44 @@ public class SqlOperation {
 	}
 
 	/**
-	 * 返回结果集
-	 * @param sql
-	 * @param obj
+	 * 执行SQL返回结果集ResultSet
+	 * @param dataSource 数据源
+	 * @param sql 预编译SQL
+	 * @param obj 预编译SQl执行参数
 	 * @return
 	 */
-	public ResultSet getResultSet(String dbname,String sql, Object...obj) {
-		Connection conn=null;
-		PreparedStatement ps=null;
-		SqlLog log=new SqlLog(dbname);
-		ResultSet rs=null;
+	public ResultSet getResultSet(LuckyDataSource dataSource,String sql, Object...obj) {
 		try {
-			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
-			log.isShowLog(sql, obj);
-			ps = conn.prepareStatement(sql);
+			Connection conn= dataSource.getConnection();
+			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
+			PreparedStatement ps = conn.prepareStatement(sql);
 			if (obj != null) {
 				for (int i = 0; i < obj.length; i++) {
 					ps.setObject(i + 1, obj[i]);
 				}
 			}
-			rs = ps.executeQuery();
+			return ps.executeQuery();
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sql,obj,e);
 		}
-		return rs;
 	}
 
 	/**
 	 *
-	 * @param dbname 数据源名称
+	 * @param dataSource 数据源
 	 * @param c 包装类的Class对象
 	 * @param sql 预编译的sql语句
 	 * @param obj 替换占位符的数组
 	 * @param <T>
 	 * @return
 	 */
-	public <T> List<T> autoPackageToList(String dbname,Class<T> c, String sql, Object... obj) {
+	public <T> List<T> autoPackageToList(LuckyDataSource dataSource,Class<T> c, String sql, Object... obj) {
 		Connection conn=null;
 		PreparedStatement ps=null;
-		SqlLog log=new SqlLog(dbname);
+		SqlLog log=new SqlLog(dataSource.getDbname());
 		ResultSet rs=null;
 		try {
-			conn= DataSourceManage.getDataSourceManage(dbname).getConnection(dbname);
+			conn= dataSource.getConnection();
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -204,7 +204,7 @@ public class SqlOperation {
 			} catch (Exception e) {
 				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
 			}finally {
-				C3p0DataSourceManage.release(rs,ps,conn);
+				DataSourceManage.release(rs,ps,conn);
 			}
 		}else {
 			try {
@@ -214,7 +214,7 @@ public class SqlOperation {
 			} catch (SQLException e) {
 				throw new LuckySqlOperationException(sql,obj,e);
 			}finally {
-				C3p0DataSourceManage.release(rs,ps,conn);
+				LuckyDataSource.release(rs,ps,conn);
 			}
 		}
 		return collection;

@@ -1,11 +1,9 @@
 package com.lucky.jacklamb.sqlcore.datasource.enums;
 
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
-import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikariCPDataSource;
-import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikaroCPDataSourceManage;
+import com.lucky.jacklamb.sqlcore.exception.PoolTypeUnableToIdentifyException;
 
 /**
  * @author fk7075
@@ -33,9 +31,13 @@ public enum Pool {
         return new HikariCPDataSource();
     }
 
-    public DataSourceManage getDataSourceManage(){
-        if("c3p0".equals(strPoolType))
-            return new C3p0DataSourceManage();
-        return new HikaroCPDataSourceManage();
+    public static LuckyDataSource getDataSource(String strPoolType){
+        if(strPoolType==null)
+            return HIKARICP.getDataSource();
+        if("c3p0".equalsIgnoreCase(strPoolType))
+            return C3P0.getDataSource();
+        if("HikariCP".equalsIgnoreCase(strPoolType))
+            return HIKARICP.getDataSource();
+        throw new PoolTypeUnableToIdentifyException(strPoolType);
     }
 }

@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.datasource.factory;
+package com.lucky.jacklamb.sqlcore.datasource.abs;
 
 import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public abstract class LuckyDataSource {
+public abstract class LuckyDataSource extends DataSourceManage{
 
     private Pool poolType;
     private String dbname;
@@ -188,4 +188,5 @@ public abstract class LuckyDataSource {
         }
         return this;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.core.SqlOperation;
 
 import java.sql.ResultSet;
@@ -41,7 +42,7 @@ public class DeleteKeySql {
 			try {
 				String table = PojoManage.getTable(clazz);
 				String sql = "SHOW CREATE TABLE " + table;
-				ResultSet rs = sqlop.getResultSet(dbname,sql);
+				ResultSet rs = sqlop.getResultSet(ReaderInI.getDataSource(dbname),sql);
 				List<String> keyList=new ArrayList<>();
 				if (rs != null) {
 					while (rs.next()) {
@@ -80,7 +81,7 @@ public class DeleteKeySql {
 	 */
 	public void deleteKey1() {
 		for (String sql : this.delkeysql) {
-			sqlop.setSql(dbname,sql);
+			sqlop.setSql(ReaderInI.getDataSource(dbname),sql);
 		}
 	}
 

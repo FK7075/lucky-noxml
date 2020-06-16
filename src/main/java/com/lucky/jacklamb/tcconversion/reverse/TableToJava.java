@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 /**

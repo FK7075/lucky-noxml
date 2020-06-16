@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.tcconversion.reverse;
 
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 

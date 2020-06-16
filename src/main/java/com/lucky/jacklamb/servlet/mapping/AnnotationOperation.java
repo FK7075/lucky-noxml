@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("all")
 public class AnnotationOperation {
 
     private static final Logger log = LogManager.getLogger(AnnotationOperation.class);
@@ -248,7 +249,7 @@ public class AnnotationOperation {
                     fi.setAccessible(true);
                     Object fi_obj = fi.get(pojo);
                     // pojo中含有@Upload返回的文件名
-                    if (model.multipartFileMapContainsKey(fi.getName()) && fi_obj == null) {
+                    if (model.uploadFileMapContainsKey(fi.getName())) {
                         File[] uploadFiles = model.getUploadFileArray(fi.getName());
                         if (fi.getType() == String[].class) {
                             String[] uploadFileNames = new String[uploadFiles.length];

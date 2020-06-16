@@ -5,8 +5,9 @@ import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.abs.DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -20,7 +21,7 @@ import java.util.*;
  */
 public class AutoPackage {
 
-	private String dbname;
+	private LuckyDataSource dataSource;
 
 	private boolean isCache;
 
@@ -29,14 +30,14 @@ public class AutoPackage {
 	private SqlOperation sqlOperation;
 
 	public AutoPackage(String dbname) {
-		this.dbname=dbname;
+		this.dataSource=ReaderInI.getDataSource(dbname);
 		isCache= ReaderInI.getDataSource(dbname).getCache();
 		//如果用户开启了缓存配置，测初始化一个LRU缓存
 		if(isCache)
 			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
-		DataSourceManage.release(null,null, DataSourceManage.getDataSourceManage(dbname).getConnection(dbname));
+		DataSourceManage.release(null,null, dataSource.getConnection());
 	}
 
 	/**
@@ -51,12 +52,12 @@ public class AutoPackage {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
 		if(isCache)
 			return queryCache(sp,c);
-		return sqlOperation.autoPackageToList(dbname, c, sp.precompileSql, sp.params);
+		return sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
 	}
 
 	public boolean update(String sql, Object...obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
-		boolean result = sqlOperation.setSql(dbname, sp.precompileSql, sp.params);
+		boolean result = sqlOperation.setSql(dataSource, sp.precompileSql, sp.params);
 		if(isCache)
 			clear();
 		return result;
@@ -66,12 +67,12 @@ public class AutoPackage {
 		SqlAndParams sp=new SqlAndParams(method,sql,obj);
 		if(isCache)
 			return queryCache(sp,c);
-		return sqlOperation.autoPackageToList(dbname, c, sp.precompileSql, sp.params);
+		return sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
 	}
 
 	public boolean updateMethod(Method method, String sql, Object[]obj) {
 		SqlAndParams sp=new SqlAndParams(method,sql,obj);
-		boolean result = sqlOperation.setSql(dbname, sp.precompileSql, sp.params);
+		boolean result = sqlOperation.setSql(dataSource, sp.precompileSql, sp.params);
 		if(isCache)
 			clear();
 		return result;
@@ -80,13 +81,13 @@ public class AutoPackage {
 	public boolean updateBatch(String sql,Object[][] obj) {
 		if(isCache)
 			clear();
-		return sqlOperation.setSqlBatch(dbname,sql, obj);
+		return sqlOperation.setSqlBatch(dataSource,sql, obj);
 	}
 
 	public boolean updateBatch(String...completeSqls){
 		if(isCache)
 			clear();
-		return sqlOperation.setSqlBatch(dbname,completeSqls);
+		return sqlOperation.setSqlBatch(dataSource,completeSqls);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class AutoPackage {
 		if(lruCache.containsKey(completeSql)){
 			return (List<T>) lruCache.get(completeSql);
 		}else{
-			List<?> result = sqlOperation.autoPackageToList(dbname, c, sp.precompileSql, sp.params);
+			List<?> result = sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
 			lruCache.put(completeSql,result);
 			return (List<T>) result;
 		}

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.core.SqlOperation;
 
 /**
@@ -42,7 +43,7 @@ public abstract class LuckyUtils {
 	 */
 	public static ResultSet getResultSet(String dbname,String sql,Object...obj) {
 		SqlOperation sqlop=new SqlOperation();
-		return sqlop.getResultSet(dbname,sql, obj);
+		return sqlop.getResultSet(ReaderInI.getDataSource(dbname),sql, obj);
 	}
 	/**
 	 * 获得属性的类型去掉长度

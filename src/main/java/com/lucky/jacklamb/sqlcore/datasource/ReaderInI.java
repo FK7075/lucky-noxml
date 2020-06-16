@@ -4,8 +4,8 @@ import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.exception.NotFindBeanPropertyException;
 import com.lucky.jacklamb.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
-import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceFactory;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +45,7 @@ public class ReaderInI {
 
 	public static LuckyDataSource readIni(String section) {
 		Map<String, String> sectionMap = iniFilePars.getSectionMap(section);
-		LuckyDataSource dataSource=sectionMap.containsKey("poolType")? DataSourceFactory.getDataSource(sectionMap.get("poolType")):
-																	   DataSourceFactory.getDefDataSource();
+		LuckyDataSource dataSource=Pool.getDataSource(sectionMap.get("poolType"));
 		String dbname=SECTION_JDBC.equals(section)?"defaultDB":section;
 		dataSource.setDbname(dbname);
 		dataSource=dataSource.getDataSource(sectionMap);

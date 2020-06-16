@@ -11,7 +11,7 @@ import java.util.Set;
 
 import javax.websocket.server.ServerApplicationConfig;
 
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -234,7 +234,7 @@ public class ApplicationBeans {
 			Object obj=entry.getValue();
 			Class<?> mapClass=obj.getClass();
 			if(LuckyDataSource.class.isAssignableFrom(mapClass))
-				list.add((C3p0DataSource)entry.getValue());
+				list.add((LuckyDataSource)entry.getValue());
 		}
 		return list;
 	}

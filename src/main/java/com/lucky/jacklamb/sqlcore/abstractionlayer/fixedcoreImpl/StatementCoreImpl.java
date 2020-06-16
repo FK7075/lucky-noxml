@@ -6,7 +6,7 @@ import java.util.List;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.core.AutoPackage;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 @SuppressWarnings("unchecked")
 public final class StatementCoreImpl implements StatementCore {

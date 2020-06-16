@@ -13,9 +13,10 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.GeneralSqlGenerator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PrecompileSqlAndObject;
-import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
+@SuppressWarnings("unchecked")
 public abstract class GeneralObjectCoreBase implements GeneralObjectCore, UniqueSqlCore {
 	
 	private GeneralSqlGenerator gcg;
