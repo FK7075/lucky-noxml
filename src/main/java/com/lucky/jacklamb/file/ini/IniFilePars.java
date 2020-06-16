@@ -20,7 +20,7 @@ import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 
-import static com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0IniKey.*;
+import static com.lucky.jacklamb.sqlcore.datasource.SectionKey.*;
 
 public class IniFilePars {
 	

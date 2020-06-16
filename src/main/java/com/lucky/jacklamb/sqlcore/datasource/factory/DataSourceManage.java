@@ -1,5 +1,6 @@
-package com.lucky.jacklamb.sqlcore.datasource;
+package com.lucky.jacklamb.sqlcore.datasource.factory;
 
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikaroCPDataSourceManage;

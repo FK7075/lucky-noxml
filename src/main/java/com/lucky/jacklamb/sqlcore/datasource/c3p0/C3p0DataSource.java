@@ -1,17 +1,9 @@
 package com.lucky.jacklamb.sqlcore.datasource.c3p0;
 
-import com.lucky.jacklamb.ioc.config.AppConfig;
-import com.lucky.jacklamb.ioc.scan.ScanFactory;
-import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 public class C3p0DataSource extends LuckyDataSource {
-
 
 	private Integer acquireIncrement;
 

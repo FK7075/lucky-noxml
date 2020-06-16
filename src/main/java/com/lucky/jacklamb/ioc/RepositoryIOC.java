@@ -13,7 +13,7 @@ import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
@@ -151,10 +151,10 @@ public class RepositoryIOC extends ComponentFactory {
 				
 			} else if (repository.isAnnotationPresent(Mapper.class)) {
 				if (first) {
-					List<C3p0DataSource> datalist= ReaderInI.getAllDataSource();
-					for(C3p0DataSource data:datalist) {
-						SqlCore sqlCore=SqlCoreFactory.createSqlCore(data.getName());
-						beanID="lucky#$jacklamb#$&58314@SqlCore-"+data.getName();
+					List<LuckyDataSource> datalist= ReaderInI.getAllDataSource();
+					for(LuckyDataSource data:datalist) {
+						SqlCore sqlCore=SqlCoreFactory.createSqlCore(data.getDbname());
+						beanID="lucky#$jacklamb#$&58314@SqlCore-"+data.getDbname();
 						addRepositoryMap(beanID, sqlCore);
 						log.info("@Repository \"[type=SqlCore id="+beanID+" class="+sqlCore+"]\"");
 					}

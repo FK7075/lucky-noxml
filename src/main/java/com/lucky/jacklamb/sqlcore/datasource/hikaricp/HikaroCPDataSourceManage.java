@@ -1,9 +1,8 @@
 package com.lucky.jacklamb.sqlcore.datasource.hikaricp;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
-import com.lucky.jacklamb.sqlcore.datasource.DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -30,11 +29,31 @@ public class HikaroCPDataSourceManage extends DataSourceManage {
         for (HikariCPDataSource data : datalist) {
             HikariConfig hikariCfg=new HikariConfig();
             hikariCfg.setDriverClassName(data.getDriverClass());
-            hikariCfg.setUsername(data.getUsername());
             hikariCfg.setJdbcUrl(data.getJdbcUrl());
+            hikariCfg.setUsername(data.getUsername());
             hikariCfg.setPassword(data.getPassword());
+            hikariCfg.setAutoCommit(data.getAutoCommit());
             hikariCfg.setConnectionTimeout(data.getConnectionTimeout());
+            hikariCfg.setIdleTimeout(data.getIdleTimeout());
+            hikariCfg.setMaxLifetime(data.getMaxLifetime());
+            hikariCfg.setConnectionTestQuery(data.getConnectionTestQuery());//Object
+            hikariCfg.setMinimumIdle(data.getMinimumIdle());
             hikariCfg.setMaximumPoolSize(data.getMaximumPoolSize());
+            hikariCfg.setMetricRegistry(data.getMetricRegistry());//Object
+            if(data.getHealthCheckRegistry()!=null)
+                hikariCfg.setHealthCheckProperties(data.getHealthCheckRegistry());//Object
+            if(data.getPoolName()!=null)
+                hikariCfg.setPoolName(data.getPoolName());
+            hikariCfg.setIsolateInternalQueries(data.getIsolateInternalQueries());
+            hikariCfg.setAllowPoolSuspension(data.getAllowPoolSuspension());
+            hikariCfg.setReadOnly(data.getReadOnly());
+            hikariCfg.setRegisterMbeans(data.getRegisterMbeans());
+            hikariCfg.setConnectionInitSql(data.getConnectionInitSql());
+            hikariCfg.setLeakDetectionThreshold(data.getLeakDetectionThreshold());
+            hikariCfg.setDataSource(data.getDataSource());
+            hikariCfg.setSchema(data.getSchema());
+            hikariCfg.setThreadFactory(data.getThreadFactory());
+            hikariCfg.setScheduledExecutor(data.getScheduledExecutorService());
             HikariDataSource ds = new HikariDataSource(hikariCfg);
             dbMap.put(data.getDbname(), ds);
         }

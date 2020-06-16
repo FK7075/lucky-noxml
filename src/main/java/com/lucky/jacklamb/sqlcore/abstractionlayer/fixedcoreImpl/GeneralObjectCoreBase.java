@@ -13,7 +13,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.GeneralSqlGenerator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PrecompileSqlAndObject;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 public abstract class GeneralObjectCoreBase implements GeneralObjectCore, UniqueSqlCore {
@@ -22,7 +22,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	
 	protected StatementCore statementCore;
 
-	protected C3p0DataSource dataSource;
+	protected LuckyDataSource dataSource;
 
 	protected String dbname;
 	

@@ -268,7 +268,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @return
 	 */
 	public String getDbName() {
-		return dataSource.getName();
+		return dataSource.getDbname();
 	}
 	
 	/**

@@ -1,11 +1,11 @@
 package com.lucky.jacklamb.sqlcore.datasource.hikaricp;
 
-import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 public class HikariCPDataSource extends LuckyDataSource {
@@ -21,7 +21,7 @@ public class HikariCPDataSource extends LuckyDataSource {
     private Integer maximumPoolSize;
     private String poolName;
     private Object metricRegistry;
-    private Object healthCheckRegistry;
+    private Properties healthCheckRegistry;
 
     private Integer initializationFailTimeout;
     private Boolean isolateInternalQueries;
@@ -36,7 +36,7 @@ public class HikariCPDataSource extends LuckyDataSource {
     private DataSource dataSource;
     private String schema;
     private ThreadFactory threadFactory;
-    private String ScheduledExecutorService;
+    private ScheduledExecutorService scheduledExecutorService;
 
     public String getDataSourceClassName() {
         return dataSourceClassName;
@@ -118,11 +118,11 @@ public class HikariCPDataSource extends LuckyDataSource {
         this.metricRegistry = metricRegistry;
     }
 
-    public Object getHealthCheckRegistry() {
+    public Properties getHealthCheckRegistry() {
         return healthCheckRegistry;
     }
 
-    public void setHealthCheckRegistry(Object healthCheckRegistry) {
+    public void setHealthCheckRegistry(Properties healthCheckRegistry) {
         this.healthCheckRegistry = healthCheckRegistry;
     }
 
@@ -230,17 +230,18 @@ public class HikariCPDataSource extends LuckyDataSource {
         this.threadFactory = threadFactory;
     }
 
-    public String getScheduledExecutorService() {
-        return ScheduledExecutorService;
+    public ScheduledExecutorService getScheduledExecutorService() {
+        return scheduledExecutorService;
     }
 
-    public void setScheduledExecutorService(String scheduledExecutorService) {
-        ScheduledExecutorService = scheduledExecutorService;
+    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
+        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     public HikariCPDataSource(){
         super();
         setPoolType(Pool.HIKARICP);
+        connectionTestQuery="SELECT 1";
         autoCommit=true;
         connectionTimeout=30000;
         idleTimeout=600000;

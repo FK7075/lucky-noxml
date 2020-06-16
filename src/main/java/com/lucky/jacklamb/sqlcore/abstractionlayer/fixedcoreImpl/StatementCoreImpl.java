@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.AutoPackage;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.core.AutoPackage;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 
 @SuppressWarnings("unchecked")
 public final class StatementCoreImpl implements StatementCore {
@@ -18,9 +18,9 @@ public final class StatementCoreImpl implements StatementCore {
 	protected AutoPackage autopackage;
 	
 	
-	public StatementCoreImpl(C3p0DataSource dataSource) {
+	public StatementCoreImpl(LuckyDataSource dataSource) {
 		this.createSql= new CreateSql();
-		this.dbname=dataSource.getName();
+		this.dbname=dataSource.getDbname();
 		this.autopackage=new AutoPackage(dbname);
 	}
 	

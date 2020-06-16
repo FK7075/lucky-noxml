@@ -1,11 +1,12 @@
-package com.lucky.jacklamb.sqlcore.datasource;
+package com.lucky.jacklamb.sqlcore.datasource.core;
 
 import com.lucky.jacklamb.conversion.util.MethodUtils;
 import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -29,13 +30,13 @@ public class AutoPackage {
 
 	public AutoPackage(String dbname) {
 		this.dbname=dbname;
-		isCache= ReaderInI.getDataSource(dbname).isCache();
+		isCache= ReaderInI.getDataSource(dbname).getCache();
 		//如果用户开启了缓存配置，测初始化一个LRU缓存
 		if(isCache)
 			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
-		C3p0DataSourceManage.release(null,null, DataSourceManage.getDataSourceManage(dbname).getConnection(dbname));
+		DataSourceManage.release(null,null, DataSourceManage.getDataSourceManage(dbname).getConnection(dbname));
 	}
 
 	/**

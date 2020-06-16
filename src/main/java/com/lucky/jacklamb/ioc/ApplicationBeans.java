@@ -11,7 +11,7 @@ import java.util.Set;
 
 import javax.websocket.server.ServerApplicationConfig;
 
-import com.lucky.jacklamb.sqlcore.datasource.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

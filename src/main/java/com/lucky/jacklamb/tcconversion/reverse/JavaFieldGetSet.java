@@ -1,11 +1,11 @@
 package com.lucky.jacklamb.tcconversion.reverse;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.LuckyUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 得到关于某个属性的源代码（属性声明，get/set方法的源码）
@@ -17,7 +17,7 @@ public class JavaFieldGetSet {
 	private String getField;
 	private String setField;
 	private static String dbname;
-	private static C3p0DataSource data;
+	private static LuckyDataSource data;
 	public String getField() {
 		return field;
 	}
@@ -64,7 +64,7 @@ public class JavaFieldGetSet {
 	 * @return 对应表的java源代码
 	 */
 	public static GetJavaSrc getOneJavaSrc(TableStructure ts,String name){
-		C3p0DataSource data= ReaderInI.getDataSource(name);
+		LuckyDataSource data= ReaderInI.getDataSource(name);
 		GetJavaSrc javasrc=new GetJavaSrc();
 		List<JavaFieldGetSet> list=new ArrayList<>();
 		javasrc.setClassName(ts.getTableName());

@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
+import com.lucky.jacklamb.sqlcore.datasource.factory.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 import java.io.PrintStream;
@@ -14,14 +14,14 @@ import java.io.PrintStream;
 public class SqlLog {
 	
 	private boolean log;
-	private C3p0DataSource dataSource;
+	private LuckyDataSource dataSource;
 	private String jdbcUrl;
 	private SqlFormatUtil sqlFormatUtil;
 	private static final PrintStream loger= System.out;
 	
 	public SqlLog(String dbname) {
 		dataSource= ReaderInI.getDataSource(dbname);
-		log=dataSource.isLog();
+		log=dataSource.getLog();
 		sqlFormatUtil=new SqlFormatUtil();
 		jdbcUrl=dataSource.getJdbcUrl();
 		if(jdbcUrl.contains("?")) {
@@ -93,7 +93,7 @@ public class SqlLog {
 	}
 	
 	private String formatSql(String sql) {
-		if(dataSource.isFormatSqlLog())
+		if(dataSource.getFormatSqlLog())
 			return "\n"+sqlFormatUtil.format(sql);
 		return sql;
 		

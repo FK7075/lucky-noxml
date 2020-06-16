@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.datasource;
+package com.lucky.jacklamb.sqlcore.datasource.factory;
 
 import com.lucky.jacklamb.conversion.util.ClassUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
@@ -8,7 +8,6 @@ import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -33,9 +32,10 @@ public abstract class LuckyDataSource {
 
     public LuckyDataSource(){
         createTable= ScanFactory.createScan().getPojoClass();
-        poolType=Pool.C3P0;
+        poolType=Pool.HIKARICP;
         cache=true;
         log=false;
+        formatSqlLog=false;
         cacheCapacity=50;
     }
 
@@ -150,7 +150,7 @@ public abstract class LuckyDataSource {
         this.srcPath = srcPath;
     }
 
-    protected LuckyDataSource getDataSource(Map<String,String> dataSectionMap) {
+    public LuckyDataSource getDataSource(Map<String,String> dataSectionMap) {
         Field[] fields = ClassUtils.getAllFields(this.getClass());
         String fieldName;
         for (Field field : fields) {
@@ -162,10 +162,12 @@ public abstract class LuckyDataSource {
                     List<Class<?>> tables=new ArrayList<>();
                     String[] split = valueStr.split(",");
                     for (String tab : split) {
+                        String classPath = null;
                         try {
-                            tables.add(Class.forName(tab));
+                            classPath= dataSectionMap.get(tab);
+                            tables.add(Class.forName(classPath));
                         } catch (ClassNotFoundException e) {
-                            throw new NoDataSourceException("不正确的自动建表配置信息，无法执行建表程序，请检查classpath下的appconfig.ini配置文件中["+dbname+"]节中的'createTable'属性的配置信息。err=>"+tab);
+                            throw new NoDataSourceException("不正确的自动建表配置信息，无法执行建表程序，请检查classpath下的appconfig.ini配置文件中["+dbname+"]节中的'createTable'属性的配置信息。err=>"+tab+"=\""+classPath+"\"");
                         }
                     }
                     try {

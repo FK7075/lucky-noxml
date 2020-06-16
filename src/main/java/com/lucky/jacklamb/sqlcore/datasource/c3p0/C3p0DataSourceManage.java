@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.lucky.jacklamb.exception.NoDataSourceException;
-import com.lucky.jacklamb.sqlcore.datasource.DataSourceManage;
+import com.lucky.jacklamb.sqlcore.datasource.factory.DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -20,8 +20,7 @@ public class C3p0DataSourceManage extends DataSourceManage {
     private static Map<String, ComboPooledDataSource> dbMap;
 
     static {
-        if (dbMap == null)
-            init();
+        init();
     }
 
     public static void init() {

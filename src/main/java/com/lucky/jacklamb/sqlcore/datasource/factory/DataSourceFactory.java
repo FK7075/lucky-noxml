@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.datasource;
+package com.lucky.jacklamb.sqlcore.datasource.factory;
 
 import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikariCPDataSource;
@@ -16,10 +16,10 @@ public abstract class DataSourceFactory {
         else if("HikariCP".equalsIgnoreCase(poolType))
             return new HikariCPDataSource();
         System.out.println("错误的poolType: ["+poolType+"],Lucky将采用默认的数据库连接池！");
-        return new C3p0DataSource();
+        return new HikariCPDataSource();
     }
 
     public static LuckyDataSource getDefDataSource(){
-        return new C3p0DataSource();
+        return new HikariCPDataSource();
     }
 }
