@@ -52,7 +52,6 @@ public class LuckyApplication {
             tomcat.getServer().setShutdown(serverCfg.getShutdown());
         StandardContext context = new StandardContext();
         context.setSessionTimeout(serverCfg.getSessionTimeout());
-
         context.setPath(serverCfg.getContextPath());
         context.setReloadable(serverCfg.isReloadable());
         String docBase = serverCfg.getDocBase();
