@@ -1,11 +1,265 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="02c4a2af-ab5c-4c7c-9973-9a5cfd26626f" name="Default Changelist" comment="2020-05-29 完成了对HttpClient的文件传输方法二次封装">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/After.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/AopParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/Around.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/Aspect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/Before.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/aop/Cacheable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Autowired.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Bean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Component.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Configuration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Repository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Scope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Service.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/ioc/Value.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/CallResult.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/CrossOrigin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/DeleteMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/Download.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/ExceptionHander.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/GetMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/MD5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/PostMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/PutMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/RequestMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/RequestParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/RestBody.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/RestParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/SendRed.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/mvc/Upload.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/Id.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/Key.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/Table.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/AutoId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Change.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Count.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Delete.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Insert.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Like.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Mapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Page.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Query.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/ResultType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Select.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Update.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/annotation/orm/mapper/X.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/expandpoint/CacheExpandPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/expandpoint/LazyLoaderExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/expandpoint/LogExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/expandpoint/PermissionExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/expandpoint/TransactionExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/Chain.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/LuckyMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/Point.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/PointRun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/PointRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/ProxyFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/proxy/TargetMethodSignature.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/util/ASMUtil$1$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/util/ASMUtil$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/util/ASMUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/aop/util/PointRunFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/HttpRequestState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/JOIN.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/Location.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/Logo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/PrimaryType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/RequestMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/Rest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/Scan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/Sort.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/enums/scope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/AutoPackageException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/CreateBeanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/FileSizeCrossingException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/FileTypeIllegalException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/IllegaAopparametersException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/IllegalExpressionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/InjectionPropertiesException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/JsonFormatException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NoDataSourceException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotAddIOCComponent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFindBeanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFindBeanPropertyException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFindDocBaseFolderException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFindFlieException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFindRequestException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFoundCallUrlException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/NotSupportDataBasesException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/exception/TypeConversionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/expression/ExpressionEngine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/expression/MyTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/file/CompressType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/file/MultipartFile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/file/ZipUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/file/ini/INIConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/file/ini/IniFilePars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/httpclient/HttpClientCall.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ApplicationBeans.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/AspectAOP.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ComponentFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ComponentIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ControllerAndMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ControllerAndMethodMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ControllerIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/IOCContainers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/RepositoryIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/ServiceIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/URLAndRequestMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/AppConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/ApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/LuckyConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/ScanConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/ServerConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/config/WebConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/exception/ExceptionDispose.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/exception/ExceptionDisposeHand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/exception/LuckyExceptionDispose.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/exception/LuckyExceptionHand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/JarScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/LuckyClassLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/PackageScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/Scan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/ScanFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/ioc/scan/URClassLoaderJarScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/junit/LuckyJUnit4ClassRunner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/junit/LuckyRunner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/mapper/LuckyMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/mapper/LuckyMapperProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/mapper/SqlAndArray.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/mapping/AnnotationOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/mapping/UrlParsMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/md5/MD5Utils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/ClassControl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/InitializePoJo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/ObjectAlias.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/ObjectToJoinSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/PackBoxToPojo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/PageCount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/PageLimit.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/PageList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/Paging.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/PojoAndField.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/QFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/QueryBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/SortSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/SqlAndObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/query/SqlFragProce.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/Attr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/AttrUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/BB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/FormatUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/LSON.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/LXML.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/rest/TT.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/LuckyController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/LuckyDispatherServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/LuckyJumpFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/LuckyWebContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/Model.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/ResponseControl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/servlet/StaticResourceManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/GeneralObjectCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/ObjectCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/SqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/SqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/StatementCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/UniqueSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/LuckyCache.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/AccessSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/DB2Core.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/MySqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/MySqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/OracleCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/OracleSqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/PostgreSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/PostgreSqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/SqlServerCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/SybaseCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/GeneralObjectCoreImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/StatementCoreImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/BatchInsert.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/Book.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/CreateSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/FieldAndValue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/GeneralSqlGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/PojoManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/PrecompileSqlAndObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlCoreFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlFormatUtil$FormatProcess.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlFormatUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlLog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/AutoPackage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/C3p0Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/DataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/IniKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/ReadIni.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/SqlOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/c3p0/Transaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/exception/DatabaseTypeUnableIdentifyException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/sqlcore/exception/NotFindSqlConfigFileException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/FilterMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/LuckyApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/LuckyServerApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/LuckyServletContainerInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/LuckyShutdown.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/start/ServletMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/createtable/CreateTable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/createtable/CreateTableSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/createtable/DeleteKeySql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/GetJavaSrc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/JavaFieldGetSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/PackBoxSrc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableNum.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableStructure.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableToJava.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/reverse/Tables.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/AccessJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/DB2JavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/JDBChangeFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/JavaConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/MySqlJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/OracleJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/PostgreJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/SqlServerJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/SyBaseJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/tcconversion/typechange/TypeConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/ArrayCast.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/IpUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/Jacklabm$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/Jacklabm.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/LuckyIOUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/jacklamb/utils/LuckyUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/log4j.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/lucky-1.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.lucky.jacklamb.AppTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.lucky.jacklamb.AppTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/lucky/jacklamb/AppTest.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/../LUCKY-TEST/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,92 +288,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/AnnotationOperation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="35" column="7" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="4" column="45" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundCallUrlException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/GetMapping.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1008">
-              <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/httpclient/HttpClientCall.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="189" column="7" selection-start-line="189" selection-start-column="7" selection-end-line="189" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/md5/MD5Utils.java">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyDispatherServlet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2520">
-              <caret line="128" column="49" selection-start-line="128" selection-start-column="49" selection-end-line="128" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1176">
-              <caret line="55" selection-start-line="55" selection-end-line="59" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PutMapping.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1008">
-              <caret line="46" selection-start-line="46" selection-end-line="50" selection-end-column="32" />
+            <state relative-caret-position="320">
+              <caret line="216" column="32" selection-start-line="216" selection-start-column="32" selection-end-line="216" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -129,6 +302,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="AnnotationType" />
+        <option value="Enum" />
+        <option value="HTML File" />
         <option value="Interface" />
         <option value="Class" />
       </list>
@@ -136,10 +312,44 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>L</find>
-      <find>call</find>
-      <find>getParamName</find>
+      <find>.xml</find>
+      <find>.svg</find>
+      <find>.js</find>
+      <find>jsp</find>
+      <find>ico</find>
+      <find>.ico</find>
+      <find>$</find>
+      <find>main-text-a</find>
+      <find>error</find>
+      <find>Gson</find>
+      <find>true</find>
+      <find>insertBatchByCollection</find>
+      <find>insert</find>
+      <find>dataSource</find>
+      <find>getD</find>
+      <find>catch</find>
+      <find>closePort</find>
+      <find>application/octet-stream</find>
+      <find>.doc</find>
+      <find>.xls</find>
+      <find>getByIdIn</find>
+      <find>.html</find>
+      <find>//</find>
+      <find>#</find>
+      <find>\r\n&quot;</find>
+      <find>+</find>
+      <find>private</find>
+      <find>log4j-core</find>
+      <find>start</find>
+      <find>init</find>
     </findStrings>
+    <replaceStrings>
+      <replace>S:</replace>
+      <replace>S</replace>
+      <replace>]</replace>
+      <replace>public</replace>
+      <replace>Boolean</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
@@ -149,26 +359,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/rest/LSON.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyApplication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/c3p0/C3p0Util.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/c3p0/HikaroCPUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/c3p0/HikaroCPDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/HikaroCPDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/DataSourceMagger.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/DataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/DataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/IniKey.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/C3p0DataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/config/hikarocp.json" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/exception/LuckySqlOperationException.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/SqlOperation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/HikaroCPDataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/ReadIni.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikariCPIniKey.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/help/C3p0.ini" />
+        <option value="$PROJECT_DIR$/src/main/resources/help/HikariCP.ini" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/GeneralObjectCoreBase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/StatementCoreImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/util/SqlLog.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/tcconversion/reverse/JavaFieldGetSet.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/tcconversion/reverse/TableToJava.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/abstractionlayer/abstcore/SqlCore.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikaroCPDataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/AutoPackage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0IniKey.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/SectionKey.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/zaxxer/hikari/HikariDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/RepositoryIOC.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/catalina/util/LifecycleBase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/LuckyDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0DataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/DataSourceFactory.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/ReaderInI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0DataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/help/appconfig.ini" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/factory/LuckyDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikariCPDataSource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/factory/DataSourceManage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/enums/Pool.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyTomcatLog.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyServletContainerInitializer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingRuntimeException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalRuntimeException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyDispatherServlet.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/ExceptionDispose.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyApplication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/catalina/valves/AccessLogValve.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/juli/logging/DirectJDKLog.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/tomcat/util/net/NioSelectorPool.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/catalina/core/StandardService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/catalina/core/StandardEngine.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/apache/coyote/AbstractProtocol.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PutMapping.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PostMapping.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/DeleteMapping.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/GetMapping.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/CallParam.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundCallUrlException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/AnnotationOperation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/httpclient/HttpClientCall.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/log4j2.xml" />
       </list>
     </option>
   </component>
@@ -176,8 +417,8 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="localRepository" value="E:\Maven\RepMaven" />
-        <option name="mavenHome" value="D:/Maven/apache-maven-3.6.1" />
-        <option name="userSettingsFile" value="D:\Maven\apache-maven-3.6.1\conf\settings.xml" />
+        <option name="mavenHome" value="D:/backup/apache-maven-3.6.1" />
+        <option name="userSettingsFile" value="D:\backup\apache-maven-3.6.1\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
     <option name="importingSettings">
@@ -198,13 +439,26 @@
           <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
           <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
         </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Plugins" type="7aea1407:MavenProjectsStructure$PluginsNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Dependencies" type="f4be9f2a:MavenProjectsStructure$DependenciesNode" />
+        </path>
       </expand>
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1912" />
+    <option name="y" value="-15" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -215,53 +469,8 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jacklamb" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lucky-noxml" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jacklamb" type="462c0819:PsiDirectoryNode" />
-              <item name="httpclient" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -270,17 +479,33 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../LUCKY-TEST" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.gutterIcons" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/static" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources\static" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources\config" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources\help" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lucky.jacklamb.annotation.orm.mapper" />
       <recent name="com.lucky.jacklamb.annotation.mvc" />
+      <recent name="org.apache.tomcat.util.http.parser" />
+      <recent name="com.lucky.jacklamb.annotation.orm" />
       <recent name="com.lucky.jacklamb.exception" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources\static" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources\config" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\resources" />
+      <recent name="D:\GitHub-Project\lucky-noxml\src\main\java" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -294,6 +519,82 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager" selected="Application.LRUCache">
+    <configuration name="CreateSql" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql" />
+      <module name="lucky" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.jacklamb.sqlcore.abstractionlayer.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ExpressionEngine" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.jacklamb.expression.ExpressionEngine" />
+      <module name="lucky" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.jacklamb.expression.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LRUCache" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache" />
+      <module name="lucky" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.jacklamb.sqlcore.abstractionlayer.cache.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LuckyLRUCache" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LuckyLRUCache" />
+      <module name="lucky" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.jacklamb.sqlcore.abstractionlayer.cache.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Regular" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.jacklamb.servlet.mapping.regula.Regular" />
+      <module name="lucky" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.jacklamb.servlet.mapping.regula.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.LRUCache" />
+        <item itemvalue="Application.LuckyLRUCache" />
+        <item itemvalue="Application.Regular" />
+        <item itemvalue="Application.ExpressionEngine" />
+        <item itemvalue="Application.CreateSql" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -332,83 +633,40 @@
       <workItem from="1586875535459" duration="14781000" />
       <workItem from="1586958725487" duration="2980000" />
       <workItem from="1587008673785" duration="727000" />
-    </task>
-    <task id="LOCAL-00001" summary="2020-03-31 Mac-Maven Lucky-Noxml">
-      <created>1585672949515</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1585672949516</updated>
-    </task>
-    <task id="LOCAL-00002" summary="2020-03-31 Mac-Maven Mac兼容问题有待解决">
-      <created>1585683504326</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1585683504326</updated>
-    </task>
-    <task id="LOCAL-00003" summary="2020-03-31 Mac-Maven Mac兼容问题有待解决">
-      <created>1585683877604</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1585683877604</updated>
-    </task>
-    <task id="LOCAL-00004" summary="2020-03-31 Mac-Maven Mac Liunx兼容问题">
-      <created>1585683954466</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1585683954466</updated>
-    </task>
-    <task id="LOCAL-00005" summary="2020-03-31 Mac-Maven 修复pojo类的扫描BUG">
-      <created>1585749393672</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1585749393672</updated>
-    </task>
-    <task id="LOCAL-00006" summary="2020-04-02 Mac-Maven 提升了LuckyJumpFilter的健壮性">
-      <created>1585817104010</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1585817104010</updated>
-    </task>
-    <task id="LOCAL-00007" summary="2020-04-02 Mac-Maven 新的启程！">
-      <created>1585818972388</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1585818972388</updated>
-    </task>
-    <task id="LOCAL-00008" summary="2020-04-02 Mac-Maven 将默认docBase修改为项目路径下的webapp，默认BaseDir修改为系统的零时文件夹。配置文件中增加了一个web项目的确认项">
-      <created>1585959216601</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1585959216601</updated>
-    </task>
-    <task id="LOCAL-00009" summary="2020-04-02 Mac-Maven DocBase不存在时，给予友好的提示，而不是直接报错！">
-      <created>1585990753778</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1585990753778</updated>
-    </task>
-    <task id="LOCAL-00010" summary="2020-04-06 Mac-Maven 添加对文件上传的异常处理！">
-      <created>1586183237906</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1586183237906</updated>
-    </task>
-    <task id="LOCAL-00011" summary="2020-04-07 日志">
-      <created>1586249031915</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1586249031915</updated>
+      <workItem from="1587369420543" duration="597000" />
+      <workItem from="1587379570472" duration="807000" />
+      <workItem from="1587429790972" duration="1832000" />
+      <workItem from="1587637465547" duration="30000" />
+      <workItem from="1587711252337" duration="987000" />
+      <workItem from="1587728758264" duration="24000" />
+      <workItem from="1587862102460" duration="18394000" />
+      <workItem from="1587948824488" duration="1609000" />
+      <workItem from="1588036065919" duration="2215000" />
+      <workItem from="1588145160692" duration="94000" />
+      <workItem from="1588150362261" duration="2033000" />
+      <workItem from="1588207533079" duration="7577000" />
+      <workItem from="1588255642453" duration="8036000" />
+      <workItem from="1588727263321" duration="44000" />
+      <workItem from="1588727724047" duration="2648000" />
+      <workItem from="1588898967206" duration="15367000" />
+      <workItem from="1588986435329" duration="634000" />
+      <workItem from="1589157626437" duration="97000" />
+      <workItem from="1589160213154" duration="13483000" />
+      <workItem from="1589278038959" duration="69000" />
+      <workItem from="1589341407247" duration="11134000" />
+      <workItem from="1589417360230" duration="3238000" />
+      <workItem from="1589423022606" duration="605000" />
+      <workItem from="1589425956883" duration="59117000" />
+      <workItem from="1589951459101" duration="7402000" />
+      <workItem from="1590021999247" duration="12680000" />
+      <workItem from="1590108400972" duration="214000" />
+      <workItem from="1590108668852" duration="22369000" />
+      <workItem from="1590539988783" duration="2620000" />
+      <workItem from="1590634328533" duration="15811000" />
+      <workItem from="1590712904566" duration="32779000" />
+      <workItem from="1591006429048" duration="62650000" />
+      <workItem from="1591344823858" duration="84320000" />
+      <workItem from="1591923187885" duration="65960000" />
     </task>
     <task id="LOCAL-00012" summary="2020-04-12 :优化了Controller异常处理机制，可以处理由@Uoload产生的各种异常了。。">
       <created>1586632170929</created>
@@ -445,11 +703,319 @@
       <option name="project" value="LOCAL" />
       <updated>1587008778184</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="2020-04-20 15:49:23 ： Logo格式化">
+      <created>1587369011556</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1587369011556</updated>
+    </task>
+    <task id="LOCAL-00018" summary="2020-04-20 15:49:23 ： Logo格式化">
+      <created>1587369707558</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1587369707558</updated>
+    </task>
+    <task id="LOCAL-00019" summary="2020-04-26 17:21:55 ： Conversion功能优化">
+      <created>1587892927673</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1587892927673</updated>
+    </task>
+    <task id="LOCAL-00020" summary="2020-04-20 15:49:23 ： Logo格式化">
+      <created>1587895980334</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1587895980334</updated>
+    </task>
+    <task id="LOCAL-00021" summary="2020-04-26 19:18:23 ： Debug">
+      <created>1587899930233</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1587899930233</updated>
+    </task>
+    <task id="LOCAL-00022" summary="2020-04-29 15:26:23 ： conversion优化">
+      <created>1588145238258</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1588145238258</updated>
+    </task>
+    <task id="LOCAL-00023" summary="2020-04-30 20:14:23 ：数据持久层优化">
+      <created>1588248928652</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1588248928652</updated>
+    </task>
+    <task id="LOCAL-00024" summary="2020-04-30 23:37:29 ： IOC、DI算法优化，支持抽象类的属性注入">
+      <created>1588261140859</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1588261140859</updated>
+    </task>
+    <task id="LOCAL-00025" summary="2020-04-30 23:55:55 ： IOC、ID、AOP算法优化，支持抽象类属性的读取与注入，并优化了部分日志！">
+      <created>1588262236468</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1588262236468</updated>
+    </task>
+    <task id="LOCAL-00026" summary="2020-05-08 16:52:32 ：优化">
+      <created>1588927978619</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1588927978619</updated>
+    </task>
+    <task id="LOCAL-00027" summary="2020-08-08 19:26:23 ： 日志优化">
+      <created>1588937192976</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1588937192976</updated>
+    </task>
+    <task id="LOCAL-00028" summary="2020-05-11 16:55:33 ： 加入参数格式校验注解@Check">
+      <created>1589187566126</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1589187566126</updated>
+    </task>
+    <task id="LOCAL-00029" summary="2020-05-13 20:05:54 ： 加入BeanUtils类和FileCopyUtils类，前者负责bean的拷贝与转换，后者负责文件的拷贝">
+      <created>1589371665242</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1589371665242</updated>
+    </task>
+    <task id="LOCAL-00030" summary="2020-04-20 15:49:23 ： Logo格式化">
+      <created>1589372543186</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1589372543186</updated>
+    </task>
+    <task id="LOCAL-00031" summary="2020-05-14 18:50:56 ： ${}表达式">
+      <created>1589453462543</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1589453462543</updated>
+    </task>
+    <task id="LOCAL-00032" summary="2020-05-15 19:02:34 ： 文件操作重构，支持多文件上传！并完善配置文件参数获取机制">
+      <created>1589540638747</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1589540638747</updated>
+    </task>
+    <task id="LOCAL-00033" summary="2020-05-18 18:30:02 ： 分布式准备工作开始">
+      <created>1589797835683</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1589797835683</updated>
+    </task>
+    <task id="LOCAL-00034" summary="2020-05-19 19:03:01 ：第一版注册中心编写完毕，测试中....">
+      <created>1589886222360</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1589886222360</updated>
+    </task>
+    <task id="LOCAL-00035" summary="2020-05-20 17:00:05 ： 520快乐，注册中心Bug修复中....">
+      <created>1589965309027</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1589965309028</updated>
+    </task>
+    <task id="LOCAL-00036" summary="2020-05-21 注册中心转发算法优化">
+      <created>1590058953118</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1590058953118</updated>
+    </task>
+    <task id="LOCAL-00037" summary="2020-05-25 注册中心管理页面优化">
+      <created>1590405025271</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1590405025272</updated>
+    </task>
+    <task id="LOCAL-00038" summary="2020-05-26 注册中心优化">
+      <created>1590483539196</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1590483539196</updated>
+    </task>
+    <task id="LOCAL-00039" summary="2020-05-28 加入@InitRun注解，被@InitRun注解标注的Controller方法会在Tomcat服务器启动时执行！">
+      <created>1590654831638</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1590654831638</updated>
+    </task>
+    <task id="LOCAL-00040" summary="2020-05-28 加入@InitRun注解，用于在服务器启动时执行一些初始化的工作，@InitRun注解只能在Controller中使用，Controller中所有被@InitRun注解标注的方法都将会在服务器启动后立即执行，如果方法有返回值，这会将返回值存入IOC容器中，在程序中可以注入ComponentIOC对象，而后使用其getComponentBean(ID)方法来得到该返回值">
+      <created>1590661773354</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1590661773354</updated>
+    </task>
+    <task id="LOCAL-00041" summary="2020-05-28 加入@InitRun注解，用于在服务器启动时执行一些初始化的工作，@InitRun注解只能在Controller中使用，Controller中所有被@InitRun注解标注的方法都将会在服务器启动后立即执行，如果方法有返回值，这会将返回值存入IOC容器中，在程序中可以注入ComponentIOC对象，而后使用其getComponentBean(ID)方法来得到该返回值">
+      <created>1590665292856</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1590665292856</updated>
+    </task>
+    <task id="LOCAL-00042" summary="2020-05-29 完成了对HttpClient的文件传输方法的二次封装">
+      <created>1590750207941</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1590750207941</updated>
+    </task>
+    <task id="LOCAL-00043" summary="2020-05-29 完成了对HttpClient的文件传输方法二次封装">
+      <created>1590750271006</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1590750271006</updated>
+    </task>
+    <task id="LOCAL-00044" summary="2020-05-29 跨服务文件api调用优化">
+      <created>1591001209152</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1591001209152</updated>
+    </task>
+    <task id="LOCAL-00045" summary="2020-06-01 丰富了基类LuckyController的功能，异常显示升级，发生异常时也会将异常信息打印到浏览器">
+      <created>1591009190433</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1591009190433</updated>
+    </task>
+    <task id="LOCAL-00046" summary="2020-06-02 加入ContentType.json干掉了StaticResourceManage中的if/else">
+      <created>1591097753239</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1591097753239</updated>
+    </task>
+    <task id="LOCAL-00047" summary="2020-06-03 美化404、500页面">
+      <created>1591178238394</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1591178238394</updated>
+    </task>
+    <task id="LOCAL-00048" summary="2020-06-04 错误页面优化">
+      <created>1591266255440</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1591266255440</updated>
+    </task>
+    <task id="LOCAL-00049" summary="2020-06-05 数据持久层方法优化">
+      <created>1591354423178</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1591354423178</updated>
+    </task>
+    <task id="LOCAL-00050" summary="2020-06-05 数据持久层优化，新增批量更新、批量删除方法，优化批量添加方法！并且支持带索引的预编译SQL">
+      <created>1591354603950</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1591354603951</updated>
+    </task>
+    <task id="LOCAL-00051" summary="2020-06-05 数据持久层优化">
+      <created>1591356087190</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1591356087191</updated>
+    </task>
+    <task id="LOCAL-00052" summary="2020-06-08 debug">
+      <created>1591610589383</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1591610589383</updated>
+    </task>
+    <task id="LOCAL-00053" summary="2020-06-09 优化了对mysql建表api的优化，在LuckMapper中也加入了建表的方法">
+      <created>1591698277570</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1591698277570</updated>
+    </task>
+    <task id="LOCAL-00054" summary="2020-06-10 数据持久层加入LRU缓存">
+      <created>1591787102618</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1591787102618</updated>
+    </task>
+    <task id="LOCAL-00055" summary="2020-06-11 &#10;更新&#10;1.Mapper接口开发支持继承体系，多数据源的环境下可以使用一套接口操作多个数据源！&#10;2.增强了LuckyController基类的功能(json转换、MD5加密)&#10;3.重构了部分项目结构&#10;问题&#10;1.集群环境下，注册中心转发问题。查询操作只需要一个服务响应，增删改操作是否需要转发给所有服务？&#10;2.如何定义&quot;查询&quot;与&quot;增删改&quot;？">
+      <created>1591863761510</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1591863761510</updated>
+    </task>
+    <task id="LOCAL-00056" summary="2020-06-12 Logo提取到txt文件中">
+      <created>1591959715769</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1591959715770</updated>
+    </task>
+    <task id="LOCAL-00057" summary="2020-06-15 尝试兼容HikariCP">
+      <created>1592216912683</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1592216912683</updated>
+    </task>
+    <task id="LOCAL-00058" summary="2020-06-15 尝试兼容HikariCP">
+      <created>1592218532711</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1592218532711</updated>
+    </task>
+    <task id="LOCAL-00059" summary="2020-06-16 debug">
+      <created>1592306641212</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1592306641212</updated>
+    </task>
+    <task id="LOCAL-00060" summary="2020-06-17 HikariCp兼容完毕，并且将HikariCp设置为默认连接池">
+      <created>1592384209845</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1592384209845</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50314000" />
+    <option name="totallyTimeSpent" value="508048000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -461,60 +1027,150 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="1912" y="-15" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6111111" visible="true" weight="0.16950959" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.60954446" visible="true" weight="0.19936034" />
       <window_info id="Favorites" order="1" sideWeight="0.3888889" side_tool="true" weight="0.20347957" />
-      <window_info id="Structure" order="2" sideWeight="0.3888889" side_tool="true" weight="0.20347957" />
+      <window_info id="Structure" order="2" sideWeight="0.39045554" side_tool="true" weight="0.18656716" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
       <window_info id="UI Designer" order="5" />
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32923076" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49848714" visible="true" weight="0.3353846" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4914712" visible="true" weight="0.324295" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49946696" weight="0.329718" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49733475" weight="0.345987" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5015129" side_tool="true" weight="0.3353846" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.3276923" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.329718" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50852877" side_tool="true" weight="0.324295" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3275488" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Theme Preview" order="4" />
-      <window_info anchor="right" id="Maven" order="5" weight="0.18683812" />
+      <window_info anchor="right" id="Maven" order="5" weight="0.17537314" />
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Database" order="8" weight="0.32995737" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.60954446" visible="true" weight="0.19936034" />
+      <window_info id="Favorites" order="1" sideWeight="0.3888889" side_tool="true" weight="0.20347957" />
+      <window_info id="Structure" order="2" sideWeight="0.39045554" side_tool="true" weight="0.18656716" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Designer" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4914712" visible="true" weight="0.324295" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49946696" weight="0.329718" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49733475" weight="0.345987" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.329718" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50852877" side_tool="true" weight="0.324295" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3275488" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="4" />
+      <window_info anchor="right" id="Maven" order="5" visible="true" weight="0.10501066" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Database" order="8" weight="0.32995737" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="2020-03-31 Mac-Maven Lucky-Noxml" />
-    <MESSAGE value="2020-03-31 Mac-Maven Mac兼容问题有待解决" />
-    <MESSAGE value="2020-03-31 Mac-Maven Mac Liunx兼容问题" />
-    <MESSAGE value="2020-03-31 Mac-Maven 修复pojo类的扫描BUG" />
-    <MESSAGE value="2020-04-02 Mac-Maven 提升了LuckyJumpFilter的健壮性" />
-    <MESSAGE value="2020-04-02 Mac-Maven 新的启程！" />
-    <MESSAGE value="2020-04-02 Mac-Maven 将默认docBase修改为项目路径下的webapp，默认BaseDir修改为系统的零时文件夹。配置文件中增加了一个web项目的确认项" />
-    <MESSAGE value="2020-04-02 Mac-Maven DocBase不存在时，给予友好的提示，而不是直接报错！" />
-    <MESSAGE value="2020-04-06 Mac-Maven 添加对文件上传的异常处理！" />
-    <MESSAGE value="2020-04-07 日志" />
-    <MESSAGE value="2020-04-12 :优化了Controller异常处理机制，可以处理由@Uoload产生的各种异常了。。" />
-    <MESSAGE value="2020-04-12 :优化了Controller异常处理机制" />
-    <MESSAGE value="2020-04-15 :添加了注解式的远程接口调用功能，在Controller注解中添加一个callurl，Lucky将自动访问该远程接口，并会将返回结果封装到被CallParam注解标注的方法中String类型的参数中" />
-    <MESSAGE value="2020-04-15 :丰富了HttpClientCall类的方法" />
-    <MESSAGE value="2020-04-16 ： MD5" />
-    <option name="LAST_COMMIT_MESSAGE" value="2020-04-16 ： MD5" />
+    <MESSAGE value="2020-05-19 19:03:01 ：第一版注册中心编写完毕，测试中...." />
+    <MESSAGE value="2020-05-20 17:00:05 ： 520快乐，注册中心Bug修复中...." />
+    <MESSAGE value="2020-05-21 注册中心转发算法优化" />
+    <MESSAGE value="2020-05-25 注册中心管理页面优化" />
+    <MESSAGE value="2020-05-26 注册中心优化" />
+    <MESSAGE value="2020-05-28 加入@InitRun注解，被@InitRun注解标注的Controller方法会在Tomcat服务器启动时执行！" />
+    <MESSAGE value="2020-05-28 加入@InitRun注解，用于在服务器启动时执行一些初始化的工作，@InitRun注解只能在Controller中使用，Controller中所有被@InitRun注解标注的方法都将会在服务器启动后立即执行，如果方法有返回值，这会将返回值存入IOC容器中，在程序中可以注入ComponentIOC对象，而后使用其getComponentBean(ID)方法来得到该返回值" />
+    <MESSAGE value="2020-05-29 完成了对HttpClient的文件传输方法的二次封装" />
+    <MESSAGE value="2020-05-29 完成了对HttpClient的文件传输方法二次封装" />
+    <MESSAGE value="2020-05-29 跨服务文件api调用优化" />
+    <MESSAGE value="2020-06-01 丰富了基类LuckyController的功能，异常显示升级，发生异常时也会将异常信息打印到浏览器" />
+    <MESSAGE value="2020-06-02 加入ContentType.json干掉了StaticResourceManage中的if/else" />
+    <MESSAGE value="2020-06-03 美化404、500页面" />
+    <MESSAGE value="2020-06-04 错误页面优化" />
+    <MESSAGE value="2020-06-05 数据持久层方法优化" />
+    <MESSAGE value="2020-06-05 数据持久层优化，新增批量更新、批量删除方法，优化批量添加方法！并且支持带索引的预编译SQL" />
+    <MESSAGE value="2020-06-05 数据持久层优化" />
+    <MESSAGE value="2020-06-08 debug" />
+    <MESSAGE value="2020-06-09 优化了对mysql建表api的优化，在LuckMapper中也加入了建表的方法" />
+    <MESSAGE value="2020-06-10 数据持久层加入LRU缓存" />
+    <MESSAGE value="2020-06-11 &#10;更新&#10;1.Mapper接口开发支持继承体系，多数据源的环境下可以使用一套接口操作多个数据源！&#10;2.增强了LuckyController基类的功能(json转换、MD5加密)&#10;3.重构了部分项目结构&#10;问题&#10;1.集群环境下，注册中心转发问题。查询操作只需要一个服务响应，增删改操作是否需要转发给所有服务？&#10;2.如何定义&quot;查询&quot;与&quot;增删改&quot;？" />
+    <MESSAGE value="2020-06-12 Logo提取到txt文件中" />
+    <MESSAGE value="2020-06-15 尝试兼容HikariCP" />
+    <MESSAGE value="2020-06-16 debug" />
+    <MESSAGE value="2020-06-17 HikariCp兼容完毕，并且将HikariCp设置为默认连接池" />
+    <option name="LAST_COMMIT_MESSAGE" value="2020-06-17 HikariCp兼容完毕，并且将HikariCp设置为默认连接池" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" width="800" height="717" key="#Intentions" timestamp="1585955484003">
@@ -622,257 +1278,552 @@
     </state>
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1585987973852" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/config/AppConfig.java</url>
-          <line>24</line>
-          <properties />
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/config/appconfig.ini">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/core/SqlOperation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="83" />
+        <state relative-caret-position="199">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/Model.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikariCPIniKey.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        <state relative-caret-position="384">
+          <caret line="12" column="52" lean-forward="true" selection-start-line="12" selection-start-column="52" selection-end-line="12" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/ReaderInI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="51" column="38" selection-start-line="51" selection-start-column="38" selection-end-line="51" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0DataSourceManage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/com/zaxxer/HikariCP/3.4.2/HikariCP-3.4.2.jar!/com/zaxxer/hikari/HikariConfig.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6144">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/config/HikaroCP-DriverClassName.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/config/ContentType.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2848">
+          <caret line="463" column="5" selection-start-line="463" selection-start-column="5" selection-end-line="463" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/SectionKey.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/file/ini/IniFilePars.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-710">
+          <caret line="460" column="13" selection-start-line="460" selection-start-column="13" selection-end-line="460" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/help/appconfig.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="491">
+          <caret line="36" column="55" selection-start-line="36" selection-start-column="55" selection-end-line="36" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/help/HikariCP.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="49" column="2" selection-start-line="49" selection-start-column="2" selection-end-line="49" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/factory/LuckyDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4285">
+          <caret line="169" column="181" selection-start-line="169" selection-start-column="181" selection-end-line="169" selection-end-column="181" />
           <folding>
-            <element signature="e#4970#4971#0" expanded="true" />
-            <element signature="e#5006#5007#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1155#1156#0" expanded="true" />
+            <element signature="e#1186#1187#0" expanded="true" />
+            <element signature="e#1232#1233#0" expanded="true" />
+            <element signature="e#1272#1273#0" expanded="true" />
+            <element signature="e#1305#1306#0" expanded="true" />
+            <element signature="e#1334#1335#0" expanded="true" />
+            <element signature="e#1378#1379#0" expanded="true" />
+            <element signature="e#1414#1415#0" expanded="true" />
+            <element signature="e#1448#1449#0" expanded="true" />
+            <element signature="e#1478#1479#0" expanded="true" />
+            <element signature="e#1524#1525#0" expanded="true" />
+            <element signature="e#1562#1563#0" expanded="true" />
+            <element signature="e#1597#1598#0" expanded="true" />
+            <element signature="e#1628#1629#0" expanded="true" />
+            <element signature="e#1676#1677#0" expanded="true" />
+            <element signature="e#1716#1717#0" expanded="true" />
+            <element signature="e#1751#1752#0" expanded="true" />
+            <element signature="e#1782#1783#0" expanded="true" />
+            <element signature="e#1830#1831#0" expanded="true" />
+            <element signature="e#1870#1871#0" expanded="true" />
+            <element signature="e#1908#1909#0" expanded="true" />
+            <element signature="e#1942#1943#0" expanded="true" />
+            <element signature="e#1996#1997#0" expanded="true" />
+            <element signature="e#2042#2043#0" expanded="true" />
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#2099#2100#0" expanded="true" />
+            <element signature="e#2138#2139#0" expanded="true" />
+            <element signature="e#2168#2169#0" expanded="true" />
+            <element signature="e#2201#2202#0" expanded="true" />
+            <element signature="e#2229#2230#0" expanded="true" />
+            <element signature="e#2272#2273#0" expanded="true" />
+            <element signature="e#2306#2307#0" expanded="true" />
+            <element signature="e#2347#2348#0" expanded="true" />
+            <element signature="e#2383#2384#0" expanded="true" />
+            <element signature="e#2442#2443#0" expanded="true" />
+            <element signature="e#2492#2493#0" expanded="true" />
+            <element signature="e#2532#2533#0" expanded="true" />
+            <element signature="e#2567#2568#0" expanded="true" />
+            <element signature="e#2776#2777#0" expanded="true" />
+            <element signature="e#2810#2811#0" expanded="true" />
+            <element signature="e#2872#2873#0" expanded="true" />
+            <element signature="e#2918#2919#0" expanded="true" />
+            <element signature="e#2976#2977#0" expanded="true" />
+            <element signature="e#3045#3046#0" expanded="true" />
+            <element signature="e#3083#3084#0" expanded="true" />
+            <element signature="e#3117#3118#0" expanded="true" />
+            <element signature="e#3171#3172#0" expanded="true" />
+            <element signature="e#3217#3218#0" expanded="true" />
+            <element signature="e#3251#3252#0" expanded="true" />
+            <element signature="e#3281#3282#0" expanded="true" />
+            <element signature="e#3327#3328#0" expanded="true" />
+            <element signature="e#3365#3366#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/rest/LSON.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikaroCPDataSourceManage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="51" column="62" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/log4j.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyJumpFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/LuckyExceptionHand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1426">
-          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/ExceptionDisposeHand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-584">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/tomcat/embed/tomcat-embed-core/8.5.34/tomcat-embed-core-8.5.34.jar!/javax/servlet/http/HttpServlet.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="37" column="19" selection-start-line="37" selection-start-column="19" selection-end-line="37" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/UrlParsMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="188" column="16" selection-start-line="188" selection-start-column="16" selection-end-line="188" selection-end-column="16" />
+        <state relative-caret-position="-241">
+          <caret line="29" column="21" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
           <folding>
-            <element signature="e#6898#6899#0" expanded="true" />
-            <element signature="e#6935#6936#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_202/src.zip!/java/lang/RuntimeException.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingRuntimeException.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalRuntimeException.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/commons-fileupload/commons-fileupload/1.3.3/commons-fileupload-1.3.3.jar!/org/apache/commons/fileupload/servlet/ServletFileUpload.class">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/factory/DataSourceFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        <state relative-caret-position="191">
+          <caret line="12" column="34" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
+          <folding>
+            <element signature="e#730#731#0" expanded="true" />
+            <element signature="e#773#774#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileSizeCrossingException.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/factory/DataSourceManage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="11" column="51" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="51" />
+        <state relative-caret-position="125">
+          <caret line="24" column="29" lean-forward="true" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/aop/proxy/TargetMethodSignature.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/abs/DataSourceManage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
+        <state relative-caret-position="-387">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/abs/LuckyDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3665">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0DataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4697">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/Upload.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/enums/Pool.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+        <state relative-caret-position="416">
+          <caret line="40" column="64" selection-start-line="40" selection-start-column="64" selection-end-line="40" selection-end-column="64" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#539#540#0" expanded="true" />
+            <element signature="e#585#586#0" expanded="true" />
+            <element signature="e#619#620#0" expanded="true" />
+            <element signature="e#658#659#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/logging/log4j/log4j-api/2.12.1/log4j-api-2.12.1.jar!/META-INF/versions/9/module-info.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1">
+          <caret line="4" column="7" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikariCPDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2368">
+          <caret line="83" selection-start-line="83" selection-end-line="83" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1708#1709#0" expanded="true" />
+            <element signature="e#1750#1751#0" expanded="true" />
+            <element signature="e#1820#1821#0" expanded="true" />
+            <element signature="e#1882#1883#0" expanded="true" />
+            <element signature="e#1920#1921#0" expanded="true" />
+            <element signature="e#1953#1954#0" expanded="true" />
+            <element signature="e#2006#2007#0" expanded="true" />
+            <element signature="e#2050#2051#0" expanded="true" />
+            <element signature="e#2095#2096#0" expanded="true" />
+            <element signature="e#2135#2136#0" expanded="true" />
+            <element signature="e#2202#2203#0" expanded="true" />
+            <element signature="e#2260#2261#0" expanded="true" />
+            <element signature="e#2299#2300#0" expanded="true" />
+            <element signature="e#2333#2334#0" expanded="true" />
+            <element signature="e#2388#2389#0" expanded="true" />
+            <element signature="e#2434#2435#0" expanded="true" />
+            <element signature="e#2473#2474#0" expanded="true" />
+            <element signature="e#2507#2508#0" expanded="true" />
+            <element signature="e#2562#2563#0" expanded="true" />
+            <element signature="e#2608#2609#0" expanded="true" />
+            <element signature="e#2654#2655#0" expanded="true" />
+            <element signature="e#2696#2697#0" expanded="true" />
+            <element signature="e#2766#2767#0" expanded="true" />
+            <element signature="e#2828#2829#0" expanded="true" />
+            <element signature="e#2867#2868#0" expanded="true" />
+            <element signature="e#2901#2902#0" expanded="true" />
+            <element signature="e#2956#2957#0" expanded="true" />
+            <element signature="e#3002#3003#0" expanded="true" />
+            <element signature="e#3045#3046#0" expanded="true" />
+            <element signature="e#3083#3084#0" expanded="true" />
+            <element signature="e#3146#3147#0" expanded="true" />
+            <element signature="e#3200#3201#0" expanded="true" />
+            <element signature="e#3235#3236#0" expanded="true" />
+            <element signature="e#3266#3267#0" expanded="true" />
+            <element signature="e#3314#3315#0" expanded="true" />
+            <element signature="e#3354#3355#0" expanded="true" />
+            <element signature="e#3395#3396#0" expanded="true" />
+            <element signature="e#3432#3433#0" expanded="true" />
+            <element signature="e#3492#3493#0" expanded="true" />
+            <element signature="e#3544#3545#0" expanded="true" />
+            <element signature="e#3594#3595#0" expanded="true" />
+            <element signature="e#3636#3637#0" expanded="true" />
+            <element signature="e#3825#3826#0" expanded="true" />
+            <element signature="e#3873#3874#0" expanded="true" />
+            <element signature="e#4080#4081#0" expanded="true" />
+            <element signature="e#4125#4126#0" expanded="true" />
+            <element signature="e#4317#4318#0" expanded="true" />
+            <element signature="e#4359#4360#0" expanded="true" />
+            <element signature="e#4430#4431#0" expanded="true" />
+            <element signature="e#4492#4493#0" expanded="true" />
+            <element signature="e#4528#4529#0" expanded="true" />
+            <element signature="e#4559#4560#0" expanded="true" />
+            <element signature="e#4608#4609#0" expanded="true" />
+            <element signature="e#4648#4649#0" expanded="true" />
+            <element signature="e#4690#4691#0" expanded="true" />
+            <element signature="e#4727#4728#0" expanded="true" />
+            <element signature="e#4788#4789#0" expanded="true" />
+            <element signature="e#4840#4841#0" expanded="true" />
+            <element signature="e#4874#4875#0" expanded="true" />
+            <element signature="e#4904#4905#0" expanded="true" />
+            <element signature="e#4950#4951#0" expanded="true" />
+            <element signature="e#4988#4989#0" expanded="true" />
+            <element signature="e#5032#5033#0" expanded="true" />
+            <element signature="e#5072#5073#0" expanded="true" />
+            <element signature="e#5138#5139#0" expanded="true" />
+            <element signature="e#5196#5197#0" expanded="true" />
+            <element signature="e#5243#5244#0" expanded="true" />
+            <element signature="e#5286#5287#0" expanded="true" />
+            <element signature="e#5467#5468#0" expanded="true" />
+            <element signature="e#5507#5508#0" expanded="true" />
+            <element signature="e#5574#5575#0" expanded="true" />
+            <element signature="e#5632#5633#0" expanded="true" />
+            <element signature="e#5682#5683#0" expanded="true" />
+            <element signature="e#5727#5728#0" expanded="true" />
+            <element signature="e#5913#5914#0" expanded="true" />
+            <element signature="e#5946#5947#0" expanded="true" />
+            <element signature="e#6002#6003#0" expanded="true" />
+            <element signature="e#6046#6047#0" expanded="true" />
+            <element signature="e#6079#6080#0" expanded="true" />
+            <element signature="e#6108#6109#0" expanded="true" />
+            <element signature="e#6152#6153#0" expanded="true" />
+            <element signature="e#6188#6189#0" expanded="true" />
+            <element signature="e#6235#6236#0" expanded="true" />
+            <element signature="e#6271#6272#0" expanded="true" />
+            <element signature="e#6336#6337#0" expanded="true" />
+            <element signature="e#6386#6387#0" expanded="true" />
+            <element signature="e#6455#6456#0" expanded="true" />
+            <element signature="e#6502#6503#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Maven/RepMaven/org/apache/tomcat/tomcat-annotations-api/8.5.51/tomcat-annotations-api-8.5.51.pom">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-163" />
+      </provider>
+    </entry>
+    <entry file="file://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51.pom">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="37" column="24" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyTomcatLog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="11" column="46" lean-forward="true" selection-start-line="11" selection-start-column="46" selection-end-line="11" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#752#753#0" expanded="true" />
+            <element signature="e#802#803#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/AccessLog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/util/LifecycleBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="36" column="51" lean-forward="true" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/Lifecycle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="82" column="17" selection-start-line="82" selection-start-column="17" selection-end-line="82" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyServletContainerInitializer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        <state>
+          <caret line="27" column="4" lean-forward="true" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
+          <folding>
+            <element signature="e#977#978#0" expanded="true" />
+            <element signature="e#1000#1001#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/FileTypeIllegalException.java">
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/util/LifecycleMBeanBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="11" column="50" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="50" />
+        <state relative-caret-position="192">
+          <caret line="33" column="54" selection-start-line="33" selection-start-column="54" selection-end-line="33" selection-end-column="54" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/ExceptionDispose.java">
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/Contained.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
-          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
+        <state relative-caret-position="199">
+          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyServerApplicationConfig.java">
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/valves/ValveBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        <state relative-caret-position="191">
+          <caret line="37" column="84" selection-start-line="37" selection-start-column="84" selection-end-line="37" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/Valve.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/valves/AccessLogValve.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="65" lean-forward="true" selection-end-line="704" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/coyote/AbstractProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-18560">
+          <caret line="48" column="22" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/embed/tomcat-embed-core/8.5.51/tomcat-embed-core-8.5.51-sources.jar!/org/apache/catalina/valves/AbstractAccessLogValve.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="327">
+          <caret line="150" column="7" lean-forward="true" selection-start-line="150" selection-start-column="7" selection-end-line="150" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/catalina/valves/AccessLogValve.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="64" column="41" selection-start-line="64" selection-start-column="41" selection-end-line="64" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/logging/log4j/log4j-api/2.12.1/log4j-api-2.12.1.jar!/org/apache/logging/log4j/Logger.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="452" column="18" selection-start-line="452" selection-start-column="13" selection-end-line="452" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/logging/Level.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1184">
+          <caret line="65" column="13" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/juli/logging/DirectJDKLog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3862#3863#0" expanded="true" />
+            <element signature="e#3924#3925#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/start/LuckyApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
+        <state relative-caret-position="317">
+          <caret line="67" column="9" selection-start-line="67" selection-start-column="9" selection-end-line="67" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/logging/Logger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="1718" column="19" selection-start-line="1718" selection-start-column="19" selection-end-line="1718" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/tomcat-juli/9.0.31/tomcat-juli-9.0.31.jar!/org/apache/juli/logging/DirectJDKLog.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
+          <folding>
+            <element signature="e#882#883#0" expanded="true" />
+            <element signature="e#939#940#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven/RepMaven/org/apache/tomcat/tomcat-juli/9.0.31/tomcat-juli-9.0.31.jar!/org/apache/juli/logging/Log.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="14" column="12" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/zaxxer/hikari/HikariDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="42" column="86" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="86" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/catalina/core/StandardService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="54" selection-start-line="54" selection-end-line="54" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/tomcat/util/net/NioSelectorPool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="45" column="82" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/coyote/AbstractProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="562" column="15" selection-start-line="562" selection-start-column="15" selection-end-line="562" selection-end-column="15" />
+          <folding>
+            <element signature="e#12192#12193#0" expanded="true" />
+            <element signature="e#12250#12251#0" expanded="true" />
+            <element signature="e#41935#41969#0" expanded="true" />
+            <element signature="e#42612#42646#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/log4j2.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="5" column="142" selection-start-line="5" selection-start-column="142" selection-end-line="5" selection-end-column="142" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/help/maven.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2080">
+          <caret line="65" column="8" lean-forward="true" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/apache/catalina/core/StandardEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="42" column="81" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="81" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="139" column="17" selection-start-line="139" selection-start-column="17" selection-end-line="139" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar!/org/apache/http/params/HttpParams.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="12" column="15" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/message/AbstractHttpMessage.java" />
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar!/org/apache/http/params/HttpParams.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/ioc/exception/LuckyExceptionDispose.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PostMapping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="49" column="32" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/DeleteMapping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="51" column="32" selection-start-line="51" selection-start-column="32" selection-end-line="51" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/CallParam.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/mapping/AnnotationOperation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="35" column="7" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="4" column="45" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/exception/NotFoundCallUrlException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RestParam.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/GetMapping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1008">
-          <caret line="46" column="7" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/servlet/LuckyDispatherServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2520">
-          <caret line="128" column="49" selection-start-line="128" selection-start-column="49" selection-end-line="128" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/RequestMapping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1176">
-          <caret line="55" selection-start-line="55" selection-end-line="59" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/annotation/mvc/PutMapping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1008">
-          <caret line="46" selection-start-line="46" selection-end-line="50" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/httpclient/HttpClientCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="189" column="7" selection-start-line="189" selection-start-column="7" selection-end-line="189" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/jacklamb/md5/MD5Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        <state relative-caret-position="320">
+          <caret line="216" column="32" selection-start-line="216" selection-start-column="32" selection-end-line="216" selection-end-column="32" />
         </state>
       </provider>
     </entry>
