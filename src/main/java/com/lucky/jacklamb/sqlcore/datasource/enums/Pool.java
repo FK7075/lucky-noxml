@@ -6,6 +6,7 @@ import com.lucky.jacklamb.sqlcore.datasource.hikaricp.HikariCPDataSource;
 import com.lucky.jacklamb.sqlcore.exception.PoolTypeUnableToIdentifyException;
 
 /**
+ * 数据库连接池枚举工厂
  * @author fk7075
  * @version 1.0.0
  * @date 2020/6/15 11:29 下午
@@ -19,10 +20,6 @@ public enum Pool {
 
     Pool(String strPoolType) {
         this.strPoolType = strPoolType;
-    }
-
-    public String strPoolType(){
-        return this.strPoolType;
     }
 
     public LuckyDataSource getDataSource(){
