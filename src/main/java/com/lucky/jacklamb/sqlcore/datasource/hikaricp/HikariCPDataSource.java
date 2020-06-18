@@ -313,8 +313,7 @@ public class HikariCPDataSource extends LuckyDataSource {
             ds = (HikariDataSource) dbMap.get(getDbname());
             connection = ds.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new NoDataSourceException("错误的数据库连接[databaseURL:" + ds.getJdbcUrl() + "] 或 错误用户名和密码[username:" + ds.getUsername() + "  password=" + ds.getPassword() + "]");
+            throw new NoDataSourceException("无法正常获取数据库连接！JdbcUrl: "+ds.getJdbcUrl(),e);
         }
         return connection;
     }
