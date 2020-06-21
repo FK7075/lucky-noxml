@@ -6,15 +6,31 @@ import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public abstract class LuckyDataSource extends DataSourceManage{
+public abstract class LuckyDataSource{
 
+    /**
+     * 配置类和配置文件中的数据源
+     */
+    protected static List<? extends LuckyDataSource> datalist;
+
+    /**
+     * 转换后的各个数据源的JDBC数据源
+     */
+    protected static Map<String, DataSource> dbMap;
+
+    //数据库连接池的类型
     private Pool poolType;
+    //数据源的标示
     private String dbname;
 
     private String jdbcUrl;
@@ -33,6 +49,7 @@ public abstract class LuckyDataSource extends DataSourceManage{
     public LuckyDataSource(){
         createTable= ScanFactory.createScan().getPojoClass();
         poolType=Pool.HIKARICP;
+        dbname="defaultDB";
         cache=true;
         log=false;
         formatSqlLog=false;
@@ -150,7 +167,39 @@ public abstract class LuckyDataSource extends DataSourceManage{
         this.srcPath = srcPath;
     }
 
-    public LuckyDataSource getDataSource(Map<String,String> dataSectionMap) {
+
+
+    public abstract Connection getConnection();
+
+    /**
+     * 关闭数据库资源
+     * @param rs ResultSet对象
+     * @param ps PreparedStatement对象
+     * @param conn Connection对象
+     */
+    public static void release(ResultSet rs, PreparedStatement ps, Connection conn) {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("资源关闭错误！");
+        }
+    }
+
+    /**
+     * 配置文件配置信息转LuckyDataSource
+     * @param dataSectionMap 类似[Jdbc]的key-value组成的Map
+     * @return
+     */
+    public LuckyDataSource iniSection2LuckyDataSource(Map<String,String> dataSectionMap) {
         Field[] fields = ClassUtils.getAllFields(this.getClass());
         String fieldName;
         for (Field field : fields) {

@@ -5,7 +5,6 @@ import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.abs.DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
@@ -19,6 +18,8 @@ import java.util.*;
  * @author fk-7075
  *
  */
+
+@SuppressWarnings("all")
 public class AutoPackage {
 
 	private LuckyDataSource dataSource;
@@ -37,7 +38,7 @@ public class AutoPackage {
 			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
 		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
-		DataSourceManage.release(null,null, dataSource.getConnection());
+		LuckyDataSource.release(null,null, dataSource.getConnection());
 	}
 
 	/**

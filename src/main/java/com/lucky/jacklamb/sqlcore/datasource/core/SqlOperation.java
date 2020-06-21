@@ -6,7 +6,6 @@ import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
-import com.lucky.jacklamb.sqlcore.datasource.abs.DataSourceManage;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
@@ -50,7 +49,7 @@ public class SqlOperation {
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sql,obj,e);
 		} finally {
-			DataSourceManage.release(null, ps, conn);
+			LuckyDataSource.release(null, ps, conn);
 		}
 		return isOk;
 	}
@@ -86,7 +85,7 @@ public class SqlOperation {
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sql,obj,e);
 		}finally {
-			DataSourceManage.release(null, ps, conn);
+			LuckyDataSource.release(null, ps, conn);
 			return isOk;
 		}
 	}
@@ -112,7 +111,7 @@ public class SqlOperation {
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sqls,e);
 		}finally {
-			DataSourceManage.release(null, null, conn);
+			LuckyDataSource.release(null, null, conn);
 		}
 	}
 
@@ -204,7 +203,7 @@ public class SqlOperation {
 			} catch (Exception e) {
 				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
 			}finally {
-				DataSourceManage.release(rs,ps,conn);
+				LuckyDataSource.release(rs,ps,conn);
 			}
 		}else {
 			try {

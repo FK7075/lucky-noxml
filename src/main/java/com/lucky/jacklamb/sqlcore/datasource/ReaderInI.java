@@ -48,7 +48,7 @@ public class ReaderInI {
 		LuckyDataSource dataSource=Pool.getDataSource(sectionMap.get("poolType"));
 		String dbname=SECTION_JDBC.equals(section)?"defaultDB":section;
 		dataSource.setDbname(dbname);
-		dataSource=dataSource.getDataSource(sectionMap);
+		dataSource=dataSource.iniSection2LuckyDataSource(sectionMap);
 		if(dataSource.getDriverClass()==null|| dataSource.getJdbcUrl()==null
 		   ||dataSource.getUsername()==null||dataSource.getPassword()==null)
 			throw new NotFindBeanPropertyException("在calsspath:appconfig.ini的配置文件的["+section+"]节中找不到必须属性\"driverClass\",\"jdbcUrl\",\"username\",\"password\"");
@@ -78,8 +78,7 @@ public class ReaderInI {
 				}
 			}
 			if(!haveDefaultDB&&iocDataSources.size()!=1)
-				throw new NoDataSourceException("找不到默认的数据源，请检查是否配置了name属性为\"defaultDB\"的数据源");
-			if(!haveDefaultDB&&iocDataSources.size()==1)
+				throw new NoDataSourceException("找不到默认的数据源，请检查是否配置了name属性为\"defaultDB\"的数据源! \n1.检查您的appconfig.ini配置文件中是否配置了[Jdbc]节。\n2.检查您的配置类中是否配置了数据源配置。");
 				iocDataSources.get(0).setDbname("defaultDB");
 			allDataSource = iocDataSources;
 		}
