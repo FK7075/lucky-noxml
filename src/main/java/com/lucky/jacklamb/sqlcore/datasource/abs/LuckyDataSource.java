@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.datasource.abs;
 
 import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
@@ -227,10 +228,10 @@ public abstract class LuckyDataSource{
                 }else if("poolType".equals(fieldName)){
                     continue;
                 }else{
-                    try {
-                        field.set(this, JavaConversion.strToBasic(valueStr,field.getType()));
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException("类型转换异常！ERROR -> String: ["+valueStr+"]==>"+field.getType());
+                    if(FieldUtils.isCanOperation(field)){
+                        FieldUtils.setValue(this,field,JavaConversion.strToBasic(valueStr,field.getType(),true));
+                    }else{
+                        FieldUtils.setValue(this,field,JavaConversion.strToBasic(valueStr,field.getType()));
                     }
                 }
             }

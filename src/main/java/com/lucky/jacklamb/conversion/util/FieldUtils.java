@@ -148,4 +148,19 @@ public abstract class FieldUtils {
         return isSubclass(field,targetObject.getClass());
     }
 
+    /**
+     * 是否为可运算的属性(int double boolean)
+     * @param field
+     * @return
+     */
+    public static boolean isCanOperation(Field field){
+        Class<?> t = field.getType();
+        if(t==int.class||t==Integer.class||
+          t==boolean.class||t==Boolean.class||
+          t==float.class||t==Float.class||
+          t==double.class||t==Double.class)
+            return true;
+        return false;
+    }
+
 }
