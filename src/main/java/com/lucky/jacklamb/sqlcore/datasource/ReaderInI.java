@@ -78,7 +78,7 @@ public class ReaderInI {
 				}
 			}
 			if(!haveDefaultDB&&iocDataSources.size()!=1)
-				throw new NoDataSourceException("找不到默认的数据源，请检查是否配置了name属性为\"defaultDB\"的数据源! \n1.检查您的appconfig.ini配置文件中是否配置了[Jdbc]节。\n2.检查您的配置类中是否配置了数据源配置。");
+				throw new NoDataSourceException("找不到默认的数据源，请检查是否配置了name属性为\"defaultDB\"的数据源! \n\t1.检查您的appconfig.ini配置文件中是否配置了[Jdbc]节。\n\t2.检查您的配置类中是否配置了数据源配置。");
 				iocDataSources.get(0).setDbname("defaultDB");
 			allDataSource = iocDataSources;
 		}
