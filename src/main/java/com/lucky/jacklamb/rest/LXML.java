@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class LXML {
 	

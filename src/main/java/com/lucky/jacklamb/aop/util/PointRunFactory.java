@@ -13,6 +13,7 @@ import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.aop.proxy.ProxyFactory;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 
 /**
@@ -48,16 +49,14 @@ public class PointRunFactory {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass) throws  SecurityException,IllegalArgumentException{
 		List<PointRun> findPointbyBean = findPointbyBean(AspectMap,iocCode,beanid,beanClass);
 		if(!findPointbyBean.isEmpty()) {
 			return ProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isCacheable(beanClass)) {
 			return ProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else{
-			Constructor<?> constructor = beanClass.getConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
+			return ClassUtils.newObject(beanClass);
 		}
 	}
 	

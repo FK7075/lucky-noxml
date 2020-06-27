@@ -4,7 +4,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 import com.lucky.jacklamb.expression.ExpressionEngine;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class JavaConversion {
 	

@@ -1,9 +1,9 @@
 package com.lucky.jacklamb.file.ini;
 
-import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.ArrayCast;
+import com.lucky.jacklamb.utils.typechange.ArrayCast;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

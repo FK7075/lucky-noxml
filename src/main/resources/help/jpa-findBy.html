@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JPA-findBy</title>
+</head>
+<body>
+
+<table style="height: 557px; width: 1061px;">
+    <thead>
+    <tr class="header"><th>Keyword</th><th>Sample</th><th>JPQL snippet</th></tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+        <td>And</td>
+        <td>findByLastnameAndFirstname</td>
+        <td>… where x.lastname = ?1 and x.firstname = ?2</td>
+    </tr>
+    <tr class="even">
+        <td>Or</td>
+        <td>findByLastnameOrFirstname</td>
+        <td>… where x.lastname = ?1 or x.firstname = ?2</td>
+    </tr>
+    <tr class="odd">
+        <td>Is,Equals</td>
+        <td>findByFirstnameIs,findByFirstnameEquals</td>
+        <td>… where x.firstname = ?1</td>
+    </tr>
+    <tr class="even">
+        <td>Between</td>
+        <td>findByStartDateBetween</td>
+        <td>… where x.startDate between ?1 and ?2</td>
+    </tr>
+    <tr class="odd">
+        <td>LessThan</td>
+        <td>findByAgeLessThan</td>
+        <td>… where x.age &lt; ?1</td>
+    </tr>
+    <tr class="even">
+        <td>LessThanEqual</td>
+        <td>findByAgeLessThanEqual</td>
+        <td>… where x.age ⇐ ?1</td>
+    </tr>
+    <tr class="odd">
+        <td>GreaterThan</td>
+        <td>findByAgeGreaterThan</td>
+        <td>… where x.age &gt; ?1</td>
+    </tr>
+    <tr class="even">
+        <td>GreaterThanEqual</td>
+        <td>findByAgeGreaterThanEqual</td>
+        <td>… where x.age &gt;= ?1</td>
+    </tr>
+    <tr class="odd">
+        <td>After</td>
+        <td>findByStartDateAfter</td>
+        <td>… where x.startDate &gt; ?1</td>
+    </tr>
+    <tr class="even">
+        <td>Before</td>
+        <td>findByStartDateBefore</td>
+        <td>… where x.startDate &lt; ?1</td>
+    </tr>
+    <tr class="odd">
+        <td>IsNull</td>
+        <td>findByAgeIsNull</td>
+        <td>… where x.age is null</td>
+    </tr>
+    <tr class="even">
+        <td>IsNotNull,NotNull</td>
+        <td>findByAge(Is)NotNull</td>
+        <td>… where x.age not null</td>
+    </tr>
+    <tr class="odd">
+        <td>Like</td>
+        <td>findByFirstnameLike</td>
+        <td>… where x.firstname like ?1</td>
+    </tr>
+    <tr class="even">
+        <td>NotLike</td>
+        <td>findByFirstnameNotLike</td>
+        <td>… where x.firstname not like ?1</td>
+    </tr>
+    <tr class="odd">
+        <td>StartingWith</td>
+        <td>findByFirstnameStartingWith</td>
+        <td>… where x.firstname like ?1&nbsp;(parameter bound with appended&nbsp;%)</td>
+    </tr>
+    <tr class="even">
+        <td>EndingWith</td>
+        <td>findByFirstnameEndingWith</td>
+        <td>… where x.firstname like ?1&nbsp;(parameter bound with prepended&nbsp;%)</td>
+    </tr>
+    <tr class="odd">
+        <td>Containing</td>
+        <td>findByFirstnameContaining</td>
+        <td>… where x.firstname like ?1&nbsp;(parameter bound wrapped in&nbsp;%)</td>
+    </tr>
+    <tr class="even">
+        <td>OrderBy</td>
+        <td>findByAgeOrderByLastnameDesc</td>
+        <td>… where x.age = ?1 order by x.lastname desc</td>
+    </tr>
+    <tr class="odd">
+        <td>Not</td>
+        <td>findByLastnameNot</td>
+        <td>… where x.lastname &lt;&gt; ?1</td>
+    </tr>
+    <tr class="even">
+        <td>In</td>
+        <td>findByAgeIn(Collection&nbsp;ages)</td>
+        <td>… where x.age in ?1</td>
+    </tr>
+    <tr class="odd">
+        <td>NotIn</td>
+        <td>findByAgeNotIn(Collectionage)</td>
+        <td>… where x.age not in ?1</td>
+    </tr>
+    <tr class="even">
+        <td>TRUE</td>
+        <td>findByActiveTrue()</td>
+        <td>… where x.active = true</td>
+    </tr>
+    <tr class="odd">
+        <td>FALSE</td>
+        <td>findByActiveFalse()</td>
+        <td>… where x.active = false</td>
+    </tr>
+    <tr class="even">
+        <td>IgnoreCase</td>
+        <td>findByFirstnameIgnoreCase</td>
+        <td>… where UPPER(x.firstame) = UPPER(?1)</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

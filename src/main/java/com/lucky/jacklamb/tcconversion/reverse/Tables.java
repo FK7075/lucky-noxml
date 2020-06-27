@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 /**
  * 得到数据库中所有的表的名字
  * @author fk-7075

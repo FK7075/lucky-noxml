@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
 
 import com.lucky.jacklamb.annotation.orm.NoColumn;
-import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

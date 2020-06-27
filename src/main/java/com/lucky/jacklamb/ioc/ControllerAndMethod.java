@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
-import com.lucky.jacklamb.utils.IpUtil;
+import com.lucky.jacklamb.utils.base.IpUtil;
 
 /**
  * Controller

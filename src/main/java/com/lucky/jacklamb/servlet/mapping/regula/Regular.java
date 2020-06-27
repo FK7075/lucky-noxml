@@ -15,11 +15,15 @@ public abstract class Regular {
     public static final String Sharp="\\#\\{[\\w|:|\\[|\\]|.|-]+\\}";
 
     /**
-     * 带数字标识的预编译SQL
+     * 带数字标识的预编译SQL  ?1 ?2
      */
     public static final  String NUMSQL="\\?\\d+";
 
+    /**
+     * eg -> @:name @:age
+     */
     public static final String $SQL="\\@:[_a-zA-Z][_a-zA-Z0-9]*";
+
 
     /**
      * 邮箱

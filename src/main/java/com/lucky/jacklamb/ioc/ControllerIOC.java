@@ -4,6 +4,7 @@ import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
@@ -13,11 +14,10 @@ import com.lucky.jacklamb.httpclient.luckyclient.LuckyClientControllerProxy;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.servlet.mapping.Mapping;
 import com.lucky.jacklamb.servlet.mapping.MappingDetails;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -127,16 +127,11 @@ public class ControllerIOC extends ComponentFactory{
 	 * 
 	 * @param controllerClass
 	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
+	 * @throws SecurityException
 	 * @throws IllegalArgumentException 
 	 */
 	public void initControllerIOC(List<Class<?>> controllerClass) 
-			throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+			throws SecurityException,  IllegalArgumentException{
 		String beanID;
 		for (Class<?> controller : controllerClass) {
 			if (controller.isAnnotationPresent(Controller.class)) {

@@ -4,9 +4,9 @@ import com.lucky.jacklamb.conversion.LuckyConversion;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.conversion.annotation.Mapping;
 import com.lucky.jacklamb.conversion.annotation.Mappings;
-import com.lucky.jacklamb.conversion.util.ClassUtils;
-import com.lucky.jacklamb.conversion.util.EntityAndDto;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.conversion.EntityAndDto;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.lang.reflect.*;
 import java.util.*;

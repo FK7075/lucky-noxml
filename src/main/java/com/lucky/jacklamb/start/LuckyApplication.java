@@ -1,15 +1,8 @@
 package com.lucky.jacklamb.start;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
-import com.lucky.jacklamb.httpclient.HttpClientCall;
-import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
@@ -21,7 +14,6 @@ import org.apache.tomcat.websocket.server.WsSci;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
-import com.lucky.jacklamb.utils.LuckyUtils;
 
 public class LuckyApplication {
 

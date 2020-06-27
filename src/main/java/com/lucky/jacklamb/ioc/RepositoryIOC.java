@@ -1,6 +1,5 @@
 package com.lucky.jacklamb.ioc;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -127,15 +126,10 @@ public class RepositoryIOC extends ComponentFactory {
 	 * 
 	 * @param repositoryClass
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws ClassNotFoundException
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
+	 * @throws SecurityException
 	 * @throws IllegalArgumentException 
 	 */
-	public void initRepositoryIOC(List<Class<?>> repositoryClass) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public void initRepositoryIOC(List<Class<?>> repositoryClass) throws SecurityException, IllegalArgumentException {
 		boolean first = true;
 		String beanID;
 		for (Class<?> repository : repositoryClass) {

@@ -1,23 +1,18 @@
 package com.lucky.jacklamb.sqlcore.datasource.abs;
 
-import com.lucky.jacklamb.conversion.util.ClassUtils;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
-import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.sql.*;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public abstract class LuckyDataSource{
+public abstract class LuckyDataSource implements DataSource{
 
     /**
      * 配置类和配置文件中的数据源
@@ -170,7 +165,44 @@ public abstract class LuckyDataSource{
 
 
 
-    public abstract Connection getConnection();
+    public Connection getConnection(){
+        try {
+            return getTripartiteDataSource().getConnection();
+        } catch (SQLException throwables) {
+            throw new NoDataSourceException(throwables);
+        }
+    }
+
+    public void init(){
+        if(dbMap==null)
+            LuckyDataSource2TripartiteDataSource();
+    }
+
+    /**
+     * 初始化数据源
+     * 将所有的LuckyDataSource转换为标准的第三方DataSource
+     * 所有LuckyDataSource在创建之后必须先初始化，才能使用
+     */
+    protected abstract void LuckyDataSource2TripartiteDataSource();
+
+    /**
+     * 获取第三方DataSource
+     * @param <T>
+     * @return
+     */
+    public <T extends DataSource> T getTripartiteDataSource() {
+       return (T) dbMap.get(getDbname());
+    }
+
+
+    @Override
+    public Connection getConnection(String username, String password){
+        try {
+            return getTripartiteDataSource().getConnection(username, password);
+        } catch (SQLException throwables) {
+            throw new NoDataSourceException(throwables);
+        }
+    }
 
     /**
      * 关闭数据库资源
@@ -195,48 +227,39 @@ public abstract class LuckyDataSource{
         }
     }
 
-    /**
-     * 配置文件配置信息转LuckyDataSource
-     * @param dataSectionMap 类似[Jdbc]的key-value组成的Map
-     * @return
-     */
-    public LuckyDataSource iniSection2LuckyDataSource(Map<String,String> dataSectionMap) {
-        Field[] fields = ClassUtils.getAllFields(this.getClass());
-        String fieldName;
-        for (Field field : fields) {
-            fieldName=field.getName();
-            if(dataSectionMap.containsKey(fieldName)){
-                field.setAccessible(true);
-                String valueStr = dataSectionMap.get(fieldName);
-                if("createTable".equals(fieldName)){
-                    List<Class<?>> tables=new ArrayList<>();
-                    String[] split = valueStr.split(",");
-                    for (String tab : split) {
-                        String classPath = null;
-                        try {
-                            classPath= dataSectionMap.get(tab);
-                            tables.add(Class.forName(classPath));
-                        } catch (ClassNotFoundException e) {
-                            throw new NoDataSourceException("不正确的自动建表配置信息，无法执行建表程序，请检查classpath下的appconfig.ini配置文件中["+dbname+"]节中的'createTable'属性的配置信息。err=>"+tab+"=\""+classPath+"\"");
-                        }
-                    }
-                    try {
-                        field.set(this, tables);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                }else if("poolType".equals(fieldName)){
-                    continue;
-                }else{
-                    if(FieldUtils.isCanOperation(field)){
-                        FieldUtils.setValue(this,field,JavaConversion.strToBasic(valueStr,field.getType(),true));
-                    }else{
-                        FieldUtils.setValue(this,field,JavaConversion.strToBasic(valueStr,field.getType()));
-                    }
-                }
-            }
-        }
-        return this;
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return getTripartiteDataSource().unwrap(iface);
     }
 
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return getTripartiteDataSource().isWrapperFor(iface);
+    }
+
+    @Override
+    public PrintWriter getLogWriter() throws SQLException {
+        return getTripartiteDataSource().getLogWriter();
+    }
+
+    @Override
+    public void setLogWriter(PrintWriter out) throws SQLException {
+        getTripartiteDataSource().setLogWriter(out);
+    }
+
+    @Override
+    public void setLoginTimeout(int seconds) throws SQLException {
+        getTripartiteDataSource().setLoginTimeout(seconds);
+    }
+
+    @Override
+    public int getLoginTimeout() throws SQLException {
+        return getTripartiteDataSource().getLoginTimeout();
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        return getTripartiteDataSource().getParentLogger();
+    }
 }

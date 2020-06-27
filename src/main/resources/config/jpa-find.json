@@ -1,0 +1,20 @@
+{
+    "And"           :"@01",
+    "Or"            :"@02",
+    "Is"            :"@03",
+    "Equals"        :"@04",
+    "Between"       :"@05",
+    "LessThan"      :"@06",
+    "GreaterThan"   :"@07",
+    "After"         :"@08",
+    "Before"        :"@09",
+    "Null"          :"@10",
+    "Like"          :"@11 ",
+    "In"            :"@12",
+    "OrderBy"       :"@13",
+    "Desc"          :"@14",
+    "Asc"           :"@15",
+    "Not"           :"@16",
+    "True"          :"@17",
+    "False"         :"@18"
+}

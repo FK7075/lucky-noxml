@@ -1,6 +1,8 @@
-package com.lucky.jacklamb.conversion.util;
+package com.lucky.jacklamb.utils.reflect;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class ClassUtils {
@@ -43,6 +45,38 @@ public abstract class ClassUtils {
         for (int i = 0; i < superClassFieldLength; i++)
             allMethods[clzzFieldLength + i] = superMethods[i];
         return allMethods;
+    }
+
+    /**
+     * 使用反射机制调用构造函数创建一个对象
+     * @param tclass 目标对象的Class
+     * @param cparams 构造器执行的参数
+     * @param <T>
+     * @return
+     */
+    public static <T> T newObject(Class<? extends T> tclass,Object...cparams){
+        try {
+            Constructor<? extends T> constructor  =tclass.getConstructor(array2Class(cparams));
+            constructor.setAccessible(true);
+            return constructor.newInstance(cparams);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static Class<?>[] array2Class(Object[] objs){
+        Class<?>[] paramsClass=new Class<?>[objs.length];
+        for (int i = 0; i < objs.length; i++) {
+            paramsClass[i]=objs[i].getClass();
+        }
+        return paramsClass;
     }
 
     public static boolean isBasic(Class<?> clzz){

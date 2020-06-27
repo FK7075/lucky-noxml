@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.datasource.core;
 
 import com.lucky.jacklamb.annotation.orm.NoPackage;
-import com.lucky.jacklamb.conversion.util.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;

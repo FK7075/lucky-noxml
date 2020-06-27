@@ -2,7 +2,6 @@ package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.annotation.orm.mapper.*;
-import com.lucky.jacklamb.conversion.proxy.ConversionMethodInterceptor;
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.PrimaryType;
@@ -12,8 +11,7 @@ import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.exception.NotFoundInterfacesGenericException;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.logging.log4j.LogManager;

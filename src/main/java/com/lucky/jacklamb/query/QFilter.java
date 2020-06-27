@@ -1,8 +1,7 @@
 package com.lucky.jacklamb.query;
 
 import com.lucky.jacklamb.annotation.orm.NoColumn;
-import com.lucky.jacklamb.conversion.util.ClassUtils;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 
 import java.lang.reflect.Field;

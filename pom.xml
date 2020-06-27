@@ -13,8 +13,9 @@
   <url>http://www.example.com</url>
   <properties>
     <java.version>1.8</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <source.encoding>UTF-8</source.encoding>
+    <project.build.sourceEncoding>${source.encoding}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${source.encoding}</project.reporting.outputEncoding>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -195,7 +196,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <encoding>UTF-8</encoding>
+          <encoding>${source.encoding}</encoding>
           <compilerArgs>
             <arg>-parameters</arg>
           </compilerArgs>

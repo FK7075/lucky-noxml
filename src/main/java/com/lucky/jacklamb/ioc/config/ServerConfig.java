@@ -16,7 +16,7 @@ import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.core.LuckyDispatherServlet;
 import com.lucky.jacklamb.start.FilterMapping;
 import com.lucky.jacklamb.start.ServletMapping;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class ServerConfig implements LuckyConfig  {
 

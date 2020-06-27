@@ -1,6 +1,4 @@
-package com.lucky.jacklamb.conversion.util;
-
-import com.lucky.jacklamb.conversion.LuckyConversion;
+package com.lucky.jacklamb.conversion;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.utils;
+package com.lucky.jacklamb.utils.typechange;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

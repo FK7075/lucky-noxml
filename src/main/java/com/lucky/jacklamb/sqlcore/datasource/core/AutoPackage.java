@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.sqlcore.datasource.core;
 
-import com.lucky.jacklamb.conversion.util.MethodUtils;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import com.lucky.jacklamb.servlet.mapping.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
@@ -37,8 +37,8 @@ public class AutoPackage {
 		if(isCache)
 			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
 		sqlOperation=new SqlOperation();
-		//保证dbname的数据库连接池能提前创建，避免第一次执行数据库操作时才创建连接池
-		LuckyDataSource.release(null,null, dataSource.getConnection());
+		//初始化数据源
+		dataSource.init();
 	}
 
 	/**

@@ -1,12 +1,16 @@
 package com.lucky.jacklamb.sqlcore.datasource;
 
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.exception.NotFindBeanPropertyException;
 import com.lucky.jacklamb.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +52,7 @@ public class ReaderInI {
 		LuckyDataSource dataSource=Pool.getDataSource(sectionMap.get("poolType"));
 		String dbname=SECTION_JDBC.equals(section)?"defaultDB":section;
 		dataSource.setDbname(dbname);
-		dataSource=dataSource.iniSection2LuckyDataSource(sectionMap);
+		dataSource=iniSection2LuckyDataSource(sectionMap,dataSource.getClass());
 		if(dataSource.getDriverClass()==null|| dataSource.getJdbcUrl()==null
 		   ||dataSource.getUsername()==null||dataSource.getPassword()==null)
 			throw new NotFindBeanPropertyException("在calsspath:appconfig.ini的配置文件的["+section+"]节中找不到必须属性\"driverClass\",\"jdbcUrl\",\"username\",\"password\"");
@@ -82,6 +86,51 @@ public class ReaderInI {
 				iocDataSources.get(0).setDbname("defaultDB");
 			allDataSource = iocDataSources;
 		}
+	}
+
+	/**
+	 * 配置文件配置信息转LuckyDataSource
+	 * @param dataSectionMap 类似[Jdbc]的key-value组成的Map
+	 * @return
+	 */
+	public static LuckyDataSource iniSection2LuckyDataSource(Map<String,String> dataSectionMap,Class<? extends LuckyDataSource> luckyDataSourceClass) {
+		Field[] fields = ClassUtils.getAllFields(luckyDataSourceClass);
+		LuckyDataSource luckyDataSource = ClassUtils.newObject(luckyDataSourceClass);
+		String fieldName;
+		for (Field field : fields) {
+			fieldName=field.getName();
+			if(dataSectionMap.containsKey(fieldName)){
+				field.setAccessible(true);
+				String valueStr = dataSectionMap.get(fieldName);
+				if("createTable".equals(fieldName)){
+					List<Class<?>> tables=new ArrayList<>();
+					String[] split = valueStr.split(",");
+					for (String tab : split) {
+						String classPath = null;
+						try {
+							classPath= dataSectionMap.get(tab);
+							tables.add(Class.forName(classPath));
+						} catch (ClassNotFoundException e) {
+							throw new NoDataSourceException("不正确的自动建表配置信息，无法执行建表程序，请检查classpath下的appconfig.ini配置文件中["+luckyDataSource.getDbname()+"]节中的'createTable'属性的配置信息。err=>"+tab+"=\""+classPath+"\"");
+						}
+					}
+					try {
+						field.set(luckyDataSource, tables);
+					} catch (IllegalAccessException e) {
+						throw new RuntimeException(e);
+					}
+				}else if("poolType".equals(fieldName)){
+					continue;
+				}else{
+					if(FieldUtils.isCanOperation(field)){
+						FieldUtils.setValue(luckyDataSource,field, JavaConversion.strToBasic(valueStr,field.getType(),true));
+					}else{
+						FieldUtils.setValue(luckyDataSource,field,JavaConversion.strToBasic(valueStr,field.getType()));
+					}
+				}
+			}
+		}
+		return luckyDataSource;
 	}
 
 	public static boolean filter(List<LuckyDataSource> list, String name) {

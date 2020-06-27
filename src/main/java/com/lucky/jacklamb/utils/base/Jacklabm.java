@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.utils;
+package com.lucky.jacklamb.utils.base;
 
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.ioc.ApplicationBeans;

@@ -27,7 +27,7 @@ import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,7 +102,7 @@ public class ComponentIOC extends ComponentFactory {
 	 * @throws NoSuchMethodException 
 	 */
 	public void initComponentIOC(List<Class<?>> componentClass)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
 		String beanID;
 		for (Class<?> component : componentClass) {
 			if (component.isAnnotationPresent(Component.class)) {

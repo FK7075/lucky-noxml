@@ -13,10 +13,11 @@ import com.lucky.jacklamb.annotation.aop.Aspect;
 import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.aop.proxy.PointRun;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,27 +42,10 @@ public class AspectAOP {
 			aspectMap = new HashMap<>();
 			aspectIDS = new ArrayList<>();
 			initAspectIOC(ScanFactory.createScan().getComponentClass("aspect"));
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}  catch (SecurityException e) {
+			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -123,8 +107,7 @@ public class AspectAOP {
 	 * @throws InvocationTargetException
 	 */
 	public void initAspectIOC(List<Class<?>> AspectClass)
-			throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			throws SecurityException,IllegalArgumentException{
 		Aspect agann;
 		Before before;
 		After after;
@@ -141,9 +124,7 @@ public class AspectAOP {
 				}
 				if (Point.class.isAssignableFrom(aspect)) {
 					name += ".proceed";
-					constructor = aspect.getConstructor();
-					constructor.setAccessible(true);
-					pointRun = new PointRun((Point) constructor.newInstance());
+					pointRun = new PointRun((Point) ClassUtils.newObject(aspect));
 					addAspectMap(name, pointRun);
 					log.info("@Aspect \"[location=Around id=" + name + " class=" + pointRun + "]\"");
 				} else {
@@ -157,9 +138,7 @@ public class AspectAOP {
 							} else {
 								Aspectid = name + ("." + before.value());
 							}
-							constructor = aspect.getConstructor();
-							constructor.setAccessible(true);
-							pointRun = new PointRun(constructor.newInstance(), method);
+							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
 							log.info("@Aspect \"[location=Before id=" + Aspectid + " class=" + pointRun
 									+ "]\"");
@@ -170,9 +149,7 @@ public class AspectAOP {
 							} else {
 								Aspectid = name + ("." + after.value());
 							}
-							constructor = aspect.getConstructor();
-							constructor.setAccessible(true);
-							pointRun = new PointRun(constructor.newInstance(), method);
+							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
 							log.info("@Aspect \"[location=After id=" + Aspectid + " class=" + pointRun
 									+ "]\"");

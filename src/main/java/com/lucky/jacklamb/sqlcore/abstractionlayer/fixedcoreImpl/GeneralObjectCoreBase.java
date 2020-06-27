@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.GeneralObjectCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;

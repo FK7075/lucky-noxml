@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.lucky.jacklamb.tcconversion.typechange.JDBChangeFactory;
 import com.lucky.jacklamb.tcconversion.typechange.TypeConversion;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 /**
  * 表到类的信息封装器（类名 属性名 属性类型 toString方法）

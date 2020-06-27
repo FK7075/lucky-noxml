@@ -19,9 +19,8 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.sqlcore.datasource.c3p0.C3p0DataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
-import com.lucky.jacklamb.utils.Jacklabm;
+import com.lucky.jacklamb.utils.base.Jacklabm;
 
 public class ApplicationBeans {
 	

@@ -7,8 +7,6 @@ import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -162,7 +160,8 @@ public class C3p0DataSource extends LuckyDataSource {
 		maxStatementsPerConnection=0;
 	}
 
-	public void init() {
+	@Override
+	protected void LuckyDataSource2TripartiteDataSource() {
 		dbMap = new HashMap<>();
 		datalist = ReaderInI.getAllDataSource().stream().filter(a-> Pool.C3P0==a.getPoolType()).map(a->(C3p0DataSource)a).collect(Collectors.toList());
 		for (LuckyDataSource ldata : datalist) {
@@ -188,22 +187,4 @@ public class C3p0DataSource extends LuckyDataSource {
 			dbMap.put(data.getDbname(), db);
 		}
 	}
-
-	@Override
-	public Connection getConnection() {
-		if(dbMap==null){
-			init();
-		}
-		Connection connection;
-		ComboPooledDataSource comboPooledDataSource = null;
-		try {
-			comboPooledDataSource = (ComboPooledDataSource)dbMap.get(getDbname());
-			connection = comboPooledDataSource.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new NoDataSourceException("错误的数据库连接[databaseURL:" + comboPooledDataSource.getJdbcUrl() + "] 或 错误用户名和密码[username:" + comboPooledDataSource.getUser() + "  password=" + comboPooledDataSource.getPassword() + "]");
-		}
-		return connection;
-	}
-
 }

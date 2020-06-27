@@ -15,6 +15,11 @@ public class NoDataSourceException extends RuntimeException {
 		super(message);
 	}
 
+	public NoDataSourceException(Throwable e) {
+		super(e);
+	}
+
+
 	public NoDataSourceException(String message,Throwable e) {
 		super(message,e);
 	}

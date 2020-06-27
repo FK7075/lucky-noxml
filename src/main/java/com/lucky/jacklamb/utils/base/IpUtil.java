@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.utils;
+package com.lucky.jacklamb.utils.base;
 
 public class IpUtil {
 

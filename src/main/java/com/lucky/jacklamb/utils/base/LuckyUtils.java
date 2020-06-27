@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.utils;
+package com.lucky.jacklamb.utils.base;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;

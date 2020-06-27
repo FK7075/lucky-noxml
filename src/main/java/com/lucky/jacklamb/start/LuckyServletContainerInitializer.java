@@ -12,9 +12,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-import com.lucky.jacklamb.utils.LuckyUtils;
-
-import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import org.apache.logging.log4j.LogManager;

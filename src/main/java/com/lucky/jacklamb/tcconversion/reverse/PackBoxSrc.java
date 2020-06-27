@@ -3,7 +3,7 @@ package com.lucky.jacklamb.tcconversion.reverse;
 import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 /**
  * 万能包装箱

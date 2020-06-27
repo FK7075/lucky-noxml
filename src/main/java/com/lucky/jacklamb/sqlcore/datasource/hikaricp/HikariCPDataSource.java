@@ -1,6 +1,5 @@
 package com.lucky.jacklamb.sqlcore.datasource.hikaricp;
 
-import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
@@ -8,8 +7,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
@@ -265,7 +262,8 @@ public class HikariCPDataSource extends LuckyDataSource {
         leakDetectionThreshold = 0;
     }
 
-    public void init() {
+    @Override
+    protected void LuckyDataSource2TripartiteDataSource() {
         dbMap = new HashMap<>();
         datalist = ReaderInI.getAllDataSource().stream().filter(a -> Pool.HIKARICP == a.getPoolType()).map(a -> (HikariCPDataSource) a).collect(Collectors.toList());
         for (LuckyDataSource hdata : datalist) {
@@ -302,21 +300,6 @@ public class HikariCPDataSource extends LuckyDataSource {
         }
     }
 
-    @Override
-    public Connection getConnection() {
-        if(dbMap==null){
-            init();
-        }
-        Connection connection;
-        HikariDataSource ds = null;
-        try {
-            ds = (HikariDataSource) dbMap.get(getDbname());
-            connection = ds.getConnection();
-        } catch (SQLException e) {
-            throw new NoDataSourceException("无法正常获取数据库连接！JdbcUrl: "+ds.getJdbcUrl(),e);
-        }
-        return connection;
-    }
 }
 
 

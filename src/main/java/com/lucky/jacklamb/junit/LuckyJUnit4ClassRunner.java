@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.lucky.jacklamb.conversion.util.ClassUtils;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -19,7 +18,7 @@ import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.ArrayCast;
+import com.lucky.jacklamb.utils.typechange.ArrayCast;
 
 public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	

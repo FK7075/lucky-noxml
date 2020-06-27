@@ -9,7 +9,7 @@ import com.lucky.jacklamb.annotation.orm.mapper.Page;
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlCoreFactory;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class Paging <T>{
 	

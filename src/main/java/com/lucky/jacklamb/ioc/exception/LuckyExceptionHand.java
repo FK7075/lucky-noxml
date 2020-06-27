@@ -3,7 +3,7 @@ package com.lucky.jacklamb.ioc.exception;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.servlet.core.Model;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

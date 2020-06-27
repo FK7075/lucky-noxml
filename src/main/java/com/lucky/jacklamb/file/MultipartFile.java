@@ -1,15 +1,13 @@
 package com.lucky.jacklamb.file;
 
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 public class MultipartFile {
 	

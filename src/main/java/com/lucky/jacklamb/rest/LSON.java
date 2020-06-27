@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,9 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.log4j.Logger;
 
-import com.lucky.jacklamb.exception.JsonFormatException;
-import com.lucky.jacklamb.ioc.config.ScanConfig;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 /**
  * pojo对象转json字符串

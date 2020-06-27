@@ -1,8 +1,8 @@
-package com.lucky.jacklamb.utils;
+package com.lucky.jacklamb.utils.base;
 
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
-import com.lucky.jacklamb.conversion.util.ClassUtils;
-import com.lucky.jacklamb.conversion.util.FieldUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;

@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.conversion.util;
+package com.lucky.jacklamb.utils.reflect;
 
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -16,6 +16,13 @@ import java.util.Map;
 
 public abstract class MethodUtils {
 
+    /**
+     * 使用反射机制执行方法
+     * @param targetObject
+     * @param method
+     * @param params
+     * @return
+     */
     public static Object invoke(Object targetObject,Method method,Object...params){
         try {
             method.setAccessible(true);
@@ -24,6 +31,15 @@ public abstract class MethodUtils {
             throw new RuntimeException("无法通过反射机制执行方法！ Method: "+method+", Object: "+targetObject+", Param: "+ Arrays.toString(params),e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException("无法通过反射机制执行方法！ Method: "+method+", Object: "+targetObject+", Param: "+ Arrays.toString(params),e);
+        }
+    }
+
+    public static Object invoke(Object targetObject,String methodName,Object[] params){
+        try {
+            Method method=targetObject.getClass().getDeclaredMethod(methodName,ClassUtils.array2Class(params));
+            return invoke(targetObject,method,params);
+        } catch (NoSuchMethodException e) {
+           throw new RuntimeException(e);
         }
     }
 

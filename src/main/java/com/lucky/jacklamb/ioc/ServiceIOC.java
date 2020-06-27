@@ -10,7 +10,7 @@ import com.lucky.jacklamb.annotation.ioc.Service;
 import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.utils.LuckyUtils;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
