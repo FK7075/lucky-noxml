@@ -126,6 +126,8 @@ class SqlAndParams{
 
 	Object[] params;
 
+	public SqlAndParams(){};
+
 	public SqlAndParams(String haveNumSql,Object[] params){
 		numSql(haveNumSql,params);
 		finalProce();
@@ -145,57 +147,117 @@ class SqlAndParams{
 		if(precompileSql.contains(In)||precompileSql.contains(S)||
 			precompileSql.contains(E)||precompileSql.contains(C)){
 			List<Integer> indexs=new ArrayList<>();
-			getIndexParamMap(precompileSql,indexs,"?","@");
+			getIndexParamMap(precompileSql,indexs,"?");
 			Map<Integer,Integer> indexMap=new HashMap<>();
 			for (int i = 0; i < indexs.size(); i++) {
 				indexMap.put(indexs.get(i),i);
 			}
-			dealithW_esc(indexMap,E);dealithW_esc(indexMap,S);dealithW_esc(indexMap,C);
+			dealithW_s(indexMap);dealithW_e(indexMap);dealithW_c(indexMap);
+			precompileSql=precompileSql.replaceAll("\\?l","?");
+			dealithW_C(indexMap);
 		}
 	}
 
-	public void dealithW_esc(Map<Integer,Integer>indexMap,String target){
+	public void dealithW_s(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		getIndexParamMap(precompileSql,escIndex,target,"@X");
-		precompileSql=precompileSql.replaceAll("\\\\"+target,"?");
+		getIndexParamMap(precompileSql,escIndex,S);
+		precompileSql=precompileSql.replaceAll("\\?s","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
-			if(S.equals(target)){
-				params[idx]=params[idx]+"%";
-			}else if(E.equals(target)){
-				params[idx]="%"+params[idx];
-			}else if(C.equals(target)){
-				params[idx]="%"+params[idx]+"%";
-			}
+			params[idx]=params[idx]+"%";
 		}
 	}
 
-	public void dealithW_C(){
+	public void dealithW_e(Map<Integer,Integer>indexMap){
+		List<Integer> escIndex=new ArrayList<>();
+		getIndexParamMap(precompileSql,escIndex,E);
+		precompileSql=precompileSql.replaceAll("\\?e","?l");
+		for (Integer index : escIndex) {
+			int idx=indexMap.get(index);
+			params[idx]="%"+params[idx];
+		}
+	}
 
+	public void dealithW_c(Map<Integer,Integer>indexMap){
+		List<Integer> escIndex=new ArrayList<>();
+		getIndexParamMap(precompileSql,escIndex,C);
+		precompileSql=precompileSql.replaceAll("\\?c","?l");
+		for (Integer index : escIndex) {
+			int idx=indexMap.get(index);
+			params[idx]="%"+params[idx]+"%";
+		}
+	}
+
+	public void dealithW_C(Map<Integer,Integer>indexMap){
+		List<Integer> escIndex=new ArrayList<>();
+		getIndexParamMap(precompileSql,escIndex,In);
+		if(!escIndex.isEmpty()){
+			Map<Integer,Object[]> inCollectionMap=new HashMap<>();
+			Collection collections;
+			int newArraySize=0;
+			Object[] collArray;
+			for (Integer index : escIndex) {
+				int idx=indexMap.get(index);
+				collections=(Collection)params[idx];
+				int collSize=collections.size();
+				newArraySize+=collSize;
+				collArray=new Object[collSize];
+				precompileSql=precompileSql.replaceFirst("\\?C",getMark(collSize));
+				int i=0;
+				for (Object coll : collections) {
+					collArray[i]=coll;
+					i++;
+				}
+				inCollectionMap.put(idx,collArray);
+			}
+			newArraySize=params.length+newArraySize-inCollectionMap.size();
+			Object[] newParams=new Object[newArraySize];
+			int p=0;
+			for(int i=0;i<params.length;i++){
+				if(inCollectionMap.containsKey(i)){
+					for(Object obj:inCollectionMap.get(i)){
+						newParams[p]=obj;
+						p++;
+					}
+				}else{
+					newParams[p]=params[i];
+					p++;
+				}
+			}
+			params=newParams;
+		}
+	}
+
+	public String getMark(int num){
+		StringBuilder s=new StringBuilder(" (");
+		for(int i=0;i<num;i++){
+			s.append("?,");
+		}
+		return s.substring(0,s.length()-1)+") ";
 	}
 
 	//得到每个？的位置
-	public void getIndexParamMap(String sql,List<Integer> indexs,String target,String replace){
+	public void getIndexParamMap(String sql,List<Integer> indexs,String target){
 		if(!sql.contains(target)){
 			return;
 		}
 		String sqlCopy=sql;
 		indexs.add(sqlCopy.indexOf(target));
 		if("?".equals(target)){
-			sqlCopy=sqlCopy.replaceFirst("\\?",replace);
+			sqlCopy=sqlCopy.replaceFirst("\\?","@");
 		}else if(S.equals(target)){
-			sqlCopy=sqlCopy.replaceFirst("\\?s",replace);
+			sqlCopy=sqlCopy.replaceFirst("\\?s","@L");
 		}else if(E.equals(target)){
-			sqlCopy=sqlCopy.replaceFirst("\\?e",replace);
+			sqlCopy=sqlCopy.replaceFirst("\\?e","@L");
 		}else if(C.equals(target)){
-			sqlCopy=sqlCopy.replaceFirst("\\?c",replace);
-		}else if(S.equals(target)){
-			sqlCopy=sqlCopy.replaceFirst("\\?C",replace);
+			sqlCopy=sqlCopy.replaceFirst("\\?c","@L");
+		}else if(In.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?C","@L");
 		}else{
 			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?C]");
 		}
 
-		getIndexParamMap(sqlCopy,indexs,target,replace);
+		getIndexParamMap(sqlCopy,indexs,target);
 	}
 
 	private void nameSQl(Method method,List<String> names,String haveNumSql, Object[] params){

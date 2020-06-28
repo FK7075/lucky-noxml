@@ -146,7 +146,6 @@ public class JpaSample {
         }
 
     }
-
     public List<String> getVarOpeSortList(List<String> varList, List<String> opeList, String jpaSample) {
         List<String> varOpeSortList = new ArrayList<>();
         boolean varStatr = jpaSample.startsWith(varList.get(0));
@@ -229,13 +228,6 @@ public class JpaSample {
             }
         }
         throw new RuntimeException("不符合规范的JPA查询方法命名：" + jpaSample);
-    }
-
-    public static void main(String[] args) {
-        JpaSample jpaSample = new JpaSample(Book.class);
-        //findByNameAndPriceIsNotNullAndPriceNotOrderByAgeDesc ==> ...where name=? AND price IS NOT NULL AND price<>? ORDER BY age DESC
-        System.out.println(jpaSample.sampleToSql("findByNameIgnoreCaseAndPriceLessThanEquals"));
-
     }
 }
 
