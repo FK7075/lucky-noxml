@@ -117,12 +117,18 @@ public class AutoPackage {
 
 class SqlAndParams{
 
+	private final String S ="?s";
+	private final String E ="?e";
+	private final String C ="?c";
+	private final String In="?C";
+
 	String precompileSql;
 
 	Object[] params;
 
 	public SqlAndParams(String haveNumSql,Object[] params){
 		numSql(haveNumSql,params);
+		finalProce();
 	}
 
 	public SqlAndParams(Method method, String haveNumSql, Object[] params){
@@ -132,6 +138,64 @@ class SqlAndParams{
 		}else{
 			nameSQl(method,names,haveNumSql,params);
 		}
+		finalProce();
+	}
+
+	public void finalProce(){
+		if(precompileSql.contains(In)||precompileSql.contains(S)||
+			precompileSql.contains(E)||precompileSql.contains(C)){
+			List<Integer> indexs=new ArrayList<>();
+			getIndexParamMap(precompileSql,indexs,"?","@");
+			Map<Integer,Integer> indexMap=new HashMap<>();
+			for (int i = 0; i < indexs.size(); i++) {
+				indexMap.put(indexs.get(i),i);
+			}
+			dealithW_esc(indexMap,E);dealithW_esc(indexMap,S);dealithW_esc(indexMap,C);
+		}
+	}
+
+	public void dealithW_esc(Map<Integer,Integer>indexMap,String target){
+		List<Integer> escIndex=new ArrayList<>();
+		getIndexParamMap(precompileSql,escIndex,target,"@X");
+		precompileSql=precompileSql.replaceAll("\\\\"+target,"?");
+		for (Integer index : escIndex) {
+			int idx=indexMap.get(index);
+			if(S.equals(target)){
+				params[idx]=params[idx]+"%";
+			}else if(E.equals(target)){
+				params[idx]="%"+params[idx];
+			}else if(C.equals(target)){
+				params[idx]="%"+params[idx]+"%";
+			}
+		}
+	}
+
+	public void dealithW_C(){
+
+	}
+
+	//得到每个？的位置
+	public void getIndexParamMap(String sql,List<Integer> indexs,String target,String replace){
+		if(!sql.contains(target)){
+			return;
+		}
+		String sqlCopy=sql;
+		indexs.add(sqlCopy.indexOf(target));
+		if("?".equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?",replace);
+		}else if(S.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?s",replace);
+		}else if(E.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?e",replace);
+		}else if(C.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?c",replace);
+		}else if(S.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?C",replace);
+		}else{
+			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?C]");
+		}
+
+		getIndexParamMap(sqlCopy,indexs,target,replace);
 	}
 
 	private void nameSQl(Method method,List<String> names,String haveNumSql, Object[] params){

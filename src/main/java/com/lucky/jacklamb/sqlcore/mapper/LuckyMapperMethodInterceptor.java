@@ -11,6 +11,7 @@ import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -382,16 +383,17 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
     /**
      * 处理被没有被注解标注的接口方法
      *
-     * @param method 接口方法
-     * @param args   参数列表
-     * @param sql_fp SQl片段化类
+     * @param method             接口方法
+     * @param args               参数列表
+     * @param sql_fp             SQl片段化类
+     * @param luckyMapperGeneric LuckyMapper接口的泛型
      * @return Object
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      * @throws SecurityException
      * @throws NoSuchFieldException
      */
-    private Object notHave(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    private Object notHave(Method method, Object[] args, SqlFragProce sql_fp, Class<?> luckyMapperGeneric) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         if (sqlMap.containsKey(method.getName().toUpperCase())) {
             pageParam(method, args);
             String methodName = method.getName().toUpperCase();
@@ -449,11 +451,21 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                     return sqlCore.updateMethod(sqlStr, method, args);
                 }
             }
-        } else {
+        } else if(luckyMapperGeneric!=null){
+            JpaSample jpaSample = new JpaSample(luckyMapperGeneric);
+            Class<?> returnType = method.getReturnType();
+            List<?> result = sqlCore.getList(luckyMapperGeneric, jpaSample.sampleToSql(method.getName()), args);
+            if(List.class.isAssignableFrom(returnType)){
+                return result;
+            }else{
+                if(result==null||result.isEmpty())
+                    return null;
+                return result.get(0);
+            }
+        }else{
             return null;
         }
     }
-
 
 
     @Override
@@ -482,11 +494,11 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             return void.class;
         }
         if (isExtendLM && "deleteByIdIn".equals(method.getName()) && params.length == 1) {
-            return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
+            return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>) params[0]);
 
         }
         if (isExtendLM && "selectByIdIn".equals(method.getName()) && params.length == 1) {
-            return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>)params[0]);
+            return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>) params[0]);
         }
 
         //用户自定义Mapper接口方法的代理
@@ -504,7 +516,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         else if (method.isAnnotationPresent(Count.class))
             return (Object) sqlCore.count(params[0]);
         else
-            return notHave(method, params, sql_fp);
+            return notHave(method, params, sql_fp, LuckyMapperGeneric);
     }
 
 

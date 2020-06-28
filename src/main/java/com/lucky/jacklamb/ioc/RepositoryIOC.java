@@ -148,14 +148,14 @@ public class RepositoryIOC extends ComponentFactory {
 					List<LuckyDataSource> datalist= ReaderInI.getAllDataSource();
 					for(LuckyDataSource data:datalist) {
 						SqlCore sqlCore=SqlCoreFactory.createSqlCore(data.getDbname());
-						beanID="lucky#$jacklamb#$&58314@SqlCore-"+data.getDbname();
+						beanID="SqlCore-"+data.getDbname();
 						addRepositoryMap(beanID, sqlCore);
 						log.info("@Repository \"[type=SqlCore id="+beanID+" class="+sqlCore+"]\"");
 					}
 					first = false;
 				}
 				Mapper mapper = repository.getAnnotation(Mapper.class);
-				beanID="lucky#$jacklamb#$&58314@SqlCore-"+mapper.dbname();
+				beanID="SqlCore-"+mapper.dbname();
 				SqlCore currSqlCore=(SqlCore) getMaRepBean(beanID);
 				if (!"".equals(mapper.id())) {
 					Object mapper2 = currSqlCore.getMapper(repository);
