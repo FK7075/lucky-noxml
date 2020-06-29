@@ -2,6 +2,9 @@ package com.lucky.jacklamb.cglib;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
 
 public abstract class CglibProxy {
 
@@ -12,3 +15,6 @@ public abstract class CglibProxy {
         return (T) enhancer.create();
     }
 }
+
+
+

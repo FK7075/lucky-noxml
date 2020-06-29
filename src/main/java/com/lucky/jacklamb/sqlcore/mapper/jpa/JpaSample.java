@@ -18,7 +18,38 @@ import java.util.stream.Collectors;
 /**
  * @author fk7075
  * @version 1.0.0
- * @date 2020/6/26 2:48 下午
+ * @date 2020/6/29 12:48 下午
+ *
+ * findBy语法解析流程
+ * eg: findByNameStartingWithAndAgeAndPriceBetween
+ * 1.去掉前缀
+ *     NameStartingWithAndAgeAndPriceBetween
+ * 2.将find表达式中包含的实体属性全部替换为 "="
+ *     =StartingWithAnd=And=Between
+ * 3.使用编码表[find-coding.json]将2得到的表达式编码（以SQL运算符的长度降序为顺序）
+ *     =@21@01=@01=@05
+ * 4.分离SQL运算符
+ *    [@21@01,@01,@05]
+ * 5.分离出2中的原始SQL运算符
+ *    =StartingWithAnd=And=Between --> [StartingWithAnd,And,Between]
+ * 6.使用"="替换原始表达式中的[StartingWithAnd,And,Between]部分
+ *    NameStartingWithAndAgeAndPriceBetween -->Name=Age=Price
+ * 7.分离出参数终结符
+ *    Name=Age=Price --> [Name,Age,Price]
+ * 8.重新组合参数终结符和SQL运算符
+ *   [Name,Age,Price] + [@21@01,@01,@05] = [Name,@21@01,Age,@01,Price,@05]
+ * 9.解码运算
+ *   [Name,@21@01,Age,@01,Price,@05] -->  ...WHERE name LIKE ?s AND age AND price BETWEEN ? AND ?
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * 一.findByNameStartingWithAndAgeAndPriceBetween -> NameStartingWithAndAgeAndPriceBetween
+ * 二.NameStartingWithAndAgeAndPriceBetween -> =StartingWithAnd=And=Between
+ *     1.   opeList       : StartingWithAnd=And=Between   -> =@21@01=@01=@05 -> [@21@01,@01,@05]
+ *     2.1. opeSourceList : =StartingWithAnd=And=Between  -> [StartingWithAnd,And,Between]
+ *     2.2. varList       : NameStartingWithAndAgeAndPriceBetween+[StartingWithAnd,And,Between] -> Name=Age=Price= ->[Name,Age,Price]
+ * 三.[@21@01,@01,@05] + [Name,Age,Price] -> [Name,@21@01,Age,@01,Price,@05] -> ...WHERE name LIKE ?s AND age AND price BETWEEN ? AND ?
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 public class JpaSample {
 
@@ -45,9 +76,14 @@ public class JpaSample {
     private static Map<String, String> parsingMap;
 
     /**
-     * 所有运算符按照字符长度倒序排序后的集合
+     * 所有SQL运算符按照字符长度倒序排序后的集合
      */
-    private static List<String> lengthSortKeys;
+    private static List<String> lengthSortSqlOpe;
+
+    /**
+     * 当前所有终结符按照字符长度倒序排序后的集合
+     */
+    private List<String> lengthSortField;
 
     /**
      * 查询语句的前缀
@@ -60,17 +96,16 @@ public class JpaSample {
     private Map<String, String> fieldColumnMap;
 
     static {
-        try (BufferedReader br_ope = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-standard.json"), "UTF-8"));
-             BufferedReader br_par = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-parsing.json"), "UTF-8"));
+        try (BufferedReader br_ope = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-coding.json"), "UTF-8"));
+             BufferedReader br_par = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-decoding.json"), "UTF-8"));
         ) {
             Gson gson = new Gson();
             Type type = new TypeToken<Map<String, String>>() {
             }.getType();
             operationMap = gson.fromJson(br_ope, type);
             parsingMap = gson.fromJson(br_par, type);
-            lengthSortKeys = new ArrayList<>(operationMap.keySet());
-            Collections.sort(lengthSortKeys, new SortByLengthComparator());
-            br_par.close();
+            lengthSortSqlOpe=new ArrayList<>(operationMap.keySet());
+            Collections.sort(lengthSortSqlOpe, new SortByLengthComparator());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,34 +119,9 @@ public class JpaSample {
         for (Field field : fields) {
             fieldColumnMap.put(LuckyUtils.TableToClass(field.getName()), PojoManage.getTableField(field));
         }
+        lengthSortField = new ArrayList<>(fieldColumnMap.keySet());
+        Collections.sort(lengthSortField, new SortByLengthComparator());
     }
-
-    /*
-        And	                findByLastnameAndFirstname	                    … where x.lastname = ?1 and x.firstname = ?2
-        Or	                findByLastnameOrFirstname	                    … where x.lastname = ?1 or x.firstname = ?2
-        Is,Equals	        findByFirstnameIs,findByFirstnameEquals	        … where x.firstname = ?1
-        Between	            findByStartDateBetween	                        … where x.startDate between ?1 and ?2
-        LessThan	        findByAgeLessThan	                            … where x.age < ?1
-        LessThanEqual	    findByAgeLessThanEqual	                        … where x.age <= ?1
-        GreaterThan	        findByAgeGreaterThan	                        … where x.age > ?1
-        GreaterThanEqual	findByAgeGreaterThanEqual	                    … where x.age >= ?1
-        After	            findByStartDateAfter	                        … where x.startDate > ?1
-        Before	            findByStartDateBefore	                        … where x.startDate < ?1
-        IsNull	            findByAgeIsNull	                                … where x.age is null
-        IsNotNull,NotNull	findByAge(Is)NotNull	                        … where x.age not null
-        Like	            findByFirstnameLike	                            … where x.firstname like ?1
-        NotLike	            findByFirstnameNotLike	                        … where x.firstname not like ?1
-        StartingWith	    findByFirstnameStartingWith	                    … where x.firstname like ?1 (parameter bound with appended %)
-        EndingWith	        findByFirstnameEndingWith	                    … where x.firstname like ?1 (parameter bound with prepended %)
-        Containing	        findByFirstnameContaining	                    … where x.firstname like ?1 (parameter bound wrapped in %)
-        OrderBy	            findByAgeOrderByLastnameDesc	                … where x.age = ?1 order by x.lastname desc
-        Not	                findByLastnameNot	                            … where x.lastname <> ?1
-        In	                findByAgeIn(Collection ages)	                … where x.age in ?1
-        NotIn	            findByAgeNotIn(Collectionage)	                … where x.age not in ?1
-        TRUE	            findByActiveTrue()	                            … where x.active = true
-        FALSE	            findByActiveFalse()	                            … where x.active = false
-        IgnoreCase	        findByFirstnameIgnoreCase	                    … where UPPER(x.firstame) = UPPER(?1)
-     */
 
     /**
      * 将JPA的findBy表达式解析为SQL语句
@@ -122,20 +132,37 @@ public class JpaSample {
      * @return
      */
     public String sampleToSql(String jpaSample) {
+        /*
+            一.findByNameStartingWithAndAgeAndPriceBetween -> NameStartingWithAndAgeAndPriceBetween
+            二.NameStartingWithAndAgeAndPriceBetween -> =StartingWithAnd=And=Between
+                1.   opeList       : StartingWithAnd=And=Between   -> =@21@01=@01=@05 -> [@21@01,@01,@05]
+                2.1. opeSourceList : =StartingWithAnd=And=Between  -> [StartingWithAnd,And,Between]
+                2.2. varList       : NameStartingWithAndAgeAndPriceBetween+[StartingWithAnd,And,Between] -> Name=Age=Price= ->[Name,Age,Price]
+            三.[@21@01,@01,@05] + [Name,Age,Price] -> [Name,@21@01,Age,@01,Price,@05] -> ...WHERE name LIKE ?s AND age AND price BETWEEN ? AND ?
+         */
         String jpaCopy=jpaSample;
         jpaSample = removePrefix(jpaSample);
-        for (String s : lengthSortKeys) {
-            jpaSample = jpaSample.replaceAll(s, operationMap.get(s));
+        String copy=jpaSample;
+
+        for (String field : lengthSortField) {
+            jpaSample = jpaSample.replaceAll(field, "=");
         }
-        List<String> varList = Arrays.asList(jpaSample.replaceAll(REG, "=").split("="))
-                .stream().filter(a -> a != null && !"".equals(a)).collect(Collectors.toList());
-        List<String> copyVarList = new ArrayList<>(varList);
-        Collections.sort(copyVarList, new SortByLengthComparator());
-        String jpaSampleCopy = jpaSample;
-        for (String var : copyVarList) {
-            jpaSampleCopy = jpaSampleCopy.replaceAll(var, "=");
+        String copy1=jpaSample;
+        for (String ope : lengthSortSqlOpe) {
+            copy1=copy1.replaceAll(ope,operationMap.get(ope));
         }
-        List<String> opeList = Arrays.asList(jpaSampleCopy.split("="))
+        List<String> opeList=Arrays.asList(copy1.split("=")).stream().
+                filter(a -> a != null && !"".equals(a)).collect(Collectors.toList());
+
+        List<String> opeSourceList=Arrays.asList(jpaSample.split("=")).stream().
+                filter(a -> a != null && !"".equals(a)).collect(Collectors.toList());
+        List<String> copyOpeList = new ArrayList<>(opeSourceList);
+        Collections.sort(copyOpeList, new SortByLengthComparator());
+        jpaSample=copy;
+        for (String ope : copyOpeList) {
+            jpaSample=jpaSample.replaceAll(ope,"=");
+        }
+        List<String> varList=Arrays.asList(jpaSample.split("="))
                 .stream().filter(a -> a != null && !"".equals(a)).collect(Collectors.toList());
         List<String> varOpeSortList = getVarOpeSortList(varList, opeList, jpaSample);
         try {

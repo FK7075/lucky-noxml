@@ -143,11 +143,29 @@ class SqlAndParams{
 		finalProce();
 	}
 
+	/*最后处理，处理预编译Sql中的特殊参数[?s,?e,?c,?C]
+	    ---------------------------------------------------------------------------
+	    ?e  : EndingWith    ->LIKE %param      以param结尾
+	        SELECT * FROM table WHERE name LIKE ?e       Params["Jack"]
+	                             |
+	                             V
+	        SELECT * FROM table WHERE name LIKE ?        Params["%Jack"]
+        ----------------------------------------------------------------------------
+	    ?s  : StartingWith  ->LIKE param%      以param开头
+	    ?c  : Containing    ->LIKE %param%     包含param
+	    -----------------------------------------------------------------------------
+	    ?C  : In            ->In [Collection]  条件范围为Collection集合
+	        SELECT * FROM table WHERE age IN ?C           Params[Collection[1,2,3,4]]
+	        	                 |
+	                             V
+	        SELECT * FROM table WHERE age IN (?,?,?,?)    Params[1,2,3,4]
+	    -----------------------------------------------------------------------------
+	 */
 	public void finalProce(){
 		if(precompileSql.contains(In)||precompileSql.contains(S)||
 			precompileSql.contains(E)||precompileSql.contains(C)){
 			List<Integer> indexs=new ArrayList<>();
-			getIndexParamMap(precompileSql,indexs,"?");
+			setQuestionMarkIndex(precompileSql,indexs,"?");
 			Map<Integer,Integer> indexMap=new HashMap<>();
 			for (int i = 0; i < indexs.size(); i++) {
 				indexMap.put(indexs.get(i),i);
@@ -158,9 +176,10 @@ class SqlAndParams{
 		}
 	}
 
+	//处理?s,同dealithW_c
 	public void dealithW_s(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		getIndexParamMap(precompileSql,escIndex,S);
+		setQuestionMarkIndex(precompileSql,escIndex,S);
 		precompileSql=precompileSql.replaceAll("\\?s","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -168,9 +187,10 @@ class SqlAndParams{
 		}
 	}
 
+    //处理?e,同dealithW_s
 	public void dealithW_e(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		getIndexParamMap(precompileSql,escIndex,E);
+		setQuestionMarkIndex(precompileSql,escIndex,E);
 		precompileSql=precompileSql.replaceAll("\\?e","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -178,9 +198,16 @@ class SqlAndParams{
 		}
 	}
 
+	/*处理?c
+	    indexMap:每个?在SQL中的位置(KEY)与(=>)?对应参数在参数数组中的位置(VALUE)所组成的Map<Integer,Integer>
+	    1.得到所有?c在SQl中出现的位置所组成的集合(escIndex)
+	    2.使用?l替换掉所有的?c
+	    3.遍历(escIndex),使用(indexMap)将escIndex翻译为对应参数数组的位置(idx)
+	    4.使用(idx)拿到并修改原参数 ==>params[idx]="%"+params[idx]+"%";
+	 */
 	public void dealithW_c(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		getIndexParamMap(precompileSql,escIndex,C);
+		setQuestionMarkIndex(precompileSql,escIndex,C);
 		precompileSql=precompileSql.replaceAll("\\?c","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -188,9 +215,37 @@ class SqlAndParams{
 		}
 	}
 
+	/*处理?C  (IN操作类似的范围限定操作)
+	    indexMap:?在SQL中的位置(KEY)与(=>)?对应参数在参数数组中的位置(VALUE)
+	     1.得到所有?C在SQl中出现的位置所组成的集合(escIndex)
+	     2.如果(escIndex)中没有元素则结束，否则进入第三步
+	     3.遍历(escIndex),将使用(indexMap)将escIndex翻译为对应参数数组的位置(idx)
+	     4.使用(idx)拿到原参数，并将其强转为Collection类型，如果出现异常会抛出一个RuntimeException
+	     5.将Collection转化为数组(collArray),转化后将(idx)和(collArray)添加到Map(inCollectionMap)中 ==> inCollectionMap.put(idx,collArray)
+	     6.得到一个包含(collArray)长度个数的? ==>  (?,?,?,?) ,然后使用这个替换掉原SQL中的第一个?C
+	     7.生产新的参数数组Object[] newParams；
+	        新数组长度=原数组长度+原数组中所有集合参数的元素个数和-集合参数的个数
+	        newParamsSize=params.length+S(inCollectionMap.value.length)-inCollectionMap.size
+	     8.使用原数组和inCollectionMap数组填充新数组
+	     9.将新数组赋值给原数组
+
+	     ------------------------------------------------------------------------------------------------------------------------------
+	      SQL : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN ?C AND f3=? OR f4=? AND f5 IN ?C f6 NOT IN ?C
+	      Params               [0,1,2C,3,4,5C,6C]    l=7
+
+	      inCollectionMap                            lm=3
+	            2 -> [a,b,c,d]                       l2=4
+	            5 -> [x,y,z]                         l5=3
+	            6 -> [t,q,m,j]                       l6=4
+	      Object[] newParams = new Object[l+l2+l5+l6-lm]
+	                             |
+	                             V
+	      NEW-SQL    : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN (?,?,?,?) AND f3=? OR f4=? AND f5 IN (?,?,?) f6 NOT IN (?,?,?,?)
+	      NEW-Params :        [0,1,a,b,c,d,3,4,x,y,z,t,q,m,j]
+	 */
 	public void dealithW_C(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		getIndexParamMap(precompileSql,escIndex,In);
+		setQuestionMarkIndex(precompileSql,escIndex,In);
 		if(!escIndex.isEmpty()){
 			Map<Integer,Object[]> inCollectionMap=new HashMap<>();
 			Collection collections;
@@ -198,7 +253,11 @@ class SqlAndParams{
 			Object[] collArray;
 			for (Integer index : escIndex) {
 				int idx=indexMap.get(index);
-				collections=(Collection)params[idx];
+				try{
+                    collections=(Collection)params[idx];
+                }catch (Exception e){
+				    throw new RuntimeException("SQL操作符 \"IN\" 对应的参数类型必须为Collection的子类！错误的类型:"+params[idx].getClass(),e);
+                }
 				int collSize=collections.size();
 				newArraySize+=collSize;
 				collArray=new Object[collSize];
@@ -236,8 +295,8 @@ class SqlAndParams{
 		return s.substring(0,s.length()-1)+") ";
 	}
 
-	//得到每个？的位置
-	public void getIndexParamMap(String sql,List<Integer> indexs,String target){
+	//得到每个？在SQL中的位置，组成一个集合
+	public void setQuestionMarkIndex(String sql, List<Integer> indexs, String target){
 		if(!sql.contains(target)){
 			return;
 		}
@@ -257,7 +316,7 @@ class SqlAndParams{
 			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?C]");
 		}
 
-		getIndexParamMap(sqlCopy,indexs,target);
+		setQuestionMarkIndex(sqlCopy,indexs,target);
 	}
 
 	private void nameSQl(Method method,List<String> names,String haveNumSql, Object[] params){
