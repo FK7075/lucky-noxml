@@ -173,6 +173,7 @@ public class JpaSample {
         }
 
     }
+
     public List<String> getVarOpeSortList(List<String> varList, List<String> opeList, String jpaSample) {
         List<String> varOpeSortList = new ArrayList<>();
         boolean varStatr = jpaSample.startsWith(varList.get(0));
