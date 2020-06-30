@@ -1,9 +1,10 @@
 
 <!--打包插件，将java项目打包为可运行的jar包(jar包中包含第三方包)-->
 <build>
-    <finalName>normal-litigant</finalName> <!-- 指定package生成的文件名为 -->
+    <finalName>lucky-application</finalName> <!-- 指定package生成的文件名为 -->
     <plugins>
-        <!-- 设置编译版本为1.8 -->
+
+        <!-- 编译插件 -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -12,11 +13,13 @@
                 <target>1.8</target>
                 <encoding>UTF-8</encoding>
                 <compilerArgs>
+                    <!-- 添加编译参数-parameters -->
                     <arg>-parameters</arg>
                 </compilerArgs>
             </configuration>
         </plugin>
-        <!-- 添加编译参数-parameters -->
+
+        <!-- 打包插件 -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
@@ -38,6 +41,7 @@
             </executions>
         </plugin>
 
+        <!--打包插件，用于将应用打包为可运行的Jar包-->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -45,6 +49,7 @@
             <configuration>
                 <archive>
                     <manifest>
+                        <!-- 主函数所在类 -->
                         <mainClass>com.hzczx.nomal.NormlLitiagentApplication</mainClass>
                     </manifest>
                 </archive>

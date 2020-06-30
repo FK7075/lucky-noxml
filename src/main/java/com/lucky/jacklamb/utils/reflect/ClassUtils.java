@@ -1,9 +1,6 @@
 package com.lucky.jacklamb.utils.reflect;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public abstract class ClassUtils {
 
@@ -71,6 +68,11 @@ public abstract class ClassUtils {
 
     }
 
+    /**
+     * 将一个Object[]转化为对应类型的Class[]
+     * @param objs 要操作的Object[]
+     * @return
+     */
     public static Class<?>[] array2Class(Object[] objs){
         Class<?>[] paramsClass=new Class<?>[objs.length];
         for (int i = 0; i < objs.length; i++) {
@@ -79,7 +81,25 @@ public abstract class ClassUtils {
         return paramsClass;
     }
 
+    /**
+     * 得到某个泛型Type的所有泛型类型
+     * @param type 泛型Type
+     * @return
+     */
+    public static Class<?>[] getGenericType(Type type){
+        if(type!=null && type instanceof ParameterizedType){
+            ParameterizedType pt=(ParameterizedType) type;
+            Type[] types=pt.getActualTypeArguments();
+            Class<?>[] genericType=new Class<?>[types.length];
+            for(int i=0;i<types.length;i++)
+                genericType[i]=(Class<?>)types[i];
+            return genericType;
+        }else{
+            return null;
+        }
+    }
+
     public static boolean isBasic(Class<?> clzz){
-        return false;
+        return clzz.getClassLoader()==null;
     }
 }

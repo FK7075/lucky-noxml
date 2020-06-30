@@ -27,12 +27,12 @@ public class RepositoryIOC extends ComponentFactory {
 	private List<String> repositoryIDS;
 
 	private Map<String, Object> mapperMap;
-	
+
 	private Map<String,String> mapperTtypeMap;
 
 	private List<String> mapperIDS;
-	
-	
+
+
 	public RepositoryIOC() {
 		repositoryMap=new HashMap<>();
 		repositoryIDS=new ArrayList<>();
@@ -47,7 +47,7 @@ public class RepositoryIOC extends ComponentFactory {
 		else if (containIdByRepository(id))
 			return repositoryMap.get(id);
 		else
-			throw new NotFindBeanException("在Repository和Mapper(ioc)容器中找不到ID为--" + id + "--的Bean...");
+			throw new NotFindBeanException("在Repository和Mapper(ioc)容器中找不到ID为 \"" + id + "\" 的Bean...");
 	}
 
 	public boolean containId(String id) {
@@ -72,7 +72,7 @@ public class RepositoryIOC extends ComponentFactory {
 
 	public void addRepositoryMap(String daoId, Object daoObj) {
 		if(containId(daoId))
-			throw new NotAddIOCComponent("Repository(ioc)容器中已存在ID为--"+daoId+"--的组件，无法重复添加（您可能配置了同名的@Repository组件，这将会导致异常的发生！）......");
+			throw new NotAddIOCComponent("Repository(ioc)容器中已存在ID为 \""+daoId+" \"的组件，无法重复添加（您可能配置了同名的@Repository组件，这将会导致异常的发生！）......");
 		repositoryMap.put(daoId, daoObj);
 		addRepositoryIDS(daoId);
 	}
@@ -103,7 +103,7 @@ public class RepositoryIOC extends ComponentFactory {
 
 	public void addMapperMap(String mapperID, Object mapperObj) {
 		if(containId(mapperID))
-			throw new NotAddIOCComponent("Mapper(ioc)容器中已存在ID为--"+mapperID+"--的组件，无法重复添加......");
+			throw new NotAddIOCComponent("Mapper(ioc)容器中已存在ID为 \""+mapperID+"\" 的组件，无法重复添加......");
 		mapperMap.put(mapperID, mapperObj);
 		addMapperIDS(mapperID);
 		mapperTtypeMap.put(mapperID, mapperObj.getClass().getName());
@@ -123,11 +123,11 @@ public class RepositoryIOC extends ComponentFactory {
 
 	/**
 	 * 加载Repository组件
-	 * 
+	 *
 	 * @param repositoryClass
 	 * @return
 	 * @throws SecurityException
-	 * @throws IllegalArgumentException 
+	 * @throws IllegalArgumentException
 	 */
 	public void initRepositoryIOC(List<Class<?>> repositoryClass) throws SecurityException, IllegalArgumentException {
 		boolean first = true;
@@ -142,7 +142,7 @@ public class RepositoryIOC extends ComponentFactory {
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "repository", beanID, repository);
 				addRepositoryMap(beanID, aspect);
 				log.info("@Repository \"[id="+beanID+" class="+aspect+"]\"");
-				
+
 			} else if (repository.isAnnotationPresent(Mapper.class)) {
 				if (first) {
 					List<LuckyDataSource> datalist= ReaderInI.getAllDataSource();

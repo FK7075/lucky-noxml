@@ -51,8 +51,8 @@ public class ReaderInI {
 		Map<String, String> sectionMap = iniFilePars.getSectionMap(section);
 		LuckyDataSource dataSource=Pool.getDataSource(sectionMap.get("poolType"));
 		String dbname=SECTION_JDBC.equals(section)?"defaultDB":section;
-		dataSource.setDbname(dbname);
 		dataSource=iniSection2LuckyDataSource(sectionMap,dataSource.getClass());
+		dataSource.setDbname(dbname);
 		if(dataSource.getDriverClass()==null|| dataSource.getJdbcUrl()==null
 		   ||dataSource.getUsername()==null||dataSource.getPassword()==null)
 			throw new NotFindBeanPropertyException("在calsspath:appconfig.ini的配置文件的["+section+"]节中找不到必须属性\"driverClass\",\"jdbcUrl\",\"username\",\"password\"");

@@ -13,6 +13,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.logging.log4j.LogManager;
@@ -454,10 +455,10 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         } else if(luckyMapperGeneric!=null){
             JpaSample jpaSample = new JpaSample(luckyMapperGeneric);
             Class<?> returnType = method.getReturnType();
-            List<?> result = sqlCore.getList(luckyMapperGeneric, jpaSample.sampleToSql(method.getName()), args);
             if(List.class.isAssignableFrom(returnType)){
-                return result;
+                return sqlCore.getList(MethodUtils.getReturnTypeGeneric(method)[0],jpaSample.sampleToSql(method.getName()), args);
             }else{
+                List<?> result = sqlCore.getList(returnType, jpaSample.sampleToSql(method.getName()), args);
                 if(result==null||result.isEmpty())
                     return null;
                 return result.get(0);

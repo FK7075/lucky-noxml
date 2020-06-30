@@ -51,7 +51,7 @@ public class ServerStartRun {
 
     public void runAdd(){
         try{
-            Object[] runParams = MethodUtils.getRunParam(controllerMethod, params,beans);
+            Object[] runParams = MethodUtils.getRunParam(controllerMethod, params);
             Object runResult = controllerMethod.invoke(controllerObject, runParams);
             if (controllerMethod.getReturnType() != void.class) {
                 componentIOC.addAppMap(componentName,runResult);

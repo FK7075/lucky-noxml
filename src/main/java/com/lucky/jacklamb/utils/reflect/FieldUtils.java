@@ -44,16 +44,7 @@ public abstract class FieldUtils {
      */
     public static Class<?>[] getGenericType(Field field){
         Type type = field.getGenericType();
-        if(type!=null && type instanceof ParameterizedType){
-            ParameterizedType pt=(ParameterizedType) type;
-            Type[] types=pt.getActualTypeArguments();
-            Class<?>[] genericType=new Class<?>[types.length];
-            for(int i=0;i<types.length;i++)
-                genericType[i]=(Class<?>)types[i];
-            return genericType;
-        }else{
-            return null;
-        }
+        return ClassUtils.getGenericType(type);
     }
 
     /**
