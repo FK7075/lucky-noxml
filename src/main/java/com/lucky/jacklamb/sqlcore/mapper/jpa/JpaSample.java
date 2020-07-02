@@ -131,7 +131,7 @@ public class JpaSample {
      *                  getByLastnameAndFirstname]
      * @return
      */
-    public String sampleToSql(String jpaSample) {
+    public String sampleToSql(String jpaSample) throws IllegalJPAExpressionException {
         /*
             一.findByNameStartingWithAndAgeAndPriceBetween -> NameStartingWithAndAgeAndPriceBetween
             二.NameStartingWithAndAgeAndPriceBetween -> =StartingWithAnd=And=Between
@@ -249,13 +249,13 @@ public class JpaSample {
         }
     }
 
-    public String removePrefix(String jpaSample) {
+    public String removePrefix(String jpaSample) throws IllegalJPAExpressionException {
         for (String prefix : PREFIX) {
             if (jpaSample.startsWith(prefix)) {
                 return jpaSample.substring(prefix.length());
             }
         }
-        throw new RuntimeException("不符合规范的JPA查询方法命名：" + jpaSample);
+        throw new IllegalJPAExpressionException("不符合JPA规范的查询方法命名：" + jpaSample);
     }
 }
 

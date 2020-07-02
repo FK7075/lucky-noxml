@@ -11,6 +11,7 @@ import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.mapper.jpa.IllegalJPAExpressionException;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
@@ -456,15 +457,24 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             JpaSample jpaSample = new JpaSample(luckyMapperGeneric);
             Class<?> returnType = method.getReturnType();
             if(List.class.isAssignableFrom(returnType)){
-                return sqlCore.getList(MethodUtils.getReturnTypeGeneric(method)[0],jpaSample.sampleToSql(method.getName()), args);
+                try {
+                    return sqlCore.getList(MethodUtils.getReturnTypeGeneric(method)[0],jpaSample.sampleToSql(method.getName()), args);
+                } catch (IllegalJPAExpressionException e) {
+                    throw new RuntimeException("找不到与Mapper接口方法 "+method+" 相关的SQL配置，尝试使用JPA查询解释器解析该方法的方法名！解析失败，该方法名不符合JPA查询规范...",e);
+                }
             }else{
-                List<?> result = sqlCore.getList(returnType, jpaSample.sampleToSql(method.getName()), args);
+                List<?> result = null;
+                try {
+                    result = sqlCore.getList(returnType, jpaSample.sampleToSql(method.getName()), args);
+                } catch (IllegalJPAExpressionException e) {
+                    throw new RuntimeException("找不到与Mapper接口方法 "+method+" 相关的SQL配置，尝试使用JPA查询解释器解析该方法的方法名！解析失败，该方法名不符合JPA查询规范...",e);
+                }
                 if(result==null||result.isEmpty())
                     return null;
                 return result.get(0);
             }
         }else{
-            return null;
+            throw new RuntimeException("无法代理的Mapper方法："+method+" ,没有为该方法配置相关的SQL操作...");
         }
     }
 
