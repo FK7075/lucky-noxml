@@ -2,7 +2,6 @@ package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
@@ -10,7 +9,8 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.typechange.ArrayCast;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -285,10 +285,10 @@ public final class IOCContainers {
 						field.set(component, beans.getBean(fieldClass));
 					}else {
 						if(fieldClass.isArray()) {//基本类型的数组类型
-							field.set(component,ArrayCast.strArrayChange(val, fieldClass));
+							field.set(component,JavaConversion.strArrToBasicArr(val, fieldClass));
 						}else if(List.class.isAssignableFrom(fieldClass)) {//List类型
 							List<Object> list=new ArrayList<>();
-							String fx=ArrayCast.getFieldGenericType(field)[0];
+							String fx= FieldUtils.getStrGenericType(field)[0];
 							if(fx.endsWith("$ref")) {
 								for(String z:val) {
 									list.add(beans.getBean(z));
@@ -301,7 +301,7 @@ public final class IOCContainers {
 							field.set(component, list);
 						}else if(Set.class.isAssignableFrom(fieldClass)) {//Set类型
 							Set<Object> set=new HashSet<>();
-							String fx=ArrayCast.getFieldGenericType(field)[0];
+							String fx=FieldUtils.getStrGenericType(field)[0];
 							if(fx.endsWith("$ref")) {
 								for(String z:val) {
 									set.add(beans.getBean(z));
@@ -314,7 +314,7 @@ public final class IOCContainers {
 							field.set(component, set);
 						}else if(Map.class.isAssignableFrom(fieldClass)) {//Map类型
 							Map<Object,Object> map=new HashMap<>();
-							String[] fx=ArrayCast.getFieldGenericType(field);
+							String[] fx=FieldUtils.getStrGenericType(field);
 							boolean one=fx[0].endsWith("$ref");
 							boolean two=fx[1].endsWith("$ref");
 							if(one&&two) {//K-V都不是基本类型

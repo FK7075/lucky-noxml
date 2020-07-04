@@ -7,7 +7,6 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.typechange.ArrayCast;
 import com.lucky.jacklamb.utils.base.Jacklabm;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -530,7 +529,7 @@ public class Model {
      * @return T[]
      */
     public <T> T[] strArrayChange(String[] strArr, Class<T> changTypeClass) {
-        return ArrayCast.strArrayChange(strArr, changTypeClass);
+        return (T[]) JavaConversion.strArrToBasicArr(strArr, changTypeClass);
     }
 
     /**
@@ -551,7 +550,7 @@ public class Model {
      * @return
      */
     public <T> T[] getArray(String key, Class<T> clzz) {
-        return (T[]) ArrayCast.strArrayChange(parameterMap.get(key), clzz);
+        return (T[]) JavaConversion.strArrToBasicArr(parameterMap.get(key), clzz);
     }
 
     /**

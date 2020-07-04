@@ -1,9 +1,9 @@
 package com.lucky.jacklamb.file.ini;
 
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.typechange.ArrayCast;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -179,7 +179,7 @@ public class INIConfig {
 	 * @return
 	 */
 	public  <T> T[] getArray(String section,String key,Class<T> changTypeClass,String separator) {
-		return ArrayCast.strArrayChange(getArray(section,key,separator), changTypeClass);
+		return (T[]) JavaConversion.strArrToBasicArr(getArray(section,key,separator), changTypeClass);
 	}
 	
 	/**
@@ -307,9 +307,9 @@ public class INIConfig {
 					if(field.getType().isArray()) {
 						field.set(object, getArray(section,fieldName,field.getType()));
 					}else if(field.getType().isAssignableFrom(List.class)) {
-						field.set(object, getCollection(section,fieldName,List.class,ArrayCast.getClassFieldGenericType(field)[0]));
+						field.set(object, getCollection(section,fieldName,List.class, FieldUtils.getGenericType(field)[0]));
 					}else if(field.getType().isAssignableFrom(Set.class)) {
-						field.set(object, getCollection(section,fieldName,Set.class,ArrayCast.getClassFieldGenericType(field)[0]));
+						field.set(object, getCollection(section,fieldName,Set.class,FieldUtils.getGenericType(field)[0]));
 					}else if(field.getType().getClassLoader()==null) {
 						field.set(object, JavaConversion.strToBasic(sectionValue, field.getType()));
 					}else if(sectionValue.startsWith("S:")) {

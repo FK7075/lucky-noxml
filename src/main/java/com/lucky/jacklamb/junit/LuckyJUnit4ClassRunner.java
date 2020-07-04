@@ -1,24 +1,18 @@
 package com.lucky.jacklamb.junit;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.annotation.ioc.Autowired;
+import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
-import com.lucky.jacklamb.annotation.ioc.Autowired;
-import com.lucky.jacklamb.annotation.ioc.Value;
-import com.lucky.jacklamb.ioc.ApplicationBeans;
-import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.typechange.ArrayCast;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	
@@ -64,10 +58,10 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 					allFields[i].set(testObject, applicationBeans.getBean(fieldClass));
 				}else {
 					if(fieldClass.isArray()) {//基本类型的数组类型
-						allFields[i].set(testObject,ArrayCast.strArrayChange(val, fieldClass));
+						allFields[i].set(testObject,JavaConversion.strArrToBasicArr(val, fieldClass));
 					}else if(List.class.isAssignableFrom(fieldClass)) {//List类型
 						List<Object> list=new ArrayList<>();
-						String fx=ArrayCast.getFieldGenericType(allFields[i])[0];
+						String fx= FieldUtils.getStrGenericType(allFields[i])[0];
 						if(fx.endsWith("$ref")) {
 							for(String z:val) {
 								list.add(applicationBeans.getBean(z));
@@ -80,7 +74,7 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 						allFields[i].set(testObject, list);
 					}else if(Set.class.isAssignableFrom(fieldClass)) {//Set类型
 						Set<Object> set=new HashSet<>();
-						String fx=ArrayCast.getFieldGenericType(allFields[i])[0];
+						String fx=FieldUtils.getStrGenericType(allFields[i])[0];
 						if(fx.endsWith("$ref")) {
 							for(String z:val) {
 								set.add(applicationBeans.getBean(z));
@@ -93,7 +87,7 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 						allFields[i].set(testObject, set);
 					}else if(Map.class.isAssignableFrom(fieldClass)) {//Map类型
 						Map<Object,Object> map=new HashMap<>();
-						String[] fx=ArrayCast.getFieldGenericType(allFields[i]);
+						String[] fx=FieldUtils.getStrGenericType(allFields[i]);
 						boolean one=fx[0].endsWith("$ref");
 						boolean two=fx[1].endsWith("$ref");
 						if(one&&two) {//K-V都不是基本类型

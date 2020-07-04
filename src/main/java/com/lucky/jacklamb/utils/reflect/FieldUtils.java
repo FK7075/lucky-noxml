@@ -48,6 +48,30 @@ public abstract class FieldUtils {
     }
 
     /**
+     * 返回集合属性的泛型,如果不是java自带的类型，会在泛型类型后加上$ref<br>
+     * List[String]  ->String<br>
+     * Map[String,Ingeger]  ->[String,Integer]<br>
+     * Map[String,MyPojo]   ->[String,MyPojo$ref]<br>
+     *
+     * @param field
+     * @return
+     */
+    public static String[] getStrGenericType(Field field) {
+        Class<?>[] genericClassArray = getGenericType(field);
+        if(genericClassArray==null)
+            return null;
+        String[] gener = new String[genericClassArray.length];
+        for (int i = 0; i < gener.length; i++) {
+            Class<?> gc=genericClassArray[i];
+            if(gc.getClassLoader()!=null)
+                gener[i]=gc.getSimpleName()+"$ref";
+            else
+                gener[i]=gc.getSimpleName();
+        }
+        return gener;
+    }
+
+    /**
      * 属性是否为基本集合类型(泛型为JDK类型的集合)
      * @param field Field对象
      * @return
