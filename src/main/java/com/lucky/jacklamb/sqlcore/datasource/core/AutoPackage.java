@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.datasource.core;
 
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
-import com.lucky.jacklamb.servlet.mapping.regula.Regular;
+import com.lucky.jacklamb.utils.regula.Regular;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;

@@ -12,7 +12,7 @@ import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.servlet.core.Model;
-import com.lucky.jacklamb.servlet.mapping.regula.Regular;
+import com.lucky.jacklamb.utils.regula.Regular;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.commons.codec.digest.DigestUtils;

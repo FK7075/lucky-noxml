@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.servlet.mapping.regula;
+package com.lucky.jacklamb.utils.regula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public abstract class Regular {
     /**
      * 身份证号码
      */
-    public static final String IdCard="^d{15}|d{}18$";
+    public static final String IdCard="^\\d{15}|\\d{}18$";
 
     /**
      * 域名
