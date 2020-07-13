@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
-import com.lucky.jacklamb.servlet.core.LuckyDispatherServlet;
+import com.lucky.jacklamb.servlet.core.LuckyDispatcherServlet;
 import com.lucky.jacklamb.start.FilterMapping;
 import com.lucky.jacklamb.start.ServletMapping;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
@@ -285,7 +285,7 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");
 			projectPath=System.getProperty("user.dir").replaceAll("\\\\", "/")+"/";
-			serverConfig.addServlet(new LuckyDispatherServlet(),0, "/");
+			serverConfig.addServlet(new LuckyDispatcherServlet(),0, "/");
 			serverConfig.setContextPath("");
 			serverConfig.setApBaseDir(System.getProperty("java.io.tmpdir")+"tomcat/");
 			serverConfig.setDocBase("webapp/");

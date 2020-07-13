@@ -6,87 +6,25 @@ import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
-import com.lucky.jacklamb.ioc.config.AppConfig;
-import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.ioc.exception.LuckyExceptionDispose;
-import com.lucky.jacklamb.servlet.ResponseControl;
-import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
-import com.lucky.jacklamb.servlet.mapping.AnnotationOperation;
-import com.lucky.jacklamb.servlet.mapping.UrlParsMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Comparator;
 
 @MultipartConfig
-public class LuckyDispatherServlet extends HttpServlet {
+public class LuckyDispatcherServlet extends BaseServlet {
 
-    private static final long serialVersionUID = 3808567874497317419L;
-    private static final Logger log = LogManager.getLogger(LuckyDispatherServlet.class);
-    private AnnotationOperation anop;
-    private WebConfig webCfg;
-    private UrlParsMap urlParsMap;
-    private ResponseControl responseControl;
-
-    public void initRun() {
-        ApplicationBeans.iocContainers.getControllerIOC().getServerStartRuns()
-                .stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a) -> {
-            log.info("@InitRun ==> Running \"{priority=[" + a.getPriority() + "], id=" + a.getComponentName() + ", Method=" + a.getControllerMethod() + "\"}");
-            a.runAdd();
-        });
-    }
+    private static final Logger log = LogManager.getLogger(LuckyDispatcherServlet.class);
 
     @Override
-    public void init(ServletConfig config) {
-        ApplicationBeans.createApplicationBeans();
-        anop = new AnnotationOperation();
-        webCfg = AppConfig.getAppConfig().getWebConfig();
-        urlParsMap = new UrlParsMap();
-        responseControl = new ResponseControl();
-        initRun();
-    }
-
-    @Override
-    public void destroy() {
-        ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
-                .stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a) -> {
-            log.info("@CloseRun ==> Running \"{priority=[" + a.getPriority() + "], id=" + a.getComponentName() + ", Method=" + a.getControllerMethod() + "\"}");
-            a.runAdd();
-        });
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
-        this.luckyResponse(req, resp, RequestMethod.DELETE);
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-        this.luckyResponse(req, resp, RequestMethod.PUT);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        this.luckyResponse(req, resp, RequestMethod.GET);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        this.luckyResponse(req, resp, RequestMethod.POST);
-    }
-
-    private void luckyResponse(HttpServletRequest req, HttpServletResponse resp, RequestMethod requestMethod) {
+    public void luckyResponse(HttpServletRequest req, HttpServletResponse resp, RequestMethod requestMethod) {
         Model model = null;
         Method method = null;
         Object controllerObj = null;
