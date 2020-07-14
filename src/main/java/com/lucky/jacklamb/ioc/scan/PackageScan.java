@@ -280,7 +280,7 @@ public class PackageScan extends Scan {
 					repositoryClass.add(fileClass);
 				else if(fileClass.isAnnotationPresent(Component.class)
 						||fileClass.isAnnotationPresent(Configuration.class)
-						||fileClass.isAnnotationPresent(ExceptionHander.class)
+						||fileClass.isAnnotationPresent(ControllerExceptionHandler.class)
 						||fileClass.isAnnotationPresent(LuckyServlet.class)
 						||fileClass.isAnnotationPresent(LuckyFilter.class)
 						||fileClass.isAnnotationPresent(LuckyListener.class)

@@ -14,7 +14,7 @@ import com.lucky.jacklamb.conversion.LuckyConversion;
 import com.lucky.jacklamb.annotation.ioc.Bean;
 import com.lucky.jacklamb.annotation.ioc.Component;
 import com.lucky.jacklamb.annotation.ioc.Configuration;
-import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
+import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
 import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
@@ -159,8 +159,8 @@ public class ComponentIOC extends ComponentFactory {
 					}
 				}
 				continue;
-			}else if(component.isAnnotationPresent(ExceptionHander.class)) {
-				ExceptionHander annotation = component.getAnnotation(ExceptionHander.class);
+			}else if(component.isAnnotationPresent(ControllerExceptionHandler.class)) {
+				ControllerExceptionHandler annotation = component.getAnnotation(ControllerExceptionHandler.class);
 				if (!"".equals(annotation.id())) {
 					beanID=annotation.id();
 				} else {

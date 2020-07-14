@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.lucky.jacklamb.annotation.mvc.ExceptionHander;
+import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 
@@ -20,7 +20,7 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 			beans = ApplicationBeans.createApplicationBeans().getBeans(ExceptionDispose.class);
 		}catch(NotFindBeanException e) {
 			beans=new ArrayList<>();
-			log.debug("用户没有注册ExceptionDispose组件，Controller中产生异常需要在Controller中进行处理，如果需要解耦异常处理请使用@ExceptionHander注解定义一组ExceptionDispose");
+			log.debug("用户没有注册ExceptionDispose组件，Controller中产生异常需要在Controller中进行处理，如果需要解耦异常处理请使用@ControllerExceptionHandler注解定义一组ExceptionDispose");
 		}
 	}
 
@@ -32,10 +32,10 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 	@Override
 	protected void globalExceptionHand(Throwable e) {
 		ExceptionDispose exceobj;
-		ExceptionHander eh;
+		ControllerExceptionHandler eh;
 		for(Object obj:beans) {
 			exceobj=(ExceptionDispose) obj;
-			eh=exceobj.getClass().getAnnotation(ExceptionHander.class);
+			eh=exceobj.getClass().getAnnotation(ControllerExceptionHandler.class);
 			if(eh.value().length==0) {
 				exceobj.dispose(e);
 				return;
@@ -52,11 +52,11 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 	public void exceptionHand() {
 		ExceptionDispose exceobj;
 		ExceptionDisposeHand edh;
-		ExceptionHander eh;
+		ControllerExceptionHandler eh;
 		String[] scope;
 		for(Object obj:beans) {
 			exceobj=(ExceptionDispose) obj;
-			eh=exceobj.getClass().getAnnotation(ExceptionHander.class);
+			eh=exceobj.getClass().getAnnotation(ControllerExceptionHandler.class);
 			scope=eh.value();
 			exceobj.init(model,controllerObj, currClass, currMethod, params);
 			edh=new ExceptionDisposeHand(scope,exceobj);
