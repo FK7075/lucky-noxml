@@ -57,24 +57,19 @@ public class URLAndRequestMethod {
 	
 	public URLAndRequestMethod findUrl(Model model,List<URLAndRequestMethod> urlList) throws IOException {
 		boolean isPass=false;
-		URLAndRequestMethod tempURLAndRequestMethod = null;
 		for(URLAndRequestMethod temp:urlList) {
 			if(isConform(temp.getUrl(),url)) {
 				isPass=true;
-				tempURLAndRequestMethod=temp;
-				break;
+				if(temp.methods.contains(model.getRequestMethod())){
+					return temp;
+				}
 			}
 		}
-		if(!isPass) {
+		if(!isPass)
 			model.error(Code.NOTFOUND, "找不与请求相匹配的映射资,请检查您的URL是否正确！","不正确的url："+url);
-			return null;
-		}
-		for(RequestMethod currmethod : methods)
-			if(!tempURLAndRequestMethod.getMethods().contains(currmethod)) {
-				model.error(Code.REFUSED,"您的请求类型"+this.methods+" , 当前方法并不支持！","不合法的请求类型"+this.methods);
-				return null;
-			}
-		return tempURLAndRequestMethod;
+		else
+			model.error(Code.REFUSED,"您的请求类型"+this.methods+" , 当前方法并不支持！","不合法的请求类型"+this.methods);
+		return null;
 	}
 	
 	/**
