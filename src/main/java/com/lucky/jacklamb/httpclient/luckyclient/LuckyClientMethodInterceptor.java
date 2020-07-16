@@ -5,6 +5,7 @@ import com.lucky.jacklamb.annotation.mvc.FileUpload;
 import com.lucky.jacklamb.annotation.mvc.LuckyClient;
 import com.lucky.jacklamb.annotation.mvc.RequestMapping;
 import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
@@ -53,7 +54,9 @@ public class LuckyClientMethodInterceptor implements MethodInterceptor {
             String serviceName = fc.value();
             md = Mapping.getMappingDetails(method);
             String methodUrl = md.value.startsWith("/") ? md.value.substring(1) : md.value;
+            methodUrl= $Expression.translationSharp(methodUrl,callapiMap);
             String regApiUrl = regUrl + serviceName + apiUrl + methodUrl;
+
 
 
             //文件下载的请求，服务将返回byte[]类型的结果
@@ -109,10 +112,10 @@ public class LuckyClientMethodInterceptor implements MethodInterceptor {
     }
 
     private static byte[] fileDownload(String regIpPort, String serviceName, String methodApi, RequestMethod requestMethod, Map<String, Object> paramMap) throws IOException, URISyntaxException {
-                    /*
-                带文件的请求，首先访问注册中心的服务解析接口，得到所有文件服务的地址，
-                得到地址后在将文件请求发送到相应的文件服务器上
-             */
+          /*
+            带文件的请求，首先访问注册中心的服务解析接口，得到所有文件服务的地址，
+            得到地址后在将文件请求发送到相应的文件服务器上
+         */
         String RegUrl = regIpPort + "lucyxfl/getUrl";
         Map<String, Object> serviceNameMap = new HashMap<>();
         serviceNameMap.put("serviceName", serviceName);

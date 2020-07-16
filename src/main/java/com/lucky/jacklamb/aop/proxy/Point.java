@@ -48,6 +48,6 @@ public abstract class Point {
 	 * @param chain
 	 * @return
 	 */
-	public abstract Object proceed(Chain chain);
+	public abstract Object proceed(Chain chain) throws Throwable;
 
 }

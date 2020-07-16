@@ -233,7 +233,7 @@ public class PointRun {
 		Point cpoint=new Point() {
 			
 			@Override
-			public Object proceed(Chain chain) {
+			public Object proceed(Chain chain) throws Throwable {
 				if(location==Location.BEFORE) {
 					perform(expand,expandMethod);
 					return chain.proceed();
@@ -291,12 +291,14 @@ public class PointRun {
 							throw new RuntimeException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
 						expandParams[i]=targetMethodSignature.getParamByIndex(index);	
 					}else if(aopParamValue.equals("[params]")){//整个参数列表
-						expandParams[i]=targetMethodSignature.getParameters();
+						expandParams[i]=targetMethodSignature.getParams();
 					}else if(aopParamValue.equals("[method]")) {//Method对象
 						expandParams[i]=targetMethodSignature.getCurrMethod();
 					}else if(aopParamValue.equals("[target]")) {//目标类的Class
 						expandParams[i]=targetMethodSignature.getTargetClass();
-					} else {//根据参数名得到具体参数
+					} else if(aopParamValue.equals("[targetMethodSignature]")){
+						expandParams[i]=targetMethodSignature;
+					}else {//根据参数名得到具体参数
 						if(!targetMethodSignature.containsParamName(aopParamValue))
 							throw new RuntimeException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
 						expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);

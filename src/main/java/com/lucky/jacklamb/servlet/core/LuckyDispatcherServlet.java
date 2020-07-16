@@ -41,7 +41,7 @@ public class LuckyDispatcherServlet extends BaseServlet {
             String currIp = model.getIpAddr();
             if ("/favicon.ico".equals(uri)) {
                 resp.setContentType("image/x-icon");
-                InputStream favStream = ApplicationBeans.class.getResourceAsStream("/favicon.ico");
+                InputStream favStream = ApplicationBeans.class.getResourceAsStream("/ico/favicon.ico");
                 if (favStream != null) {
                     FileCopyUtils.preview(model, favStream,"favicon.ico");
                     return;

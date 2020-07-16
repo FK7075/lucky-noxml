@@ -378,7 +378,7 @@ public class Model {
                 outputStream = resp.getOutputStream();
             outputStream.write(info.toString().getBytes("UTF-8"));
         } catch (IOException e) {
-            e.printStackTrace();
+            error(e,Code.ERROR);
         }
 
     }
@@ -659,31 +659,12 @@ public class Model {
      * @param code
      */
     public void error(Throwable e,Code code) {
-        try {
-            File exceptionFile = getBaseDir("log/lucky-tomcat("+port+")-exp.log");
-            if (!exceptionFile.exists()) {
-                exceptionFile.getParentFile().mkdirs();
-                exceptionFile.createNewFile();
-            }
-            e.printStackTrace(new PrintStream(exceptionFile));
-            e.printStackTrace();
-            StringBuilder ecpInfo = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(exceptionFile), "UTF-8"));
-            String s = null;
-            while ((s = br.readLine()) != null) {
-                if (s.startsWith("at"))
-                    ecpInfo.append("&emsp;&emsp;&emsp;&emsp;" + s + "<br/>");
-                else
-                    ecpInfo.append("&emsp;&emsp;" + s + "<br/>");
-            }
-            error(code,ecpInfo.toString(),e.toString());
-            log.error(ecpInfo.toString());
-            br.close();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        StringWriter buffer=new StringWriter();
+        e.printStackTrace(new PrintWriter(buffer));
+        e.printStackTrace();
+        log.error(buffer.toString());
+        String stackMsg = buffer.toString().replaceAll("\\r\\n", "<br>").replaceAll("\\t", "&emsp;&emsp;");
+        error(code,stackMsg,e.toString());
     }
 
     public void error(Code code,String Message,String Description) {

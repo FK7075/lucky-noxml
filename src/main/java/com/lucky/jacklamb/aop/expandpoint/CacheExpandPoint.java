@@ -14,7 +14,7 @@ public class CacheExpandPoint extends Point{
 	private ApplicationBeans beans;
 	
 	@SuppressWarnings("unchecked")
-	public Object cacheResult(Chain chain) {
+	public Object cacheResult(Chain chain) throws Throwable {
 //		String condition = cachAnn.condition();//表达式，满足就走缓存,依赖表达式解析引擎，后期完善 
 		beans=ApplicationBeans.createApplicationBeans();
 		Object result = null;
@@ -44,7 +44,7 @@ public class CacheExpandPoint extends Point{
 	}
 	
 	@Override
-	public Object proceed(Chain chain) {
+	public Object proceed(Chain chain) throws Throwable {
 		// 返回缓存中的值
 		return cacheResult(chain);
 	}

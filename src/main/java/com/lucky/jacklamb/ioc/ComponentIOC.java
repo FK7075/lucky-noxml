@@ -27,6 +27,7 @@ import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
+import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,8 @@ public class ComponentIOC extends ComponentFactory {
 	private static final Logger log= LogManager.getLogger(ComponentIOC.class);
 
 	private Map<String, Object> appMap;
+
+	private String IOC_CODE="component";
 
 	private List<String> appIDS;
 	
@@ -141,21 +144,24 @@ public class ComponentIOC extends ComponentFactory {
 					if(met.isAnnotationPresent(Bean.class)) {
 						Object invoke = met.invoke(obj);
 						Bean bean=met.getAnnotation(Bean.class);
-						if("".equals(bean.value())) {
-							beanID=component.getSimpleName()+"."+met.getName();
-						}else {
-							beanID=bean.value();
+						IocCode iocCode=bean.iocCode();
+						if(iocCode==IocCode.COMPONENT){
+							if("".equals(bean.value())) {
+								beanID=component.getSimpleName()+"."+met.getName();
+							}else {
+								beanID=bean.value();
+							}
+							if(!LuckyConfig.class.isAssignableFrom(met.getReturnType())) {
+								addAppMap(beanID, invoke);
+							}else if(ScanConfig.class.isAssignableFrom(met.getReturnType())) {
+								addAppMap(beanID, AppConfig.getAppConfig().getScanConfig());
+							}else if(WebConfig.class.isAssignableFrom(met.getReturnType())) {
+								addAppMap(beanID, AppConfig.getAppConfig().getWebConfig());
+							}else if(ServerConfig.class.isAssignableFrom(met.getReturnType())) {
+								addAppMap(beanID, AppConfig.getAppConfig().getServerConfig());
+							}
+							log.info("@Bean \"[id="+beanID+" class="+invoke+"]\"");
 						}
-						if(!LuckyConfig.class.isAssignableFrom(met.getReturnType())) {
-							addAppMap(beanID, invoke);
-						}else if(ScanConfig.class.isAssignableFrom(met.getReturnType())) {
-							addAppMap(beanID, AppConfig.getAppConfig().getScanConfig());
-						}else if(WebConfig.class.isAssignableFrom(met.getReturnType())) {
-							addAppMap(beanID, AppConfig.getAppConfig().getWebConfig());
-						}else if(ServerConfig.class.isAssignableFrom(met.getReturnType())) {
-							addAppMap(beanID, AppConfig.getAppConfig().getServerConfig());
-						}
-						log.info("@Bean \"[id="+beanID+" class="+invoke+"]\"");
 					}
 				}
 				continue;
@@ -166,7 +172,7 @@ public class ComponentIOC extends ComponentFactory {
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
+				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@ExceptionHander \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
@@ -174,7 +180,7 @@ public class ComponentIOC extends ComponentFactory {
 					||component.isAnnotationPresent(LuckyFilter.class)
 					||component.isAnnotationPresent(LuckyListener.class)) {
 				beanID=LuckyUtils.TableToClass1(component.getSimpleName());
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
+				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@Web \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;

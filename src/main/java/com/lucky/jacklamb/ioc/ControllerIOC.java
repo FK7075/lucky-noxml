@@ -25,6 +25,8 @@ public class ControllerIOC extends ComponentFactory{
 
 	private static final Logger log= LogManager.getLogger(ControllerIOC.class);
 
+	private String IOC_CODE="controller";
+
 	private Map<String, Object> controllerMap;
 
 	private List<String> controllerIDS;
@@ -91,7 +93,7 @@ public class ControllerIOC extends ComponentFactory{
 
 	public Object getControllerBean(String id) {
 		if (!containId(id))
-			throw new NotFindBeanException("在Controller(ioc)容器中找不到ID为--" + id + "--的Bean...");
+			throw new NotFindBeanException("在Controller(ioc)容器中找不到ID为 \"" + id + "\" 的Bean...");
 		return controllerMap.get(id);
 	}
 
@@ -105,7 +107,7 @@ public class ControllerIOC extends ComponentFactory{
 
 	public void addControllerMap(String id, Object object) {
 		if (containId(id))
-			throw new NotAddIOCComponent("Controller(ioc)容器中已存在ID为--" + id + "--的组件，无法重复添加（您可能配置了同名的@Controller组件，这将会导致异常的发生！）......");
+			throw new NotAddIOCComponent("Controller(ioc)容器中已存在ID为 \"" + id + "\" 的组件，无法重复添加（您可能配置了同名的@Controller组件，这将会导致异常的发生！）......");
 		controllerMap.put(id, object);
 		addControllerIDS(id);
 	}
@@ -142,7 +144,7 @@ public class ControllerIOC extends ComponentFactory{
 				else {
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
-				addControllerMap(beanID, PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "controller", beanID, controller));
+				addControllerMap(beanID, PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, controller));
 			}else if(controller.isAnnotationPresent(CallController.class)){
 				CallController cont = controller.getAnnotation(CallController.class);
 				if (!"".equals(cont.id())) {

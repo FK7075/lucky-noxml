@@ -9,6 +9,7 @@ import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
+import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 不做配置时的默认包扫描
@@ -227,17 +229,87 @@ public class PackageScan extends Scan {
 				}
 				if(fileClass.isAnnotationPresent(Configuration.class)) {
 					Method[] beanMethods=fileClass.getDeclaredMethods();
+					Object cfgObj = fileClass.newInstance();
 					Class<?> returnType;
 					Object config;
 					StringBuilder info;
 					for(Method method:beanMethods) {
 						returnType=method.getReturnType();
-						if(method.isAnnotationPresent(Bean.class)&&LuckyConfig.class.isAssignableFrom(returnType)) {
-							info=new StringBuilder();
+						if(method.isAnnotationPresent(Bean.class)) {
+							IocCode iocCode=method.getAnnotation(Bean.class).iocCode();
 							method.setAccessible(true);
-							config=method.invoke(fileClass.newInstance());
-							info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
-							log.info(info.toString());
+							if(LuckyConfig.class.isAssignableFrom(returnType)){
+								config=method.invoke(cfgObj);
+								info=new StringBuilder();
+								info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
+								log.info(info.toString());
+							}else if(iocCode == IocCode.CONTROLLER){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									controllerClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(controllerClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Controller组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode == IocCode.SERVICE){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									serviceClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(serviceClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Service组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode == IocCode.REPOSITORY){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									repositoryClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(repositoryClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Repository组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode==IocCode.TABLE){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									pojoClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(pojoClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Table组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode==IocCode.ASPECT){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									aspectClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(aspectClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode==IocCode.WEBSOCKET){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									webSocketClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(webSocketClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@ServerEndpoint组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}
 						}
 					}
 				}

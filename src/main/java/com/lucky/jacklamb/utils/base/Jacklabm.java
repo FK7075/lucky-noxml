@@ -6,11 +6,15 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.URL;
 
 public abstract class Jacklabm {
+
+    public static final Logger log= LogManager.getLogger(ApplicationBeans.class);;
 
     private static ScanConfig sc;
 
@@ -36,10 +40,11 @@ public abstract class Jacklabm {
     public static void welcome() {
         if (!first)
             return;
-        InputStream logoStream = ApplicationBeans.class.getResourceAsStream("/logo.txt");
+        InputStream logoStream = ApplicationBeans.class.getResourceAsStream("/logo/logo.txt");
         if(logoStream!=null){
             first = false;
             try {
+                log.info("找到自定义的启动logo文件：classpath: /logo/logo.txt");
                 System.out.println(IOUtils.toString(logoStream));
                 System.out.println(versionInfo());
                 return;
@@ -89,16 +94,16 @@ public abstract class Jacklabm {
     private static String getHtmlString(Code code) throws IOException {
         String htmlString;
         boolean isFive=code==Code.ERROR;
-        URL html=isFive?ApplicationBeans.class.getClassLoader().getResource("/500.html"):
-                    ApplicationBeans.class.getClassLoader().getResource("/404.html");
-        if (html == null) {
+        InputStream html=isFive?ApplicationBeans.class.getResourceAsStream("/err/500.html"):
+                    ApplicationBeans.class.getResourceAsStream("/err/404.html");
+        if (html==null) {
             StringWriter sw = new StringWriter();
             BufferedReader br = isFive?new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/500.html"), "UTF-8")):
                                        new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/404.html"), "UTF-8"));
             IOUtils.copy(br, sw);
             htmlString = sw.toString();
         } else {
-            htmlString = FileUtils.readFileToString(new File(html.getPath()), "UTF-8");
+            htmlString = IOUtils.toString(html, "UTF-8");
         }
         return htmlString;
     }

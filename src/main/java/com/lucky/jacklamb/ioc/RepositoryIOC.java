@@ -28,6 +28,8 @@ public class RepositoryIOC extends ComponentFactory {
 
 	private Map<String, Object> mapperMap;
 
+	private String IOC_CODE="repository";
+
 	private Map<String,String> mapperTtypeMap;
 
 	private List<String> mapperIDS;
@@ -139,7 +141,7 @@ public class RepositoryIOC extends ComponentFactory {
 					beanID=rep.value();
 				else
 					beanID=LuckyUtils.TableToClass1(repository.getSimpleName());
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "repository", beanID, repository);
+				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, repository);
 				addRepositoryMap(beanID, aspect);
 				log.info("@Repository \"[id="+beanID+" class="+aspect+"]\"");
 

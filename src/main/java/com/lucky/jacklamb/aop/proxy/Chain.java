@@ -64,14 +64,10 @@ public class Chain {
 	}
 
 
-	public Object proceed() {
+	public Object proceed() throws Throwable {
 		Object result;
 		if(++index==points.size()) {
-			try {
-				result=methodProxy.invokeSuper(target, params);
-			} catch (Throwable e) {
-				throw new RuntimeException("Throwable", e);
-			}
+			result=methodProxy.invokeSuper(target, params);
 		}else {
 			Point point=points.get(index);
 			result=point.proceed(this);

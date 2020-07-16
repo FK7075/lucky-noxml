@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.annotation.ioc;
 
+import com.lucky.jacklamb.ioc.enums.IocCode;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,4 +23,10 @@ public @interface Bean {
 	 * @return
 	 */
 	String value() default "";
+
+	/**
+	 * 指定组件的类型，默认为Component组件
+	 * @return
+	 */
+	IocCode iocCode() default IocCode.COMPONENT;
 }
