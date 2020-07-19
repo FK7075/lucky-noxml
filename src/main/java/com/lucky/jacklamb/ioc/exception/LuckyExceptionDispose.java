@@ -17,7 +17,7 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 	
 	public LuckyExceptionDispose() {
 		try {
-			beans = ApplicationBeans.createApplicationBeans().getBeans(ExceptionDispose.class);
+			beans = ApplicationBeans.createApplicationBeans().getBeans(LuckyExceptionHandler.class);
 		}catch(NotFindBeanException e) {
 			beans=new ArrayList<>();
 			log.debug("用户没有注册ExceptionDispose组件，Controller中产生异常需要在Controller中进行处理，如果需要解耦异常处理请使用@ControllerExceptionHandler注解定义一组ExceptionDispose");
@@ -31,10 +31,10 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 	 */
 	@Override
 	protected void globalExceptionHand(Throwable e) {
-		ExceptionDispose exceobj;
+		LuckyExceptionHandler exceobj;
 		ControllerExceptionHandler eh;
 		for(Object obj:beans) {
-			exceobj=(ExceptionDispose) obj;
+			exceobj=(LuckyExceptionHandler) obj;
 			eh=exceobj.getClass().getAnnotation(ControllerExceptionHandler.class);
 			if(eh.value().length==0) {
 				exceobj.dispose(e);
@@ -50,12 +50,12 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 	 */
 	@Override
 	public void exceptionHand() {
-		ExceptionDispose exceobj;
+		LuckyExceptionHandler exceobj;
 		ExceptionDisposeHand edh;
 		ControllerExceptionHandler eh;
 		String[] scope;
 		for(Object obj:beans) {
-			exceobj=(ExceptionDispose) obj;
+			exceobj=(LuckyExceptionHandler) obj;
 			eh=exceobj.getClass().getAnnotation(ControllerExceptionHandler.class);
 			scope=eh.value();
 			exceobj.init(model,controllerObj, currClass, currMethod, params);

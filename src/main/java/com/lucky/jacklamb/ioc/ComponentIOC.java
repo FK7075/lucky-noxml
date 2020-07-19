@@ -174,7 +174,7 @@ public class ComponentIOC extends ComponentFactory {
 				}
 				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addAppMap(beanID,aspect);
-				log.info("@ExceptionHander \"[id="+beanID+" ,class="+aspect+"]\"");
+				log.info("@ControllerExceptionHandler \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
 			}else if(component.isAnnotationPresent(LuckyServlet.class)
 					||component.isAnnotationPresent(LuckyFilter.class)

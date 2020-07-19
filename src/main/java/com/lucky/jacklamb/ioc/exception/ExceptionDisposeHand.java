@@ -21,9 +21,9 @@ public class ExceptionDisposeHand {
 	/**
 	 * 对应的异常处理
 	 */
-	private ExceptionDispose dispose;
+	private LuckyExceptionHandler dispose;
 	
-	public ExceptionDisposeHand(String[] hander, ExceptionDispose dispose) {
+	public ExceptionDisposeHand(String[] hander, LuckyExceptionHandler dispose) {
 		this.hander=new ArrayList<>();
 		Stream.of(hander).forEach(this.hander::add);
 		this.dispose = dispose;
@@ -37,11 +37,11 @@ public class ExceptionDisposeHand {
 		this.hander = hander;
 	}
 
-	public ExceptionDispose getDispose() {
+	public LuckyExceptionHandler getDispose() {
 		return dispose;
 	}
 
-	public void setDispose(ExceptionDispose dispose) {
+	public void setDispose(LuckyExceptionHandler dispose) {
 		this.dispose = dispose;
 	}
 	
