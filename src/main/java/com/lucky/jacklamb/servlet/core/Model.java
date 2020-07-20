@@ -666,7 +666,8 @@ public class Model {
         e.printStackTrace(new PrintWriter(buffer));
         e.printStackTrace();
         log.error(buffer.toString());
-        String stackMsg = buffer.toString().replaceAll("\\r\\n", "<br>").replaceAll("\\t", "&emsp;&emsp;");
+        String stackMsg = buffer.toString().replaceAll("\\r\\n", "<br/>").replaceAll("\\t", "&emsp;&emsp;");
+        stackMsg=stackMsg.replaceAll("\\n","<br/>");
         error(code,stackMsg,e.toString());
     }
 
