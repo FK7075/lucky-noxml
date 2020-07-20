@@ -24,6 +24,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -351,6 +352,7 @@ public class Model {
     public void writerJson(Object pojo) {
         LSON lson = new LSON();
         log.debug(lson.toJsonByGson(pojo));
+        resp.setContentType("application/json");
         writer(lson.toFormatJsonByGson(pojo));
     }
 
@@ -360,9 +362,10 @@ public class Model {
      * @param pojo (数组，对象，Collection,Map)
      * @throws IOException
      */
-    public void witerXml(Object pojo) {
+    public void writerXml(Object pojo) {
         LXML lson = new LXML(pojo);
         log.debug(HEAD + lson.getXmlStr());
+        resp.setContentType("application/xml");
         writer(HEAD + lson.getXmlStr());
     }
 
@@ -669,12 +672,66 @@ public class Model {
 
     public void error(Code code,String Message,String Description) {
         try {
-            resp.setContentType("text/html");
-            writer(Jacklabm.exception(code, Message, Description));
+            //"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+            String userAgent = req.getHeader("User-Agent");
+            if(userAgent.startsWith("Mozilla/")){
+                resp.setContentType("text/html");
+                writer(Jacklabm.exception(code, Message, Description));
+            }else{
+                writerJson(new ExceptionMessage(code.code,code.errTitle,Description));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+}
 
+class ExceptionMessage{
 
+    private Date errTime;
+
+    private int errCode;
+
+    private String errType;
+
+    private String message;
+
+    public ExceptionMessage(int errCode, String errType, String message) {
+        this.errTime = new Date();
+        this.errCode = errCode;
+        this.errType = errType;
+        this.message = message;
+    }
+
+    public Date getErrTime() {
+        return errTime;
+    }
+
+    public void setErrTime(Date errTime) {
+        this.errTime = errTime;
+    }
+
+    public int getErrCode() {
+        return errCode;
+    }
+
+    public void setErrCode(int errCode) {
+        this.errCode = errCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getErrType() {
+        return errType;
+    }
+
+    public void setErrType(String errType) {
+        this.errType = errType;
+    }
 }

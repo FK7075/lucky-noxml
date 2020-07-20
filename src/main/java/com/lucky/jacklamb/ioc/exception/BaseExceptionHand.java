@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @author fk-7075
  *
  */
-public abstract class LuckyExceptionHand {
+public abstract class BaseExceptionHand {
 
 	/**
 	 * 当前请求响应的Controller对象
@@ -48,6 +48,13 @@ public abstract class LuckyExceptionHand {
 	 */
 	private List<ExceptionDisposeHand> registry;
 
+	/**
+	 * 初始化
+	 * @param model
+	 * @param controllerObj
+	 * @param currMethod
+	 * @param params
+	 */
 	public void initialize(Model model, Object controllerObj, Method currMethod, Object[] params) {
 		this.controllerObj = controllerObj;
 		this.currClass = controllerObj.getClass();

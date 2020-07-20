@@ -9,7 +9,7 @@ import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 
-public class LuckyExceptionDispose extends LuckyExceptionHand {
+public class LuckyExceptionDispose extends BaseExceptionHand {
 	
 	private static Logger log=Logger.getLogger(LuckyExceptionDispose.class);
 	
@@ -37,8 +37,8 @@ public class LuckyExceptionDispose extends LuckyExceptionHand {
 			exceobj=(LuckyExceptionHandler) obj;
 			eh=exceobj.getClass().getAnnotation(ControllerExceptionHandler.class);
 			if(eh.value().length==0) {
-				exceobj.dispose(e);
-				return;
+				if(exceobj.dispose(e));
+					return;
 			}
 		}
 		super.globalExceptionHand(e);

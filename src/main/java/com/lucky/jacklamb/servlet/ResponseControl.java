@@ -20,8 +20,6 @@ public class ResponseControl {
 	
 	/**
 	 * 响应当前请求
-	 * @param req Request对象
-	 * @param resp Response对象
 	 * @param info 响应的目标
 	 * @param pre_suf 前后缀配置
 	 * @throws IOException
@@ -63,7 +61,7 @@ public class ResponseControl {
 				return;
 			}
 			if(controllerAndMethod.getRest()==Rest.XML) {
-				model.witerXml(obj);
+				model.writerXml(obj);
 				return;
 			}
 			if(controllerAndMethod.getRest()==Rest.TXT) {
