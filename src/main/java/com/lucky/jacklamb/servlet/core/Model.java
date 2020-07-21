@@ -38,8 +38,6 @@ public class Model {
 
     private static final Logger log = LogManager.getLogger(Model.class);
 
-    private final String HEAD = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-
     private final Integer port=AppConfig.getAppConfig().getServerConfig().getPort();
 
     /**
@@ -364,9 +362,9 @@ public class Model {
      */
     public void writerXml(Object pojo) {
         LXML lson = new LXML(pojo);
-        log.debug(HEAD + lson.getXmlStr());
+        log.debug(lson.getXmlStr());
         resp.setContentType("application/xml");
-        writer(HEAD + lson.getXmlStr());
+        writer(lson.getXmlStr());
     }
 
     /**
