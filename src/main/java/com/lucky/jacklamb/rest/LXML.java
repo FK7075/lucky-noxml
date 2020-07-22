@@ -1,15 +1,8 @@
 package com.lucky.jacklamb.rest;
 
 import com.lucky.jacklamb.utils.base.LuckyUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
 
-import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -28,43 +21,43 @@ public class LXML {
      * @param pojo
      */
     public LXML(Object pojo) {
-//        xmlStr= XmlFileUtil.createXmlDocument(pojo);
-        if (pojo == null)
-            xmlStr = "<null/>";
-        else {
-            Class<?> clzz = pojo.getClass();
-            if (Collection.class.isAssignableFrom(clzz)) {
-                try {
-                    xmlStr = collectionToxmlStr((Collection<?>) pojo);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } else if (clzz.isEnum()) {
-                xmlStr = pojo.toString();
-            } else if (clzz.isArray()) {
-                try {
-                    xmlStr = arrayToxmlStr((Object[]) pojo);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } else if (Map.class.isAssignableFrom(clzz)) {
-                xmlStr = mapToxmlStr((Map<Object, Object>) pojo);
-            } else if (clzz.getClassLoader() != null) {
-                try {
-                    xmlStr = objectToxmlStr(pojo);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                xmlStr = pojo.toString();
-            }
-        }
+        xmlStr= XmlFileUtil.createXmlDocument(pojo);
+//        if (pojo == null)
+//            xmlStr = "<null/>";
+//        else {
+//            Class<?> clzz = pojo.getClass();
+//            if (Collection.class.isAssignableFrom(clzz)) {
+//                try {
+//                    xmlStr = collectionToxmlStr((Collection<?>) pojo);
+//                } catch (IllegalArgumentException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//            } else if (clzz.isEnum()) {
+//                xmlStr = pojo.toString();
+//            } else if (clzz.isArray()) {
+//                try {
+//                    xmlStr = arrayToxmlStr((Object[]) pojo);
+//                } catch (IllegalArgumentException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//            } else if (Map.class.isAssignableFrom(clzz)) {
+//                xmlStr = mapToxmlStr((Map<Object, Object>) pojo);
+//            } else if (clzz.getClassLoader() != null) {
+//                try {
+//                    xmlStr = objectToxmlStr(pojo);
+//                } catch (IllegalArgumentException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                xmlStr = pojo.toString();
+//            }
+//        }
 
     }
 
