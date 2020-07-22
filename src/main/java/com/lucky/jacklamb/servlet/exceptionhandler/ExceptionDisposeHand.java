@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.ioc.exception;
+package com.lucky.jacklamb.servlet.exceptionhandler;
 
 import java.util.ArrayList;
 import java.util.List;

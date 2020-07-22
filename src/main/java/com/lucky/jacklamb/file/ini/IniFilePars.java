@@ -251,12 +251,12 @@ public class IniFilePars {
 			sectionMap = this.getSectionMap(SECTION_WEB);
 			webSetting(web,sectionMap);
 		}
-		if(this.isHasSection(SECTION_HANDERPREFIXANDSUFFIX)) {
-			sectionMap = this.getSectionMap(SECTION_HANDERPREFIXANDSUFFIX);
+		if(this.isHasSection(SECTION_HANDLER_PREFIX_AND_SUFFIX)) {
+			sectionMap = this.getSectionMap(SECTION_HANDLER_PREFIX_AND_SUFFIX);
 			addPrefixAndSuffix(web,sectionMap);
 		}
-		if(this.isHasSection(SECTION_STATICHANDER)) {
-			sectionMap = this.getSectionMap(SECTION_STATICHANDER);
+		if(this.isHasSection(SECTION_STATIC_HANDLER)) {
+			sectionMap = this.getSectionMap(SECTION_STATIC_HANDLER);
 			addStaticHander(web,sectionMap);
 		}
 		if(this.isHasSection(SECTION_SPECIFIRESOURCESIPRESTRICT)) {

@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.ioc.exception;
+package com.lucky.jacklamb.servlet.exceptionhandler;
 
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.enums.Code;

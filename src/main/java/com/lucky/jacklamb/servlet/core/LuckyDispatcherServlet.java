@@ -6,7 +6,7 @@ import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
-import com.lucky.jacklamb.ioc.exception.LuckyExceptionDispose;
+import com.lucky.jacklamb.servlet.exceptionhandler.LuckyExceptionDispose;
 import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +107,7 @@ public class LuckyDispatcherServlet extends BaseServlet {
                     obj1 = method.invoke(controllerObj, args);
                     if (isDownload == true)//下载操作
                         anop.download(model, method);
-                    responseControl.jump(model, controllerAndMethod, method, obj1);
+                    responseControl.jump(model, controllerAndMethod.getRest(), method, obj1,controllerAndMethod.getPreAndSuf());
                 }
             }
         } catch (Throwable e) {

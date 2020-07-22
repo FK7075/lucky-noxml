@@ -10,7 +10,7 @@ import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
-import com.lucky.jacklamb.ioc.exception.JarScanException;
+import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
 import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

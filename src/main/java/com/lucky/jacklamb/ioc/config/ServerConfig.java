@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.ioc.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
@@ -19,6 +20,8 @@ import com.lucky.jacklamb.start.ServletMapping;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class ServerConfig implements LuckyConfig  {
+
+	private static final String f= File.separator;
 
 	public ServerConfig() {
 		servletlist=new ArrayList<>();
@@ -185,7 +188,7 @@ public class ServerConfig implements LuckyConfig  {
 	 * @param docbase
 	 */
 	public void setDocBase(String docbase) {
-		if(docbase.startsWith("/")) {
+		if(docbase.startsWith(f)) {
 			this.docBase=projectPath+docbase.substring(1);
 		}else {
 			this.docBase=projectPath+docbase;
@@ -202,6 +205,7 @@ public class ServerConfig implements LuckyConfig  {
 	 */
 	public void setPort(int port) {
 		this.port = port;
+		this.baseDir=System.getProperty("java.io.tmpdir")+"tomcat."+serverConfig.getPort()+f;
 	}
 
 	public String getContextPath() {
@@ -284,11 +288,10 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setShutdown(null);
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");
-			projectPath=System.getProperty("user.dir").replaceAll("\\\\", "/")+"/";
+			projectPath=System.getProperty("user.dir")+f;
 			serverConfig.addServlet(new LuckyDispatcherServlet(),0, "/");
 			serverConfig.setContextPath("");
-			serverConfig.setApBaseDir(System.getProperty("java.io.tmpdir")+"tomcat/");
-			serverConfig.setDocBase("webapp/");
+			serverConfig.setDocBase("webapp"+f);
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);

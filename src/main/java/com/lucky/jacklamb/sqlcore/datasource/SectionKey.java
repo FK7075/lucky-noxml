@@ -22,7 +22,7 @@ public class SectionKey {
 	
 	public static final String SECTION_FILTER="Filter";
 	
-	public static final String SECTION_STATICHANDER="StaticHander";
+	public static final String SECTION_STATIC_HANDLER="StaticHandler";
 	
 	public static final String SECTION_FILTER_MAPPING="Filter Mapping";
 	
@@ -32,7 +32,7 @@ public class SectionKey {
 
 	public static final String SECTION_SERVICE="Service";
 	
-	public static final String SECTION_HANDERPREFIXANDSUFFIX="HanderPrefixAndSuffix";
+	public static final String SECTION_HANDLER_PREFIX_AND_SUFFIX="HandlerPrefixAndSuffix";
 	
-	public static final String SECTION_SPECIFIRESOURCESIPRESTRICT="specifiResourcesIpRestrict";
+	public static final String SECTION_SPECIFIRESOURCESIPRESTRICT="SpecifiResourcesIpRestrict";
 }

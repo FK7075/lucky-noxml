@@ -14,7 +14,24 @@ import java.lang.annotation.Target;
 public @interface ControllerExceptionHandler {
 	
 	String id() default "";
-	
+
+	/**
+	 * 视图定位的前缀(eg: /WEB_INF/jsp/),只有在rest=Rest.NO时发挥作用
+	 * @return
+	 */
+	String prefix() default "";
+
+	/**
+	 * 视图定位的后缀(eg: .jsp),只有在rest=Rest.NO时发挥作用
+	 * @return
+	 */
+	String suffix() default "";
+
+
+	/**
+	 * 配置异常处理器的作用范围(iocID.方法名或者iocID)
+	 * @return
+	 */
 	String[] value() default {};
 
 	/**

@@ -958,7 +958,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                 getLog().error(sm.getString("abstractConnectionHandler.oome"), oome);
             } catch (Throwable e) {
                 ExceptionUtils.handleThrowable(e);
-                // any other exception or error is odd. Here we log it
+                // any other exceptionhandler or error is odd. Here we log it
                 // with "ERROR" level, so it will show up even on
                 // less-than-verbose logs.
                 getLog().error(sm.getString("abstractConnectionHandler.error"), e);
