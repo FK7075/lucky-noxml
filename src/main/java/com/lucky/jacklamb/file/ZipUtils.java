@@ -119,6 +119,7 @@ public class ZipUtils {
                 } else {
                     // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
                     File targetFile = new File(unCompressFile.getAbsolutePath() + File.separator + entry.getName());
+                    log.info("正在解压："+targetFile);
                     // 保证这个文件的父文件夹必须要存在
                     if (!targetFile.getParentFile().exists()) {
                         targetFile.getParentFile().mkdirs();
@@ -126,7 +127,7 @@ public class ZipUtils {
                     targetFile.createNewFile();
                     // 将压缩文件内容写入到这个文件中
                     InputStream is = zipFile.getInputStream(entry);
-                    FileOutputStream fos = new FileOutputStream(targetFile);
+                    BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(targetFile));
                     int len;
                     byte[] buf = new byte[BUFFER_SIZE];
                     while ((len = is.read(buf)) != -1) {
@@ -138,7 +139,7 @@ public class ZipUtils {
                 }
             }
             long end = System.currentTimeMillis();
-            System.out.println("解压完成，耗时：" + (end - start) + " ms");
+            log.info("解压完成，耗时：" + (end - start) + " ms");
         } catch (Exception e) {
             throw new RuntimeException("unzip error from ZipUtils", e);
         } finally {

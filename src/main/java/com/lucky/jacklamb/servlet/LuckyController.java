@@ -191,6 +191,8 @@ public abstract class LuckyController {
 		compress(srcFile,jarFileName,".jar");
 	}
 
+
+
 	/**
 	 * 文件压缩
 	 * @param srcFile 源文件集合
@@ -208,6 +210,7 @@ public abstract class LuckyController {
 				}).collect(Collectors.toList());
 		if(srcFile==null||srcFile.isEmpty()){
 			model.writer("Download failed！The file you need to download cannot be found！");
+			log.error("Download failed！The file you need to download cannot be found！");
 		}else{
 			File zip=new File(baseDir+ UUID.randomUUID().toString()+suffix);
 			File srcCopy=new File(baseDir+UUID.randomUUID().toString());
