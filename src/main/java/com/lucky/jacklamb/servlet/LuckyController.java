@@ -11,6 +11,8 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.servlet.core.Model;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class LuckyController {
+
+	protected static final Logger log = LogManager.getLogger(LuckyController.class);
 
 	protected final String baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
 
@@ -168,24 +172,56 @@ public abstract class LuckyController {
 	}
 
 	/**
-	 * 将多个文件打包后下载
+	 * 将多个文件打包为Zip包后提供给用户下载
 	 * @param srcFile 源文件集合
 	 * @param zipFileName 下载后的文件名
 	 * @throws IOException
 	 */
 	protected void downloadZip(List<File> srcFile,String zipFileName) throws IOException {
-		srcFile=srcFile.stream().filter(f->f.exists()).collect(Collectors.toList());
+		compress(srcFile,zipFileName,".zip");
+	}
+
+	/**
+	 * 将多个文件打包为Jar包后提供给用户下载
+	 * @param srcFile 源文件集合
+	 * @param jarFileName 下载后的文件名
+	 * @throws IOException
+	 */
+	protected void downloadJar(List<File> srcFile,String jarFileName) throws IOException {
+		compress(srcFile,jarFileName,".jar");
+	}
+
+	/**
+	 * 文件压缩
+	 * @param srcFile 源文件集合
+	 * @param compressName 下载后的文件名
+	 * @param suffix 压缩文件的后缀
+	 * @throws IOException
+	 */
+	private void compress(List<File> srcFile,String compressName,String suffix) throws IOException {
+		srcFile=srcFile.stream()
+				.filter((f)->{
+					if(f.exists())
+						return true;
+					log.error("当前请求的下载列表中不存在文件："+f);
+					return false;
+				}).collect(Collectors.toList());
 		if(srcFile==null||srcFile.isEmpty()){
 			model.writer("Download failed！The file you need to download cannot be found！");
 		}else{
-			File zip=new File(baseDir+ UUID.randomUUID().toString()+".zip");
-			if(!zip.exists())
-				zip.createNewFile();
-			ZipUtils.toZip(srcFile,zip);
-			download(new FileInputStream(zip),zipFileName+".zip");
-			zip.delete();
+			File zip=new File(baseDir+ UUID.randomUUID().toString()+suffix);
+			File srcCopy=new File(baseDir+UUID.randomUUID().toString());
+			FileCopyUtils.copyFolders(srcFile,srcCopy);
+			try{
+				if(!zip.exists())
+					zip.createNewFile();
+				ZipUtils.compress(srcCopy,zip);
+				download(new FileInputStream(zip),compressName+suffix);
+			}finally {
+				zip.delete();
+				FileCopyUtils.deleteFile(srcCopy);
+			}
 		}
-
 	}
 
 	/**
