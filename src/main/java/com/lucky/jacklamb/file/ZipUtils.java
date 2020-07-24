@@ -111,6 +111,7 @@ public class ZipUtils {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
+                log.info("正在解压："+entry.getName());
                 // 如果是文件夹，就创建个文件夹
                 if (entry.isDirectory()) {
                     String dirPath = unCompressFile.getAbsolutePath() + File.separator + entry.getName();
@@ -119,7 +120,6 @@ public class ZipUtils {
                 } else {
                     // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
                     File targetFile = new File(unCompressFile.getAbsolutePath() + File.separator + entry.getName());
-                    log.info("正在解压："+targetFile);
                     // 保证这个文件的父文件夹必须要存在
                     if (!targetFile.getParentFile().exists()) {
                         targetFile.getParentFile().mkdirs();

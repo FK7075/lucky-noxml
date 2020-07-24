@@ -3,7 +3,7 @@ package com.lucky.jacklamb.ioc.enums;
 public enum IocCode {
 
     /** 普通IOC组件
-     * -@Component,
+     * -@Component,@Job
      * -@Configuration,
      * -@ControllerExceptionHandler,
      * -@LuckyServlet,@LuckyFilter,
@@ -48,6 +48,12 @@ public enum IocCode {
      * WebSocket组件
      * -@ServerEndpoint
      */
-    WEBSOCKET
+    WEBSOCKET,
+
+    /**
+     *Job组件
+     * -@Job
+     */
+    JOB
 
 }

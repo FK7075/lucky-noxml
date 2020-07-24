@@ -174,24 +174,80 @@ public abstract class LuckyController {
 	/**
 	 * 将多个文件打包为Zip包后提供给用户下载
 	 * @param srcFile 源文件集合
-	 * @param zipFileName 下载后的文件名
+	 * @param zipFileName 下载后的文件名，最终的压缩文件将以这个名字保存到客户端
 	 * @throws IOException
 	 */
-	protected void downloadZip(List<File> srcFile,String zipFileName) throws IOException {
+	protected void downloadZip(List<File> srcFile, String zipFileName) throws IOException {
 		compress(srcFile,zipFileName,".zip");
+	}
+
+	/**
+	 * 将多个文件打包为Zip包后提供给用户下载
+	 * @param srcFile 源文件集合
+	 * @throws IOException
+	 */
+	protected void downloadZip(List<File> srcFile) throws IOException {
+		downloadZip(srcFile,"luckyZ");
+	}
+
+	/**
+	 * 将多个文件打包为Zip包后提供给用户下载
+	 * @param srcFile 源文件集合
+	 * @throws IOException
+	 */
+	protected void downloadZipByPath(List<String> srcFile) throws IOException {
+		downloadZipByPath(srcFile,"luckyZ");
+	}
+
+	/**
+	 * 将多个文件打包为Zip包后提供给用户下载
+	 * @param srcFilePath 源文件路径的集合
+	 * @param zipFileName 下载后的文件名，最终的压缩文件将以这个名字保存到客户端
+	 * @throws IOException
+	 */
+	protected void downloadZipByPath(List<String> srcFilePath,String zipFileName) throws IOException {
+		List<File> srcFile = srcFilePath.stream().map(p -> new File(p)).collect(Collectors.toList());
+		downloadZip(srcFile,zipFileName);
 	}
 
 	/**
 	 * 将多个文件打包为Jar包后提供给用户下载
 	 * @param srcFile 源文件集合
-	 * @param jarFileName 下载后的文件名
+	 * @param jarFileName 下载后的文件名，最终的压缩文件将以这个名字保存到客户端
 	 * @throws IOException
 	 */
 	protected void downloadJar(List<File> srcFile,String jarFileName) throws IOException {
 		compress(srcFile,jarFileName,".jar");
 	}
 
+	/**
+	 * 将多个文件打包为Jar包后提供给用户下载
+	 * @param srcFile 源文件集合
+	 * @throws IOException
+	 */
+	protected void downloadJar(List<File> srcFile) throws IOException {
+		downloadJar(srcFile,"luckyJ");
+	}
 
+	/**
+	 * 将多个文件打包为Jar包后提供给用户下载
+	 * @param srcFile 源文件集合
+	 * @throws IOException
+	 */
+	protected void downloadJarByPath(List<String> srcFile) throws IOException {
+		downloadJarByPath(srcFile,"luckyJ");
+	}
+
+	/**
+	 * 将多个文件打包为Jar包后提供给用户下载
+	 * @param srcFilePath 源文件集合
+	 * @param jarFileName 下载后的文件名，最终的压缩文件将以这个名字保存到客户端
+	 * @throws IOException
+	 */
+	protected void downloadJarByPath(List<String> srcFilePath,String jarFileName) throws IOException {
+		List<File> srcFile = srcFilePath.stream().map(p -> new File(p)).collect(Collectors.toList());
+		downloadJar(srcFile,jarFileName);
+	}
 
 	/**
 	 * 文件压缩

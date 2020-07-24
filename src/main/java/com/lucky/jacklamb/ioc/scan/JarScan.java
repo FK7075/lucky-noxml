@@ -10,6 +10,7 @@ import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.ioc.config.LuckyConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
+import com.lucky.jacklamb.quartz.ann.Job;
 import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
 import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
@@ -120,7 +121,8 @@ public class JarScan extends Scan {
 							|| fileClass.isAnnotationPresent(LuckyServlet.class)
 							|| fileClass.isAnnotationPresent(LuckyFilter.class)
 							|| fileClass.isAnnotationPresent(LuckyListener.class)
-							|| fileClass.isAnnotationPresent(Conversion.class))
+							|| fileClass.isAnnotationPresent(Conversion.class)
+							|| fileClass.isAnnotationPresent(Job.class))
 						componentClass.add(fileClass);
 					else if(fileClass.isAnnotationPresent(Table.class))
 						pojoClass.add(fileClass);
@@ -231,6 +233,17 @@ public class JarScan extends Scan {
 									Stream.of(ctrlClasses).forEach(aspectClass::add);
 								}else{
 									throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
+								}
+							}else if(iocCode == IocCode.JOB){
+								config=method.invoke(cfgObj);
+								if(returnType==Class.class){
+									Class ctrlClass= (Class) config;
+									componentClass.add(ctrlClass);
+								}else if(returnType==Class[].class){
+									Class[] ctrlClasses= (Class[]) config;
+									Stream.of(ctrlClasses).forEach(componentClass::add);
+								}else{
+									throw new RuntimeException("尝试创建一个@Job组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
 								}
 							}else if(iocCode==IocCode.WEBSOCKET){
 								config=method.invoke(cfgObj);
