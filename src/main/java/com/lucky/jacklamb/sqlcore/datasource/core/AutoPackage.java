@@ -358,7 +358,7 @@ class SqlAndParams{
 			String name;
 			Object[] targetParams=new Object[size];
 			for (int i = 0; i < size; i++) {
-				name=names.get(i).substring(2);
+				name=names.get(i).substring(1);
 				if(methodParamsNV.containsKey(name)){
 					targetParams[i]=methodParamsNV.get(name);
 				}else {

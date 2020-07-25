@@ -2,9 +2,61 @@ package com.lucky.jacklamb.quartz.ann;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Job {
-    String value() default "";
+
+    /** 任务的唯一ID */
+    String id() default "";
+
+    /** 使用Cron表达式构建一个触发器 */
+    String cron() default "";
+
+    /**
+     * [固定延时触发] 单位：ms
+     * 在主动调用该注解标注的方法时，延迟fixedDela毫秒后执行一次后结束。
+     */
+    long fixedDelay() default -1L;
+
+    /*
+        [循环触发] interval + count
+        interval：任务执行的间隔时间                       默认：1秒
+        count：循环执行的次数，值小于1时表示无限循环的执行     默认：-1
+     */
+    /** 任务循环执行的时间间隔，默认为1秒。单位：ms */
+    long interval() default 1000L;
+
+    /** 该定时任务执行的次数，配合interval使用时生效。取值-1时任务会无限的执行*/
+    int count() default -1;
+
+    //dy的优先级较大
+
+    /**
+     * 动态cron，需要到方法参数中去获取具体的值
+     */
+    String dyCron() default "";
+
+    /**
+     * [固定延时触发] 单位：ms
+     * 在主动调用该注解标注的方法时，延迟dyDelay毫秒后执行一次后结束。
+     * 此时dyDelay是动态的，需要到方法参数中去获取具体的值
+     */
+    String dyDelay() default "";
+
+    /**
+     * 动态interval，需要到方法参数中去获取具体的值
+     */
+    String dyInterval() default "";
+
+    /**
+     * 动态count，需要到方法参数中去获取具体的值
+     */
+    String dyCount() default "";
+
+    /**
+     * 是否在服务器启动时就出发该任务 默认false
+     * 注：为true时，任务方法必须为无参方法，否则将无法执行
+     */
+    boolean serverStartRun() default false;
 }

@@ -1,33 +1,19 @@
 package com.lucky.jacklamb.ioc.scan;
 
-import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.annotation.ioc.*;
-import com.lucky.jacklamb.annotation.orm.Table;
-import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
-import com.lucky.jacklamb.ioc.config.LuckyConfig;
-import com.lucky.jacklamb.ioc.enums.IocCode;
-import com.lucky.jacklamb.quartz.ann.Job;
 import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
 import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
 public class JarScan extends Scan {
 	
@@ -108,35 +94,7 @@ public class JarScan extends Scan {
 					name = name.substring(0, name.length() - 6);
 					String clzzName = name.replaceAll("/", "\\.");
 					Class<?> fileClass = Class.forName(clzzName);
-					if (fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class))
-						controllerClass.add(fileClass);
-					else if (fileClass.isAnnotationPresent(Service.class))
-						serviceClass.add(fileClass);
-					else if (fileClass.isAnnotationPresent(Repository.class)
-							|| fileClass.isAnnotationPresent(Mapper.class))
-						repositoryClass.add(fileClass);
-					else if (fileClass.isAnnotationPresent(Component.class)
-							|| fileClass.isAnnotationPresent(Configuration.class)
-							|| fileClass.isAnnotationPresent(ControllerExceptionHandler.class)
-							|| fileClass.isAnnotationPresent(LuckyServlet.class)
-							|| fileClass.isAnnotationPresent(LuckyFilter.class)
-							|| fileClass.isAnnotationPresent(LuckyListener.class)
-							|| fileClass.isAnnotationPresent(Conversion.class)
-							|| fileClass.isAnnotationPresent(Job.class))
-						componentClass.add(fileClass);
-					else if(fileClass.isAnnotationPresent(Table.class))
-						pojoClass.add(fileClass);
-					else if (fileClass.isAnnotationPresent(Aspect.class) || Point.class.isAssignableFrom(fileClass))
-						aspectClass.add(fileClass);
-					else {
-						try {
-							if(fileClass.isAnnotationPresent(ServerEndpoint.class)||ServerApplicationConfig.class.isAssignableFrom(fileClass)||Endpoint.class.isAssignableFrom(fileClass)) {
-								webSocketClass.add(fileClass);
-							}
-						}catch(Exception e) {
-							continue;
-						}
-					}
+					load(fileClass);
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -163,103 +121,7 @@ public class JarScan extends Scan {
 				name = name.substring(0, name.length() - 6);
 				String clzzName = name.replaceAll("/", "\\.");
 				Class<?> fileClass = Class.forName(clzzName);
-				if(fileClass.isAnnotationPresent(Configuration.class)) {
-					Method[] beanMethods=fileClass.getDeclaredMethods();
-					Object cfgObj = fileClass.newInstance();
-					Class<?> returnType;
-					Object config;
-					StringBuilder info;
-					for(Method method:beanMethods) {
-						returnType=method.getReturnType();
-						if(method.isAnnotationPresent(Bean.class)) {
-							IocCode iocCode=method.getAnnotation(Bean.class).iocCode();
-							method.setAccessible(true);
-							if(LuckyConfig.class.isAssignableFrom(returnType)){
-								config=method.invoke(cfgObj);
-								info=new StringBuilder();
-								info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
-								log.info(info.toString());
-							}else if(iocCode == IocCode.CONTROLLER){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									controllerClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(controllerClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Controller组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode == IocCode.SERVICE){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									serviceClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(serviceClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Service组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode == IocCode.REPOSITORY){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									repositoryClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(repositoryClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Repository组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode==IocCode.TABLE){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									pojoClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(pojoClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Table组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode==IocCode.ASPECT){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									aspectClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(aspectClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode == IocCode.JOB){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									componentClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(componentClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@Job组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}else if(iocCode==IocCode.WEBSOCKET){
-								config=method.invoke(cfgObj);
-								if(returnType==Class.class){
-									Class ctrlClass= (Class) config;
-									webSocketClass.add(ctrlClass);
-								}else if(returnType==Class[].class){
-									Class[] ctrlClasses= (Class[]) config;
-									Stream.of(ctrlClasses).forEach(webSocketClass::add);
-								}else{
-									throw new RuntimeException("尝试创建一个@ServerEndpoint组件失败！不合法的返回值类型"+returnType+",合法的返回值类型为Class和Class[]，错误位置："+method);
-								}
-							}
-						}
-					}
-				}
+				registered(fileClass);
 				if(ApplicationConfig.class.isAssignableFrom(fileClass)&&fileClass.isAnnotationPresent(Configuration.class)) {
 					appConfig=(ApplicationConfig) fileClass.newInstance();
 				}

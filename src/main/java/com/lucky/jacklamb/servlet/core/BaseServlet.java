@@ -2,12 +2,17 @@ package com.lucky.jacklamb.servlet.core;
 
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.ioc.ComponentIOC;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
+import com.lucky.jacklamb.quartz.ann.Job;
+import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.servlet.ResponseControl;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.servlet.mapping.AnnotationOperation;
 import com.lucky.jacklamb.servlet.mapping.UrlParsMap;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +22,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Map;
 
 public abstract class BaseServlet extends HttpServlet {
 
@@ -35,6 +42,24 @@ public abstract class BaseServlet extends HttpServlet {
         });
     }
 
+    public void jobRun(){
+        final Map<String, Object> appMap = ApplicationBeans.iocContainers.getAppIOC().getAppMap();
+        for(Map.Entry<String,Object> entry:appMap.entrySet()){
+            Object app = entry.getValue();
+            Class<?> appClass = app.getClass().getSuperclass();
+            if(appClass.isAnnotationPresent(QuartzJobs.class)){
+                Method[] jobMethods = appClass.getDeclaredMethods();
+                for (Method jobMethod : jobMethods) {
+                    if(jobMethod.isAnnotationPresent(Job.class)&&jobMethod.getAnnotation(Job.class).serverStartRun()){
+                        jobMethod.setAccessible(true);
+                        log.info("@Job \" "+appClass.getName()+"."+jobMethod.getName()+" \" Start Running......");
+                        MethodUtils.invoke(app,jobMethod);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void init(ServletConfig config) {
         ApplicationBeans.createApplicationBeans();
@@ -42,6 +67,7 @@ public abstract class BaseServlet extends HttpServlet {
         webCfg = AppConfig.getAppConfig().getWebConfig();
         urlParsMap = new UrlParsMap();
         responseControl = new ResponseControl();
+        jobRun();
         initRun();
     }
 

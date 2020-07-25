@@ -29,9 +29,8 @@ import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.quartz.QuartzProxy;
-import com.lucky.jacklamb.quartz.ann.Job;
+import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -187,15 +186,16 @@ public class ComponentIOC extends ComponentFactory {
 				addAppMap(beanID,aspect);
 				log.info("@Web \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
-			}else if(component.isAnnotationPresent(Job.class)){
-				Job job=component.getAnnotation(Job.class);
-				if (!"".equals(job.value())) {
-					beanID=job.value();
+			}else if(component.isAnnotationPresent(QuartzJobs.class)){
+				QuartzJobs quartzJobs =component.getAnnotation(QuartzJobs.class);
+				if (!"".equals(quartzJobs.value())) {
+					beanID= quartzJobs.value();
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				addAppMap(beanID, ClassUtils.newObject(component));
-				log.info("@Job \"[id="+beanID+" ,class="+component+"]\"");
+				Object aspect=QuartzProxy.getProxy(component);
+				addAppMap(beanID, aspect);
+				log.info("@Job \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
 			}else {
 				continue;
