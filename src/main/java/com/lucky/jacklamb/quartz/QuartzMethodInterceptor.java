@@ -9,6 +9,7 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,15 +20,19 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 public class QuartzMethodInterceptor implements MethodInterceptor {
 
-    private static Scheduler scheduler;
+    private static Map<Method,JobKey> specialJobMap=new HashMap<>();
 
     @Override
     public Object intercept(Object targetObj, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
         if(method.isAnnotationPresent(Job.class)){
-            if(scheduler==null)
-                scheduler = StdSchedulerFactory.getDefaultScheduler();
-            String jtname= UUID.randomUUID().toString();
             Job quartzJob = method.getAnnotation(Job.class);
+            String jtname= UUID.randomUUID().toString();
+            if(quartzJob.onlyOne()){
+                if(specialJobMap.containsKey(method)){
+                    return methodProxy.invokeSuper(targetObj,params);
+                }
+            }
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             //封装任务逻辑
             TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
             JobDetail jobDetail = JobBuilder.newJob(LuckyJob.class)
@@ -38,6 +43,12 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
             Trigger trigger =getTrigger(paramKV,method,quartzJob,jtname);
             scheduler.scheduleJob(jobDetail,trigger);
+            if(quartzJob.mutex()&&specialJobMap.containsKey(method)){
+                scheduler.pauseJob(specialJobMap.get(method));
+                scheduler.deleteJob(specialJobMap.get(method));
+            }
+            if(quartzJob.onlyOne()||quartzJob.mutex())
+                specialJobMap.put(method,jobDetail.getKey());
             scheduler.start();
             return null;
         }

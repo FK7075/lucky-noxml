@@ -10,12 +10,13 @@ public class MyJob {
         System.out.println("showTime("+k+") || Run==>"+ LuckyUtils.time());
     }
 
-    @Job(dyInterval = "interval", dyCount ="counte")
+    @Job(dyInterval = "interval", dyCount ="counte",mutex = true)
     public void time(Long interval,Integer counte,String fk){
-        System.out.println("time() || Run==>"+ LuckyUtils.time());
+        System.out.println("time("+fk+") || Run==>"+ LuckyUtils.time());
     }
 
+    @Job(count = 5,interval = 3*1000L)
     public void ttt(){
-        System.out.println("kokokok");
+        System.out.println(LuckyUtils.time()+" ==> kokokok");
     }
 }

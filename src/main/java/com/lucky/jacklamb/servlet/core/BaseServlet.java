@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.servlet.core;
 
+import com.lucky.jacklamb.annotation.mvc.InitRun;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ComponentIOC;
@@ -50,7 +51,7 @@ public abstract class BaseServlet extends HttpServlet {
             if(appClass.isAnnotationPresent(QuartzJobs.class)){
                 Method[] jobMethods = appClass.getDeclaredMethods();
                 for (Method jobMethod : jobMethods) {
-                    if(jobMethod.isAnnotationPresent(Job.class)&&jobMethod.getAnnotation(Job.class).serverStartRun()){
+                    if(jobMethod.isAnnotationPresent(Job.class)&&jobMethod.isAnnotationPresent(InitRun.class)){
                         jobMethod.setAccessible(true);
                         log.info("@Job \" "+appClass.getName()+"."+jobMethod.getName()+" \" Start Running......");
                         MethodUtils.invoke(app,jobMethod);

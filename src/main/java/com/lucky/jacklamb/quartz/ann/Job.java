@@ -38,9 +38,7 @@ public @interface Job {
     String dyCron() default "";
 
     /**
-     * [固定延时触发] 单位：ms
-     * 在主动调用该注解标注的方法时，延迟dyDelay毫秒后执行一次后结束。
-     * 此时dyDelay是动态的，需要到方法参数中去获取具体的值
+     * 动态fixedDelay，需要到方法参数中去获取具体的值
      */
     String dyDelay() default "";
 
@@ -55,8 +53,14 @@ public @interface Job {
     String dyCount() default "";
 
     /**
-     * 是否在服务器启动时就出发该任务 默认false
-     * 注：为true时，任务方法必须为无参方法，否则将无法执行
+     * 互斥任务，当方法调用时会将上次调用的定时任务关闭
+     * @return
      */
-    boolean serverStartRun() default false;
+    boolean mutex() default false;
+
+    /**
+     * 仅在第一次被调用时被代理为定时任务，之后的调用不执行代理
+     */
+    boolean onlyOne() default false;
+
 }
