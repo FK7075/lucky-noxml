@@ -5,7 +5,7 @@ import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class MyJob {
 
-    @Job(cron = "1/2 * * * * ？")
+    @Job(cron = "1/2 * * * * ?")
     public void showTime(String k){
         System.out.println("showTime("+k+") || Run==>"+ LuckyUtils.time());
     }

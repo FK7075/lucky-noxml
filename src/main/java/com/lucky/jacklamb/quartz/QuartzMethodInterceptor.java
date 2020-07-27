@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.quartz;
 
-import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.quartz.ann.Job;
 import com.lucky.jacklamb.quartz.exception.CronExpressionException;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
@@ -10,7 +10,6 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -24,26 +23,32 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
 
     private static Map<Method,JobKey> specialJobMap=new HashMap<>();
 
+    private static Scheduler scheduler;
+
     @Override
     public Object intercept(Object targetObj, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
         if(method.isAnnotationPresent(Job.class)){
             Job quartzJob = method.getAnnotation(Job.class);
-            String jtname= UUID.randomUUID().toString();
+            String jobName= UUID.randomUUID().toString();
             if(quartzJob.onlyFirst()){
                 if(specialJobMap.containsKey(method)){
                     return methodProxy.invokeSuper(targetObj,params);
                 }
             }
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+            if(scheduler==null){
+                scheduler = StdSchedulerFactory.getDefaultScheduler();
+                ApplicationBeans.createApplicationBeans().addComponentBean("LuckyScheduler",scheduler);
+            }
+
             //封装任务逻辑
             TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
             JobDetail jobDetail = JobBuilder.newJob(LuckyJob.class)
-                    .withIdentity(jtname, LUCKY_JOB_GROUP)
+                    .withIdentity(jobName, LUCKY_JOB_GROUP)
                     .build();
             //将任务逻辑put到上下文中
             jobDetail.getJobDataMap().put(LUCKY_JOB,targetJobRun);
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
-            Trigger trigger =getTrigger(paramKV,method,quartzJob,jtname);
+            Trigger trigger =getTrigger(paramKV,method,quartzJob,jobName);
             scheduler.scheduleJob(jobDetail,trigger);
             if(quartzJob.onlyLast()&&specialJobMap.containsKey(method)){
                 scheduler.pauseJob(specialJobMap.get(method));
