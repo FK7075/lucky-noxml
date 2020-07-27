@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.ioc.scan;
 
+import com.lucky.jacklamb.file.utils.FileCopyUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,19 +39,9 @@ public class LuckyClassLoader extends ClassLoader {
 		try {
 			in = new FileInputStream(new File(name));
 			out = new ByteArrayOutputStream();
-			int i = 0;
-			while ((i = in.read()) != -1) {
-				out.write(i);
-			}
-		} catch (Exception e) {
+			FileCopyUtils.copy(in,out);
+		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				out.close();
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		return out.toByteArray();
 

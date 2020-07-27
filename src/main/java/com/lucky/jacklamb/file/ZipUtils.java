@@ -86,19 +86,21 @@ public class ZipUtils {
 
     /**
      * 解压缩
-     * @param compressFile 带解压的压缩文件
-     * @param unCompressFile  解压后的目标文件夹路径
+     *
+     * @param compressFile   带解压的压缩文件
+     * @param unCompressFile 解压后的目标文件夹路径
      */
-    public static void unCompress(File compressFile, String unCompressFile){
-        unCompress(compressFile,new File(unCompressFile));
+    public static void unCompress(File compressFile, String unCompressFile) {
+        unCompress(compressFile, new File(unCompressFile));
     }
 
     /**
      * 解压缩
-     * @param compressFile 带解压的压缩文件
-     * @param unCompressFile  解压后的目标文件夹
+     *
+     * @param compressFile   待解压的压缩文件
+     * @param unCompressFile 解压后的目标文件夹
      */
-    public static void unCompress(File compressFile, File unCompressFile){
+    public static void unCompress(File compressFile, File unCompressFile) {
         long start = System.currentTimeMillis();
         // 判断源文件是否存在
         if (!compressFile.exists()) {
@@ -111,7 +113,7 @@ public class ZipUtils {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
-                log.info("正在解压："+entry.getName());
+                log.info("正在解压：" + entry.getName());
                 // 如果是文件夹，就创建个文件夹
                 if (entry.isDirectory()) {
                     String dirPath = unCompressFile.getAbsolutePath() + File.separator + entry.getName();

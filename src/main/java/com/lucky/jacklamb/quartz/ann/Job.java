@@ -53,14 +53,13 @@ public @interface Job {
     String dyCount() default "";
 
     /**
-     * 互斥任务，当方法调用时会将上次调用的定时任务关闭
-     * @return
+     * 只运行最后一次调用，之前调用的任务将会被停止
      */
-    boolean mutex() default false;
+    boolean onlyLast() default false;
 
     /**
      * 仅在第一次被调用时被代理为定时任务，之后的调用不执行代理
      */
-    boolean onlyOne() default false;
+    boolean onlyFirst() default false;
 
 }

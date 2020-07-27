@@ -32,7 +32,6 @@ public class PackageScan extends Scan {
 	
 	public PackageScan() {
 		super();
-		lson=new LSON();
 		projectPath=PackageScan.class.getClassLoader().getResource("").getPath();
 		log.info("Project Start Path "+System.getProperty("user.dir"));
 		log.info("Class File Root Directory "+projectPath);
@@ -166,7 +165,6 @@ public class PackageScan extends Scan {
 		try {
 			fileScan(fileProjectPath);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -176,20 +174,7 @@ public class PackageScan extends Scan {
 	public void findAppConfig() {
 		try {
 			findConfig(fileProjectPath);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
 	}
@@ -199,19 +184,7 @@ public class PackageScan extends Scan {
 		File[] listFiles = bin.listFiles();
 		for(File file:listFiles) {
 			if(!file.isDirectory()&&file.getAbsolutePath().endsWith(".class")) {
-				String className=file.getAbsolutePath().replaceAll("\\\\", "/").replaceAll(fileProjectPath, "").replaceAll("/", "\\.");
-				className=className.substring(0,className.length()-6);
-				Class<?> fileClass=null;
-				if(className.startsWith("classes.")) {
-					className=className.substring(8);
-					fileClass=Class.forName(className);
-				}else if(className.startsWith("test-classes.")) {
-					luckyClassLoader=new LuckyClassLoader(fileProjectPath+File.separator+"test-classes");
-					className=className.substring(13);
-					fileClass=luckyClassLoader.loadClass(className);
-				}else {
-					fileClass=Class.forName(className);
-				}
+				Class<?> fileClass=getFileClass(file);
 				registered(fileClass);
 				if(ApplicationConfig.class.isAssignableFrom(fileClass)&&fileClass.isAnnotationPresent(Configuration.class)) {
 					appConfig=(ApplicationConfig) fileClass.newInstance();
@@ -231,23 +204,26 @@ public class PackageScan extends Scan {
 			if(file.isDirectory()) {
 				fileScan(path+"/"+file.getName());
 			}else if(file.getAbsolutePath().endsWith(".class")) {
-				String className=file.getAbsolutePath().replaceAll("\\\\", "/").replaceAll(fileProjectPath, "").replaceAll("/", "\\.");
-				className=className.substring(0,className.length()-6);
-				Class<?> fileClass=null;
-				if(className.startsWith("classes.")) {
-					className=className.substring(8);
-					fileClass=Class.forName(className);
-				}else if(className.startsWith("test-classes.")) {
-					luckyClassLoader=new LuckyClassLoader(fileProjectPath+File.separator+"test-classes");
-					className=className.substring(13);
-					fileClass=luckyClassLoader.loadClass(className);
-				}else{
-					fileClass=Class.forName(className);
-				}
-				load(fileClass);
+				load(getFileClass(file));
 			}
 		}
-		
+	}
+
+	private Class<?> getFileClass(File file) throws ClassNotFoundException {
+		String className=file.getAbsolutePath().replaceAll("\\\\", "/").replaceAll(fileProjectPath, "").replaceAll("/", "\\.");
+		className=className.substring(0,className.length()-6);
+		Class<?> fileClass=null;
+		if(className.startsWith("classes.")) {
+			className=className.substring(8);
+			fileClass=Class.forName(className);
+		}else if(className.startsWith("test-classes.")) {
+			luckyClassLoader=new LuckyClassLoader(fileProjectPath+File.separator+"test-classes");
+			className=className.substring(13);
+			fileClass=luckyClassLoader.loadClass(className);
+		}else{
+			fileClass=Class.forName(className);
+		}
+		return  fileClass;
 	}
 
 }

@@ -5,12 +5,12 @@ import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class MyJob {
 
-    @Job(dyCron = "k")
+    @Job(cron = "1/2 * * * * ？")
     public void showTime(String k){
         System.out.println("showTime("+k+") || Run==>"+ LuckyUtils.time());
     }
 
-    @Job(dyInterval = "interval", dyCount ="counte",mutex = true)
+    @Job(dyInterval = "interval", dyCount ="counte",onlyLast = true)
     public void time(Long interval,Integer counte,String fk){
         System.out.println("time("+fk+") || Run==>"+ LuckyUtils.time());
     }

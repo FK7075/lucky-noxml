@@ -317,6 +317,28 @@ public abstract class FileCopyUtils {
 
     /**
      * 复制目录或文件，包含最外层文件夹
+     * 注：将文件夹以及文件夹中的所有文件拷贝到另一个文件夹
+     *     formDir:
+     *          src
+     *             |_main
+     *                  |_java
+     *                  |_resource
+     *             |_test
+     *             |_pom.xml
+     *      toDir:
+     *          fileCopy
+     *
+     *      复制后：
+     *       toDir -->
+     *       fileCopy
+     *              |
+     *              src
+     *                  |_main
+     *                      |_java
+     *                      |_resource
+     *                  |_test
+     *                  |_pom.xml
+     *
      * @param fromDir 源文件/文件夹
      * @param toDir 目标文件夹
      */
@@ -332,6 +354,27 @@ public abstract class FileCopyUtils {
 
     /**
      * 复制目录或文件，不包含最外层文件夹
+     * 注：将文件夹中的所有文件拷贝到另一个文件夹
+     *
+     *     formDir:
+     *          src
+     *             |_main
+     *                  |_java
+     *                  |_resource
+     *             |_test
+     *             |_pom.xml
+     *      toDir:
+     *          fileCopy
+     *
+     *      复制后：
+     *       toDir -->
+     *       fileCopy
+     *             |_main
+     *                  |_java
+     *                  |_resource
+     *             |_test
+     *             |_pom.xml
+     *
      * @param fromDir 源文件/文件夹
      * @param toDir 目标文件夹
      * @throws IOException
@@ -372,6 +415,10 @@ public abstract class FileCopyUtils {
         }
     }
 
+    /**
+     * 删除文件夹以及文件夹中所有的文件
+     * @param folder
+     */
     public static void deleteFile(File folder){
         File[] files = folder.listFiles();
         for (File f : files) {

@@ -2,6 +2,7 @@ package com.lucky.jacklamb.quartz;
 
 import com.lucky.jacklamb.aop.util.ASMUtil;
 import com.lucky.jacklamb.quartz.ann.Job;
+import com.lucky.jacklamb.quartz.exception.CronExpressionException;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -9,6 +10,7 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,7 +29,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         if(method.isAnnotationPresent(Job.class)){
             Job quartzJob = method.getAnnotation(Job.class);
             String jtname= UUID.randomUUID().toString();
-            if(quartzJob.onlyOne()){
+            if(quartzJob.onlyFirst()){
                 if(specialJobMap.containsKey(method)){
                     return methodProxy.invokeSuper(targetObj,params);
                 }
@@ -43,11 +45,11 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
             Trigger trigger =getTrigger(paramKV,method,quartzJob,jtname);
             scheduler.scheduleJob(jobDetail,trigger);
-            if(quartzJob.mutex()&&specialJobMap.containsKey(method)){
+            if(quartzJob.onlyLast()&&specialJobMap.containsKey(method)){
                 scheduler.pauseJob(specialJobMap.get(method));
                 scheduler.deleteJob(specialJobMap.get(method));
             }
-            if(quartzJob.onlyOne()||quartzJob.mutex())
+            if(quartzJob.onlyFirst()||quartzJob.onlyLast())
                 specialJobMap.put(method,jobDetail.getKey());
             scheduler.start();
             return null;
@@ -62,11 +64,13 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         String dyCron=job.dyCron();
         if(!"".equals(dyCron)){
             if(!paramKV.containsKey(dyCron))
-                throw new RuntimeException("定时任务 '"+method+" '缺少必要的参数：'(String)"+dyCron+"' ");
+                throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyCron参数：'(String)"+dyCron+"' ");
             cron=(String)paramKV.get(dyCron);
         }
         //Cron表达式构建Trigger
         if(!"".equals(cron)){
+            if(!CronExpression.isValidExpression(cron))
+                throw new CronExpressionException(method,cron);
             Trigger trigger = triggerBuilder.startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(cron))
                     .build();
@@ -84,7 +88,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         String dyCount=job.dyCount();
         if(!"".equals(dyCount)){
             if(!paramKV.containsKey(dyCount))
-                throw new RuntimeException("定时任务 '"+method+" '缺少必要的参数：'(Long)"+dyCount+"' ");
+                throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyCount参数：'(Long)"+dyCount+"' ");
             count=(int)paramKV.get(dyCount);
         }
 
@@ -92,7 +96,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         String dyInterval=job.dyInterval();
         if(!"".equals(dyInterval)){
             if(!paramKV.containsKey(dyInterval))
-                throw new RuntimeException("定时任务 '"+method+" '缺少必要的参数：'(Long)"+dyInterval+"' ");
+                throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyInterval参数：'(Long)"+dyInterval+"' ");
             interval=(long)paramKV.get(dyInterval);
         }
 

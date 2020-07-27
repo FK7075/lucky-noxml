@@ -21,8 +21,6 @@ public class JarScan extends Scan {
 
 	private static final Logger log= LogManager.getLogger(JarScan.class);
 	
-	private LSON lson;
-	
 	protected String prefix;
 
 

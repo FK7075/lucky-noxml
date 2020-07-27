@@ -43,21 +43,38 @@ public class AppConfig {
 		return appConfig;
 	}
 
+	/**
+	 * 得到当前状态下的ScanConfig
+	 * @return
+	 */
 	public ScanConfig getScanConfig() {
 		return scancfg;
 	}
 
+	/**
+	 * 得到当前状态下的WebConfig
+	 * @return
+	 */
 	public WebConfig getWebConfig() {
 		return webcfg;
 	}
 
+	/**
+	 * 得到当前状态下的ServerConfig
+	 * @return
+	 */
 	public ServerConfig getServerConfig() {
 		return servercfg;
 	}
 
+	/**
+	 * 得到当前状态下的ServiceConfig
+	 * @return
+	 */
 	public ServiceConfig getServiceConfig() {
 		return servicecfg;
 	}
+
 	
 	/**
 	 * 得到默认状态下的WebConfig
