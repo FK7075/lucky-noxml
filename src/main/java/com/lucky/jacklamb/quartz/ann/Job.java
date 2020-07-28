@@ -62,4 +62,9 @@ public @interface Job {
      */
     boolean onlyFirst() default false;
 
+    /**
+     *是否允许任务并发执行
+     */
+    boolean parallel() default true;
+
 }

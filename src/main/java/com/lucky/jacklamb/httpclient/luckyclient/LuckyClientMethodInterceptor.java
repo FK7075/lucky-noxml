@@ -69,10 +69,16 @@ public class LuckyClientMethodInterceptor implements MethodInterceptor {
 
             //封装返回结果
             Class<?> returnClass = method.getReturnType();
-            try {
-                return new LSON().toObject(returnClass, callResult);
-            } catch (Exception e) {
-                throw new JsonConversionException(serviceName,returnClass, callResult, e);
+            if(returnClass!=void.class){
+                if(returnClass==String.class){
+                    return callResult;
+                }else{
+                    try{
+                        return new LSON().toObject(returnClass,callResult);
+                    }catch (Exception e){
+                        throw new JsonConversionException(apiUrl,returnClass,callResult,e);
+                    }
+                }
             }
 
         }

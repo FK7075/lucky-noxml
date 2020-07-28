@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.quartz;
+package com.lucky.jacklamb.quartz.proxy;
 
 import com.lucky.jacklamb.cglib.CglibProxy;
 

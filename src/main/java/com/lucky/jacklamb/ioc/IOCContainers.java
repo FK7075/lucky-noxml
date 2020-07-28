@@ -75,6 +75,11 @@ public final class IOCContainers {
 		this.appIOC.addAppMap(key, value);
 	}
 
+	public void removeComponent(String key){
+		controllerIOC.getControllerIDS().remove(key);
+		controllerIOC.getControllerMap().remove(key);
+	}
+
 	public ControllerIOC getControllerIOC() {
 		return controllerIOC;
 	}

@@ -28,7 +28,7 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
-import com.lucky.jacklamb.quartz.QuartzProxy;
+import com.lucky.jacklamb.quartz.proxy.QuartzProxy;
 import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;

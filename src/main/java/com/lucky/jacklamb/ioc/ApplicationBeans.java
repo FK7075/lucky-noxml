@@ -254,8 +254,12 @@ public class ApplicationBeans {
 	 * @param Id
 	 * @param component
 	 */
-	public void addComponentBean(String Id,Object component) {
+	public void  addComponentBean(String Id,Object component) {
 		iocContainers.addComponent(Id, component);
+	}
+
+	public void removeComponentBean(String Id){
+		iocContainers.removeComponent(Id);
 	}
 	
 	/**

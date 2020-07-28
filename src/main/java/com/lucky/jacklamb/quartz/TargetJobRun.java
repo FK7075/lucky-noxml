@@ -2,10 +2,7 @@ package com.lucky.jacklamb.quartz;
 
 import net.sf.cglib.proxy.MethodProxy;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-public class TargetJobRun {
+public class TargetJobRun{
 
     private Object job;
 

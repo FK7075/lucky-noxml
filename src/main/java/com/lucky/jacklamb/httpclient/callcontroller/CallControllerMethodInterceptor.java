@@ -64,11 +64,18 @@ public class CallControllerMethodInterceptor implements MethodInterceptor {
 
             //封装返回结果
             Class<?> returnClass=method.getReturnType();
-            try{
-                return new LSON().toObject(returnClass,callResult);
-            }catch (Exception e){
-                throw new JsonConversionException(apiUrl,returnClass,callResult,e);
+            if(returnClass!=void.class){
+                if(returnClass==String.class){
+                    return callResult;
+                }else{
+                    try{
+                        return new LSON().toObject(returnClass,callResult);
+                    }catch (Exception e){
+                        throw new JsonConversionException(apiUrl,returnClass,callResult,e);
+                    }
+                }
             }
+
 
         }
         throw new NotMappingMethodException("该方法不是Mapping方法，无法执行代理！错误位置："+method);
@@ -85,8 +92,8 @@ public class CallControllerMethodInterceptor implements MethodInterceptor {
      * @throws IOException
      * @throws URISyntaxException
      */
-    private static String   call(String url, Method method, Map<String,Object> params, RequestMethod requestMethod) throws IOException, URISyntaxException {
-        if(method.isAnnotationPresent(FileUpload.class))
+    private static String call(String url, Method method, Map<String,Object> params, RequestMethod requestMethod) throws IOException, URISyntaxException {
+        if(!method.isAnnotationPresent(FileUpload.class))
             return HttpClientCall.call(url,requestMethod,params);
         return HttpClientCall.uploadFile(url,params);
     }

@@ -16,7 +16,8 @@ public class MyJob {
     }
 
     @Job(count = 5,interval = 3*1000L)
-    public void ttt(){
+    public void ttt() throws InterruptedException {
         System.out.println(LuckyUtils.time()+" ==> kokokok");
+        Thread.sleep(7*1000L);
     }
 }

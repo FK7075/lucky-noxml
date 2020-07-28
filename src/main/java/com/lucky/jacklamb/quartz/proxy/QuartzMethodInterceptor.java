@@ -1,14 +1,20 @@
-package com.lucky.jacklamb.quartz;
+package com.lucky.jacklamb.quartz.proxy;
 
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.quartz.TargetJobRun;
 import com.lucky.jacklamb.quartz.ann.Job;
 import com.lucky.jacklamb.quartz.exception.CronExpressionException;
+import com.lucky.jacklamb.quartz.job.LuckyJob;
+import com.lucky.jacklamb.quartz.job.SerialJob;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.quartz.*;
+import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.spi.JobStore;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +29,6 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
 
     private static Map<Method,JobKey> specialJobMap=new HashMap<>();
 
-    private static Scheduler scheduler;
 
     @Override
     public Object intercept(Object targetObj, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
@@ -35,18 +40,20 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
                     return methodProxy.invokeSuper(targetObj,params);
                 }
             }
-            if(scheduler==null){
-                scheduler = StdSchedulerFactory.getDefaultScheduler();
-                ApplicationBeans.createApplicationBeans().addComponentBean("LuckyScheduler",scheduler);
-            }
+//            JobStore jobStore=
+//            DirectSchedulerFactory.getInstance().createScheduler();
+            Scheduler  scheduler = StdSchedulerFactory.getDefaultScheduler();
+            Class<? extends org.quartz.Job> jobClass=quartzJob.parallel()?LuckyJob.class: SerialJob.class;
 
             //封装任务逻辑
             TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
-            JobDetail jobDetail = JobBuilder.newJob(LuckyJob.class)
+            String jobRunBeanId=UUID.randomUUID().toString();
+            ApplicationBeans.createApplicationBeans().addComponentBean(jobRunBeanId,targetJobRun);
+            JobDetail jobDetail = JobBuilder.newJob(jobClass)
                     .withIdentity(jobName, LUCKY_JOB_GROUP)
                     .build();
-            //将任务逻辑put到上下文中
-            jobDetail.getJobDataMap().put(LUCKY_JOB,targetJobRun);
+            //将任务逻辑的IocId put到上下文中
+            jobDetail.getJobDataMap().put(LUCKY_JOB,jobRunBeanId);
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
             Trigger trigger =getTrigger(paramKV,method,quartzJob,jobName);
             scheduler.scheduleJob(jobDetail,trigger);
