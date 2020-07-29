@@ -66,25 +66,25 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public <T> boolean delete(T t) {
+	public <T> int delete(T t) {
 		PrecompileSqlAndObject delete = gcg.singleDelete(t);
 		return statementCore.update(delete.getPrecompileSql(), delete.getObjects().toArray());
 	}
 
 	@Override
-	public <T> boolean update(T t,String...conditions) {
+	public <T> int update(T t,String...conditions) {
 		PrecompileSqlAndObject update = gcg.singleUpdate(t,conditions);
 		return statementCore.update(update.getPrecompileSql(), update.getObjects().toArray());
 	}
 
 	@Override
-	public boolean deleteBatchByArray(Object... obj) {
+	public int deleteBatchByArray(Object... obj) {
 		List<Object> objects = Arrays.asList(obj);
 		return deleteBatchByCollection(objects);
 	}
 
 	@Override
-	public <T> boolean deleteBatchByCollection(Collection<T> collection) {
+	public <T> int deleteBatchByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject delete;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {
@@ -93,17 +93,17 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		}
 		String[] sqls=new String[completeSqls.size()];
 		completeSqls.toArray(sqls);
-		return statementCore.updateBatch(sqls);
+		return getResult(statementCore.updateBatch(sqls));
 	}
 
 	@Override
-	public boolean updateBatchByArray(Object... obj) {
+	public int updateBatchByArray(Object... obj) {
 		List<Object> objects = Arrays.asList(obj);
 		return updateBatchByCollection(objects);
 	}
 
 	@Override
-	public <T> boolean updateBatchByCollection(Collection<T> collection) {
+	public <T> int updateBatchByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject update;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {
@@ -112,17 +112,17 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		}
 		String[] sqls=new String[completeSqls.size()];
 		completeSqls.toArray(sqls);
-		return statementCore.updateBatch(sqls);
+		return getResult(statementCore.updateBatch(sqls));
 	}
 
 	@Override
-	public boolean delete(Class<?> clazz, Object id) {
+	public int delete(Class<?> clazz, Object id) {
 		String ysql = gcg.deleteOneSql(clazz);
 		return statementCore.update(ysql, id);
 	}
 
 	@Override
-	public boolean deleteByIdIn(Class<?> clazz, Object[] ids) {
+	public int deleteByIdIn(Class<?> clazz, Object[] ids) {
 		String ysql =gcg.deleteIn(clazz, ids);
 		return statementCore.update(ysql, ids);
 	}
@@ -134,18 +134,18 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public <T> boolean insert(T pojo) {
+	public <T> int insert(T pojo) {
 		PrecompileSqlAndObject insert=gcg.singleInsert(pojo);
 		return statementCore.update(insert.getPrecompileSql(), insert.getObjects().toArray());
 	}
 
 	@Override
-	public <T> boolean insertSetIdBatchByArray(Object... obj) {
+	public <T> int insertSetIdBatchByArray(Object... obj) {
 		return insertBatchByCollection(Arrays.asList(obj));
 	}
 
 	@Override
-	public <T> boolean insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertBatchByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject insert;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {
@@ -155,7 +155,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		setUUID(completeSqls);
 		String[] sqls=new String[completeSqls.size()];
 		completeSqls.toArray(sqls);
-		return statementCore.updateBatch(sqls);
+		return getResult(statementCore.updateBatch(sqls));
 	}
 
 	protected <T> void setUUID(Collection<T> collection){
@@ -171,5 +171,13 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 			if (isUUID && FieldUtils.getValue(t, idField) == null)
 				FieldUtils.setValue(t, idField, UUID.randomUUID().toString());
 		}
+	}
+
+	protected int getResult(int[] arr){
+		int s=0;
+		for (int i : arr) {
+			s+=i;
+		}
+		return s;
 	}
 }

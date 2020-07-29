@@ -42,9 +42,9 @@ public interface StatementCore {
 	 * @param obj
 	 * @return
 	 */
-	public boolean update(String sql,Object...obj);
+	public int update(String sql,Object...obj);
 
-	public boolean updateMethod(Method method, String sql, Object[] obj);
+	public int updateMethod(Method method, String sql, Object[] obj);
 	
 	/**
 	 * 批量SQL非查询操作
@@ -55,14 +55,14 @@ public interface StatementCore {
 	 * [[xxx],[xxx],[xxx]]
 	 * @return
 	 */
-	public boolean updateBatch(String sql,Object[][] obj);
+	public int[] updateBatch(String sql,Object[][] obj);
 
 	/**
 	 * 批量SQL操作，使用Statement对象执行多条非查询语句
 	 * @param completeSqls 完整的SQL语句
 	 * @return
 	 */
-	public boolean updateBatch(String...completeSqls);
+	public int[] updateBatch(String...completeSqls);
 	
 	/**
 	 * 清空缓存

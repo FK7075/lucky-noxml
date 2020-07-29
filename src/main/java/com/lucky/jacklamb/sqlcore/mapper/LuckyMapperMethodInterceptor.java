@@ -52,7 +52,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private boolean updateSql(Method method, Object[] args, SqlFragProce sql_fp, String sql) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    private int updateSql(Method method, Object[] args, SqlFragProce sql_fp, String sql) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         if (sql.contains("#{")) {
             Class<?> obc = args[0].getClass();
             SqlAndArray sqlArr = noSqlTo(obc, sql);
@@ -105,7 +105,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @param args   执行参数
      * @return true/false
      */
-    private boolean dynamicUpdateSql(SqlFragProce sql_fp, Method method, String sql, Object[] args) {
+    private int dynamicUpdateSql(SqlFragProce sql_fp, Method method, String sql, Object[] args) {
         SqlAndObject so = sql_fp.filterSql(sql, args);
         return sqlCore.updateMethod(so.getSqlStr(), method, so.getObjects());
     }
@@ -265,7 +265,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private <T> boolean update(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    private <T> int update(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Update upd = method.getAnnotation(Update.class);
         if (upd.batch())
             return sqlCore.updateBatchByCollection((Collection<T>) args[0]);
@@ -309,7 +309,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private <T> boolean delete(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    private <T> int delete(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Delete del = method.getAnnotation(Delete.class);
         if (del.byid())
             return sqlCore.delete((Class<?>) args[0], args[1]);
@@ -335,7 +335,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    private <T> boolean insert(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    private <T> int insert(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Insert ins = method.getAnnotation(Insert.class);
         String sql = ins.value();
         if ("".equals(sql)) {

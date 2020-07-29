@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.StatementCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.jdbc.core.AutoPackage;
+import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 @SuppressWarnings("unchecked")
@@ -15,13 +15,13 @@ public final class StatementCoreImpl implements StatementCore {
 	
 	private CreateSql createSql;
 	
-	protected AutoPackage autopackage;
+	protected DefaultSqlActuator autopackage;
 	
 	
 	public StatementCoreImpl(LuckyDataSource dataSource) {
 		this.createSql= new CreateSql();
 		this.dbname=dataSource.getDbname();
-		this.autopackage=new AutoPackage(dbname);
+		this.autopackage=new DefaultSqlActuator(dbname);
 	}
 	
 	
@@ -54,22 +54,22 @@ public final class StatementCoreImpl implements StatementCore {
 	}
 
 	@Override
-	public boolean update(String sql, Object... obj) {
+	public int update(String sql, Object... obj) {
 		return autopackage.update(sql, obj);
 	}
 
 	@Override
-	public boolean updateMethod(Method method, String sql, Object[] obj) {
+	public int updateMethod(Method method, String sql, Object[] obj) {
 		return autopackage.updateMethod(method,sql, obj);
 	}
 
 	@Override
-	public boolean updateBatch(String sql, Object[][] obj) {
+	public int[] updateBatch(String sql, Object[][] obj) {
 		return autopackage.updateBatch(sql, obj);
 	}
 
 	@Override
-	public boolean updateBatch(String... completeSqls) {
+	public int[] updateBatch(String... completeSqls) {
 		return autopackage.updateBatch(completeSqls);
 	}
 

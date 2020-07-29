@@ -56,9 +56,9 @@ public final class SybaseCore extends SqlCore {
 	}
 
 	@Override
-	public <T> boolean insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertBatchByCollection(Collection<T> collection) {
 		// TODO Auto-generated method stub
-		return false;
+		return 0;
 	}
 
 	@Override

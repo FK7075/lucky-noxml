@@ -27,7 +27,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Delete(byid=true)
-	public boolean deleteById(Object id);
+	public int deleteById(Object id);
 	
 	/**
 	 * 对象删除
@@ -35,7 +35,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Delete
-	public boolean delete(T pojo);
+	public int delete(T pojo);
 
 	/**
 	 * 查询操作
@@ -65,7 +65,7 @@ public interface LuckyMapper<T> {
 	 * @return 
 	 */
 	@Update
-	public boolean update(T pojo);
+	public int update(T pojo);
 	
 	/**
 	 * 添加操作，并自动获取自增ID
@@ -73,7 +73,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Insert(setautoId=true)
-	public boolean insertAutoID(T pojo);
+	public int insertAutoID(T pojo);
 	
 	/**
 	 * 添加操作
@@ -81,7 +81,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Insert
-	public boolean insert(T pojo);
+	public int insert(T pojo);
 	
 	/**
 	 * 批量添加操作
@@ -105,7 +105,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Delete(batch = true)
-	public boolean batchDelete(Collection<T> pojos);
+	public int batchDelete(Collection<T> pojos);
 	
 	/**
 	 * 分页操作
@@ -149,7 +149,7 @@ public interface LuckyMapper<T> {
 	 * @param ids
 	 * @return
 	 */
-	public boolean deleteByIdIn(List<?> ids);
+	public int deleteByIdIn(List<?> ids);
 
 	/**
 	 * 根据ID批量查询数据

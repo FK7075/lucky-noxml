@@ -42,8 +42,8 @@ public abstract class LuckyUtils {
 	 * @return 查询结果集
 	 */
 	public static ResultSet getResultSet(String dbname,String sql,Object...obj) {
-		SqlOperation sqlop=new SqlOperation();
-		return sqlop.getResultSet(ReaderInI.getDataSource(dbname),sql, obj);
+		SqlOperation sqlop=new SqlOperation(ReaderInI.getDataSource(dbname).getConnection(),dbname);
+		return sqlop.getResultSet(sql, obj);
 	}
 	/**
 	 * 获得属性的类型去掉长度

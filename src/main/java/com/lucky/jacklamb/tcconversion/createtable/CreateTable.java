@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
-import com.lucky.jacklamb.sqlcore.jdbc.core.AutoPackage;
+import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateTable {
-    private AutoPackage autoPackage;
+    private DefaultSqlActuator autoPackage;
     private List<Class<?>> classlist;
     private String dbname;
 
@@ -16,7 +16,7 @@ public class CreateTable {
     public CreateTable(String dbname) {
         this.dbname = dbname;
         classlist = ReaderInI.getDataSource(dbname).getCreateTable();
-        autoPackage = new AutoPackage(dbname);
+        autoPackage = new DefaultSqlActuator(dbname);
     }
 
     /**

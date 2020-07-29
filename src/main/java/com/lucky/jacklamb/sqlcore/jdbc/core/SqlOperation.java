@@ -22,59 +22,53 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class SqlOperation {
 
+	private Connection conn;
 
+	private String dbname;
 
-
+	public SqlOperation(Connection conn, String dbname) {
+		this.conn = conn;
+		this.dbname = dbname;
+	}
 
 	/**
 	 * 实现对表的曾刪改操作
-	 * @param dataSource 数据源
 	 * @param sql（预编译的sql语句）
 	 * @param obj（替换占位符的数组）
 	 * @return boolean
 	 */
-	public boolean setSql(LuckyDataSource dataSource,String sql, Object...obj) {
-		Connection conn=null;
+	public int setSql(String sql, Object...obj) {
 		PreparedStatement ps=null;
-		boolean isOk=false;
 		try {
-			conn= dataSource.getConnection();
-			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
+			new SqlLog(dbname).isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
 				for (int i = 0; i < obj.length; i++) {
 					ps.setObject(i + 1, obj[i]);
 				}
 			}
-			int i = ps.executeUpdate();
-			if (i != 0)
-				isOk = true;
+			return ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sql,obj,e);
 		} finally {
-			LuckyDataSource.release(null, ps, conn);
+			LuckyDataSource.release(null,ps,null);
 		}
-		return isOk;
 	}
 
 	/**
 	 * 增删改操作批处理
-	 * @param dataSource 数据源
 	 * @param sql 预编译的SQL语句
 	 * @param obj 预编译的SQL语句
 	 * @return
 	 */
-	public boolean setSqlBatch(LuckyDataSource dataSource,String sql,Object[]... obj) {
-		Connection conn=null;
+	public int[] setSqlBatch(String sql,Object[]... obj) {
 		PreparedStatement ps=null;
-		boolean isOk=false;
 		try {
-			conn= dataSource.getConnection();
-			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
+			new SqlLog(dbname).isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if(obj==null||obj.length==0) {
-				ps.executeUpdate();
-				isOk=true;
+				int[] result={ps.executeUpdate()};
+				return result;
 			}else {
 				for(int i=0;i<obj.length;i++) {
 					for(int j=0;j<obj[i].length;j++) {
@@ -82,53 +76,49 @@ public class SqlOperation {
 					}
 					ps.addBatch();
 				}
-				ps.executeBatch();
-				isOk=true;
+				return  ps.executeBatch();
 			}
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sql,obj,e);
 		}finally {
-			LuckyDataSource.release(null, ps, conn);
-			return isOk;
+			LuckyDataSource.release(null,ps,null);
 		}
 	}
 
 	/**
 	 * SQL批量执行
-	 * @param dataSource 数据源
 	 * @param sqls 一系列完整SQL组成的数组
 	 * @return
 	 */
-	public boolean setSqlBatch(LuckyDataSource dataSource,String...sqls){
-		Connection conn=null;
-		Statement ps;
+	public int[] setSqlBatch(String...sqls){
+		Statement ps=null;
 		try {
-			conn= dataSource.getConnection();
-			new SqlLog(dataSource.getDbname()).isShowLog(sqls);
+			new SqlLog(dbname).isShowLog(sqls);
 			ps = conn.createStatement();
 			for (String sql : sqls) {
 				ps.addBatch(sql);
 			}
-			ps.executeBatch();
-			return true;
+			return ps.executeBatch();
 		} catch (SQLException e) {
 			throw new LuckySqlOperationException(sqls,e);
 		}finally {
-			LuckyDataSource.release(null, null, conn);
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	/**
 	 * 执行SQL返回结果集ResultSet
-	 * @param dataSource 数据源
 	 * @param sql 预编译SQL
 	 * @param obj 预编译SQl执行参数
 	 * @return
 	 */
-	public ResultSet getResultSet(LuckyDataSource dataSource,String sql, Object...obj) {
+	public ResultSet getResultSet(String sql, Object...obj) {
 		try {
-			Connection conn= dataSource.getConnection();
-			new SqlLog(dataSource.getDbname()).isShowLog(sql, obj);
+			new SqlLog(dbname).isShowLog(sql, obj);
 			PreparedStatement ps = conn.prepareStatement(sql);
 			if (obj != null) {
 				for (int i = 0; i < obj.length; i++) {
@@ -143,20 +133,17 @@ public class SqlOperation {
 
 	/**
 	 *
-	 * @param dataSource 数据源
 	 * @param c 包装类的Class对象
 	 * @param sql 预编译的sql语句
 	 * @param obj 替换占位符的数组
 	 * @param <T>
 	 * @return
 	 */
-	public <T> List<T> autoPackageToList(LuckyDataSource dataSource,Class<T> c, String sql, Object... obj) {
-		Connection conn=null;
+	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		PreparedStatement ps=null;
-		SqlLog log=new SqlLog(dataSource.getDbname());
+		SqlLog log=new SqlLog(dbname);
 		ResultSet rs=null;
 		try {
-			conn= dataSource.getConnection();
 			log.isShowLog(sql, obj);
 			ps = conn.prepareStatement(sql);
 			if (obj != null) {
@@ -206,7 +193,7 @@ public class SqlOperation {
 			} catch (Exception e) {
 				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
 			}finally {
-				LuckyDataSource.release(rs,ps,conn);
+				LuckyDataSource.release(rs,ps,null);
 			}
 		}else {
 			try {
@@ -216,7 +203,7 @@ public class SqlOperation {
 			} catch (SQLException e) {
 				throw new LuckySqlOperationException(sql,obj,e);
 			}finally {
-				LuckyDataSource.release(rs,ps,conn);
+				LuckyDataSource.release(rs,ps,null);
 			}
 		}
 		return collection;
@@ -244,7 +231,4 @@ public class SqlOperation {
 			throw new LuckySqlOperationException(e);
 		}
 	}
-
-	
-
 }

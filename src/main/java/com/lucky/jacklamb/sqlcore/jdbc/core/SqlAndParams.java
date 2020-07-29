@@ -1,121 +1,14 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * 结果集自动包装类
- *
- * @author fk-7075
- *
- */
-
-@SuppressWarnings("all")
-public class AutoPackage {
-
-	private LuckyDataSource dataSource;
-
-	private boolean isCache;
-
-	private LRUCache<String,List<?>> lruCache;
-
-	private SqlOperation sqlOperation;
-
-	public AutoPackage(String dbname) {
-		this.dataSource=ReaderInI.getDataSource(dbname);
-		isCache= ReaderInI.getDataSource(dbname).getCache();
-		//如果用户开启了缓存配置，测初始化一个LRU缓存
-		if(isCache)
-			lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
-		sqlOperation=new SqlOperation();
-		//初始化数据源
-		dataSource.init();
-	}
-
-	/**
-	 * 自动将结果集中的内容封装起来
-	 *
-	 * @param c 封装类的Class对象
-	 * @param sql 预编译的sql语句
-	 * @param obj 替换占位符的数组
-	 * @return 返回一个泛型的List集合
-	 */
-	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
-		SqlAndParams sp=new SqlAndParams(sql,obj);
-		if(isCache)
-			return queryCache(sp,c);
-		return sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
-	}
-
-	public boolean update(String sql, Object...obj) {
-		SqlAndParams sp=new SqlAndParams(sql,obj);
-		boolean result = sqlOperation.setSql(dataSource, sp.precompileSql, sp.params);
-		if(isCache)
-			clear();
-		return result;
-	}
-
-	public <T> List<T> autoPackageToListMethod(Class<T> c, Method method,String sql, Object[] obj) {
-		SqlAndParams sp=new SqlAndParams(method,sql,obj);
-		if(isCache)
-			return queryCache(sp,c);
-		return sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
-	}
-
-	public boolean updateMethod(Method method, String sql, Object[]obj) {
-		SqlAndParams sp=new SqlAndParams(method,sql,obj);
-		boolean result = sqlOperation.setSql(dataSource, sp.precompileSql, sp.params);
-		if(isCache)
-			clear();
-		return result;
-	}
-
-	public boolean updateBatch(String sql,Object[][] obj) {
-		if(isCache)
-			clear();
-		return sqlOperation.setSqlBatch(dataSource,sql, obj);
-	}
-
-	public boolean updateBatch(String...completeSqls){
-		if(isCache)
-			clear();
-		return sqlOperation.setSqlBatch(dataSource,completeSqls);
-	}
-
-	/**
-	 * 从LRU缓存中查询结果
-	 * @param sp
-	 * @param c
-	 * @param <T>
-	 * @return
-	 */
-	public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
-		String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
-		if(lruCache.containsKey(completeSql)){
-			return (List<T>) lruCache.get(completeSql);
-		}else{
-			List<?> result = sqlOperation.autoPackageToList(dataSource, c, sp.precompileSql, sp.params);
-			lruCache.put(completeSql,result);
-			return (List<T>) result;
-		}
-	}
-
-	public void clear(){
-		lruCache.clear();
-	}
-
-}
-
-class SqlAndParams{
+public class SqlAndParams{
 
 	private final String S ="?s";
 	private final String E ="?e";

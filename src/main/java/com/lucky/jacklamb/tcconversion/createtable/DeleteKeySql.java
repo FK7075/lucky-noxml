@@ -2,6 +2,7 @@ package com.lucky.jacklamb.tcconversion.createtable;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;
 
 import java.sql.ResultSet;
@@ -42,7 +43,7 @@ public class DeleteKeySql {
 			try {
 				String table = PojoManage.getTable(clazz);
 				String sql = "SHOW CREATE TABLE " + table;
-				ResultSet rs = sqlop.getResultSet(ReaderInI.getDataSource(dbname),sql);
+				ResultSet rs = sqlop.getResultSet(sql);
 				List<String> keyList=new ArrayList<>();
 				if (rs != null) {
 					while (rs.next()) {
@@ -56,6 +57,7 @@ public class DeleteKeySql {
 						}
 					}
 				}
+				LuckyDataSource.release(rs,null,null);
 				for (String wkey : keyList) {
 					String sqlStr = "ALTER TABLE " + table + " DROP FOREIGN KEY " + wkey;
 					deleteKeySQL.add(sqlStr);
@@ -71,7 +73,7 @@ public class DeleteKeySql {
 	 * 得到数据库的名字和删除数据库所有表外键的sql语句集合并封装到属性中
 	 */
 	public DeleteKeySql(String dbname,List<Class<?>> classlist) {
-		sqlop = new SqlOperation();
+		sqlop = new SqlOperation(ReaderInI.getDataSource(dbname).getConnection(),dbname);
 		this.dbname=dbname;
 		this.classlist = classlist;
 	}
@@ -81,7 +83,7 @@ public class DeleteKeySql {
 	 */
 	public void deleteKey1() {
 		for (String sql : this.delkeysql) {
-			sqlop.setSql(ReaderInI.getDataSource(dbname),sql);
+			sqlop.setSql(sql);
 		}
 	}
 

@@ -76,9 +76,9 @@ public final class MySqlCore extends SqlCore {
 	}
 
 	@Override
-	public <T> boolean insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertBatchByCollection(Collection<T> collection) {
 		if(collection.isEmpty())
-			return false;
+			return -1;
 		setUUID(collection);
 		BatchInsert bbi=new BatchInsert(collection);
 		return statementCore.update(bbi.getInsertSql(), bbi.getInsertObject());

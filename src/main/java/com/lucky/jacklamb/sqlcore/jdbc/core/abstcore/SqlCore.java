@@ -89,7 +89,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * 包含删除信息的包装类的对象
 	 * @return
 	 */
-	public <T> boolean delete(T pojo) {
+	public <T> int delete(T pojo) {
 		return super.delete(pojo);
 	}
 	
@@ -99,7 +99,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param conditions 作为更新条件的字段(支持多值，缺省默认使用Id字段作为更新条件)
 	 * @return
 	 */
-	public <T> boolean updateByPojo(T pojo,String...conditions) {
+	public <T> int updateByPojo(T pojo,String...conditions) {
 		return super.update(pojo,conditions);
 	}
 	
@@ -109,7 +109,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * 包含删除信息的对象数组
 	 * @return
 	 */
-	public boolean deleteBatchByArray(Object...pojos) {
+	public int deleteBatchByArray(Object...pojos) {
 		return super.deleteBatchByArray(pojos);
 	}
 	
@@ -120,7 +120,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * 包含更新信息的对象数组
 	 * @return
 	 */
-	public boolean updateBatchByArray(Object...pojos) {
+	public int updateBatchByArray(Object...pojos) {
 		return super.updateBatchByArray(pojos);
 	}
 	
@@ -129,7 +129,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param pojoCollection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	public <T> boolean deleteBatchByCollection(Collection<T> pojoCollection) {
+	public <T> int deleteBatchByCollection(Collection<T> pojoCollection) {
 		return super.deleteBatchByCollection(pojoCollection);
 	}
 	
@@ -139,7 +139,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param pojoCollection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	public <T> boolean updateBatchByCollection(Collection<T> pojoCollection) {
+	public <T> int updateBatchByCollection(Collection<T> pojoCollection) {
 		return super.updateBatchByCollection(pojoCollection);
 	}
 	
@@ -181,11 +181,11 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param obj
 	 * @return
 	 */
-	public boolean update(String sql,Object...obj) {
+	public int update(String sql,Object...obj) {
 		return statementCore.update(sql, obj);
 	}
 
-	public boolean updateMethod(String sql,Method method,Object[] obj) {
+	public int updateMethod(String sql,Method method,Object[] obj) {
 		return statementCore.updateMethod(method,sql, obj);
 	}
 	
@@ -197,7 +197,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * id值
 	 * @return
 	 */
-	public boolean delete(Class<?> pojoClass,Object id) {
+	public int delete(Class<?> pojoClass,Object id) {
 		return super.delete(pojoClass, id);
 	}
 	
@@ -207,7 +207,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param ids 要删除的id所组成的集合
 	 * @return
 	 */
-	public boolean deleteByIdIn(Class<?> pojoClass,Object[] ids) {
+	public int deleteByIdIn(Class<?> pojoClass,Object[] ids) {
 		return super.deleteByIdIn(pojoClass, ids);
 	}
 
@@ -217,7 +217,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param ids 要删除的id所组成的集合
 	 * @return
 	 */
-	public boolean deleteByIdIn(Class<?> pojoClass,List<?> ids) {
+	public int deleteByIdIn(Class<?> pojoClass,List<?> ids) {
 		return deleteByIdIn(pojoClass, ids.toArray());
 	}
 
@@ -251,7 +251,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * [[xxx],[xxx],[xxx]]
 	 * @return
 	 */
-	public boolean updateBatch(String sql,Object[][] obj) {
+	public int[] updateBatch(String sql,Object[][] obj) {
 		return statementCore.updateBatch(sql, obj);
 	}
 
@@ -260,7 +260,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param completeSql 完整的SQL
 	 * @return
 	 */
-	public boolean updateBatch(String...completeSql){
+	public int[] updateBatch(String...completeSql){
 		return statementCore.updateBatch(completeSql);
 	}
 	
@@ -295,19 +295,18 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 
 	@Override
-	public <T> boolean insert(T t) {
+	public <T> int insert(T t) {
 		if(PojoManage.getIdType(t.getClass())==PrimaryType.AUTO_UUID)
 			setNextUUID(t);
-		super.insert(t);
-		return true;
+		return super.insert(t);
 	}
 	
 	@Override
-	public <T> boolean insertSetId(T t) {
-		insert(t);
+	public <T> int insertSetId(T t) {
+		int result = insert(t);
 		if(PojoManage.getIdType(t.getClass())==PrimaryType.AUTO_INT)
 			setNextId(t);
-		return true;
+		return result;
 	}
 
 	@Override
@@ -319,11 +318,12 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 	
 	@Override
-	public boolean insertSetIdBatchByArray( Object... obj) {
-		for(Object pojo:obj) {
-			insertSetId(pojo);
+	public int insertSetIdBatchByArray( Object... obj) {
+		int[] result=new int[obj.length];
+		for (int i = 0; i < obj.length; i++) {
+			result[i]=insertSetId(obj[i]);
 		}
-		return true;
+		return getResult(result);
 	}
 	
 	public void setNextUUID(Object pojo) {

@@ -61,28 +61,28 @@ public interface UniqueSqlCore {
 	 * @param t 包含添加信息的包装类的对象
 	 * @return
 	 */
-	<T> boolean insert(T t);
+	<T> int insert(T t);
 	
 	/**
 	 * 添加数据,并为每个对象设置自增主键
 	 * @param t
 	 * @return
 	 */
-	<T> boolean insertSetId(T t);
+	<T> int insertSetId(T t);
 	
 	/**
 	 * 批量保存-数组模式,并为每个对象设置自增主键
 	 * @param obj 需要添加到数据库的实体类对象
 	 * @return
 	 */
-	<T> boolean insertSetIdBatchByArray(Object... obj);
+	<T> int insertSetIdBatchByArray(Object... obj);
 	
 	/**
 	 * 批量保存-集合模式
 	 * @param collection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	<T> boolean insertBatchByCollection(Collection<T> collection);
+	<T> int insertBatchByCollection(Collection<T> collection);
 	
 
 	/**
