@@ -1,0 +1,177 @@
+Index: src/main/java/com/lucky/jacklamb/sqlcore/c3p0/AutoPackage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lucky.jacklamb.sqlcore.c3p0;\n\nimport java.lang.reflect.Field;\nimport java.sql.ResultSet;\nimport java.sql.ResultSetMetaData;\nimport java.sql.SQLException;\nimport java.util.ArrayList;\nimport java.util.Collection;\nimport java.util.HashSet;\nimport java.util.List;\nimport java.util.Set;\n\nimport com.lucky.jacklamb.exception.AutoPackageException;\nimport com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;\nimport com.lucky.jacklamb.tcconversion.typechange.JavaConversion;\nimport com.lucky.jacklamb.utils.LuckyManager;\n\n/**\n * 结果集自动包装类\n * \n * @author fk-7075\n *\n */\npublic class AutoPackage {\n\tprivate ResultSet rs = null;\n\tprivate SqlOperation sqloperation;\n\t\n\tpublic AutoPackage(String dbname) {\n\t\tsqloperation = LuckyManager.getSqlOperation(dbname);\n\t}\n\n\t/**\n\t * 自动将结果集中的内容封装起来\n\t * \n\t * @param c 封装类的Class对象\n\t * @param sql 预编译的sql语句\n\t * @param obj 替换占位符的数组\n\t * @return 返回一个泛型的List集合\n\t */\n\tpublic List<?> autoPackageToList(Class<?> c, String sql, Object... obj) {\n\t\tList<Object> list = new ArrayList<Object>();\n\t\treturn (List<?>) autoPackageToCollection(c,list,sql,obj);\n\t}\n\t\n\t/**\n\t * 自动将结果集中的内容封装起来\n\t * \n\t * @param c 封装类的Class对象\n\t * @param sql 预编译的sql语句\n\t * @param obj 替换占位符的数组\n\t * @return 返回一个泛型的Set集合\n\t */\n\tpublic Set<?> autoPackageToSet(Class<?> c, String sql, Object... obj) {\n\t\tSet<Object> list = new HashSet<Object>();\n\t\treturn (Set<?>) autoPackageToCollection(c,list,sql,obj);\n\t}\n\t\n\t/**\n\t * 自动包装\n\t * @param c 封装类的Class对象\n\t * @param collection\n\t * @param sql 预编译的sql语句\n\t * @param obj 替换占位符的数组\n\t * @return\n\t */\n\t@SuppressWarnings(\"unchecked\")\n\tpublic <T> Collection<T> autoPackageToCollection(Class<?> c,Collection<T> collection, String sql, Object... obj) {\n\t\trs = sqloperation.getResultSet(sql, obj);\n\t\tif(c.getClassLoader()!=null) {\n\t\t\tField[] fields = c.getDeclaredFields();\n\t\t\tObject object = null;\n\t\t\ttry {\n\t\t\t\twhile (rs.next()) {\n\t\t\t\t\tobject = c.newInstance();\n\t\t\t\t\tfor (Field f : fields) {\n\t\t\t\t\t\tif (f.getType().getClassLoader()!=null) {\n\t\t\t\t\t\t\tClass<?> cl=f.getType();\n\t\t\t\t\t\t\tField[] fils=cl.getDeclaredFields();\n\t\t\t\t\t\t\tObject onfk=cl.newInstance();\n\t\t\t\t\t\t\tfor (Field ff : fils) {\n\t\t\t\t\t\t\t\tString field_tab=PojoManage.getTableField(ff);\n\t\t\t\t\t\t\t\tif (isExistColumn(rs, field_tab)) {\n\t\t\t\t\t\t\t\t\tff.setAccessible(true);\n\t\t\t\t\t\t\t\t\tff.set(onfk, rs.getObject(field_tab));\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tf.setAccessible(true);\n\t\t\t\t\t\t\tf.set(object, onfk);\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tString field_tab=PojoManage.getTableField(f);\n\t\t\t\t\t\t\tif (isExistColumn(rs, field_tab)) {\n\t\t\t\t\t\t\t\tf.setAccessible(true);\n\t\t\t\t\t\t\t\tf.set(object, rs.getObject(field_tab));\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\tcollection.add((T) object);\n\t\t\t\t}\n\t\t\t} catch (Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t\tthrow new AutoPackageException(\"表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:\"+c.getName()+\"   SQl:\"+sql);\n\t\t\t}finally {\n\t\t\t\tsqloperation.close();\n\t\t\t}\n\t\t}else {\n\t\t\ttry {\n\t\t\t\twhile(rs.next()) {\n\t\t\t\t\tcollection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));\n\t\t\t\t}\n\t\t\t} catch (SQLException e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}finally {\n\t\t\t\tsqloperation.close();\n\t\t\t}\n\t\t}\n\t\treturn collection;\n\t}\n\t\n\tpublic boolean update(String sql,Object...obj) {\n\t\treturn sqloperation.setSql(sql, obj);\n\t}\n\t\n\tpublic boolean updateBatch(String sql,Object[][] obj) {\n\t\treturn sqloperation.setSqlBatch(sql, obj);\n\t}\n\n\t/**\n\t * 判断结果集中是否有指定的列\n\t * \n\t * @param rs\n\t *            结果集对象\n\t * @param columnName\n\t *            类名\n\t * @return 结果集中有指定的列则反true\n\t */\n\tpublic boolean isExistColumn(ResultSet rs, String columnName) {\n\t\ttry {\n\t\t\tResultSetMetaData metaData = rs.getMetaData();\n\t\t\tint size=metaData.getColumnCount();\n\t\t\tfor(int i=1;i<=size;i++) {\n\t\t\t\tif(columnName.equalsIgnoreCase(metaData.getColumnLabel(i))) {\n\t\t\t\t\treturn true;\n\t\t\t\t}\n\t\t\t}\n\t\t\treturn false;\n\t\t} catch (SQLException e) {\n\t\t\te.printStackTrace();\n\t\t\treturn false;\n\t\t}\n\t}\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/lucky/jacklamb/sqlcore/c3p0/AutoPackage.java	(revision 5ac7a83df9e1140ce16c65f015901f34a7d0e28f)
++++ src/main/java/com/lucky/jacklamb/sqlcore/c3p0/AutoPackage.java	(date 1588166168167)
+@@ -1,19 +1,6 @@
+ package com.lucky.jacklamb.sqlcore.c3p0;
+ 
+-import java.lang.reflect.Field;
+-import java.sql.ResultSet;
+-import java.sql.ResultSetMetaData;
+-import java.sql.SQLException;
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.HashSet;
+ import java.util.List;
+-import java.util.Set;
+-
+-import com.lucky.jacklamb.exception.AutoPackageException;
+-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+-import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
+-import com.lucky.jacklamb.utils.LuckyManager;
+ 
+ /**
+  * 结果集自动包装类
+@@ -22,11 +9,14 @@
+  *
+  */
+ public class AutoPackage {
+-	private ResultSet rs = null;
+-	private SqlOperation sqloperation;
++
++	private String dbname;
++
++	private SqlOperation sqlOperation;
+ 	
+ 	public AutoPackage(String dbname) {
+-		sqloperation = LuckyManager.getSqlOperation(dbname);
++		this.dbname=dbname;
++		sqlOperation=new SqlOperation();
+ 	}
+ 
+ 	/**
+@@ -37,116 +27,27 @@
+ 	 * @param obj 替换占位符的数组
+ 	 * @return 返回一个泛型的List集合
+ 	 */
+-	public List<?> autoPackageToList(Class<?> c, String sql, Object... obj) {
+-		List<Object> list = new ArrayList<Object>();
+-		return (List<?>) autoPackageToCollection(c,list,sql,obj);
++	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
++		return sqlOperation.getResultSet(dbname,c,sql,obj);
+ 	}
+-	
++
+ 	/**
+-	 * 自动将结果集中的内容封装起来
+-	 * 
+-	 * @param c 封装类的Class对象
+-	 * @param sql 预编译的sql语句
+-	 * @param obj 替换占位符的数组
+-	 * @return 返回一个泛型的Set集合
+-	 */
+-	public Set<?> autoPackageToSet(Class<?> c, String sql, Object... obj) {
+-		Set<Object> list = new HashSet<Object>();
+-		return (Set<?>) autoPackageToCollection(c,list,sql,obj);
+-	}
+-	
+-	/**
+-	 * 自动包装
+-	 * @param c 封装类的Class对象
+-	 * @param collection
+-	 * @param sql 预编译的sql语句
++	 * 执行非查询操作
++	 * @param sql 预编译的SQL语句
+ 	 * @param obj 替换占位符的数组
+ 	 * @return
+ 	 */
+-	@SuppressWarnings("unchecked")
+-	public <T> Collection<T> autoPackageToCollection(Class<?> c,Collection<T> collection, String sql, Object... obj) {
+-		rs = sqloperation.getResultSet(sql, obj);
+-		if(c.getClassLoader()!=null) {
+-			Field[] fields = c.getDeclaredFields();
+-			Object object = null;
+-			try {
+-				while (rs.next()) {
+-					object = c.newInstance();
+-					for (Field f : fields) {
+-						if (f.getType().getClassLoader()!=null) {
+-							Class<?> cl=f.getType();
+-							Field[] fils=cl.getDeclaredFields();
+-							Object onfk=cl.newInstance();
+-							for (Field ff : fils) {
+-								String field_tab=PojoManage.getTableField(ff);
+-								if (isExistColumn(rs, field_tab)) {
+-									ff.setAccessible(true);
+-									ff.set(onfk, rs.getObject(field_tab));
+-								}
+-							}
+-							f.setAccessible(true);
+-							f.set(object, onfk);
+-						} else {
+-							String field_tab=PojoManage.getTableField(f);
+-							if (isExistColumn(rs, field_tab)) {
+-								f.setAccessible(true);
+-								f.set(object, rs.getObject(field_tab));
+-							}
+-						}
+-					}
+-					collection.add((T) object);
+-				}
+-			} catch (Exception e) {
+-				e.printStackTrace();
+-				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql);
+-			}finally {
+-				sqloperation.close();
+-			}
+-		}else {
+-			try {
+-				while(rs.next()) {
+-					collection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));
+-				}
+-			} catch (SQLException e) {
+-				e.printStackTrace();
+-			}finally {
+-				sqloperation.close();
+-			}
+-		}
+-		return collection;
+-	}
+-	
+-	public boolean update(String sql,Object...obj) {
+-		return sqloperation.setSql(sql, obj);
+-	}
+-	
+-	public boolean updateBatch(String sql,Object[][] obj) {
+-		return sqloperation.setSqlBatch(sql, obj);
++	public boolean update(String sql,Object...obj){
++		return sqlOperation.setSql(dbname,sql,obj);
+ 	}
+ 
+ 	/**
+-	 * 判断结果集中是否有指定的列
+-	 * 
+-	 * @param rs
+-	 *            结果集对象
+-	 * @param columnName
+-	 *            类名
+-	 * @return 结果集中有指定的列则反true
++	 * 执行批量的非查询操作
++	 * @param sql 预编译的SQL语句
++	 * @param obj 替换占位符的数组
++	 * @return
+ 	 */
+-	public boolean isExistColumn(ResultSet rs, String columnName) {
+-		try {
+-			ResultSetMetaData metaData = rs.getMetaData();
+-			int size=metaData.getColumnCount();
+-			for(int i=1;i<=size;i++) {
+-				if(columnName.equalsIgnoreCase(metaData.getColumnLabel(i))) {
+-					return true;
+-				}
+-			}
+-			return false;
+-		} catch (SQLException e) {
+-			e.printStackTrace();
+-			return false;
+-		}
++	public boolean updateBatch(String sql,Object...obj){
++		return sqlOperation.setSqlBatch(dbname,sql,obj);
+ 	}
+-
+ }
