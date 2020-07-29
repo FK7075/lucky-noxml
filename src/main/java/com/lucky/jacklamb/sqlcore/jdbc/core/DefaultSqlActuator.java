@@ -15,8 +15,6 @@ import java.util.List;
 
 public class DefaultSqlActuator extends SqlActuator{
 
-	private LuckyDataSource dataSource;
-
 	public DefaultSqlActuator(String dbname) {
 		super(dbname);
 	}

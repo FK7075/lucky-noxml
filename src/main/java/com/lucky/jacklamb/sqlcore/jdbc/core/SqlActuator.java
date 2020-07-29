@@ -20,13 +20,16 @@ public abstract class SqlActuator {
     protected boolean isCache;
 
     public SqlActuator(String dbname) {
+        this.dbname=dbname;
         this.dataSource=ReaderInI.getDataSource(dbname);
         isCache= ReaderInI.getDataSource(dbname).getCache();
+        //初始化数据源
+        dataSource.init();
         //如果用户开启了缓存配置，测初始化一个LRU缓存
         if(isCache)
             lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
-        //初始化数据源
-        dataSource.init();
+
+
     }
 
     /**
@@ -90,14 +93,15 @@ public abstract class SqlActuator {
      * @return
      */
     public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
-        Connection connection = dataSource.getConnection();
         String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
         if(lruCache.containsKey(completeSql)){
             return (List<T>) lruCache.get(completeSql);
         }else{
+            Connection connection = dataSource.getConnection();
             SqlOperation sqlOperation=new SqlOperation(connection,dataSource.getDbname());
             List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
             lruCache.put(completeSql,result);
+            LuckyDataSource.release(null,null,connection);
             return (List<T>) result;
         }
     }
