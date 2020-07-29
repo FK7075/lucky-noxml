@@ -14,7 +14,7 @@ import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.aop.proxy.ProxyFactory;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 
 /**
  * 代理对象发生器

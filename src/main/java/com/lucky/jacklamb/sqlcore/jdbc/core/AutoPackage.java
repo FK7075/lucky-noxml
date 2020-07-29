@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.datasource.core;
+package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import com.lucky.jacklamb.utils.regula.Regular;

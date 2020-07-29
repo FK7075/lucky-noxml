@@ -40,8 +40,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
                     return methodProxy.invokeSuper(targetObj,params);
                 }
             }
-//            JobStore jobStore=
-//            DirectSchedulerFactory.getInstance().createScheduler();
+
             Scheduler  scheduler = StdSchedulerFactory.getDefaultScheduler();
             Class<? extends org.quartz.Job> jobClass=quartzJob.parallel()?LuckyJob.class: SerialJob.class;
 
@@ -52,7 +51,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             JobDetail jobDetail = JobBuilder.newJob(jobClass)
                     .withIdentity(jobName, LUCKY_JOB_GROUP)
                     .build();
-            //将任务逻辑的IocId put到上下文中
+            //将任务逻辑的IocId put到job上下文中
             jobDetail.getJobDataMap().put(LUCKY_JOB,jobRunBeanId);
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
             Trigger trigger =getTrigger(paramKV,method,quartzJob,jobName);

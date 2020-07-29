@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore;
+package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 /**
  * SQL纯对象化操作API

@@ -1,7 +1,9 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
+package com.lucky.jacklamb.sqlcore.jdbc;
 
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.AccessSqlCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.DB2Core;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl.MySqlCore;
@@ -15,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SqlCoreFactory {
@@ -23,9 +26,14 @@ public class SqlCoreFactory {
 
 	private static Map<String,SqlCore> sqlCoreMap;
 
+	private static List<LuckyDataSource> dataSources;
+
 	static {
 		if(sqlCoreMap==null)
 			sqlCoreMap=new HashMap<>();
+		if(dataSources==null){
+			dataSources=ReaderInI.getAllDataSource();
+		}
 	}
 	
 	public static SqlCore createSqlCore() {
@@ -35,7 +43,7 @@ public class SqlCoreFactory {
 	public static SqlCore createSqlCore(String dbname) {
 		if(sqlCoreMap.containsKey(dbname))
 			return sqlCoreMap.get(dbname);
-		String dbType=PojoManage.getDatabaseType(dbname);
+		String dbType= PojoManage.getDatabaseType(dbname);
 		StringBuilder sb=new StringBuilder();
 		SqlCore sqlCore;
 		switch (dbType) {

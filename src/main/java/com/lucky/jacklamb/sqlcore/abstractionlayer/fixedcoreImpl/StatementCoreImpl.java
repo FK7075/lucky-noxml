@@ -3,9 +3,9 @@ package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.StatementCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.StatementCore;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.core.AutoPackage;
+import com.lucky.jacklamb.sqlcore.jdbc.core.AutoPackage;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 @SuppressWarnings("unchecked")

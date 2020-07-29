@@ -1,6 +1,5 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore;
+package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  * @author fk-7075
  *
  */
-public interface StatementCore extends Serializable {
+public interface StatementCore {
 	
 	/**
 	 * SQL查询

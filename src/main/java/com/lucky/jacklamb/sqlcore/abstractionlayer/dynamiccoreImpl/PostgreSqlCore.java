@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlGroup;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.BatchInsert;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 

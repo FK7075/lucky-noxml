@@ -1,6 +1,7 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore;
+package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
@@ -284,21 +285,13 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param clazz Mapper接口的Class
 	 * @return Mapper接口的代理对象
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T getMapper(Class<T> clazz) {
-		LuckyMapperProxy mapperProxy = new LuckyMapperProxy(this);
-		Object obj = null;
 		try {
-			obj = mapperProxy.getMapperProxyObject(clazz);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LuckyMapperProxy mapperProxy = new LuckyMapperProxy(this);
+			return mapperProxy.getMapperProxyObject(clazz);
+		} catch (InstantiationException | IllegalAccessException | IOException e) {
+			throw new CreateMapperException(clazz,e);
 		}
-		return (T) obj;
 	}
 
 	@Override

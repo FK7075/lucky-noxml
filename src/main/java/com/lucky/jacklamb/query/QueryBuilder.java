@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.Sort;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlGroup;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 
 /**
  * 查询条件对象

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlGroup;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
 
 public class ObjectToJoinSql{

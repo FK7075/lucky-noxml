@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
-import com.lucky.jacklamb.sqlcore.datasource.core.SqlOperation;
+import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;
 
 /**
  * Lucky的工具类

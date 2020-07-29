@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.datasource.core;
+package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
@@ -21,6 +21,9 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class SqlOperation {
+
+
+
 
 
 	/**

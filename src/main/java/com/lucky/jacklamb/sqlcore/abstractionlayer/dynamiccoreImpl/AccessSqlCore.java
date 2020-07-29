@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.lucky.jacklamb.query.QueryBuilder;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 
 public final class AccessSqlCore extends SqlCore {
 

@@ -8,6 +8,7 @@ import com.lucky.jacklamb.aop.proxy.Chain;
 import com.lucky.jacklamb.aop.proxy.Point;
 import com.lucky.jacklamb.expression.ExpressionEngine;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 
 public class CacheExpandPoint extends Point{
 	
@@ -20,15 +21,15 @@ public class CacheExpandPoint extends Point{
 		Object result = null;
 		Cacheable cachAnn=method.getAnnotation(Cacheable.class);
 		String mapid = cachAnn.value();//容器中的缓存的ids
-		Map<String,Object> cacheMap = null;
+		LRUCache<String,Object> cacheMap = null;
 		String key = cachAnn.key();//结果在缓存中的key
 		key=ExpressionEngine.removeSymbol(key, params, "#[", "]");
 		if(beans.containsComponent(mapid)) {
-			cacheMap=(Map<String, Object>) beans.getComponentBean(mapid);
+			cacheMap=(LRUCache<String, Object>) beans.getComponentBean(mapid);
 		}
 		if(cacheMap==null) {//容器中还不存在该缓存容器
 			result=chain.proceed();
-			cacheMap=new HashMap<>();
+			cacheMap=new LRUCache<>(100);
 			cacheMap.put(key,result);
 			beans.addComponentBean(mapid, cacheMap);
 			return result;
