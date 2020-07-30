@@ -115,7 +115,7 @@ public interface GeneralObjectCore {
      * @param <T>
      * @return
      */
-    <T> int update(T t, String... conditions);
+    <T> int updateRow(T t, String... conditions);
 
     /**
      * 批量删除-数组模式

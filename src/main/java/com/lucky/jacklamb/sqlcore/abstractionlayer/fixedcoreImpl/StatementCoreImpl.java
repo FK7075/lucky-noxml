@@ -1,12 +1,15 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
+import com.lucky.jacklamb.sqlcore.jdbc.core.SqlActuator;
+import com.lucky.jacklamb.sqlcore.jdbc.core.TransactionSqlActuator;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.StatementCore;
+
 import java.lang.reflect.Method;
 import java.util.List;
-
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.StatementCore;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 @SuppressWarnings("unchecked")
 public final class StatementCoreImpl implements StatementCore {
@@ -15,26 +18,45 @@ public final class StatementCoreImpl implements StatementCore {
 	
 	private CreateSql createSql;
 	
-	protected DefaultSqlActuator autopackage;
-	
-	
-	public StatementCoreImpl(LuckyDataSource dataSource) {
+	private SqlActuator sqlActuator;
+
+	public Transaction openTransaction(){
+		return sqlActuator.openTransaction();
+	}
+
+	public Transaction openTransaction(int isolationLevel){
+		return sqlActuator.openTransaction(isolationLevel);
+	}
+
+	private StatementCoreImpl(LuckyDataSource dataSource){
 		this.createSql= new CreateSql();
 		this.dbname=dataSource.getDbname();
-		this.autopackage=new DefaultSqlActuator(dbname);
 	}
+
+	public static StatementCoreImpl getDefaultStatementCoreImpl(LuckyDataSource dataSource){
+		StatementCoreImpl sc=new StatementCoreImpl(dataSource);
+		sc.sqlActuator=new DefaultSqlActuator(sc.dbname);
+		return sc;
+	}
+
+	public static StatementCoreImpl getTransactionStatementCoreImpl(LuckyDataSource dataSource){
+		StatementCoreImpl sc=new StatementCoreImpl(dataSource);
+		sc.sqlActuator=new TransactionSqlActuator(sc.dbname);
+		return sc;
+	}
+
 	
 	
 	@Override
 	public <T> List<T> getList(Class<T> c, String sql, Object... obj) {
 		List<?> result=null;
-		return (List<T>) autopackage.autoPackageToList(c, sql, obj);
+		return (List<T>) this.sqlActuator.autoPackageToList(c, sql, obj);
 	}
 
 	@Override
 	public <T> List<T> getListMethod(Class<T> c,Method method, String sql, Object[] obj) {
 		List<?> result;
-		return (List<T>) autopackage.autoPackageToListMethod(c,method, sql, obj);
+		return (List<T>) this.sqlActuator.autoPackageToListMethod(c,method, sql, obj);
 	}
 
 	@Override
@@ -55,28 +77,28 @@ public final class StatementCoreImpl implements StatementCore {
 
 	@Override
 	public int update(String sql, Object... obj) {
-		return autopackage.update(sql, obj);
+		return this.sqlActuator.update(sql, obj);
 	}
 
 	@Override
 	public int updateMethod(Method method, String sql, Object[] obj) {
-		return autopackage.updateMethod(method,sql, obj);
+		return this.sqlActuator.updateMethod(method,sql, obj);
 	}
 
 	@Override
 	public int[] updateBatch(String sql, Object[][] obj) {
-		return autopackage.updateBatch(sql, obj);
+		return this.sqlActuator.updateBatch(sql, obj);
 	}
 
 	@Override
 	public int[] updateBatch(String... completeSqls) {
-		return autopackage.updateBatch(completeSqls);
+		return sqlActuator.updateBatch(completeSqls);
 	}
 
 
 	@Override
 	public void clear() {
-		autopackage.clear();
+		sqlActuator.clear();
 	}
 
 }

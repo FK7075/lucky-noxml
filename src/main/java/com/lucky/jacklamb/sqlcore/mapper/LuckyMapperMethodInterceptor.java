@@ -685,7 +685,7 @@ class SqlAndArray {
 
     @Override
     public String toString() {
-        return "SqlAndArray [sql=" + sql + ", array=" + Arrays.toString(array) + "]";
+        return "SqlAndArray [sqlActuator=" + sql + ", array=" + Arrays.toString(array) + "]";
     }
 
 }

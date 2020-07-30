@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.transaction;
 
 import com.lucky.jacklamb.ioc.ControllerIOC;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckyTransactionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +29,18 @@ public class JDBCTransaction implements Transaction {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             log.error("开启事务失败！",e);
-            e.printStackTrace();
+            throw new LuckyTransactionException("开启事务失败！",e);
+        }
+    }
+
+    @Override
+    public void open(int isolationLevel) {
+        try {
+            connection.setTransactionIsolation(isolationLevel);
+            open();
+        } catch (SQLException e) {
+            log.error("设置隔离级别失败！[(ERROR)TRANSACTION_ISOLATION : "+isolationLevel+"]",e);
+            throw new LuckyTransactionException("设置隔离级别失败！",e);
         }
     }
 
@@ -36,9 +48,10 @@ public class JDBCTransaction implements Transaction {
     public void commit() {
         try {
             connection.commit();
+            close();
         } catch (SQLException e) {
             log.error("提交事务失败！",e);
-            e.printStackTrace();
+            throw new LuckyTransactionException("提交事务失败！",e);
         }
     }
 
@@ -46,9 +59,10 @@ public class JDBCTransaction implements Transaction {
     public void rollback() {
         try {
             connection.rollback();
+            close();
         } catch (SQLException e) {
             log.error("事务回滚失败！",e);
-            e.printStackTrace();
+            throw new LuckyTransactionException("事务回滚失败！",e);
         }
     }
 
@@ -58,7 +72,7 @@ public class JDBCTransaction implements Transaction {
             connection.close();
         } catch (SQLException e) {
             log.error("关闭连接失败！",e);
-            e.printStackTrace();
+            throw new LuckyTransactionException("关闭连接失败！",e);
         }
     }
 }

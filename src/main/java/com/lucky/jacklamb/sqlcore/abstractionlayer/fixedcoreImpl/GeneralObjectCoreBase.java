@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.GeneralObjectCore;
@@ -21,18 +22,34 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	
 	private GeneralSqlGenerator gcg;
 	
-	protected StatementCore statementCore;
+	protected StatementCoreImpl statementCore;
 
-	protected LuckyDataSource dataSource;
+	public void setStatementCore(StatementCoreImpl statementCore) {
+		this.statementCore = statementCore;
+	}
+
+	private LuckyDataSource dataSource;
+
+	public LuckyDataSource getDataSource() {
+		return dataSource;
+	}
 
 	protected String dbname;
-	
-	
-	public GeneralObjectCoreBase(String dbname) {
+
+
+	public GeneralObjectCoreBase(String dbname){
 		this.dbname=dbname;
 		gcg=new GeneralSqlGenerator();
 		this.dataSource= ReaderInI.getDataSource(dbname);
-		this.statementCore=new StatementCoreImpl(dataSource);
+	}
+
+
+	protected Transaction openTransaction(){
+		return statementCore.openTransaction();
+	}
+
+	protected Transaction openTransaction(int isolationLevel){
+		return statementCore.openTransaction(isolationLevel);
 	}
 
 	@Override
@@ -72,7 +89,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public <T> int update(T t,String...conditions) {
+	public <T> int updateRow(T t, String...conditions) {
 		PrecompileSqlAndObject update = gcg.singleUpdate(t,conditions);
 		return statementCore.update(update.getPrecompileSql(), update.getObjects().toArray());
 	}

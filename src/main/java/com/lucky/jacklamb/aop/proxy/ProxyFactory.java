@@ -3,7 +3,6 @@ package com.lucky.jacklamb.aop.proxy;
 import java.util.List;
 
 import com.lucky.jacklamb.cglib.CglibProxy;
-import net.sf.cglib.proxy.Enhancer;
 
 public class ProxyFactory {
 	
@@ -24,7 +23,7 @@ public class ProxyFactory {
 	 * @return
 	 */
 	public Object getProxy(Class<?> targetClass,PointRun...pointRuns) {
-		return CglibProxy.getCglibProxyObject(targetClass,new LuckyMethodInterceptor(pointRuns));
+		return CglibProxy.getCglibProxyObject(targetClass,new LuckyAopMethodInterceptor(pointRuns));
 	}
 	
 	/**
@@ -34,7 +33,7 @@ public class ProxyFactory {
 	 * @return
 	 */
 	public Object getProxy(Class<?> targetClass,List<PointRun> pointRuns) {
-		return CglibProxy.getCglibProxyObject(targetClass,new LuckyMethodInterceptor(pointRuns));
+		return CglibProxy.getCglibProxyObject(targetClass,new LuckyAopMethodInterceptor(pointRuns));
 	}
 
 }

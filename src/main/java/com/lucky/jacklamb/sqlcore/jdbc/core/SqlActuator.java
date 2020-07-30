@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
@@ -28,8 +29,6 @@ public abstract class SqlActuator {
         //如果用户开启了缓存配置，测初始化一个LRU缓存
         if(isCache)
             lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
-
-
     }
 
     /**
@@ -92,19 +91,11 @@ public abstract class SqlActuator {
      * @param <T>
      * @return
      */
-    public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
-        String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
-        if(lruCache.containsKey(completeSql)){
-            return (List<T>) lruCache.get(completeSql);
-        }else{
-            Connection connection = dataSource.getConnection();
-            SqlOperation sqlOperation=new SqlOperation(connection,dataSource.getDbname());
-            List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
-            lruCache.put(completeSql,result);
-            LuckyDataSource.release(null,null,connection);
-            return (List<T>) result;
-        }
-    }
+    public abstract <T> List<T> queryCache(SqlAndParams sp,Class<T> c);
+
+    public abstract Transaction openTransaction();
+
+    public abstract Transaction openTransaction(int isolationLevel);
 
     /**
      * 清空缓存

@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
@@ -18,7 +20,6 @@ public class DefaultSqlActuator extends SqlActuator{
 	public DefaultSqlActuator(String dbname) {
 		super(dbname);
 	}
-
 
 	@Override
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
@@ -93,6 +94,31 @@ public class DefaultSqlActuator extends SqlActuator{
 		int[] result = sqlOperation.setSqlBatch(completeSqls);
 		LuckyDataSource.release(null,null,connection);
 		return result;
+	}
+
+	@Override
+	public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
+		String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
+		if(lruCache.containsKey(completeSql)){
+			return (List<T>) lruCache.get(completeSql);
+		}else{
+			Connection connection = dataSource.getConnection();
+			SqlOperation sqlOperation=new SqlOperation(connection,dbname);
+			List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
+			lruCache.put(completeSql,result);
+			LuckyDataSource.release(null,null,connection);
+			return (List<T>) result;
+		}
+	}
+
+	@Override
+	public Transaction openTransaction() {
+		return null;
+	}
+
+	@Override
+	public Transaction openTransaction(int isolationLevel) {
+		return null;
 	}
 
 }

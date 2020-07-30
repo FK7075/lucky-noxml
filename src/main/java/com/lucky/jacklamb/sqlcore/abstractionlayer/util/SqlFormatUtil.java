@@ -51,7 +51,7 @@ public class SqlFormatUtil {
         QUANTIFIERS.add("any");
 
         DML.add("insert");
-        DML.add("update");
+        DML.add("updateRow");
         DML.add("delete");
 
         MISC.add("select");
@@ -205,7 +205,7 @@ public class SqlFormatUtil {
             out();
             this.indent += 1;
             this.beginLine = false;
-            if ("update".equals(this.lcToken)) {
+            if ("updateRow".equals(this.lcToken)) {
                 newline();
             }
             if ("insert".equals(this.lcToken))

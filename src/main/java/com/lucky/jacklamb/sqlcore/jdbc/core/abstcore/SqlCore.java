@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
@@ -20,6 +21,14 @@ import java.util.UUID;
  *
  */
 public abstract class SqlCore extends GeneralObjectCoreBase {
+
+	public Transaction openTransaction(){
+		return super.openTransaction();
+	}
+
+	public Transaction openTransaction(int isolationLevel){
+		return super.openTransaction(isolationLevel);
+	}
 
 	public SqlCore(String dbname) {
 		super(dbname);
@@ -100,7 +109,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @return
 	 */
 	public <T> int updateByPojo(T pojo,String...conditions) {
-		return super.update(pojo,conditions);
+		return super.updateRow(pojo,conditions);
 	}
 	
 	/**
@@ -269,7 +278,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @return
 	 */
 	public String getDbName() {
-		return dataSource.getDbname();
+		return dbname;
 	}
 	
 	/**

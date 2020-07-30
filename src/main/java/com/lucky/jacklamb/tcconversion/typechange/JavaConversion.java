@@ -14,8 +14,8 @@ public class JavaConversion {
 			Class<?> clzz=(Class<?>)type;
 			if("java.util.Date".equals(clzz.getName())) {
 				strtype="java.util.Date";
-			}else if("java.sql.Date".equals(clzz.getName())) {
-				strtype="java.sql.Date";
+			}else if("java.sqlActuator.Date".equals(clzz.getName())) {
+				strtype="java.sqlActuator.Date";
 			}else{
 				strtype=((Class<?>)type).getSimpleName();
 			}
@@ -47,7 +47,7 @@ public class JavaConversion {
 			return data.charAt(0);
 		if("java.util.Date".equalsIgnoreCase(strtype))
 			return LuckyUtils.getDate(data);
-		if("java.sql.Date".equalsIgnoreCase(strtype))
+		if("java.sqlActuator.Date".equalsIgnoreCase(strtype))
 			return LuckyUtils.getSqlDate(data);
 		if("Time".equalsIgnoreCase(strtype))
 			return LuckyUtils.getSqlTime(data);

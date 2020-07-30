@@ -13,6 +13,8 @@ public interface Transaction {
 
 	void open();
 
+	void open(int isolationLevel);
+
 	void commit();
 
 	void rollback();

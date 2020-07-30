@@ -11,6 +11,7 @@ import java.util.Map;
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.annotation.aop.Cacheable;
+import com.lucky.jacklamb.annotation.aop.Transaction;
 import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.aop.proxy.ProxyFactory;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
@@ -55,6 +56,8 @@ public class PointRunFactory {
 			return ProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isCacheable(beanClass)) {
 			return ProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+		}else if(isTransaction(beanClass)){
+			return ProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else{
 			return ClassUtils.newObject(beanClass);
 		}
@@ -69,6 +72,17 @@ public class PointRunFactory {
 		Method[] declaredMethods = beanClass.getDeclaredMethods();
 		for(Method method:declaredMethods) {
 			if(method.isAnnotationPresent(Cacheable.class))
+				return true;
+		}
+		return false;
+	}
+
+	private static boolean isTransaction(Class<?> beanClass){
+		if(beanClass.isAnnotationPresent(Transaction.class))
+			return true;
+		Method[] declaredMethods = beanClass.getDeclaredMethods();
+		for(Method method:declaredMethods) {
+			if(method.isAnnotationPresent(Transaction.class))
 				return true;
 		}
 		return false;

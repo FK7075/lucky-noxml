@@ -221,7 +221,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 将String转化为java.sql.Date
+	 * 将String转化为java.sqlActuator.Date
 	 * @param dateStr
 	 * @return
 	 */
@@ -230,7 +230,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * java.sql.Date的运算
+	 * java.sqlActuator.Date的运算
 	 * @param dateStr
 	 * @param calendarField
 	 * @param amount
@@ -241,7 +241,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * java.sql.Date的运算
+	 * java.sqlActuator.Date的运算
 	 * @param dateStr
 	 * @param format
 	 * @param calendarField
@@ -253,7 +253,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 基于当前时间java.sql.Date的运算
+	 * 基于当前时间java.sqlActuator.Date的运算
 	 * @param calendarField
 	 * @param amount
 	 * @return
@@ -263,7 +263,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 获取当前时间的java.sql.Date
+	 * 获取当前时间的java.sqlActuator.Date
 	 * @return
 	 */
 	public static java.sql.Date getSqlDate(){
@@ -271,7 +271,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 将String转化为java.sql.Time
+	 * 将String转化为java.sqlActuator.Time
 	 * @param timeStr
 	 * @return
 	 */
@@ -280,7 +280,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 获取当前时间的java.sql.Time
+	 * 获取当前时间的java.sqlActuator.Time
 	 * @return
 	 */
 	public static java.sql.Time getSqlTime(){
@@ -288,7 +288,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 将String转化为java.sql.Timestamp
+	 * 将String转化为java.sqlActuator.Timestamp
 	 * @param timestampStr
 	 * @return
 	 */
@@ -297,7 +297,7 @@ public abstract class LuckyUtils {
 	}
 	
 	/**
-	 * 获取当前时间的java.sql.Timestamp
+	 * 获取当前时间的java.sqlActuator.Timestamp
 	 * @return
 	 */
 	public static Timestamp getTimestamp() {

@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.JDBCTransaction;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
@@ -14,6 +15,12 @@ public class TransactionSqlActuator extends SqlActuator {
 
     public Transaction openTransaction() {
         tr.open();
+        return tr;
+    }
+
+    @Override
+    public Transaction openTransaction(int isolationLevel) {
+        tr.open(isolationLevel);
         return tr;
     }
 
@@ -83,5 +90,18 @@ public class TransactionSqlActuator extends SqlActuator {
         SqlOperation sqlOperation=new SqlOperation(tr.getConnection(),dbname);
         int[] result = sqlOperation.setSqlBatch(completeSqls);
         return result;
+    }
+
+    @Override
+    public <T> List<T> queryCache(SqlAndParams sp, Class<T> c) {
+        String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
+        if(lruCache.containsKey(completeSql)){
+            return (List<T>) lruCache.get(completeSql);
+        }else{
+            SqlOperation sqlOperation=new SqlOperation(tr.getConnection(),dbname);
+            List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
+            lruCache.put(completeSql,result);
+            return (List<T>) result;
+        }
     }
 }

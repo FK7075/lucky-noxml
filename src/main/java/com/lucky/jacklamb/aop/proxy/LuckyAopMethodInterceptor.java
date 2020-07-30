@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.lucky.jacklamb.annotation.aop.Cacheable;
+import com.lucky.jacklamb.annotation.aop.Transaction;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
 
+import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-public class LuckyMethodInterceptor implements MethodInterceptor {
+public class LuckyAopMethodInterceptor implements MethodInterceptor {
 	
 	
 	private List<PointRun> pointRuns;//关于某一个类的所有增强的执行节点
@@ -22,7 +24,7 @@ public class LuckyMethodInterceptor implements MethodInterceptor {
 	 * 根据实际情况为真实对象的每一个需要被增强的方法产生一个特定的回调策略
 	 * @param pointRuns 环绕执行节点集合(可变参形式传入)
 	 */
-	public LuckyMethodInterceptor(PointRun...pointRuns) {
+	public LuckyAopMethodInterceptor(PointRun...pointRuns) {
 		this.pointRuns=new ArrayList<>();
 		Stream.of(pointRuns).forEach(this.pointRuns::add);
 	}
@@ -32,7 +34,7 @@ public class LuckyMethodInterceptor implements MethodInterceptor {
 	 * 根据实际情况为真实对象的每一个需要被增强的方法产生一个特定的回调策略
 	 * @param pointRuns 环绕执行节点集合(集合参形式传入)
 	 */
-	public LuckyMethodInterceptor(List<PointRun> pointRuns) {
+	public LuckyAopMethodInterceptor(List<PointRun> pointRuns) {
 		this.pointRuns=new ArrayList<>();
 		this.pointRuns.addAll(pointRuns);
 	}
@@ -41,11 +43,21 @@ public class LuckyMethodInterceptor implements MethodInterceptor {
 	public Object intercept(Object target, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
 		List<Point> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
+
 		//被@Cacheable注解标注的方法优先执行缓存代理
 		if(method.isAnnotationPresent(Cacheable.class)) {
 			Point cacheExpandPoint = new CacheExpandPoint();
 			cacheExpandPoint.init(targetMethodSignature);
 			points.add(cacheExpandPoint);
+		}
+
+
+		//被@Transaction注解标注的方法执行事务代理
+		if(target.getClass().getSuperclass().isAnnotationPresent(Transaction.class)||
+				method.isAnnotationPresent(Transaction.class)){
+			Point transactionPoint = new TransactionPoint();
+			transactionPoint.init(targetMethodSignature);
+			points.add(transactionPoint);
 		}
 		//得到所有自定义的的环绕增强节点
 		pointRuns.stream().filter(a->a.standard(method)).forEach((a)->{Point p=a.getPoint();p.init(targetMethodSignature);points.add(p);});

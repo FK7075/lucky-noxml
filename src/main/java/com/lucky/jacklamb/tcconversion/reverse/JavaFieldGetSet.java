@@ -69,7 +69,7 @@ public class JavaFieldGetSet {
 		List<JavaFieldGetSet> list=new ArrayList<>();
 		javasrc.setClassName(ts.getTableName());
 		javasrc.setPack("package "+data.getReversePack()+";");
-		javasrc.setImpor("import java.util.Date;\nimport java.sql.*;\nimport java.util.*;\nimport com.lucky.jacklamb.annotation.orm.Id;\nimport com.lucky.jacklamb.annotation.orm.Key;");
+		javasrc.setImpor("import java.util.Date;\nimport java.sqlActuator.*;\nimport java.util.*;\nimport com.lucky.jacklamb.annotation.orm.Id;\nimport com.lucky.jacklamb.annotation.orm.Key;");
 		javasrc.setToString(ts.getToString());
 		javasrc.setConstructor(ts.getConstructor());
 		javasrc.setParameterConstructor(ts.getParameterConstructor());
