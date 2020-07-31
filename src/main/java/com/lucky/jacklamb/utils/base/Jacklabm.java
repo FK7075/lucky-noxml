@@ -135,7 +135,7 @@ public abstract class Jacklabm {
         String osvsersion = "           :: (v" + System.getProperty("os.version") + ")";
         String java = ":: Java";
         String javaversioin = "           :: (v" + System.getProperty("java.version") + ")";
-        String lucky = ":: Lucky NoXml ";
+        String lucky = ":: Lucky";
         String luckyversion = "           :: (v1.0.0.RELEASE)";
         int maxLength = getMaxLength(os, java, lucky);
         String d="";

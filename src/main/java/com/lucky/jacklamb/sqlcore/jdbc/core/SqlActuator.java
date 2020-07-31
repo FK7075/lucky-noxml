@@ -8,7 +8,9 @@ import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class SqlActuator {
 
@@ -16,7 +18,7 @@ public abstract class SqlActuator {
 
     protected String dbname;
 
-    protected LRUCache<String,List<?>> lruCache;
+    protected static Map<String,LRUCache<String,List<?>>> lruCache=new HashMap<>();
 
     protected boolean isCache;
 
@@ -27,8 +29,11 @@ public abstract class SqlActuator {
         //初始化数据源
         dataSource.init();
         //如果用户开启了缓存配置，测初始化一个LRU缓存
-        if(isCache)
-            lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
+        if(isCache&&!lruCache.containsKey(dbname)){
+            LRUCache<String,List<?>> dbCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
+            lruCache.put(dbname,dbCache);
+        }
+//            lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
     }
 
     /**
@@ -101,6 +106,6 @@ public abstract class SqlActuator {
      * 清空缓存
      */
     public void clear(){
-        lruCache.clear();
+        lruCache.get(dbname).clear();
     }
 }

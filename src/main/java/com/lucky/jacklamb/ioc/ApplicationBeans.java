@@ -172,6 +172,15 @@ public class ApplicationBeans {
 	public Map<String,Object> getComponentBeans() {
 		return iocContainers.getAppIOC().getAppMap();
 	}
+
+	/**
+	 * 判断IOC容器中是否含有该类型的bean
+	 * @param clzz 目标类型
+	 * @return
+	 */
+	public boolean isIocBean(Class<?> clzz){
+		return !getBeans(clzz).isEmpty();
+	}
 	
 	/**
 	 * 根据类型得到一个IOC组件

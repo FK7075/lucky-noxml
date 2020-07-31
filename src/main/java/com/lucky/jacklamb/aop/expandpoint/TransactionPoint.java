@@ -3,6 +3,7 @@ package com.lucky.jacklamb.aop.expandpoint;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.proxy.Chain;
 import com.lucky.jacklamb.aop.proxy.Point;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,9 @@ public class TransactionPoint extends Point {
 
      */
 
-    private Map<Field,Object> oldFieldMapperMap;
+    private ThreadLocal<Map<Field,Object>> thlSourceFieldKVMap=new ThreadLocal();
+
+    private ThreadLocal<Object> thlSourceObject=new ThreadLocal();
 
     private static final Logger log= LogManager.getLogger(TransactionPoint.class);
 
@@ -67,7 +71,7 @@ public class TransactionPoint extends Point {
         return chain.proceed();
     }
 
-    public synchronized Object transactionResult(Chain chain,int isolationLevel){
+    public Object transactionResult(Chain chain,int isolationLevel){
         init();
         //开启事务
         List<Transaction> transactions = replace(isolationLevel);
@@ -90,12 +94,13 @@ public class TransactionPoint extends Point {
 
     //替换，将所有Mapper的内核替换为带事务的内核
     private List<Transaction> replace(int isolationLevel){
+        Map<Field,Object> oldFieldMapperMap=thlSourceFieldKVMap.get();
         Map<String,SqlCore> dbCores=new HashMap<>();
         for(Map.Entry<Field,Object> entry:oldFieldMapperMap.entrySet()){
-            Class<?> mapperClass = entry.getKey().getType();
+            Class<?> fieldClass = entry.getKey().getType();
             SqlCore trCore;
             String dbname;
-            if(SqlCore.class.isAssignableFrom(mapperClass)){
+            if(SqlCore.class.isAssignableFrom(fieldClass)){
                 dbname=((SqlCore)entry.getValue()).getDbName();
                 if(!dbCores.containsKey(dbname)){
                     trCore= SqlCoreFactory.createTransactionSqlCore(dbname);
@@ -104,15 +109,17 @@ public class TransactionPoint extends Point {
                     trCore=dbCores.get(dbname);
                 }
                 FieldUtils.setValue(aspectObject,entry.getKey(),trCore);
-            }else{
-                dbname=mapperClass.getAnnotation(Mapper.class).dbname();
+            }else if(fieldClass.isAnnotationPresent(Mapper.class)){
+                dbname=fieldClass.getAnnotation(Mapper.class).dbname();
                 if(!dbCores.containsKey(dbname)){
                     trCore= SqlCoreFactory.createTransactionSqlCore(dbname);
                     dbCores.put(dbname,trCore);
                 }else{
                     trCore=dbCores.get(dbname);
                 }
-                FieldUtils.setValue(aspectObject,entry.getKey(),trCore.getMapper(mapperClass));
+                FieldUtils.setValue(aspectObject,entry.getKey(),trCore.getMapper(fieldClass));
+            }else{
+                FieldUtils.setValue(aspectObject,entry.getKey(),getTrObject(dbCores,entry.getValue()));
             }
         }
         return dbCores.keySet().stream().map((k)->{
@@ -124,20 +131,68 @@ public class TransactionPoint extends Point {
         }).collect(Collectors.toList());
     }
 
+    private Object getTrObject(Map<String,SqlCore> dbCores,Object fieldObject){
+        Class<?> fClass = fieldObject.getClass();
+        Object copyFieldObj = copy(fieldObject);
+        Field[] allFields = ClassUtils.getAllFields(fClass);
+        for (Field field : allFields) {
+            Class<?> fieldClass = field.getType();
+            Object fieldValue=FieldUtils.getValue(copyFieldObj,field);
+            SqlCore trCore;
+            String dbname;
+            if(SqlCore.class.isAssignableFrom(fieldClass)){
+                dbname=((SqlCore)fieldValue).getDbName();
+                if(!dbCores.containsKey(dbname)){
+                    trCore= SqlCoreFactory.createTransactionSqlCore(dbname);
+                    dbCores.put(dbname,trCore);
+                }else{
+                    trCore=dbCores.get(dbname);
+                }
+                FieldUtils.setValue(copyFieldObj,field,trCore);
+            }else if(fieldClass.isAnnotationPresent(Mapper.class)){
+                dbname=fieldClass.getAnnotation(Mapper.class).dbname();
+                if(!dbCores.containsKey(dbname)){
+                    trCore= SqlCoreFactory.createTransactionSqlCore(dbname);
+                    dbCores.put(dbname,trCore);
+                }else{
+                    trCore=dbCores.get(dbname);
+                }
+                FieldUtils.setValue(copyFieldObj,field,trCore.getMapper(fieldClass));
+            }else if(ApplicationBeans.createApplicationBeans().isIocBean(fieldClass)){
+                FieldUtils.setValue(copyFieldObj,field,getTrObject(dbCores,fieldValue));
+            }
+        }
+        return copyFieldObj;
+    }
+
+    private Object copy(Object oldObj){
+        Class<?> objClass = oldObj.getClass();
+        Field[] allFields = ClassUtils.getAllFields(objClass);
+        Object newObj = ClassUtils.newObject(objClass);
+        for (Field field : allFields) {
+            if(!Modifier.isFinal(field.getModifiers()))
+                FieldUtils.setValue(newObj,field,FieldUtils.getValue(oldObj,field));
+        }
+        return newObj;
+    }
+
     //代理开始前的初始化，将类中原始的Mapper保存在全局Map中
     private void init(){
-        oldFieldMapperMap=new HashMap<>();
+        Map<Field,Object> oldFieldMapperMap=new HashMap<>();
         Field[] allFields= ClassUtils.getAllFields(targetClass);
         for (Field field : allFields) {
             Class<?> type = field.getType();
-            if(type.isAnnotationPresent(Mapper.class)||SqlCore.class.isAssignableFrom(type)){
+            if(ApplicationBeans.createApplicationBeans().isIocBean(type)
+            ||SqlCore.class.isAssignableFrom(type)){
                 oldFieldMapperMap.put(field, FieldUtils.getValue(aspectObject,field));
             }
         }
+        thlSourceFieldKVMap.set(oldFieldMapperMap);
     }
 
-    //代理结束后的恢复，根据之前保存的Mapper，将属性恢复回最开始的样子
+    //代理结束后的恢复
     private void recovery(){
+        Map<Field,Object> oldFieldMapperMap=thlSourceFieldKVMap.get();
         for(Map.Entry<Field,Object> entry:oldFieldMapperMap.entrySet()){
             FieldUtils.setValue(aspectObject,entry.getKey(),entry.getValue());
         }

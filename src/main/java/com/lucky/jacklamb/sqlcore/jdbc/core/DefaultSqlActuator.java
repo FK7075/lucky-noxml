@@ -1,8 +1,11 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckyTransactionException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -16,6 +19,8 @@ import java.util.List;
  */
 
 public class DefaultSqlActuator extends SqlActuator{
+
+	private static final Logger log= LogManager.getLogger(DefaultSqlActuator.class);
 
 	public DefaultSqlActuator(String dbname) {
 		super(dbname);
@@ -99,26 +104,32 @@ public class DefaultSqlActuator extends SqlActuator{
 	@Override
 	public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
 		String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
-		if(lruCache.containsKey(completeSql)){
-			return (List<T>) lruCache.get(completeSql);
+		if(lruCache.get(dbname).containsKey(completeSql)){
+			return (List<T>) lruCache.get(dbname).get(completeSql);
 		}else{
 			Connection connection = dataSource.getConnection();
 			SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 			List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
-			lruCache.put(completeSql,result);
+			lruCache.get(dbname).put(completeSql,result);
 			LuckyDataSource.release(null,null,connection);
 			return (List<T>) result;
 		}
 	}
 
+	private final String ERROR="当前使用的SQL执行器[DefaultSqlActuator]不支持事务机制，无法开启事务！若要使用事务机制请使用执行器[TransactionSqlActuator]！";
+
 	@Override
 	public Transaction openTransaction() {
-		return null;
+		LuckyTransactionException e = new LuckyTransactionException(ERROR);
+		log.error(e);
+		throw e;
 	}
 
 	@Override
 	public Transaction openTransaction(int isolationLevel) {
-		return null;
+		LuckyTransactionException e = new LuckyTransactionException(ERROR);
+		log.error(e);
+		throw e;
 	}
 
 }

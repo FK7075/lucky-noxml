@@ -4,15 +4,15 @@ import com.lucky.jacklamb.cglib.CglibProxy;
 
 import java.util.List;
 
-public class ProxyFactory {
+public class AopProxyFactory {
 	
-	private static ProxyFactory proxyFactory;
+	private static AopProxyFactory proxyFactory;
 	
-	private ProxyFactory() {}
+	private AopProxyFactory() {}
 	
-	public static ProxyFactory createProxyFactory() {
+	public static AopProxyFactory createProxyFactory() {
 		if(proxyFactory==null)
-			proxyFactory=new ProxyFactory();
+			proxyFactory=new AopProxyFactory();
 		return proxyFactory;
 	}
 	

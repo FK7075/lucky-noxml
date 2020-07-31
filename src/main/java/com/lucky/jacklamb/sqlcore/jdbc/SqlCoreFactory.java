@@ -56,13 +56,12 @@ public class SqlCoreFactory {
 
 	public static SqlCore createTransactionSqlCore(String dbname) {
 		SqlCore sqlCore=createBaseSqlCore(dbname);
-		sqlCore.setStatementCore(StatementCoreImpl.getTransactionStatementCoreImpl(sqlCore.getDataSource()));
+		StatementCoreImpl transactionStatementCoreImpl = StatementCoreImpl.getTransactionStatementCoreImpl(sqlCore.getDataSource());
+		sqlCore.setStatementCore(transactionStatementCoreImpl);
 		return sqlCore;
 	}
 
 	private static SqlCore createBaseSqlCore(String dbname){
-		if(sqlCoreMap.containsKey(dbname))
-			return sqlCoreMap.get(dbname);
 		String dbType= PojoManage.getDatabaseType(dbname);
 		StringBuilder sb=new StringBuilder();
 		SqlCore sqlCore;

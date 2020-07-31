@@ -2,6 +2,10 @@ package com.lucky.jacklamb.junit;
 
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
+import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
+import com.lucky.jacklamb.aop.proxy.AopProxyFactory;
+import com.lucky.jacklamb.aop.proxy.PointRun;
+import com.lucky.jacklamb.aop.util.PointRunFactory;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -24,6 +28,10 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	@Override
 	protected Object createTest() throws Exception {
 		Object createTest = super.createTest();
+		Class<?> aClass = createTest.getClass();
+		if(PointRunFactory.isTransaction(aClass)){
+			createTest= AopProxyFactory.createProxyFactory().getProxy(createTest.getClass());
+		}
 		ApplicationBeans applicationBeans=ApplicationBeans.createApplicationBeans();
 		return createTestObject(applicationBeans,createTest);
 	}
