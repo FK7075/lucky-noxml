@@ -1,11 +1,13 @@
 package com.lucky.jacklamb.aop.expandpoint;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.aop.proxy.Chain;
 import com.lucky.jacklamb.aop.proxy.Point;
+import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.expression.ExpressionEngine;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
@@ -16,7 +18,10 @@ public class CacheExpandPoint extends Point{
 	
 	@SuppressWarnings("unchecked")
 	public Object cacheResult(Chain chain) throws Throwable {
-//		String condition = cachAnn.condition();//表达式，满足就走缓存,依赖表达式解析引擎，后期完善 
+//		String condition = cachAnn.condition();//表达式，满足就走缓存,依赖表达式解析引擎，后期完善
+		TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
+		Method method=targetMethodSignature.getCurrMethod();
+		Object[] params=targetMethodSignature.getParams();
 		beans=ApplicationBeans.createApplicationBeans();
 		Object result = null;
 		Cacheable cachAnn=method.getAnnotation(Cacheable.class);

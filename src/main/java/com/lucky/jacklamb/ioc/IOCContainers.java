@@ -114,9 +114,9 @@ public final class IOCContainers {
 	public void inversionOfControlAndAop() {
 		try {
 			initComponentIOC();
-			initControllerIOC();
-			initServiceIOC();
 			initRepositoryIOC();
+			initServiceIOC();
+			initControllerIOC();
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new IOCException(e);
 		}

@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.annotation.ioc.Service;
-import com.lucky.jacklamb.aop.util.PointRunFactory;
+import com.lucky.jacklamb.aop.util.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
@@ -88,7 +88,7 @@ public class ServiceIOC extends ComponentFactory{
 					beanID=ser.value();
 				else
 					beanID=LuckyUtils.TableToClass1(service.getSimpleName());
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, service);
+				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, service);
 				addServiceMap(beanID, aspect);
 				log.info("@Service \"[id="+beanID+" class="+aspect+"]\"");
 			}

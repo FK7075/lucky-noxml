@@ -96,7 +96,7 @@ public class TransactionSqlActuator extends SqlActuator {
     public <T> List<T> queryCache(SqlAndParams sp, Class<T> c) {
         String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
         if(lruCache.get(dbname).containsKey(completeSql)){
-            return (List<T>) lruCache.get(completeSql);
+            return (List<T>) lruCache.get(dbname).get(completeSql);
         }else{
             SqlOperation sqlOperation=new SqlOperation(tr.getConnection(),dbname);
             List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);

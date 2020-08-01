@@ -1,11 +1,5 @@
 package com.lucky.jacklamb.aop.proxy;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Arrays;
-
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.AopParam;
 import com.lucky.jacklamb.annotation.aop.Around;
@@ -13,6 +7,12 @@ import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.enums.Location;
 import com.lucky.jacklamb.exception.IllegaAopparametersException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 public class PointRun {
 	
@@ -266,6 +266,7 @@ public class PointRun {
 				String aopParamValue,indexStr;
 				Parameter[] parameters = expandMethod.getParameters();
 				Object[] expandParams=new Object[parameters.length];
+				TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
 				for(int i=0;i<parameters.length;i++) {
 					if(TargetMethodSignature.class.isAssignableFrom(parameters[i].getType())) {
 						expandParams[i]=targetMethodSignature;

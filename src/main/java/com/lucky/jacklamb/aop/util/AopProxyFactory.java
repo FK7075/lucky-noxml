@@ -1,5 +1,13 @@
 package com.lucky.jacklamb.aop.util;
 
+import com.lucky.jacklamb.annotation.aop.After;
+import com.lucky.jacklamb.annotation.aop.Before;
+import com.lucky.jacklamb.annotation.aop.Cacheable;
+import com.lucky.jacklamb.annotation.aop.Transaction;
+import com.lucky.jacklamb.aop.proxy.PointRun;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,21 +16,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.lucky.jacklamb.annotation.aop.After;
-import com.lucky.jacklamb.annotation.aop.Before;
-import com.lucky.jacklamb.annotation.aop.Cacheable;
-import com.lucky.jacklamb.annotation.aop.Transaction;
-import com.lucky.jacklamb.aop.proxy.PointRun;
-import com.lucky.jacklamb.aop.proxy.AopProxyFactory;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-
 /**
  * 代理对象发生器
  * @author fk-7075
  *
  */
-public class PointRunFactory {
+public class AopProxyFactory {
 	
 	public static List<PointRun> createPointRuns(Class<?> AspectClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
 		List<PointRun> pointRuns=new ArrayList<>();
@@ -53,11 +52,11 @@ public class PointRunFactory {
 	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass) throws  SecurityException,IllegalArgumentException{
 		List<PointRun> findPointbyBean = findPointbyBean(AspectMap,iocCode,beanid,beanClass);
 		if(!findPointbyBean.isEmpty()) {
-			return AopProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isCacheable(beanClass)) {
-			return AopProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isTransaction(beanClass)){
-			return AopProxyFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else{
 			return ClassUtils.newObject(beanClass);
 		}
@@ -77,6 +76,11 @@ public class PointRunFactory {
 		return false;
 	}
 
+	/**
+	 * 判断当前组件是否有方法被@Transaction注解标注
+	 * @param beanClass
+	 * @return
+	 */
 	public static boolean isTransaction(Class<?> beanClass){
 		if(beanClass.isAnnotationPresent(Transaction.class))
 			return true;

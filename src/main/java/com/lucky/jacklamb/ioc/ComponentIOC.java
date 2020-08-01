@@ -18,7 +18,7 @@ import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
 import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
-import com.lucky.jacklamb.aop.util.PointRunFactory;
+import com.lucky.jacklamb.aop.util.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.file.ini.INIConfig;
@@ -117,7 +117,7 @@ public class ComponentIOC extends ComponentFactory {
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
+				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), "component", beanID, component);
 				addAppMap(beanID, aspect);
 				log.info("@Component \"[id="+beanID+" class="+aspect+"]\"");
 				continue;
@@ -174,7 +174,7 @@ public class ComponentIOC extends ComponentFactory {
 				} else {
 					beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				}
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
+				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@ControllerExceptionHandler \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
@@ -182,7 +182,7 @@ public class ComponentIOC extends ComponentFactory {
 					||component.isAnnotationPresent(LuckyFilter.class)
 					||component.isAnnotationPresent(LuckyListener.class)) {
 				beanID=LuckyUtils.TableToClass1(component.getSimpleName());
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
+				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addAppMap(beanID,aspect);
 				log.info("@Web \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;

@@ -24,7 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class BaseServlet extends HttpServlet {
@@ -44,7 +46,8 @@ public abstract class BaseServlet extends HttpServlet {
     }
 
     public void jobRun(){
-        final Map<String, Object> appMap = ApplicationBeans.iocContainers.getAppIOC().getAppMap();
+        Map<String, Object> appMap = ApplicationBeans.iocContainers.getAppIOC().getAppMap();
+        List<MRun> mRuns=new ArrayList<>();
         for(Map.Entry<String,Object> entry:appMap.entrySet()){
             Object app = entry.getValue();
             Class<?> appClass = app.getClass().getSuperclass();
@@ -52,12 +55,14 @@ public abstract class BaseServlet extends HttpServlet {
                 Method[] jobMethods = appClass.getDeclaredMethods();
                 for (Method jobMethod : jobMethods) {
                     if(jobMethod.isAnnotationPresent(Job.class)&&jobMethod.isAnnotationPresent(InitRun.class)){
-                        jobMethod.setAccessible(true);
-                        log.info("@Job \" "+appClass.getName()+"."+jobMethod.getName()+" \" Start Running......");
-                        MethodUtils.invoke(app,jobMethod);
+                        mRuns.add(new MRun(jobMethod,app));
                     }
                 }
             }
+        }
+        for (MRun mRun : mRuns) {
+            log.info("@Job \" "+mRun.getMethod().getName()+" \" Start Running......");
+            mRun.run();
         }
     }
 
@@ -118,4 +123,26 @@ public abstract class BaseServlet extends HttpServlet {
 
     protected abstract void luckyResponse(HttpServletRequest req, HttpServletResponse resp, RequestMethod post);
 
+}
+
+class MRun{
+    private Method method;
+    private Object targetObject;
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public Object getTargetObject() {
+        return targetObject;
+    }
+
+    public MRun(Method method, Object targetObject) {
+        this.method = method;
+        this.targetObject = targetObject;
+    }
+
+    public void run(){
+        MethodUtils.invoke(targetObject,method);
+    }
 }

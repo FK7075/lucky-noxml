@@ -15,9 +15,7 @@ import java.util.List;
 public final class StatementCoreImpl implements StatementCore {
 	
 	private String dbname;
-	
-	private CreateSql createSql;
-	
+
 	private SqlActuator sqlActuator;
 
 	public Transaction openTransaction(){
@@ -29,7 +27,6 @@ public final class StatementCoreImpl implements StatementCore {
 	}
 
 	private StatementCoreImpl(LuckyDataSource dataSource){
-		this.createSql= new CreateSql();
 		this.dbname=dataSource.getDbname();
 	}
 
@@ -49,14 +46,12 @@ public final class StatementCoreImpl implements StatementCore {
 	
 	@Override
 	public <T> List<T> getList(Class<T> c, String sql, Object... obj) {
-		List<?> result=null;
-		return (List<T>) this.sqlActuator.autoPackageToList(c, sql, obj);
+		return this.sqlActuator.autoPackageToList(c, sql, obj);
 	}
 
 	@Override
 	public <T> List<T> getListMethod(Class<T> c,Method method, String sql, Object[] obj) {
-		List<?> result;
-		return (List<T>) this.sqlActuator.autoPackageToListMethod(c,method, sql, obj);
+		return this.sqlActuator.autoPackageToListMethod(c,method, sql, obj);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.lucky.jacklamb.annotation.ioc.Repository;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.util.PointRunFactory;
+import com.lucky.jacklamb.aop.util.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
@@ -141,7 +141,7 @@ public class RepositoryIOC extends ComponentFactory {
 					beanID=rep.value();
 				else
 					beanID=LuckyUtils.TableToClass1(repository.getSimpleName());
-				Object aspect = PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, repository);
+				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, repository);
 				addRepositoryMap(beanID, aspect);
 				log.info("@Repository \"[id="+beanID+" class="+aspect+"]\"");
 

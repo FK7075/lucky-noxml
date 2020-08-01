@@ -3,8 +3,7 @@ package com.lucky.jacklamb.ioc;
 import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.aop.util.PointRunFactory;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.aop.util.AopProxyFactory;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
@@ -144,7 +143,7 @@ public class ControllerIOC extends ComponentFactory{
 				else {
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
-				addControllerMap(beanID, PointRunFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, controller));
+				addControllerMap(beanID, AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, controller));
 			}else if(controller.isAnnotationPresent(CallController.class)){
 				CallController cont = controller.getAnnotation(CallController.class);
 				if (!"".equals(cont.id())) {
