@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlActuator;

@@ -7,7 +7,7 @@ import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.BatchInsert;
+import com.lucky.jacklamb.sqlcore.util.BatchInsert;
 
 @SuppressWarnings("unchecked")
 public final class OracleCore extends SqlCore {
@@ -66,7 +66,7 @@ public final class OracleCore extends SqlCore {
 	}
 
 	@Override
-	public <T> int insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertByCollection(Collection<T> collection) {
 		setUUID(collection);
 		BatchInsert bbi=new BatchInsert(collection);
 		return statementCore.update(bbi.OrcaleInsetSql(), bbi.getInsertObject());

@@ -75,14 +75,14 @@ public interface UniqueSqlCore {
 	 * @param obj 需要添加到数据库的实体类对象
 	 * @return
 	 */
-	<T> int insertSetIdBatchByArray(Object... obj);
+	<T> int insertSetIdByArray(Object... obj);
 	
 	/**
 	 * 批量保存-集合模式
 	 * @param collection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	<T> int insertBatchByCollection(Collection<T> collection);
+	<T> int insertByCollection(Collection<T> collection);
 	
 
 	/**
@@ -90,7 +90,7 @@ public interface UniqueSqlCore {
 	 * @param obj 需要添加到数据库的实体类对象
 	 * @return
 	 */
-	boolean insertBatchByArray(Object...obj);
+	boolean insertByArray(Object...obj);
 	
 	void setNextId(Object pojo);
 	

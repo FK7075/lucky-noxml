@@ -2,7 +2,7 @@ package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckyTransactionException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

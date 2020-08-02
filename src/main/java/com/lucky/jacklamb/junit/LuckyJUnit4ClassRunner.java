@@ -2,8 +2,8 @@ package com.lucky.jacklamb.junit;
 
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.Value;
-import com.lucky.jacklamb.aop.proxy.PointRunFactory;
-import com.lucky.jacklamb.aop.util.AopProxyFactory;
+import com.lucky.jacklamb.aop.core.PointRunFactory;
+import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -27,7 +27,9 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	protected Object createTest() throws Exception {
 		Object createTest = super.createTest();
 		Class<?> aClass = createTest.getClass();
-		if(AopProxyFactory.isTransaction(aClass)){
+
+		//当前测试类如果存在事务注解@Transaction则执行事务代理
+		if(AopProxyFactory.isTransaction(aClass)||AopProxyFactory.isCacheable(aClass)){
 			createTest= PointRunFactory.createProxyFactory().getProxy(createTest.getClass());
 		}
 		ApplicationBeans applicationBeans=ApplicationBeans.createApplicationBeans();

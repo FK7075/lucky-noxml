@@ -1,5 +1,6 @@
-package com.lucky.jacklamb.aop.util;
+package com.lucky.jacklamb.cglib;
 
+import com.lucky.jacklamb.aop.test.CTest;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -15,13 +16,13 @@ import java.util.List;
  *
  */
 public class ASMUtil {
-	
+
 	 private static boolean sameType(Type[] types, Class<?>[] clazzes) {
 	        // 个数不同
 	        if (types.length != clazzes.length) {
 	            return false;
 	        }
-	 
+
 	        for (int i = 0; i < types.length; i++) {
 	            if (!Type.getType(clazzes[i]).equals(types[i])) {
 	                return false;
@@ -29,7 +30,7 @@ public class ASMUtil {
 	        }
 	        return true;
 	    }
-	 
+
 	    /**
 	     * 获取方法的参数名,无法获取接口参数名和JDK自带的类的方法参数名
 	     * @param m
@@ -75,7 +76,7 @@ public class ASMUtil {
 	                        super.visitLocalVariable(name, desc, signature, start,
 	                                end, index);
 	                    }
-	 
+
 	                };
 	            }
 	        }, 0);
@@ -127,7 +128,7 @@ public class ASMUtil {
 	    public static void main(String[] args) throws SecurityException,
 				NoSuchMethodException, IOException {
 			String[] s;
-	        Method mmm=CTest.class.getMethod("Get",String.class,Double.class);
+	        Method mmm= CTest.class.getMethod("Get",String.class,Double.class);
 			s=getMethodParamNames(mmm);
 			System.out.println(Arrays.toString(s));
 			System.out.println(getInterfaceMethodParamNames(mmm));

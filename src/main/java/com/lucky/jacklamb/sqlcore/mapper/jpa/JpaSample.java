@@ -2,7 +2,7 @@ package com.lucky.jacklamb.sqlcore.mapper.jpa;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 

@@ -1,21 +1,20 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 
+import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.GeneralObjectCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.UniqueSqlCore;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.util.GeneralSqlGenerator;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.PrecompileSqlAndObject;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.util.*;
-
-import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.utils.reflect.FieldUtils;
-import com.lucky.jacklamb.enums.PrimaryType;
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.GeneralObjectCore;
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.StatementCore;
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.UniqueSqlCore;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.GeneralSqlGenerator;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PrecompileSqlAndObject;
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
-import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 
 @SuppressWarnings("unchecked")
 public abstract class GeneralObjectCoreBase implements GeneralObjectCore, UniqueSqlCore {
@@ -95,13 +94,13 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public int deleteBatchByArray(Object... obj) {
+	public int deleteByArray(Object... obj) {
 		List<Object> objects = Arrays.asList(obj);
-		return deleteBatchByCollection(objects);
+		return deleteByCollection(objects);
 	}
 
 	@Override
-	public <T> int deleteBatchByCollection(Collection<T> collection) {
+	public <T> int deleteByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject delete;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {
@@ -114,13 +113,13 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public int updateBatchByArray(Object... obj) {
+	public int updateByArray(Object... obj) {
 		List<Object> objects = Arrays.asList(obj);
-		return updateBatchByCollection(objects);
+		return updateByCollection(objects);
 	}
 
 	@Override
-	public <T> int updateBatchByCollection(Collection<T> collection) {
+	public <T> int updateByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject update;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {
@@ -157,12 +156,12 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 	}
 
 	@Override
-	public <T> int insertSetIdBatchByArray(Object... obj) {
-		return insertBatchByCollection(Arrays.asList(obj));
+	public <T> int insertSetIdByArray(Object... obj) {
+		return insertByCollection(Arrays.asList(obj));
 	}
 
 	@Override
-	public <T> int insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertByCollection(Collection<T> collection) {
 		PrecompileSqlAndObject insert;
 		List<String> completeSqls=new ArrayList<>();
 		for (T t : collection) {

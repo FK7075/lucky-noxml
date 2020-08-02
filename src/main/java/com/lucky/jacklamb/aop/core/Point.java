@@ -1,4 +1,6 @@
-package com.lucky.jacklamb.aop.proxy;
+package com.lucky.jacklamb.aop.core;
+
+import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 
 /**
  * 环绕增强的执行节点,该抽象类的子类对象将会是一个环形增强的切面
@@ -8,11 +10,24 @@ package com.lucky.jacklamb.aop.proxy;
 public abstract class Point {
 
 	/**
+	 * 优先级
+	 */
+	private double priority=5;
+
+	public double getPriority() {
+		return priority;
+	}
+
+	public void setPriority(double priority) {
+		this.priority = priority;
+	}
+
+	/**
 	 * 当前方法的签名信息
 	 */
 	protected ThreadLocal<TargetMethodSignature> tlTargetMethodSignature=new ThreadLocal();
 	
-	protected void init(TargetMethodSignature targetMethodSignature) {
+	public void init(TargetMethodSignature targetMethodSignature) {
 		tlTargetMethodSignature.set(targetMethodSignature);
 	}
 	

@@ -304,7 +304,7 @@ public abstract class FileCopyUtils {
     }
 
     /**
-     * 批量复制
+     * 批量复制,将多个文件和文件夹复制到指定的文件夹中
      * @param fromFiles 等待复制的源文件集合
      * @param toFolder 目标文件夹
      * @throws IOException

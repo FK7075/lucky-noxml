@@ -4,7 +4,7 @@ import com.lucky.jacklamb.annotation.mvc.FileDownload;
 import com.lucky.jacklamb.annotation.mvc.FileUpload;
 import com.lucky.jacklamb.annotation.mvc.LuckyClient;
 import com.lucky.jacklamb.annotation.mvc.RequestMapping;
-import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;

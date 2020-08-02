@@ -55,15 +55,16 @@ public abstract class BaseServlet extends HttpServlet {
                 Method[] jobMethods = appClass.getDeclaredMethods();
                 for (Method jobMethod : jobMethods) {
                     if(jobMethod.isAnnotationPresent(Job.class)&&jobMethod.isAnnotationPresent(InitRun.class)){
-                        mRuns.add(new MRun(jobMethod,app));
+                        int priority = jobMethod.getAnnotation(InitRun.class).priority();
+                        mRuns.add(new MRun(jobMethod,app,priority));
                     }
                 }
             }
         }
-        for (MRun mRun : mRuns) {
-            log.info("@Job \" "+mRun.getMethod().getName()+" \" Start Running......");
-            mRun.run();
-        }
+        mRuns.stream().sorted(Comparator.comparing(MRun::getPriority)).forEach((m)->{
+            log.info("@Job \" "+m.getMethod().getName()+" \" Start Running......");
+            m.run();
+        });
     }
 
     @Override
@@ -128,6 +129,11 @@ public abstract class BaseServlet extends HttpServlet {
 class MRun{
     private Method method;
     private Object targetObject;
+    private int priority;
+
+    public int getPriority() {
+        return priority;
+    }
 
     public Method getMethod() {
         return method;
@@ -137,9 +143,10 @@ class MRun{
         return targetObject;
     }
 
-    public MRun(Method method, Object targetObject) {
+    public MRun(Method method, Object targetObject, int priority) {
         this.method = method;
         this.targetObject = targetObject;
+        this.priority = priority;
     }
 
     public void run(){

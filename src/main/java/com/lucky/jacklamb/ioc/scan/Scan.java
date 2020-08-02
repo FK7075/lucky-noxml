@@ -13,7 +13,7 @@ import com.lucky.jacklamb.annotation.ioc.*;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.annotation.orm.Table;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.proxy.Point;
+import com.lucky.jacklamb.aop.core.Point;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.httpclient.registry.RegistrationController;
 import com.lucky.jacklamb.httpclient.service.LuckyClientController;

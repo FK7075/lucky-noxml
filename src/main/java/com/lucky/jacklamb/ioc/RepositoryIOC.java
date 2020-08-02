@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.lucky.jacklamb.annotation.ioc.Repository;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.util.AopProxyFactory;
+import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;

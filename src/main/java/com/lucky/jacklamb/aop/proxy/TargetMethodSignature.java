@@ -1,11 +1,11 @@
 package com.lucky.jacklamb.aop.proxy;
 
+import com.lucky.jacklamb.cglib.ASMUtil;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.lucky.jacklamb.aop.util.ASMUtil;
 
 /**
  * 当前执行方法的所有相关项
@@ -118,7 +118,7 @@ public class TargetMethodSignature {
 		this.targetClass=aspectObject.getClass().getSuperclass();
 		this.currMethod=currMethod;
 		this.params=params;
-		this.paramNames=ASMUtil.getMethodParamNames(currMethod);
+		this.paramNames= ASMUtil.getMethodParamNames(currMethod);
 		indexMap=new HashMap<>();
 		for(int i=0;i<params.length;i++) {
 			indexMap.put(i+1, params[i]);

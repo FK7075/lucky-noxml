@@ -45,4 +45,10 @@ public @interface Before {
 	 * @return
 	 */
 	String pointCutMethod() default "public,*";
+
+	/**
+	 * 优先级，优先级高的增强将会被优先执行
+	 * @return
+	 */
+	double priority() default 5;
 }

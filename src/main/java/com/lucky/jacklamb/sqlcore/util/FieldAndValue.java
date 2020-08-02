@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
+package com.lucky.jacklamb.sqlcore.util;
 
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;

@@ -56,7 +56,7 @@ public final class SqlServerCore extends SqlCore {
 	}
 
 	@Override
-	public <T> int insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertByCollection(Collection<T> collection) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

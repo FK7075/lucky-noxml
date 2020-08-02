@@ -146,6 +146,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13</version>
+      <scope>provided</scope>
     </dependency>
 
       <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->

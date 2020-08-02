@@ -1,10 +1,12 @@
 package com.lucky.jacklamb.aop.expandpoint;
 
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.proxy.Chain;
-import com.lucky.jacklamb.aop.proxy.Point;
+import com.lucky.jacklamb.aop.core.Chain;
+import com.lucky.jacklamb.aop.core.Point;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
+import com.lucky.jacklamb.exception.TransactionPerformException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
@@ -64,16 +66,19 @@ public class TransactionPoint extends Point {
     public Object proceed(Chain chain) throws Throwable {
         TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
         Method method=targetMethodSignature.getCurrMethod();
-        for (Method m : objectMethod) {
-            if(m.equals(method))
-                return chain.proceed();
-        }
         Class<?> targetClass=targetMethodSignature.getTargetClass();
         //当前方法上存在@Transaction，执行事务代理
         if(method.isAnnotationPresent(com.lucky.jacklamb.annotation.aop.Transaction.class)){
             int isolationLevel = method.getAnnotation(com.lucky.jacklamb.annotation.aop.Transaction.class).isolationLevel();
             return transactionResult(chain,targetMethodSignature,isolationLevel);
         }
+
+        //没有被@Transaction注解标注的继承自Object的方法不执行代理
+        for (Method m : objectMethod) {
+            if(m.equals(method))
+                return chain.proceed();
+        }
+
         //当前方法上不存在@Transaction，但是当前方法的类上存在@Transaction，同样执行事务代理
         if(targetClass.isAnnotationPresent(com.lucky.jacklamb.annotation.aop.Transaction.class)){
             int isolationLevel = targetClass.getAnnotation(com.lucky.jacklamb.annotation.aop.Transaction.class).isolationLevel();
@@ -98,8 +103,9 @@ public class TransactionPoint extends Point {
         }catch (Throwable e){
             //回滚
             transactions.stream().forEach(tr->tr.rollback());
-            log.error("\""+tms.getCurrMethod()+"\" 方法执行异常，已触发事务的回滚机制.....",e);
-            throw new RuntimeException(e);
+            String ERR="@Transaction方法执行异常，已触发事务的回滚机制。错误位置：\""+tms.getCurrMethod()+"\"";
+            log.error(ERR,e);
+            throw new TransactionPerformException(e,ERR);
         }finally {
             //数据还原
             recovery(tms);
@@ -174,7 +180,7 @@ public class TransactionPoint extends Point {
                     trCore=dbCores.get(dbname);
                 }
                 FieldUtils.setValue(copyFieldObj,field,trCore.getMapper(fieldClass));
-            }else if(ApplicationBeans.createApplicationBeans().isIocBean(fieldClass)){
+            }else if(ApplicationBeans.createApplicationBeans().isIocBean(fieldClass)&&!fieldClass.isAnnotationPresent(QuartzJobs.class)){
                 FieldUtils.setValue(copyFieldObj,field,getTrObject(dbCores,fieldValue));
             }
         }
@@ -201,8 +207,8 @@ public class TransactionPoint extends Point {
         Field[] allFields= ClassUtils.getAllFields(targetClass);
         for (Field field : allFields) {
             Class<?> type = field.getType();
-            if(ApplicationBeans.createApplicationBeans().isIocBean(type)
-            ||SqlCore.class.isAssignableFrom(type)){
+            if((ApplicationBeans.createApplicationBeans().isIocBean(type)
+            ||SqlCore.class.isAssignableFrom(type))&&!type.isAnnotationPresent(QuartzJobs.class)){
                 oldFieldMapperMap.put(field, FieldUtils.getValue(aspectObject,field));
             }
         }

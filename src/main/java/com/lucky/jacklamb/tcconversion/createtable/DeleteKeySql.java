@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.tcconversion.createtable;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;

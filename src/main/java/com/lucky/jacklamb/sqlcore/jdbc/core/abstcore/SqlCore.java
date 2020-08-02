@@ -5,7 +5,7 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -108,7 +108,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param conditions 作为更新条件的字段(支持多值，缺省默认使用Id字段作为更新条件)
 	 * @return
 	 */
-	public <T> int updateByPojo(T pojo,String...conditions) {
+	public <T> int update(T pojo,String...conditions) {
 		return super.updateRow(pojo,conditions);
 	}
 	
@@ -118,8 +118,8 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * 包含删除信息的对象数组
 	 * @return
 	 */
-	public int deleteBatchByArray(Object...pojos) {
-		return super.deleteBatchByArray(pojos);
+	public int deleteByArray(Object...pojos) {
+		return super.deleteByArray(pojos);
 	}
 	
 	
@@ -129,8 +129,8 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * 包含更新信息的对象数组
 	 * @return
 	 */
-	public int updateBatchByArray(Object...pojos) {
-		return super.updateBatchByArray(pojos);
+	public int updateByArray(Object...pojos) {
+		return super.updateByArray(pojos);
 	}
 	
 	/**
@@ -138,8 +138,8 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param pojoCollection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	public <T> int deleteBatchByCollection(Collection<T> pojoCollection) {
-		return super.deleteBatchByCollection(pojoCollection);
+	public <T> int deleteByCollection(Collection<T> pojoCollection) {
+		return super.deleteByCollection(pojoCollection);
 	}
 	
 	
@@ -148,8 +148,8 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param pojoCollection 要操作的对象所组成的集合
 	 * @return false or true
 	 */
-	public <T> int updateBatchByCollection(Collection<T> pojoCollection) {
-		return super.updateBatchByCollection(pojoCollection);
+	public <T> int updateByCollection(Collection<T> pojoCollection) {
+		return super.updateByCollection(pojoCollection);
 	}
 	
 	/**
@@ -190,7 +190,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 * @param obj
 	 * @return
 	 */
-	public int update(String sql,Object...obj) {
+	public int updateBySql(String sql, Object...obj) {
 		return statementCore.update(sql, obj);
 	}
 
@@ -319,7 +319,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 
 	@Override
-	public boolean insertBatchByArray(Object... obj) {
+	public boolean insertByArray(Object... obj) {
 		for(Object pojo:obj) {
 			insert(pojo);
 		}
@@ -327,7 +327,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 	
 	@Override
-	public int insertSetIdBatchByArray( Object... obj) {
+	public int insertSetIdByArray(Object... obj) {
 		int[] result=new int[obj.length];
 		for (int i = 0; i < obj.length; i++) {
 			result[i]=insertSetId(obj[i]);

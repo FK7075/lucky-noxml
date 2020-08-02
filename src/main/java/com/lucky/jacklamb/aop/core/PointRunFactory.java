@@ -1,5 +1,6 @@
-package com.lucky.jacklamb.aop.proxy;
+package com.lucky.jacklamb.aop.core;
 
+import com.lucky.jacklamb.aop.proxy.LuckyAopMethodInterceptor;
 import com.lucky.jacklamb.cglib.CglibProxy;
 
 import java.util.List;

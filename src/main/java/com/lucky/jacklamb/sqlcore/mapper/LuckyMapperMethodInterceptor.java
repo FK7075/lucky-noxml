@@ -10,7 +10,7 @@ import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.IllegalJPAExpressionException;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
@@ -268,7 +268,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
     private <T> int update(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Update upd = method.getAnnotation(Update.class);
         if (upd.batch())
-            return sqlCore.updateBatchByCollection((Collection<T>) args[0]);
+            return sqlCore.updateByCollection((Collection<T>) args[0]);
         String sql = upd.value();
         if ("".equals(sql)) {
             List<String> list = new ArrayList<>();
@@ -292,7 +292,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             list.toArray(array);
             if (pojo == null)
                 throw new RuntimeException("@Update更新操作异常：没有找到用于更新操作的实体类对象!错误位置：" + method);
-            return sqlCore.updateByPojo(pojo, array);
+            return sqlCore.update(pojo, array);
         } else
             return updateSql(method, args, sql_fp, sql);
     }
@@ -314,7 +314,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         if (del.byid())
             return sqlCore.delete((Class<?>) args[0], args[1]);
         if (del.batch())
-            return sqlCore.deleteBatchByCollection((Collection<T>) args[0]);
+            return sqlCore.deleteByCollection((Collection<T>) args[0]);
         String sql = del.value();
         if ("".equals(sql))
             return sqlCore.delete(args[0]);
@@ -340,7 +340,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         String sql = ins.value();
         if ("".equals(sql)) {
             if (ins.batch()) {
-                return sqlCore.insertBatchByCollection((Collection<T>) args[0]);
+                return sqlCore.insertByCollection((Collection<T>) args[0]);
             } else {
                 if (ins.setautoId()) {
                     return sqlCore.insertSetId(args[0]);

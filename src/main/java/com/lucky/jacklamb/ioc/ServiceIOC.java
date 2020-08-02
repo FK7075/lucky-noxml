@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.annotation.ioc.Service;
-import com.lucky.jacklamb.aop.util.AopProxyFactory;
+import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.utils.base.LuckyUtils;

@@ -4,8 +4,8 @@ import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.AutoPackageException;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.SqlLog;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.SqlLog;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 

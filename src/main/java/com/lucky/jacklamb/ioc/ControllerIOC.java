@@ -3,7 +3,7 @@ package com.lucky.jacklamb.ioc;
 import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.aop.util.AopProxyFactory;
+import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;

@@ -11,8 +11,8 @@ import java.util.Map;
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.Aspect;
 import com.lucky.jacklamb.annotation.aop.Before;
-import com.lucky.jacklamb.aop.proxy.Point;
-import com.lucky.jacklamb.aop.proxy.PointRun;
+import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
@@ -38,15 +38,9 @@ public class AspectAOP {
 	private List<String> aspectIDS;
 
 	private AspectAOP() {
-		try {
-			aspectMap = new HashMap<>();
-			aspectIDS = new ArrayList<>();
-			initAspectIOC(ScanFactory.createScan().getComponentClass("aspect"));
-		}  catch (SecurityException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		}
+		aspectMap = new HashMap<>();
+		aspectIDS = new ArrayList<>();
+		initAspectIOC(ScanFactory.createScan().getComponentClass("aspect"));
 	}
 
 	public static AspectAOP getAspectIOC() {
@@ -98,13 +92,8 @@ public class AspectAOP {
 	 * 
 	 * @param AspectClass
 	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws NoSuchMethodException
 	 * @throws SecurityException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
 	public void initAspectIOC(List<Class<?>> AspectClass)
 			throws SecurityException,IllegalArgumentException{

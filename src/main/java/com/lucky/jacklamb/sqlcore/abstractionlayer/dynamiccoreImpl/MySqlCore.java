@@ -8,8 +8,8 @@ import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.BatchInsert;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.PojoManage;
+import com.lucky.jacklamb.sqlcore.util.BatchInsert;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.createtable.CreateTable;
 import com.lucky.jacklamb.tcconversion.reverse.TableToJava;
 
@@ -76,7 +76,7 @@ public final class MySqlCore extends SqlCore {
 	}
 
 	@Override
-	public <T> int insertBatchByCollection(Collection<T> collection) {
+	public <T> int insertByCollection(Collection<T> collection) {
 		if(collection.isEmpty())
 			return -1;
 		setUUID(collection);

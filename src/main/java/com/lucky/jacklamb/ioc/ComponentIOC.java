@@ -18,7 +18,7 @@ import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
 import com.lucky.jacklamb.annotation.mvc.LuckyServlet;
-import com.lucky.jacklamb.aop.util.AopProxyFactory;
+import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.file.ini.INIConfig;
@@ -98,13 +98,11 @@ public class ComponentIOC extends ComponentFactory {
 	 * 
 	 * @param componentClass
 	 * @return
-	 * @throws ClassNotFoundException
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
 	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
 	 */
 	public void initComponentIOC(List<Class<?>> componentClass)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {

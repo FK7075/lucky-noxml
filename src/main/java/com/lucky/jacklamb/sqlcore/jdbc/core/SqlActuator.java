@@ -2,12 +2,11 @@ package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

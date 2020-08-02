@@ -4,7 +4,7 @@ package com.lucky.jacklamb.httpclient.callcontroller;
 import com.lucky.jacklamb.annotation.ioc.CallController;
 import com.lucky.jacklamb.annotation.mvc.FileDownload;
 import com.lucky.jacklamb.annotation.mvc.FileUpload;
-import com.lucky.jacklamb.aop.util.ASMUtil;
+import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotMappingMethodException;

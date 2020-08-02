@@ -1,17 +1,16 @@
-package com.lucky.jacklamb.aop.proxy;
+package com.lucky.jacklamb.aop.core;
 
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.AopParam;
 import com.lucky.jacklamb.annotation.aop.Around;
 import com.lucky.jacklamb.annotation.aop.Before;
+import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.enums.Location;
 import com.lucky.jacklamb.exception.IllegaAopparametersException;
+import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Arrays;
 
 public class PointRun {
@@ -34,6 +33,7 @@ public class PointRun {
 			proceedMethod = point.getClass().getDeclaredMethod("proceed", Chain.class);
 			Around exp = proceedMethod.getAnnotation(Around.class);
 			this.point = point;
+			this.point.setPriority(exp.priority());
 			this.pointCutClass = exp.pointCutClass();
 			this.pointCutMethod = exp.pointCutMethod();
 		} catch (NoSuchMethodException e) {
@@ -58,26 +58,11 @@ public class PointRun {
 			Constructor<?> constructor = pointClass.getConstructor();
 			constructor.setAccessible(true);
 			this.point = (Point) constructor.newInstance();
+			this.point.setPriority(exp.priority());
 			this.pointCutClass = exp.pointCutClass();
 			this.pointCutMethod = exp.pointCutMethod();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new PointRunException(e);
 		}
 
 	}
@@ -92,11 +77,13 @@ public class PointRun {
 		if(method.isAnnotationPresent(Before.class)) {
 			Before before=method.getAnnotation(Before.class);
 			this.point=conversion(expand,method,Location.BEFORE);
+			this.point.setPriority(before.priority());
 			this.pointCutClass = before.pointCutClass();
 			this.pointCutMethod = before.pointCutMethod();
 		}else if(method.isAnnotationPresent(After.class)) {
 			After after=method.getAnnotation(After.class);
 			this.point=conversion(expand,method,Location.AFTER);
+			this.point.setPriority(after.priority());
 			this.pointCutClass = after.pointCutClass();
 			this.pointCutMethod = after.pointCutMethod();
 		}
@@ -131,6 +118,8 @@ public class PointRun {
 	 * @param method
 	 * @return
 	 */
+
+
 	public boolean standard(Method method) {
 		try {
 			return standardStart(method);
@@ -150,7 +139,7 @@ public class PointRun {
 		String[] pointcutStr=pointCutMethod.split(",");
 		if(Arrays.asList(pointcutStr).contains("public")) {
 			//是否配置了public,如果配置了public，则所有非public都将不会执行该增强
-			if(method.getModifiers()!=1)
+			if(!Modifier.isPublic(method.getModifiers()))
 				return false;
 		}
 		for(String str:pointcutStr) {

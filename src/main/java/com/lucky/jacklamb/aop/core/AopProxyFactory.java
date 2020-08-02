@@ -1,10 +1,9 @@
-package com.lucky.jacklamb.aop.util;
+package com.lucky.jacklamb.aop.core;
 
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.annotation.aop.Transaction;
-import com.lucky.jacklamb.aop.proxy.PointRun;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
@@ -52,11 +51,11 @@ public class AopProxyFactory {
 	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass) throws  SecurityException,IllegalArgumentException{
 		List<PointRun> findPointbyBean = findPointbyBean(AspectMap,iocCode,beanid,beanClass);
 		if(!findPointbyBean.isEmpty()) {
-			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isCacheable(beanClass)) {
-			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else if(isTransaction(beanClass)){
-			return com.lucky.jacklamb.aop.proxy.PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
+			return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);
 		}else{
 			return ClassUtils.newObject(beanClass);
 		}
@@ -67,7 +66,7 @@ public class AopProxyFactory {
 	 * @param beanClass
 	 * @return
 	 */
-	private static boolean isCacheable(Class<?> beanClass) {
+	public static boolean isCacheable(Class<?> beanClass) {
 		Method[] declaredMethods = beanClass.getDeclaredMethods();
 		for(Method method:declaredMethods) {
 			if(method.isAnnotationPresent(Cacheable.class))

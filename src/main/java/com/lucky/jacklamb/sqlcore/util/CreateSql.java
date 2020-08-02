@@ -1,6 +1,5 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
+package com.lucky.jacklamb.sqlcore.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

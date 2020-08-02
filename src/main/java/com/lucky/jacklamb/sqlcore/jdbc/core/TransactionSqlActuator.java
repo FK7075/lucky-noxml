@@ -2,11 +2,9 @@ package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.JDBCTransaction;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.util.CreateSql;
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.util.List;
 
 public class TransactionSqlActuator extends SqlActuator {

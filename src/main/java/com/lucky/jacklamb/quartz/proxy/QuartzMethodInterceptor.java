@@ -10,18 +10,15 @@ import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.quartz.*;
-import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.spi.JobStore;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.lucky.jacklamb.quartz.constant.Constant.LUCKY_JOB;
 import static com.lucky.jacklamb.quartz.constant.Constant.LUCKY_JOB_GROUP;
+import static com.lucky.jacklamb.quartz.constant.Constant.LUCKY_JOB_KEY;
 import static org.quartz.DateBuilder.futureDate;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
@@ -46,13 +43,15 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
 
             //封装任务逻辑
             TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
-            String jobRunBeanId=UUID.randomUUID().toString();
-            ApplicationBeans.createApplicationBeans().addComponentBean(jobRunBeanId,targetJobRun);
+            String jobRunBeanId="".equals(quartzJob.id())
+                    ?targetObj.getClass().getSuperclass().getName()+"."+method.getName():quartzJob.id();
+            if(!ApplicationBeans.createApplicationBeans().isIocBean(jobRunBeanId))
+                ApplicationBeans.createApplicationBeans().addComponentBean(jobRunBeanId,targetJobRun);
             JobDetail jobDetail = JobBuilder.newJob(jobClass)
                     .withIdentity(jobName, LUCKY_JOB_GROUP)
                     .build();
             //将任务逻辑的IocId put到job上下文中
-            jobDetail.getJobDataMap().put(LUCKY_JOB,jobRunBeanId);
+            jobDetail.getJobDataMap().put(LUCKY_JOB_KEY,jobRunBeanId);
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
             Trigger trigger =getTrigger(paramKV,method,quartzJob,jobName);
             scheduler.scheduleJob(jobDetail,trigger);

@@ -87,7 +87,7 @@ public class ZipUtils {
     /**
      * 解压缩
      *
-     * @param compressFile   带解压的压缩文件
+     * @param compressFile   待解压的压缩文件
      * @param unCompressFile 解压后的目标文件夹路径
      */
     public static void unCompress(File compressFile, String unCompressFile) {

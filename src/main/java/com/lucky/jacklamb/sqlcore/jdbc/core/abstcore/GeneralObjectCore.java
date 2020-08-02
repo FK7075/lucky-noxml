@@ -123,7 +123,7 @@ public interface GeneralObjectCore {
      * @param obj 包含删除信息的对象数组
      * @return
      */
-    int deleteBatchByArray(Object... obj);
+    int deleteByArray(Object... obj);
 
 
     /**
@@ -132,7 +132,7 @@ public interface GeneralObjectCore {
      * @param obj 包含更新信息的对象数组
      * @return
      */
-    int updateBatchByArray(Object... obj);
+    int updateByArray(Object... obj);
 
     /**
      * 批量删除-集合模式
@@ -140,7 +140,7 @@ public interface GeneralObjectCore {
      * @param collection 要操作的对象所组成的集合
      * @return false or true
      */
-    <T> int deleteBatchByCollection(Collection<T> collection);
+    <T> int deleteByCollection(Collection<T> collection);
 
 
     /**
@@ -149,7 +149,7 @@ public interface GeneralObjectCore {
      * @param collection 要操作的对象所组成的集合
      * @return false or true
      */
-    <T> int updateBatchByCollection(Collection<T> collection);
+    <T> int updateByCollection(Collection<T> collection);
 
 
     /**

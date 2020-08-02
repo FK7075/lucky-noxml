@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.lucky.jacklamb.aop.proxy.PointRun;
+import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.base.Jacklabm;
@@ -181,6 +181,15 @@ public class ApplicationBeans {
 	public boolean isIocBean(Class<?> clzz){
 		return !getBeans(clzz).isEmpty();
 	}
+
+	public boolean isIocBean(String iocId){
+		try{
+			getBean(iocId);
+			return true;
+		}catch (NotFindBeanException e){
+			return false;
+		}
+	}
 	
 	/**
 	 * 根据类型得到一个IOC组件
@@ -279,7 +288,7 @@ public class ApplicationBeans {
 	public boolean containsComponent(String componentId) {
 		return iocContainers.getAppIOC().containId(componentId);
 	}
-	
+
 	/**
 	 * 根据ID得到一个IOC组件
 	 * @param beanId

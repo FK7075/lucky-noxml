@@ -14,9 +14,8 @@ public class LuckyJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        String jobRunBeanId = context.getJobDetail().getJobDataMap().getString(LUCKY_JOB);
+        String jobRunBeanId = context.getJobDetail().getJobDataMap().getString(LUCKY_JOB_KEY);
         TargetJobRun targetJobRun = (TargetJobRun) beans.getBean(jobRunBeanId);
-        beans.removeComponentBean(jobRunBeanId);
         targetJobRun.run();
     }
 }

@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.sqlcore.abstractionlayer.util;
+package com.lucky.jacklamb.sqlcore.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

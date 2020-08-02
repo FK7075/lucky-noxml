@@ -4,12 +4,17 @@ import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.annotation.aop.Transaction;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
 import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
+import com.lucky.jacklamb.aop.core.Chain;
+import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.PointRun;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LuckyAopMethodInterceptor implements MethodInterceptor {
@@ -40,13 +45,14 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 
 	@Override
 	public Object intercept(Object target, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
-		List<Point> points=new ArrayList<>();
+		final List<Point> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
 
 		//被@Cacheable注解标注的方法优先执行缓存代理
 		if(method.isAnnotationPresent(Cacheable.class)) {
 			Point cacheExpandPoint = new CacheExpandPoint();
 			cacheExpandPoint.init(targetMethodSignature);
+			cacheExpandPoint.setPriority(0);
 			points.add(cacheExpandPoint);
 		}
 
@@ -56,13 +62,16 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 				method.isAnnotationPresent(Transaction.class)){
 			Point transactionPoint = new TransactionPoint();
 			transactionPoint.init(targetMethodSignature);
+			transactionPoint.setPriority(1);
 			points.add(transactionPoint);
 		}
 		//得到所有自定义的的环绕增强节点
 		pointRuns.stream().filter(a->a.standard(method)).forEach((a)->{Point p=a.getPoint();p.init(targetMethodSignature);points.add(p);});
-		
-		//将所的环绕增强节点组成一个执行链
-		Chain chain=new Chain(points,target,params,methodProxy);
+
+		//将所的环绕增强节点根据优先级排序后组成一个执行链
+		Chain chain=new Chain(points.stream()
+				.sorted(Comparator.comparing(Point::getPriority))
+				.collect(Collectors.toList()),target,params,methodProxy);
 		Object resule;
 		
 		//执行增强策略

@@ -9,7 +9,7 @@ public enum Rest {
 	NO,
 
 	/**
-	 * 返回TEST格式数据
+	 * 返回TEXT格式数据
 	 */
 	TXT,
 	
