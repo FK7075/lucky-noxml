@@ -348,7 +348,7 @@ public class AnnotationOperation {
      * @throws IllegalAccessException
      */
     public Object[] getControllerMethodParam(Model model, Class<?> controllerClass, Method method)
-            throws IOException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException {
+            throws IOException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException, IllegalParameterException {
         //获取当前Controller方法参数列表所有的参数名
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         Parameter[] parameters = method.getParameters();
@@ -482,7 +482,8 @@ public class AnnotationOperation {
                 check = parameters[i].getAnnotation(Check.class);
                 if (!Regular.check(args[i].toString(), check.value()))
                     throw new IllegalParameterException(model, paramNames[i], args[i].toString(), check.value());
-            } else if (parameters[i].isAnnotationPresent(MD5.class)) {
+            }
+            if (parameters[i].isAnnotationPresent(MD5.class)) {
                 md5 = parameters[i].getAnnotation(MD5.class);
                 args[i]=MD5Utils.md5(args[i].toString(),md5.salt(),md5.cycle(),md5.capital());
             }
