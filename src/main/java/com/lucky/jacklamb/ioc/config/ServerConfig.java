@@ -291,7 +291,7 @@ public class ServerConfig implements LuckyConfig  {
 			projectPath=System.getProperty("user.dir")+f;
 			serverConfig.addServlet(new LuckyDispatcherServlet(),0, "/");
 			serverConfig.setContextPath("");
-			serverConfig.setDocBase("webapp"+f);
+			serverConfig.setDocBase("webapps"+f);
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);

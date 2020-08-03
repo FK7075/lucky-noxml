@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.logging.log4j.LogManager;
@@ -67,6 +68,7 @@ public class LuckyApplication {
             System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", serverCfg.getRequestTargetAllow());
         tomcat.getHost().addChild(context);
         try {
+            tomcat.getConnector();
             tomcat.init();
             tomcat.start();
             tomcat.getServer().await();

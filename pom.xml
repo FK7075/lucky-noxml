@@ -13,6 +13,7 @@
   <url>http://www.example.com</url>
   <properties>
     <java.version>1.8</java.version>
+    <tomcat.version>9.0.36</tomcat.version>
     <source.encoding>UTF-8</source.encoding>
     <project.build.sourceEncoding>${source.encoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${source.encoding}</project.reporting.outputEncoding>
@@ -76,7 +77,7 @@
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>annotations-api</artifactId>
-      <version>6.0.14</version>
+      <version>6.0.53</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
@@ -111,34 +112,34 @@
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-dbcp</artifactId>
-      <version>9.0.31</version>
+      <version>${tomcat.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
-      <version>8.5.51</version>
+      <version>${tomcat.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-el -->
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-el</artifactId>
-      <version>8.5.51</version>
+      <version>${tomcat.version}</version>
     </dependency><!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
 
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
-      <version>8.5.51</version>
+      <version>${tomcat.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-websocket -->
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
-      <version>8.5.51</version>
+      <version>${tomcat.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/junit/junit -->
