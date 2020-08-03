@@ -7,15 +7,15 @@ import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.file.utils.FileCopyUtils;
-import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
+import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.servlet.core.Model;
-import com.lucky.jacklamb.utils.regula.Regular;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.lucky.jacklamb.utils.regula.Regular;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -484,9 +484,7 @@ public class AnnotationOperation {
                     throw new IllegalParameterException(model, paramNames[i], args[i].toString(), check.value());
             } else if (parameters[i].isAnnotationPresent(MD5.class)) {
                 md5 = parameters[i].getAnnotation(MD5.class);
-                for (int j = 0; j < md5.cycle(); j++) {
-                    args[i] = md5.capital() ? DigestUtils.md5Hex(md5.salt() + args[i]).toUpperCase() : DigestUtils.md5Hex(md5.salt() + args[i]);
-                }
+                args[i]=MD5Utils.md5(args[i].toString(),md5.salt(),md5.cycle(),md5.capital());
             }
         }
         return args;
@@ -623,7 +621,6 @@ public class AnnotationOperation {
         if (methodCallApi.startsWith("/"))
             methodCallApi = methodCallApi.substring(1);
         return controllerApi + methodCallApi;
-
     }
 
     /**
