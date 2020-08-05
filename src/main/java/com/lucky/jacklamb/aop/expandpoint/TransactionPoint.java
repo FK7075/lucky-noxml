@@ -103,7 +103,7 @@ public class TransactionPoint extends Point {
         }catch (Throwable e){
             //回滚
             transactions.stream().forEach(tr->tr.rollback());
-            String ERR="@Transaction方法执行异常，已触发事务的回滚机制。错误位置：\""+tms.getCurrMethod()+"\"";
+            String ERR="事务方法执行异常，已触发事务的回滚机制。错误位置：\""+tms.getCurrMethod()+"\"";
             log.error(ERR,e);
             throw new TransactionPerformException(e,ERR);
         }finally {

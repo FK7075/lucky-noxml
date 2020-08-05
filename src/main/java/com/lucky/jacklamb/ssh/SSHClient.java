@@ -10,6 +10,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SSHClient {
 
@@ -25,7 +29,7 @@ public class SSHClient {
 
     private final static int CONNECT_TIMEOUT = 30000;
 
-    private final Integer SESSION_TIMEOUT = 30000;
+    private final static Integer SESSION_TIMEOUT = 30000;
 
     private Session session;
 
@@ -55,7 +59,21 @@ public class SSHClient {
         session.setPassword(password);
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect(SESSION_TIMEOUT);
+        System.out.println("Host("+host+") connected.");
         return this;
+    }
+
+    public SSHClient(String user, String host, int port, String password) {
+        this.user = user;
+        this.host = host;
+        this.port = port;
+        this.password = password;
+    }
+
+    public SSHClient( String host, String user,String password) {
+        this.user = user;
+        this.host = host;
+        this.password = password;
     }
 
     /**
@@ -198,7 +216,7 @@ public class SSHClient {
     }
 
     /**
-     * 冲远程服务器下载文件
+     * 从远程服务器下载文件
      * @param source 服务器文件的绝对路径
      * @param destination 本地保存的目录路径
      * @return
@@ -310,4 +328,75 @@ public class SSHClient {
         return b;
     }
 
+    public boolean remoteEdit(String source, Function<List<String>, List<String>> process) {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            String fileName = source;
+            int index = source.lastIndexOf('/');
+            if (index >= 0) {
+                fileName = source.substring(index + 1);
+            }
+            //backup source
+            sendCmd(String.format("cp %s %s", source, source + ".bak." +System.currentTimeMillis()));
+            //scp from remote
+            String tmpSource = System.getProperty("java.io.tmpdir") + session.getHost() +"-" + fileName;
+            scpFrom(source, tmpSource);
+            in = new FileInputStream(tmpSource);
+            //edit file according function process
+            String tmpDestination = tmpSource + ".des";
+            out = new FileOutputStream(tmpDestination);
+            List<String> inputLines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String inputLine = null;
+            while ((inputLine = reader.readLine()) != null) {
+                inputLines.add(inputLine);
+            }
+            List<String> outputLines = process.apply(inputLines);
+            for (String outputLine : outputLines) {
+                out.write((outputLine + "\n").getBytes());
+                out.flush();
+            }
+            //scp to remote
+            scpTo(tmpDestination,source);
+            return true;
+        } catch (Exception e) {
+            log.error("remote edit error, ", e);
+            return false;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    log.error("input stream close error", e);
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    log.error("output stream close error", e);
+                }
+            }
+        }
+    }
+
+    /*
+
+    remoteExecute(session, "pwd");
+    remoteExecute(session, "mkdir /root/jsch-demo");
+    remoteExecute(session, "ls /root/jsch-demo");
+    remoteExecute(session, "touch /root/jsch-demo/test1; touch /root/jsch-demo/test2");
+    remoteExecute(session, "echo 'It a test file.' > /root/jsch-demo/test-file");
+    remoteExecute(session, "ls -all /root/jsch-demo");
+    remoteExecute(session, "ls -all /root/jsch-demo | grep test");
+    remoteExecute(session, "cat /root/jsch-demo/test-file");
+     */
+    public static void main(String[] args) throws JSchException {
+        SSHClient ssh=new SSHClient("192.168.0.167","root","123456").login();
+        ssh.remoteEdit("/mytest/test.txt",(inLs)->{
+            return inLs.stream().map(l->l.toUpperCase()).collect(Collectors.toList());
+        });
+        ssh.sendCmd("cat /mytest/test.txt");
+    }
 }
