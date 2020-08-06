@@ -83,7 +83,13 @@ public class MapperXMLParsing {
                     if(mapperSql.containsKey(method)){
                         throw new RuntimeException("同一个Mapper接口方法的SQL配置在同一个配置文件中出现了两次！ "+mapperClass+"."+method+"(XXX)");
                     }else{
-                        mapperSql.put(method,mElement.getText().replaceAll("\r\n"," ").replaceAll("\n"," ").trim().replaceAll(" +"," "));
+                        String sql = mElement.getText();
+                        sql=sql.replaceAll("\\$", "LUCKY_RDS_CHAR_DOLLAR_0721");
+                        sql=sql.replaceAll("\r\n"," ").replaceAll("\n"," ").trim();
+                        sql=sql.replaceAll("&lt;","<").replaceAll("&gt;",">");
+                        sql=sql.replaceAll("LUCKY_RDS_CHAR_DOLLAR_0721","\\$" );
+//                        mElement.getText().replaceAll("\r\n"," ").replaceAll("\n"," ").trim().replaceAll(" +"," ")
+                        mapperSql.put(method,sql);
                     }
                 }
                 xmlMap.put(mapperClass,mapperSql);

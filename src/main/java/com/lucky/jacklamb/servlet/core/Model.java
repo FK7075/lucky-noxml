@@ -7,7 +7,7 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.base.Jacklabm;
+import com.lucky.jacklamb.utils.base.JackLamb;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -675,7 +675,7 @@ public class Model {
             String userAgent = req.getHeader("User-Agent");
             if(userAgent.startsWith("Mozilla/")){
                 resp.setContentType("text/html");
-                writer(Jacklabm.exception(code, Message, Description));
+                writer(JackLamb.exception(code, Message, Description));
             }else{
                 writerJson(new ExceptionMessage(code.code,code.errTitle,Description));
             }

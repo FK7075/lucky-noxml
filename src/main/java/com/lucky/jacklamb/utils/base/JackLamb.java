@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.URL;
 
-public abstract class Jacklabm {
+public abstract class JackLamb {
 
     public static final Logger log= LogManager.getLogger(ApplicationBeans.class);;
 

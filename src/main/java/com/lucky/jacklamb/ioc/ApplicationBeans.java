@@ -20,7 +20,7 @@ import org.apache.log4j.PropertyConfigurator;
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
-import com.lucky.jacklamb.utils.base.Jacklabm;
+import com.lucky.jacklamb.utils.base.JackLamb;
 
 public class ApplicationBeans {
 	
@@ -44,7 +44,7 @@ public class ApplicationBeans {
 		log= LogManager.getLogger(ApplicationBeans.class);
 		iocContainers=new IOCContainers();
 		iocContainers.init();
-		Jacklabm.welcome();
+		JackLamb.welcome();
 
 	}
 	
