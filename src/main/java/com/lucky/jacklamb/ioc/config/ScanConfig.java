@@ -74,24 +74,41 @@ public class ScanConfig implements LuckyConfig {
 	 * 设置自定义的Logo
 	 */
 	private String customLogo;
-	
-	/**
-	 * 配置sql的ini文件的位置
-	 */
-	private String sqlIniPath;
-	
 
-	public String getSqlIniPath() {
-		return sqlIniPath;
-	}
-	
 	/**
-	 * 设置配置sql的ini文件
-	 * @param sqlIniPath
+	 * Mapper.xml所在的包
 	 */
-	public void setSqlIniPath(String sqlIniPath) {
-		this.sqlIniPath = sqlIniPath;
+	private String mapperXmlPath;
+
+	public String getMapperXmlPath() {
+		return mapperXmlPath;
 	}
+
+	/**
+	 * 设置Mapper.xml的定义位置 默认：mapperXml
+	 * @param mapperXmlPath
+	 */
+	public void setMapperXmlPath(String mapperXmlPath) {
+		this.mapperXmlPath = mapperXmlPath;
+	}
+
+	//	/**
+//	 * 配置sql的ini文件的位置
+//	 */
+//	private String sqlIniPath;
+//
+//
+//	public String getSqlIniPath() {
+//		return sqlIniPath;
+//	}
+//
+//	/**
+//	 * 设置配置sql的ini文件
+//	 * @param sqlIniPath
+//	 */
+//	public void setSqlIniPath(String sqlIniPath) {
+//		this.sqlIniPath = sqlIniPath;
+//	}
 	public ScanConfig getScanfig() {
 		return scanfig;
 	}
@@ -358,7 +375,8 @@ public class ScanConfig implements LuckyConfig {
 			scanfig.addWebSocketPackSuffix("websocket");
 			scanfig.addAspectPackSuffix("aspect","aop");
 			scanfig.addPojoPackSuffix("pojo", "entity");
-			scanfig.setSqlIniPath("appconfig.ini");
+//			scanfig.setSqlIniPath("appconfig.ini");
+			scanfig.setMapperXmlPath("mapperXml");
 			scanfig.setScanMode(Scan.AUTO_SCAN);
 			scanfig.setLogo(Logo.LUCKY);
 		}

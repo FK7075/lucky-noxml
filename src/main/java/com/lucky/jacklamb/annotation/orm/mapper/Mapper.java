@@ -36,21 +36,21 @@ public @interface Mapper {
 	 */
 	String dbname() default "defaultDB";
 	
-	/**
-	 * 外部SQl配置类的Class
-	 * @return
-	 */
-	Class<?> value() default Void.class;
-	
-	/**
-	 * 外部SQl配置文件的classpth( eg : com/lucky/mapper/user.properties)
-	 * @return
-	 */
-	String[] properties() default {};
-	
-	/**
-	 * properties配置文件的编码格式(默认值为UTF-8)
-	 * @return
-	 */
-	String  codedformat() default "UTF-8";
+//	/**
+//	 * 外部SQl配置类的Class
+//	 * @return
+//	 */
+//	Class<?> value() default Void.class;
+//
+//	/**
+//	 * 外部SQl配置文件的classpth( eg : com/lucky/mapper/user.properties)
+//	 * @return
+//	 */
+//	String[] properties() default {};
+//
+//	/**
+//	 * properties配置文件的编码格式(默认值为UTF-8)
+//	 * @return
+//	 */
+//	String  codedformat() default "UTF-8";
 }

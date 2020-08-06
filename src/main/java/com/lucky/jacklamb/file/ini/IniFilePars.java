@@ -227,8 +227,8 @@ public class IniFilePars {
 			scan.setScanMode(Scan.SUFFIX_SCAN);
 			setScanConfig(scan,sectionMap);
 		}
-		if(this.isHasSection(SECTION_SQL_INI)) {
-			scan.setSqlIniPath($Expression.translation(this.getSectionMap(SECTION_SQL_INI).get("path")));
+		if(this.isHasSection(SECTION_MAPPER_XML)) {
+			scan.setMapperXmlPath($Expression.translation(this.getSectionMap(SECTION_MAPPER_XML).get("path")));
 		}
 		if(this.isHasSection(SECTION_TOMCAT)) {
 			sectionMap = this.getSectionMap(SECTION_TOMCAT);

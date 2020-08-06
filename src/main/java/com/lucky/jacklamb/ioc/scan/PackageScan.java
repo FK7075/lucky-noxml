@@ -3,14 +3,16 @@ package com.lucky.jacklamb.ioc.scan;
 import com.lucky.jacklamb.annotation.ioc.*;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.net.URL;
+import java.util.*;
 
 /**
  * 不做配置时的默认包扫描
@@ -48,6 +50,8 @@ public class PackageScan extends Scan {
 			projectPath=projectPath.replaceAll("\\\\", "/").substring(0,projectPath.length()-1);
 		}
 
+		System.out.println("fileProjectPath ==> "+fileProjectPath);
+		System.out.println("projectPath ==> "+projectPath);
 
 	}
 	
@@ -168,8 +172,35 @@ public class PackageScan extends Scan {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+	@Override
+	public Set<MapperXMLParsing> getAllMapperXml(String path) {
+		Set<MapperXMLParsing> xmls=new HashSet<>();
+		URL url = PackageScan.class.getClassLoader().getResource(path);
+		if(url==null) {
+			return xmls;
+		}
+		try {
+			File mapperXml=new File(url.getFile());
+			getMapperXml(mapperXml,xmls);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return xmls;
+	}
+
+	private void getMapperXml(File file,Set<MapperXMLParsing> mapXmls) throws Exception {
+		if(file.isFile()&&file.getName().endsWith(".xml")&&MapperXMLParsing.isMapperXml(new FileInputStream(file))){
+			mapXmls.add(new MapperXMLParsing(file));
+		}else if(file.isDirectory()){
+			File[] sonFiles = file.listFiles();
+			for (File sonf : sonFiles) {
+				getMapperXml(sonf,mapXmls);
+			}
+		}
+	}
+
+
 	@Override
 	public void findAppConfig() {
 		try {

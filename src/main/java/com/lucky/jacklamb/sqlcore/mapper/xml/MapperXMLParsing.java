@@ -40,8 +40,21 @@ public class MapperXMLParsing {
 
     private BufferedReader xmlReader;
 
+    public static boolean isMapperXml(InputStream inputStream) throws Exception {
+       BufferedReader xmlReader=new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+        SAXReader saxReader = new SAXReader();
+        Document document = saxReader.read(xmlReader);
+        Element root = document.getRootElement();
+        return "MapperConfig".equals(root.getName());
+    }
+
     public MapperXMLParsing(String xmlPath) throws IOException {
         xmlReader=new BufferedReader(new InputStreamReader(new FileInputStream(xmlPath),"UTF-8"));
+        xmlPars();
+    }
+
+    public MapperXMLParsing(File xmlFile) throws IOException {
+        xmlReader=new BufferedReader(new InputStreamReader(new FileInputStream(xmlFile),"UTF-8"));
         xmlPars();
     }
 
@@ -66,7 +79,12 @@ public class MapperXMLParsing {
                 Map<String,String> mapperSql=new HashMap<>();
                 List<Element> methodElements = mapInter.elements(METHOD);
                 for (Element mElement : methodElements) {
-                    mapperSql.put(mElement.attributeValue(NAME),mElement.getText().replaceAll("\r\n"," ").replaceAll("\n"," ").trim().replaceAll(" +"," "));
+                    String method = mElement.attributeValue(NAME);
+                    if(mapperSql.containsKey(method)){
+                        throw new RuntimeException("同一个Mapper接口方法的SQL配置在同一个配置文件中出现了两次！ "+mapperClass+"."+method+"(XXX)");
+                    }else{
+                        mapperSql.put(method,mElement.getText().replaceAll("\r\n"," ").replaceAll("\n"," ").trim().replaceAll(" +"," "));
+                    }
                 }
                 xmlMap.put(mapperClass,mapperSql);
             }
@@ -76,7 +94,7 @@ public class MapperXMLParsing {
     }
 
     public static void main(String[] args) throws IOException {
-        MapperXMLParsing xml=new MapperXMLParsing("/Users/fukang/IDEA-WORK/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/mapper/xml/Mapper.xml");
+        MapperXMLParsing xml=new MapperXMLParsing("D:\\GitHub-Project\\lucky-noxml\\src\\main\\java\\com\\lucky\\jacklamb\\sqlcore\\mapper\\xml\\Mapper.xml");
         System.out.println(xml.getMapperSql(LuckyMapper.class));
         System.out.println(xml.getMapperSql(MapperXMLParsing.class));
     }

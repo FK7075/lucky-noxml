@@ -396,9 +396,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @throws NoSuchFieldException
      */
     private Object notHave(Method method, Object[] args, SqlFragProce sql_fp, Class<?> luckyMapperGeneric) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        if (sqlMap.containsKey(method.getName().toUpperCase())) {
+        if (sqlMap.containsKey(method.getName())) {
             pageParam(method, args);
-            String methodName = method.getName().toUpperCase();
+            String methodName = method.getName();
             String sqlStr = sqlMap.get(methodName);
             String sqlCopy = sqlStr.toUpperCase();
             if (sqlCopy.contains("#{")) {

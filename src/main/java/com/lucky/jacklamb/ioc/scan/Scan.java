@@ -2,10 +2,7 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import com.lucky.jacklamb.annotation.aop.Aspect;
@@ -24,6 +21,7 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,7 +99,6 @@ public abstract class Scan {
 		aspectClass=new ArrayList<>();
 		webSocketClass=new ArrayList<>();
 		pojoClass=new ArrayList<>();
-
 	}
 
 	public List<Class<?>> getPojoClass() {
@@ -321,5 +318,32 @@ public abstract class Scan {
 	 * 自动扫描
 	 */
 	public abstract void autoScan();
+
+	public abstract Set<MapperXMLParsing> getAllMapperXml(String path);
+
+	public Map<String,Map<String,String>> getAllMapperSql(String path){
+		Set<MapperXMLParsing> mapperXmlSet=getAllMapperXml(path);
+		Map<String,Map<String,String>> mapperSqls=new HashMap<>();
+		for (MapperXMLParsing mapXmlp : mapperXmlSet) {
+			Map<String, Map<String, String>> sqlMap = mapXmlp.getXmlMap();
+			for(Map.Entry<String,Map<String,String>> en:sqlMap.entrySet()){
+				String key = en.getKey();
+				Map<String, String> map = en.getValue();
+				if(mapperSqls.containsKey(key)){
+					Map<String, String> contextMap = mapperSqls.get(key);
+					for(Map.Entry<String,String> e:map.entrySet()){
+						if(contextMap.containsKey(e.getKey())){
+							throw new RuntimeException("同一个Mapper接口方法的SQL配置出现在了两个xml配置文件中！ "+key+"."+e.getKey()+"(XXX)");
+						}else{
+							contextMap.put(e.getKey(),e.getValue());
+						}
+					}
+				}else{
+					mapperSqls.put(key,map);
+				}
+			}
+		}
+		return mapperSqls;
+	}
 
 }

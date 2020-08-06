@@ -6,7 +6,7 @@ public class SectionKey {
 
 	public static final String SECTION_DATASOURCE="DataSources";
 
-	public static final String SECTION_SQL_INI="Sql-Ini";
+	public static final String SECTION_MAPPER_XML="Mapper-Xml";
 	
 	public static final String SECTION_SUFFIX_SCAN="Suffix Scan";
 	

@@ -1,17 +1,17 @@
 package com.lucky.jacklamb.ioc.scan;
 
-import com.lucky.jacklamb.annotation.ioc.*;
+import com.lucky.jacklamb.annotation.ioc.Configuration;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
-import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
+import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -99,6 +99,33 @@ public class JarScan extends Scan {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public Set<MapperXMLParsing> getAllMapperXml(String path){
+		JarFile jarFile = null;
+		Set<MapperXMLParsing> xmls=new HashSet<>();
+		try {
+			jarFile = new JarFile(jarpath);
+		} catch (IOException e) {
+			throw new JarScanException("找不到jar文件：["+jarpath+"]",e);
+		}
+		Enumeration<JarEntry> entrys = jarFile.entries();
+		while (entrys.hasMoreElements()) {
+			JarEntry entry = entrys.nextElement();
+			String name = entry.getName();
+			if (name.endsWith(".xml") && name.startsWith(path)) {
+				try{
+					if(MapperXMLParsing.isMapperXml(ApplicationBeans.class.getResourceAsStream("/"+name))){
+						xmls.add(new MapperXMLParsing(ApplicationBeans.class.getResourceAsStream("/"+name)));
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+
+			}
+		}
+		return xmls;
 	}
 
 	@Override

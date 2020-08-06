@@ -5,6 +5,7 @@ import com.lucky.jacklamb.cglib.CglibProxy;
 import com.lucky.jacklamb.exception.NotFindFlieException;
 import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
+import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.exception.NotFindSqlConfigFileException;
 import com.lucky.jacklamb.sqlcore.exception.NotFoundInterfacesGenericException;
@@ -19,6 +20,8 @@ import java.util.*;
 public class LuckyMapperProxy {
 
     private static final Logger log = LogManager.getLogger(LuckyMapperProxy.class);
+    private static final Map<String,Map<String,String>> allMapperSql= ScanFactory.createScan()
+            .getAllMapperSql(AppConfig.getAppConfig().getScanConfig().getMapperXmlPath());
     private SqlCore sqlCore;
     private Map<String, String> sqlMap;
     private Class<?> LuckyMapperGeneric;
@@ -28,69 +31,69 @@ public class LuckyMapperProxy {
         sqlMap = new HashMap<>();
     }
 
-    /**
-     * 初始化sqlMap,将配置类中的SQl语句加载到sqlMap中
-     *
-     * @param clazz 配置类的Class
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private <T> void initClassSqlMap(Class<T> clazz) throws InstantiationException, IllegalAccessException {
-        if (clazz.isAnnotationPresent(Mapper.class)) {
-            Mapper map = clazz.getAnnotation(Mapper.class);
-            Class<?> sqlClass = map.value();
-            if (!sqlClass.isAssignableFrom(Void.class)) {
-                Object sqlPo = sqlClass.newInstance();
-                Field[] fields = sqlClass.getDeclaredFields();
-                for (Field fi : fields) {
-                    fi.setAccessible(true);
-                    sqlMap.put(fi.getName().toUpperCase(), (String) fi.get(sqlPo));
-                }
-            }
-        }
-    }
+//    /**
+//     * 初始化sqlMap,将配置类中的SQl语句加载到sqlMap中
+//     *
+//     * @param clazz 配置类的Class
+//     * @throws InstantiationException
+//     * @throws IllegalAccessException
+//     */
+//    private <T> void initClassSqlMap(Class<T> clazz) throws InstantiationException, IllegalAccessException {
+//        if (clazz.isAnnotationPresent(Mapper.class)) {
+//            Mapper map = clazz.getAnnotation(Mapper.class);
+//            Class<?> sqlClass = map.value();
+//            if (!sqlClass.isAssignableFrom(Void.class)) {
+//                Object sqlPo = sqlClass.newInstance();
+//                Field[] fields = sqlClass.getDeclaredFields();
+//                for (Field fi : fields) {
+//                    fi.setAccessible(true);
+//                    sqlMap.put(fi.getName().toUpperCase(), (String) fi.get(sqlPo));
+//                }
+//            }
+//        }
+//    }
 
-    /**
-     * 加载写在.ini配置文件中的Sql
-     *
-     * @param clazz
-     * @throws IOException
-     */
-    private <T> void initIniMap(Class<T> clazz) throws IOException {
-        String iniSql = AppConfig.getAppConfig().getScanConfig().getSqlIniPath();
-        InputStream ini = this.getClass().getResourceAsStream("/" + iniSql);
-        if (ini != null) {
-            INIConfig app = new INIConfig(iniSql);
-            Map<String, String> classMap = app.getSectionMap(clazz.getName());
-            if (classMap != null) {
-                for (String key : classMap.keySet()) {
-                    sqlMap.put(key.toUpperCase(), classMap.get(key));
-                }
-            }
-        }
-    }
+//    /**
+//     * 加载写在.ini配置文件中的Sql
+//     *
+//     * @param clazz
+//     * @throws IOException
+//     */
+//    private <T> void initIniMap(Class<T> clazz) throws IOException {
+//        String iniSql = AppConfig.getAppConfig().getScanConfig().getSqlIniPath();
+//        InputStream ini = this.getClass().getResourceAsStream("/" + iniSql);
+//        if (ini != null) {
+//            INIConfig app = new INIConfig(iniSql);
+//            Map<String, String> classMap = app.getSectionMap(clazz.getName());
+//            if (classMap != null) {
+//                for (String key : classMap.keySet()) {
+//                    sqlMap.put(key.toUpperCase(), classMap.get(key));
+//                }
+//            }
+//        }
+//    }
 
-    /**
-     * 加载写在.properties配置文件中Sql语句
-     *
-     * @param clzz
-     */
-    private <T> void initSqlMapProperty(Class<T> clzz) {
-        if (clzz.isAnnotationPresent(Mapper.class)) {
-            Mapper mapper = clzz.getAnnotation(Mapper.class);
-            String[] propertys = mapper.properties();
-            String coding = mapper.codedformat();
-            for (String path : propertys) {
-                InputStream resource = this.getClass().getResourceAsStream("/" + path);
-                if (resource == null) {
-                    log.error("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-                    throw new NotFindSqlConfigFileException("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-                }
-                loadProperty(clzz, resource, coding);
-
-            }
-        }
-    }
+//    /**
+//     * 加载写在.properties配置文件中Sql语句
+//     *
+//     * @param clzz
+//     */
+//    private <T> void initSqlMapProperty(Class<T> clzz) {
+//        if (clzz.isAnnotationPresent(Mapper.class)) {
+//            Mapper mapper = clzz.getAnnotation(Mapper.class);
+//            String[] propertys = mapper.properties();
+//            String coding = mapper.codedformat();
+//            for (String path : propertys) {
+//                InputStream resource = this.getClass().getResourceAsStream("/" + path);
+//                if (resource == null) {
+//                    log.error("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
+//                    throw new NotFindSqlConfigFileException("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
+//                }
+//                loadProperty(clzz, resource, coding);
+//
+//            }
+//        }
+//    }
 
     /**
      * 加载写在.properties配置文件中Sql语句
@@ -177,9 +180,11 @@ public class LuckyMapperProxy {
      */
     public <T> T getMapperProxyObject(Class<T> clazz) throws InstantiationException, IllegalAccessException, IOException {
         LuckyMapperGeneric=getLuckyMapperGeneric(clazz);
-        initIniMap(clazz);
-        initClassSqlMap(clazz);
-        initSqlMapProperty(clazz);
+        if(allMapperSql.containsKey(clazz.getName()))
+            sqlMap=allMapperSql.get(clazz.getName());
+//        initIniMap(clazz);
+//        initClassSqlMap(clazz);
+//        initSqlMapProperty(clazz);
         return CglibProxy.getCglibProxyObject(clazz,new LuckyMapperMethodInterceptor(LuckyMapperGeneric,sqlCore,sqlMap));
     }
 
