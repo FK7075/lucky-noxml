@@ -18,8 +18,6 @@ public class ScanConfig implements LuckyConfig {
 	
 	private static ScanConfig scanfig;
 
-
-	
 	/**
 	 * 设置扫描模式
 	 */
@@ -92,23 +90,6 @@ public class ScanConfig implements LuckyConfig {
 		this.mapperXmlPath = mapperXmlPath;
 	}
 
-	//	/**
-//	 * 配置sql的ini文件的位置
-//	 */
-//	private String sqlIniPath;
-//
-//
-//	public String getSqlIniPath() {
-//		return sqlIniPath;
-//	}
-//
-//	/**
-//	 * 设置配置sql的ini文件
-//	 * @param sqlIniPath
-//	 */
-//	public void setSqlIniPath(String sqlIniPath) {
-//		this.sqlIniPath = sqlIniPath;
-//	}
 	public ScanConfig getScanfig() {
 		return scanfig;
 	}
@@ -375,8 +356,7 @@ public class ScanConfig implements LuckyConfig {
 			scanfig.addWebSocketPackSuffix("websocket");
 			scanfig.addAspectPackSuffix("aspect","aop");
 			scanfig.addPojoPackSuffix("pojo", "entity");
-//			scanfig.setSqlIniPath("appconfig.ini");
-			scanfig.setMapperXmlPath("mapperXml");
+			scanfig.setMapperXmlPath("mapper");
 			scanfig.setScanMode(Scan.AUTO_SCAN);
 			scanfig.setLogo(Logo.LUCKY);
 		}
