@@ -49,10 +49,6 @@ public class PackageScan extends Scan {
 			fileProjectPath=projectPath;
 			projectPath=projectPath.replaceAll("\\\\", "/").substring(0,projectPath.length()-1);
 		}
-
-		System.out.println("fileProjectPath ==> "+fileProjectPath);
-		System.out.println("projectPath ==> "+projectPath);
-
 	}
 	
 	/**

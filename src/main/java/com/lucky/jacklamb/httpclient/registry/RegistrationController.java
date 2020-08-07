@@ -6,7 +6,6 @@ import com.lucky.jacklamb.annotation.mvc.RequestParam;
 import com.lucky.jacklamb.annotation.mvc.RestBody;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.enums.Rest;
-import com.lucky.jacklamb.file.utils.FileCopyUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.LuckyController;
 import org.apache.logging.log4j.LogManager;
@@ -15,9 +14,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller("registrationCenter")
@@ -44,14 +40,14 @@ public final class RegistrationController extends LuckyController {
     //classpath:static/ 下的文件访问接口
     @RequestMapping("lucyxfl/file/#{name}")
     public void file(@RestParam("name") String name) throws IOException {
-        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/" + name);
+        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/lucky-config/static/" + name);
         preview(resourceAsStream, name);
     }
 
     //注册中心页面
     @RequestMapping("/")
     public void services() throws IOException {
-        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/static/service.html");
+        InputStream resourceAsStream = ApplicationBeans.class.getResourceAsStream("/lucky-config/static/service.html");
         preview(resourceAsStream, "service.html");
     }
 

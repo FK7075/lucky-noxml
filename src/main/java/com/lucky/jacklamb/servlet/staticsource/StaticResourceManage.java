@@ -21,7 +21,7 @@ public class StaticResourceManage {
     static{
         try {
             contentTypeMap=new HashMap<>();
-            BufferedReader br = new BufferedReader( new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/ContentType.json"), "UTF-8"));
+            BufferedReader br = new BufferedReader( new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/lucky-config/config/ContentType.json"), "UTF-8"));
             Type type=new TypeToken<List<String[]>>(){}.getType();
             List<String[]> arrContentType=new Gson().fromJson(br,type);
             for (String[] kv : arrContentType) {
@@ -54,18 +54,47 @@ public class StaticResourceManage {
         return false;
     }
 
-    public static boolean resources(Model model, String uri){
-        String realPath = model.getRequest().getServletContext().getRealPath(uri);
-        if(realPath==null)
-            return false;
-        File file=new File(realPath);
-        return file.exists();
+    public static boolean resources(Model model,String webRoot, String uri){
+        String path;
+        if(webRoot.startsWith("${classpath}")){
+            webRoot=webRoot.substring(12);
+            InputStream staticStream=ApplicationBeans.class.getResourceAsStream(webRoot+uri);
+            return staticStream!=null;
+        }else if(webRoot.startsWith("${user.dir}")){
+            webRoot=webRoot.substring(11);
+            return new File(System.getProperty("user.dir")+uri).exists();
+        }else if(webRoot.startsWith("${docBase}")){
+            webRoot=webRoot.substring(10);
+        }else{
+            return new File(webRoot+uri).exists();
+        }
+        String realPath = model.getRealPath(uri);
+        InputStream staticStream=ApplicationBeans.class.getResourceAsStream("/webapp"+uri);
+        if(realPath==null&&staticStream==null)
+          return false;
+        if(realPath!=null&&new File(realPath).exists())
+            return true;
+        return staticStream!=null;
     }
 
-    public static void response(Model model, String uri) throws IOException {
-        String realPath = model.getRequest().getServletContext().getRealPath(uri);
-        File targetFile = new File(realPath);
-        FileCopyUtils.preview(model, targetFile);
+    public static void response(Model model,String webRoot, String uri) throws IOException {
+        if(webRoot.startsWith("${classpath}")){
+
+        }else if(webRoot.startsWith("${user.dir}")){
+
+        }else if(webRoot.startsWith("${docBase}")){
+
+        }else{
+
+        }
+        File staticFile=model.getRealFile(uri);
+        if(staticFile!=null&&staticFile.exists()){
+            FileCopyUtils.preview(model, staticFile);
+            return;
+        }
+        InputStream staticStream=ApplicationBeans.class.getResourceAsStream("/webapp"+uri);
+        FileCopyUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
+
     }
 
 }

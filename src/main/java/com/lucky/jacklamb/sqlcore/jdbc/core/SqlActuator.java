@@ -32,7 +32,6 @@ public abstract class SqlActuator {
             LRUCache<String,List<?>> dbCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
             lruCache.put(dbname,dbCache);
         }
-//            lruCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
     }
 
     /**

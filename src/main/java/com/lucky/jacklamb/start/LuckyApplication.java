@@ -48,15 +48,7 @@ public class LuckyApplication {
         context.setPath(serverCfg.getContextPath());
         context.setReloadable(serverCfg.isReloadable());
         String docBase = serverCfg.getDocBase();
-        File doc = new File(docBase);
-        if (!doc.isDirectory()) {
-            if (!serverCfg.isAutoCreateWebapp()) {
-                log.warn("找不到Tomcat的DocBase文件夹：{ "+serverCfg.getDocBase()+"},请手动创建该文件夹，或者增加配置信息「 \"autoCreateWebapp=true\" 」,添加之后Lucky在下次启动时将自动创建！");
-            } else {
-                doc.mkdirs();
-                context.setDocBase(docBase);
-            }
-        } else {
+        if(docBase!=null){
             context.setDocBase(docBase);
         }
         context.setSessionCookieName("JackLamb.Lucky.Tomcat");

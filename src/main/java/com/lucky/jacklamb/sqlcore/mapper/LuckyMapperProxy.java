@@ -28,104 +28,7 @@ public class LuckyMapperProxy {
 
     public LuckyMapperProxy(SqlCore sql) {
         sqlCore = sql;
-        sqlMap = new HashMap<>();
-    }
-
-//    /**
-//     * 初始化sqlMap,将配置类中的SQl语句加载到sqlMap中
-//     *
-//     * @param clazz 配置类的Class
-//     * @throws InstantiationException
-//     * @throws IllegalAccessException
-//     */
-//    private <T> void initClassSqlMap(Class<T> clazz) throws InstantiationException, IllegalAccessException {
-//        if (clazz.isAnnotationPresent(Mapper.class)) {
-//            Mapper map = clazz.getAnnotation(Mapper.class);
-//            Class<?> sqlClass = map.value();
-//            if (!sqlClass.isAssignableFrom(Void.class)) {
-//                Object sqlPo = sqlClass.newInstance();
-//                Field[] fields = sqlClass.getDeclaredFields();
-//                for (Field fi : fields) {
-//                    fi.setAccessible(true);
-//                    sqlMap.put(fi.getName().toUpperCase(), (String) fi.get(sqlPo));
-//                }
-//            }
-//        }
-//    }
-
-//    /**
-//     * 加载写在.ini配置文件中的Sql
-//     *
-//     * @param clazz
-//     * @throws IOException
-//     */
-//    private <T> void initIniMap(Class<T> clazz) throws IOException {
-//        String iniSql = AppConfig.getAppConfig().getScanConfig().getSqlIniPath();
-//        InputStream ini = this.getClass().getResourceAsStream("/" + iniSql);
-//        if (ini != null) {
-//            INIConfig app = new INIConfig(iniSql);
-//            Map<String, String> classMap = app.getSectionMap(clazz.getName());
-//            if (classMap != null) {
-//                for (String key : classMap.keySet()) {
-//                    sqlMap.put(key.toUpperCase(), classMap.get(key));
-//                }
-//            }
-//        }
-//    }
-
-//    /**
-//     * 加载写在.properties配置文件中Sql语句
-//     *
-//     * @param clzz
-//     */
-//    private <T> void initSqlMapProperty(Class<T> clzz) {
-//        if (clzz.isAnnotationPresent(Mapper.class)) {
-//            Mapper mapper = clzz.getAnnotation(Mapper.class);
-//            String[] propertys = mapper.properties();
-//            String coding = mapper.codedformat();
-//            for (String path : propertys) {
-//                InputStream resource = this.getClass().getResourceAsStream("/" + path);
-//                if (resource == null) {
-//                    log.error("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-//                    throw new NotFindSqlConfigFileException("找不到" + clzz.getName() + "的Sql配置文件" + path + "!请检查@Mapper注解上的properties配置信息！");
-//                }
-//                loadProperty(clzz, resource, coding);
-//
-//            }
-//        }
-//    }
-
-    /**
-     * 加载写在.properties配置文件中Sql语句
-     *
-     * @param clzz
-     * @param propertyPath
-     * @param coding
-     */
-    private void loadProperty(Class<?> clzz, InputStream propertyPath, String coding) {
-        try {
-            Properties p = new Properties();
-            p.load(new BufferedReader(new InputStreamReader(propertyPath, coding)));
-            Method[] methods = clzz.getDeclaredMethods();
-            for (Method method : methods) {
-                if (!method.isAnnotationPresent(Select.class) && !method.isAnnotationPresent(Insert.class)
-                        && !method.isAnnotationPresent(Update.class) && !method.isAnnotationPresent(Delete.class)
-                        && !method.isAnnotationPresent(Query.class) && !method.isAnnotationPresent(Count.class)) {
-                    String key = method.getName();
-                    String value = p.getProperty(key);
-                    if (value != null)
-                        sqlMap.put(key.toUpperCase(), value);
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        } catch (FileNotFoundException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        } catch (IOException e) {
-            throw new NotFindFlieException("找不到文件:" + propertyPath + "，无法加载SQL.... 错误位置(Mapper):" + clzz.getName());
-        }
-
-
+        sqlMap=new HashMap<>();
     }
 
     /**
@@ -172,21 +75,33 @@ public class LuckyMapperProxy {
     /**
      * 返回接口的代理对象
      *
-     * @param clazz 接口的Class
+     * @param mapperClass 接口的Class
      * @return T
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IOException
      */
-    public <T> T getMapperProxyObject(Class<T> clazz) throws InstantiationException, IllegalAccessException, IOException {
-        LuckyMapperGeneric=getLuckyMapperGeneric(clazz);
-        if(allMapperSql.containsKey(clazz.getName()))
-            sqlMap=allMapperSql.get(clazz.getName());
-//        initIniMap(clazz);
-//        initClassSqlMap(clazz);
-//        initSqlMapProperty(clazz);
-        return CglibProxy.getCglibProxyObject(clazz,new LuckyMapperMethodInterceptor(LuckyMapperGeneric,sqlCore,sqlMap));
+    public <T> T getMapperProxyObject(Class<T> mapperClass) throws InstantiationException, IllegalAccessException, IOException {
+        LuckyMapperGeneric=getLuckyMapperGeneric(mapperClass);
+        initXmlSql(mapperClass);
+        return CglibProxy.getCglibProxyObject(mapperClass,new LuckyMapperMethodInterceptor(LuckyMapperGeneric,sqlCore,sqlMap));
     }
 
+    private void initXmlSql(Class<?> mapperClass){
+        if(mapperClass==LuckyMapper.class)
+            return;
+        String mapperClassName = mapperClass.getName();
+        if(allMapperSql.containsKey(mapperClassName)){
+            Map<String, String> map = allMapperSql.get(mapperClassName);
+            for(Map.Entry<String,String> en:map.entrySet()){
+                if(!sqlMap.containsKey(en.getKey()))
+                    sqlMap.put(en.getKey(),en.getValue());
+            }
+        }
+        Class<?>[] interfaces = mapperClass.getInterfaces();
+        for (Class<?> anInterface : interfaces) {
+            initXmlSql(anInterface);
+        }
+    }
 
 }

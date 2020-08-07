@@ -6,7 +6,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 public enum Logo {
 	
@@ -80,7 +79,7 @@ public enum Logo {
 
 	public String getLogo() {
 		try{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/logo/" + fileName), "UTF-8"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/lucky-config/logo/" + fileName), "UTF-8"));
 			return IOUtils.toString(reader);
 		}catch (IOException e){
 			throw new RuntimeException(e);

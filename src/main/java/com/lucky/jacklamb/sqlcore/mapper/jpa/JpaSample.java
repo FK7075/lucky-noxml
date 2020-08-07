@@ -96,8 +96,8 @@ public class JpaSample {
     private Map<String, String> fieldColumnMap;
 
     static {
-        try (BufferedReader br_ope = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-coding.json"), "UTF-8"));
-             BufferedReader br_par = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/config/jpa-decoding.json"), "UTF-8"));
+        try (BufferedReader br_ope = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/lucky-config/config/jpa-coding.json"), "UTF-8"));
+             BufferedReader br_par = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/lucky-config/config/jpa-decoding.json"), "UTF-8"));
         ) {
             Gson gson = new Gson();
             Type type = new TypeToken<Map<String, String>>() {

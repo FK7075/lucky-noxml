@@ -2,7 +2,7 @@ package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.annotation.orm.mapper.*;
-import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
+import com.lucky.jacklamb.conversion.proxy.Conversion;
 import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.enums.Sort;
@@ -10,9 +10,9 @@ import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.IllegalJPAExpressionException;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -22,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.*;
 import java.util.*;
+
+import static com.lucky.jacklamb.utils.regula.Regular.Sharp;
 
 public class LuckyMapperMethodInterceptor implements MethodInterceptor {
 
@@ -84,13 +86,18 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
     private SqlAndArray noSqlTo(Object obj, String noSql) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         SqlAndArray sqlArr = new SqlAndArray();
         List<String> fieldname = LuckyUtils.getSqlField(noSql);
-        Map<String, Object> fieldNameValueMap = ConversionProxy.getSourceNameValueMap(obj, "");
-        //得到预编译的SQL语句
-        noSql = LuckyUtils.getSqlStatem(noSql);
+        Map<String, Object> fieldNameValueMap = Conversion.getSourceNameValueMap(obj, "");
         List<Object> fields = new ArrayList<>();
         for (String fieldName : fieldname)
-            if (fieldNameValueMap.containsKey(fieldName))
+            if (fieldNameValueMap.containsKey(fieldName)){
+                Object objp = fieldNameValueMap.get(fieldName);
+                if(objp instanceof Collection){
+                    noSql=noSql.replaceAll("#\\{"+fieldName+"}","?C");
+                }
                 fields.add(fieldNameValueMap.get(fieldName));
+            }
+        //得到预编译的SQL语句
+        noSql=noSql.replaceAll(Sharp, "?");
         sqlArr.setSql(noSql);
         sqlArr.setArray(fields.toArray());
         return sqlArr;

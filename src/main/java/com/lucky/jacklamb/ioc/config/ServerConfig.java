@@ -21,7 +21,7 @@ import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 public class ServerConfig implements LuckyConfig  {
 
-	private static final String f= File.separator;
+	private static final String f= "/";
 
 	public ServerConfig() {
 		servletlist=new ArrayList<>();
@@ -55,8 +55,6 @@ public class ServerConfig implements LuckyConfig  {
 	
 	private String baseDir;
 
-	private boolean autoCreateWebapp;
-
 	private String requestTargetAllow;
 	
 	private List<ServletMapping> servletlist;
@@ -64,14 +62,6 @@ public class ServerConfig implements LuckyConfig  {
 	private List<FilterMapping> filterlist;
 	
 	private Set<EventListener> listeners;
-
-	public boolean isAutoCreateWebapp() {
-		return autoCreateWebapp;
-	}
-
-	public void autoCreateWebapp(boolean autoCreateWebapp) {
-		this.autoCreateWebapp = autoCreateWebapp;
-	}
 
 	public boolean isAutoDeploy() {
 		return autoDeploy;
@@ -291,11 +281,10 @@ public class ServerConfig implements LuckyConfig  {
 			projectPath=System.getProperty("user.dir")+f;
 			serverConfig.addServlet(new LuckyDispatcherServlet(),0, "/");
 			serverConfig.setContextPath("");
-			serverConfig.setDocBase("webapps"+f);
+//			serverConfig.setDocBase("webapp"+f);
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);
-			serverConfig.autoCreateWebapp(false);
 			serverConfig.setRequestTargetAllow("|{}[]");
 		}
 		return serverConfig;

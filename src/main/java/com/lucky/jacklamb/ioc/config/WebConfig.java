@@ -29,6 +29,11 @@ public class WebConfig  implements LuckyConfig  {
 	 * 是否开启Lucky的静态资源管理器
 	 */
 	private boolean openStaticResourceManage;
+
+	/**
+	 * 静态文件的根目录
+	 */
+	private String webRoot;
 	
 	/**
 	 * 是否开启post请求的请求类型转换
@@ -67,6 +72,7 @@ public class WebConfig  implements LuckyConfig  {
 
 	
 	private WebConfig() {
+		webRoot="${classpath}/webapp";
 		encoding="UTF-8";
 		openStaticResourceManage=false;
 		postChangeMethod=false;
@@ -85,6 +91,23 @@ public class WebConfig  implements LuckyConfig  {
 		if(webConfig==null)
 			webConfig=new WebConfig();
 		return webConfig;
+	}
+
+	public String getWebRoot() {
+		return webRoot;
+	}
+
+	/**
+	 * 设置静态文件的根目录
+	 * 写法如下
+	 *     1.${classpath}/xxx ：classpath下的某个文件夹 默认：${classpath}/webapp
+	 *     2.${user.dir}/xxx  ：System.getProperty("user.dir")下的某个文件夹
+	 *     3.${docBase}/xxx   : Tomcat的docBase下的某个文件夹
+	 *     4.绝对路径
+	 * @param webRoot
+	 */
+	public void setWebRoot(String webRoot) {
+		this.webRoot = webRoot;
 	}
 
 	public int getConnectTimeout() {

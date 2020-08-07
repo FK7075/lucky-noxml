@@ -290,14 +290,17 @@ public class IniFilePars {
 	}
 	
 	private void webSetting(WebConfig web,Map<String, String> sectionMap) {
-		if(sectionMap.containsKey("httpclient-connectTimeout")){
-			web.setConnectTimeout($Expression.translation(sectionMap.get("httpclient-connectTimeout"),int.class));
+		if(sectionMap.containsKey("webRoot")){
+			web.setWebRoot($Expression.translation(sectionMap.get("webRoot")));
 		}
-		if(sectionMap.containsKey("httpclient-connectionRequestTimeout")){
-			web.setConnectionRequestTimeout($Expression.translation(sectionMap.get("httpclient-connectionRequestTimeout"),int.class));
+		if(sectionMap.containsKey("httpClient-connectTimeout")){
+			web.setConnectTimeout($Expression.translation(sectionMap.get("httpClient-connectTimeout"),int.class));
 		}
-		if(sectionMap.containsKey("httpclient-socketTimeout")){
-			web.setSocketTimeout($Expression.translation(sectionMap.get("httpclient-socketTimeout"),int.class));
+		if(sectionMap.containsKey("httpClient-connectionRequestTimeout")){
+			web.setConnectionRequestTimeout($Expression.translation(sectionMap.get("httpClient-connectionRequestTimeout"),int.class));
+		}
+		if(sectionMap.containsKey("httpClient-socketTimeout")){
+			web.setSocketTimeout($Expression.translation(sectionMap.get("httpClient-socketTimeout"),int.class));
 		}
 		if(sectionMap.containsKey("encoding")) {
 			web.setEncoding($Expression.translation(sectionMap.get("encoding")));
@@ -417,9 +420,6 @@ public class IniFilePars {
 		}
 		if(sectionMap.containsKey("reloadable")) {
 			server.setReloadable($Expression.translation(sectionMap.get("reloadable"),boolean.class));
-		}
-		if(sectionMap.containsKey("autoCreateWebapp")){
-			server.autoCreateWebapp($Expression.translation(sectionMap.get("autoCreateWebapp"),boolean.class));
 		}
 		if(sectionMap.containsKey("requestTargetAllow")){
 			server.setRequestTargetAllow($Expression.translation(sectionMap.get("requestTargetAllow")));

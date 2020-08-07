@@ -11,6 +11,9 @@ import java.util.List;
 
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;
+import com.lucky.jacklamb.utils.regula.Regular;
+
+import static com.lucky.jacklamb.utils.regula.Regular.Sharp;
 
 /**
  * Lucky的工具类
@@ -71,19 +74,7 @@ public abstract class LuckyUtils {
 		}
 		return list;
 	}
-	
-	
-	public static String getSqlStatem(String nosql) {
-		if(nosql.contains("#{")) {
-			int start=nosql.indexOf("#");
-			int end=nosql.indexOf("}")+1;
-			String sub=nosql.substring(start, end);
-			nosql=nosql.replace(sub, "?");
-			nosql=getSqlStatem(nosql);
-		}
-		return nosql;
-	}
-	
+
 	public static List<String> getSqlField(String nosql){
 		List<String> list=new ArrayList<>();
 		while(nosql.contains("#{")) {

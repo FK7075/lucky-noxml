@@ -107,9 +107,9 @@ public abstract class Regular {
     }
 
     public static void main(String[] args) {
-        String sql="SELECT * FROM user WHERE a=@name AND b=@sex AND c=@id ";
-        System.out.println(getArrayByExpression(sql, $SQL));
-        System.out.println(sql.replaceAll($SQL, "?"));
+        String sql="SELECT * FROM user WHERE a=#{name} AND b=@sex AND c=#{id} ";
+        System.out.println(getArrayByExpression(sql, Sharp));
+        System.out.println(sql.replaceAll(Sharp, "?"));
         System.out.println(check("@er53", $SQL));
     }
 }

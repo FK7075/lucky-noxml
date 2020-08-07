@@ -46,7 +46,7 @@ public class LuckyDispatcherServlet extends BaseServlet {
                     FileCopyUtils.preview(model, favStream,"favicon.ico");
                     return;
                 }
-                FileCopyUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/static/favicon.ico"), "favicon.ico");
+                FileCopyUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/lucky-config/static/favicon.ico"), "favicon.ico");
                 return;
             }
             //全局资源的IP限制
@@ -63,10 +63,10 @@ public class LuckyDispatcherServlet extends BaseServlet {
             }
             if (webCfg.isOpenStaticResourceManage() && StaticResourceManage.isLegalRequest(webCfg, currIp, resp, path)) {
                 try {
-                    if (StaticResourceManage.resources(model, uri)) {
+                    if (StaticResourceManage.resources(model,webCfg.getWebRoot(), uri)) {
                         //静态资源处理
                         log.debug("STATIC-REQUEST [静态资源请求]  [" + requestMethod + "]  #SR#=> " + uri);
-                        StaticResourceManage.response(model, uri);
+                        StaticResourceManage.response(model,webCfg.getWebRoot(), uri);
                         return;
                     }else{
                         model.error(Code.NOTFOUND,"服务器中找不到资源文件 "+uri+"！","找不到资源 "+uri);

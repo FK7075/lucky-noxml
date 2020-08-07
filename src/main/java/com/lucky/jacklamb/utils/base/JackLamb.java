@@ -4,13 +4,11 @@ import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.net.URL;
 
 public abstract class JackLamb {
 
@@ -40,7 +38,7 @@ public abstract class JackLamb {
     public static void welcome() {
         if (!first)
             return;
-        InputStream logoStream = ApplicationBeans.class.getResourceAsStream("/logo/logo.txt");
+        InputStream logoStream = ApplicationBeans.class.getResourceAsStream("/lucky-config/logo/logo.txt");
         if(logoStream!=null){
             first = false;
             try {
@@ -98,8 +96,8 @@ public abstract class JackLamb {
                     ApplicationBeans.class.getResourceAsStream("/err/404.html");
         if (html==null) {
             StringWriter sw = new StringWriter();
-            BufferedReader br = isFive?new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/500.html"), "UTF-8")):
-                                       new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/config/404.html"), "UTF-8"));
+            BufferedReader br = isFive?new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/lucky-config/config/500.html"), "UTF-8")):
+                                       new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/lucky-config/config/404.html"), "UTF-8"));
             IOUtils.copy(br, sw);
             htmlString = sw.toString();
         } else {
