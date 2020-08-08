@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MultipartFile {
 	
-	private InputStream originalFileInpueStream;//用户上传的文件对应的输入流
+	private InputStream originalFileInputStream;//用户上传的文件对应的输入流
 	private String uploadFileName;//文件上传到服务器后的文件名
 	private String fileType;//文件类型
 	private String projectPath;//项目的路径
@@ -19,12 +19,12 @@ public class MultipartFile {
 	
 	/**
 	 * 
-	 * @param originalFileInpueStream
+	 * @param originalFileInputStream
 	 * @param projectPath
 	 * @param filename
 	 */
-	public MultipartFile(InputStream originalFileInpueStream,String projectPath,String filename) {
-		this.originalFileInpueStream=originalFileInpueStream;
+	public MultipartFile(InputStream originalFileInputStream,String projectPath,String filename) {
+		this.originalFileInputStream=originalFileInputStream;
 		this.originalFileName=filename;
 		this.fileType=filename.substring(filename.lastIndexOf("."));;
 		this.uploadFileName=originalFileName.replaceAll(fileType,"")+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() +getFileType();
@@ -90,37 +90,16 @@ public class MultipartFile {
 		if(!folder.exists())
 			folder.mkdirs();
 		FileOutputStream outfile=new FileOutputStream(folder.getAbsoluteFile()+File.separator+uploadFileName);//projectPath+"/"+docRelativePath+"/"+uploadFileName);
-		FileCopyUtils.copy(originalFileInpueStream,outfile);
+		FileCopyUtils.copy(originalFileInputStream,outfile);
 	}
 
-	
-	/**
-	 * 文件下载
-	 * @param response Response对象
-	 * @param file 要下载的文件
-	 * @throws IOException
-	 */
-	public static void downloadFile(HttpServletResponse response,File file) throws IOException {
-		if(!file.exists())
-			throw new RuntimeException("找不到文件,无法完成下载操作！"+file.getAbsolutePath());
-		InputStream bis = new BufferedInputStream(new FileInputStream(file));
-        //转码，免得文件名中文乱码  
-        String filename = URLEncoder.encode(file.getName(),"UTF-8");  
-        //设置文件下载头  
-        response.addHeader("Content-Disposition", "attachment;filename=" + filename);    
-        //1.设置文件ContentType类型，这样设置，会自动判断下载文件类型    
-        response.setContentType("multipart/form-data");   
-        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-        FileCopyUtils.copy(bis,out);
-	}
-	
 	/**
 	 * 获得上传文件的大小
 	 * @return
 	 * @throws IOException 
 	 */
 	public int getFileSize() throws IOException {
-		return originalFileInpueStream.available();
+		return originalFileInputStream.available();
 	}
 	
 	/**
@@ -128,18 +107,7 @@ public class MultipartFile {
 	 * @return
 	 */
 	public InputStream getInputStream() {
-		return originalFileInpueStream;
+		return originalFileInputStream;
 	}
-	
-	/**
-	 * 关闭文件输入流
-	 * @throws IOException
-	 */
-	public void close() throws IOException {
-		if(originalFileInpueStream!=null)
-			originalFileInpueStream.close();
-	}
-	
-	 
 
 }

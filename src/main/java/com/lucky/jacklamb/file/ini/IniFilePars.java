@@ -397,14 +397,8 @@ public class IniFilePars {
 		if(sectionMap.containsKey("docBase")) {
 			server.setDocBase($Expression.translation(sectionMap.get("docBase")));
 		}
-		if(sectionMap.containsKey("ap-docBase")) {
-			server.setApDocBase($Expression.translation(sectionMap.get("ap-docBase")));
-		}
 		if(sectionMap.containsKey("baseDir")) {
 			server.setBaseDir($Expression.translation(sectionMap.get("baseDir")));
-		}
-		if(sectionMap.containsKey("ap-baseDir")) {
-			server.setApBaseDir($Expression.translation(sectionMap.get("ap-baseDir")));
 		}
 		if(sectionMap.containsKey("contextPath")) {
 			server.setContextPath($Expression.translation(sectionMap.get("contextPath")));

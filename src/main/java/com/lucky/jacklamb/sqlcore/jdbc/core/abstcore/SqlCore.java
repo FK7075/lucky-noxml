@@ -30,8 +30,11 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		return super.openTransaction(isolationLevel);
 	}
 
+	private LuckyMapperProxy mapperProxy;
+
 	public SqlCore(String dbname) {
 		super(dbname);
+		mapperProxy = new LuckyMapperProxy(this);
 	}
 	
 	/**
@@ -296,7 +299,6 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 */
 	public <T> T getMapper(Class<T> clazz) {
 		try {
-			LuckyMapperProxy mapperProxy = new LuckyMapperProxy(this);
 			return mapperProxy.getMapperProxyObject(clazz);
 		} catch (InstantiationException | IllegalAccessException | IOException e) {
 			throw new CreateMapperException(clazz,e);

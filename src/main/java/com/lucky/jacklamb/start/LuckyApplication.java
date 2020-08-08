@@ -49,6 +49,9 @@ public class LuckyApplication {
         context.setReloadable(serverCfg.isReloadable());
         String docBase = serverCfg.getDocBase();
         if(docBase!=null){
+            File docFile=new File(docBase);
+            if(!docFile.exists())
+                docFile.mkdirs();
             context.setDocBase(docBase);
         }
         context.setSessionCookieName("JackLamb.Lucky.Tomcat");

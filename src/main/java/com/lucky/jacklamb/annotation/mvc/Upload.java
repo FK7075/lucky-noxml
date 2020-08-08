@@ -24,7 +24,7 @@ public @interface Upload {
 	String[] names();
 	
 	/**
-	 * 上传到项目文件夹的位置(对应names)
+	 * 上传到DocBase文件夹的位置(对应names)
 	 * abs:开头表示绝对路径
 	 * @return
 	 */

@@ -43,8 +43,6 @@ public class ServerConfig implements LuckyConfig  {
 	
 	private int sessionTimeout;
 	
-	public static String projectPath;
-	
 	private String contextPath;
 	
 	private String webapp;
@@ -122,24 +120,24 @@ public class ServerConfig implements LuckyConfig  {
 
 	/**
 	 * 设置一个Tomcat的临时文件夹(相对项目路径)
+	 *   1.${user.dir}/XXX System.getProperty("user.dir")下的某个文件夹
+	 *   2.${java.io.tmpdir}/XXX 系统临时文件夹下的某个文件夹
+	 *   3.XXX 文件夹的绝对路径
 	 * @param baseDir
 	 */
 	public void setBaseDir(String baseDir) {
-		if(baseDir.startsWith("/")) {
-			this.baseDir = projectPath+baseDir.substring(1);
-		}else {
-			this.baseDir = projectPath+baseDir;
+		if(baseDir.startsWith("${user.dir}")){
+			baseDir=baseDir.substring(11);
+			this.baseDir=System.getProperty("user.dir")+baseDir;
+		}else if(baseDir.startsWith("${java.io.tmpdir}")){
+			baseDir=baseDir.substring(17);
+			baseDir=baseDir.startsWith("/")?baseDir.substring(1):baseDir;
+			this.baseDir=System.getProperty("java.io.tmpdir")+baseDir;
+		}else{
+			this.baseDir=baseDir;
 		}
 	}
-	
-	/**
-	 * 设置一个Tomcat的临时文件夹(绝对路径)
-	 * @param ap_baseDir
-	 */
-	public void setApBaseDir(String ap_baseDir) {
-		this.baseDir = ap_baseDir;
-	}
-	
+
 
 	/**
 	 * 设置一个用于关闭Tomcat服务的指令
@@ -165,23 +163,24 @@ public class ServerConfig implements LuckyConfig  {
 		this.sessionTimeout = sessionTimeout;
 	}
 
-	/**
-	 * 设置一个静态文件的储存库(绝对路径)
-	 * @param ap_docBase
-	 */
-	public void setApDocBase(String ap_docBase) {
-		this.docBase = ap_docBase;
-	}
 	
 	/**
-	 * 设置一个静态文件的储存库(System.getProperty("user.dir")的相对路径)
+	 * 设置一个静态文件的储存库
+	 *   1.${user.dir}/XXX System.getProperty("user.dir")下的某个文件夹
+	 *   2.${java.io.tmpdir}/XXX 系统临时文件夹下的某个文件夹
+	 *   3.XXX 文件夹的绝对路径
 	 * @param docbase
 	 */
 	public void setDocBase(String docbase) {
-		if(docbase.startsWith(f)) {
-			this.docBase=projectPath+docbase.substring(1);
-		}else {
-			this.docBase=projectPath+docbase;
+		if(docbase.startsWith("${user.dir}")){
+			docbase=docbase.substring(11);
+			docBase=System.getProperty("user.dir")+docbase;
+		}else if(docbase.startsWith("${java.io.tmpdir}")){
+			docbase=docbase.substring(17);
+			docbase=docbase.startsWith("/")?docbase.substring(1):docbase;
+			docBase=System.getProperty("java.io.tmpdir")+docbase;
+		}else{
+			docBase=docbase;
 		}
 	}
 
@@ -195,7 +194,7 @@ public class ServerConfig implements LuckyConfig  {
 	 */
 	public void setPort(int port) {
 		this.port = port;
-		this.baseDir=System.getProperty("java.io.tmpdir")+"tomcat."+serverConfig.getPort()+f;
+		serverConfig.setBaseDir("${java.io.tmpdir}/tomcat."+serverConfig.getPort()+"/");
 	}
 
 	public String getContextPath() {
@@ -278,10 +277,8 @@ public class ServerConfig implements LuckyConfig  {
 			serverConfig.setShutdown(null);
 			serverConfig.setSessionTimeout(30);
 			serverConfig.setWebapp("/WebContent/");
-			projectPath=System.getProperty("user.dir")+f;
 			serverConfig.addServlet(new LuckyDispatcherServlet(),0, "/");
 			serverConfig.setContextPath("");
-//			serverConfig.setDocBase("webapp"+f);
 			serverConfig.setURIEncoding("UTF-8");
 			serverConfig.setAutoDeploy(false);
 			serverConfig.setReloadable(false);

@@ -72,7 +72,7 @@ public class WebConfig  implements LuckyConfig  {
 
 	
 	private WebConfig() {
-		webRoot="${classpath}/webapp";
+		webRoot="${classpath}/webapps";
 		encoding="UTF-8";
 		openStaticResourceManage=false;
 		postChangeMethod=false;
@@ -100,13 +100,14 @@ public class WebConfig  implements LuckyConfig  {
 	/**
 	 * 设置静态文件的根目录
 	 * 写法如下
-	 *     1.${classpath}/xxx ：classpath下的某个文件夹 默认：${classpath}/webapp
+	 *     1.${classpath}/xxx ：classpath下的某个文件夹 默认：${classpath}/webapps
 	 *     2.${user.dir}/xxx  ：System.getProperty("user.dir")下的某个文件夹
 	 *     3.${docBase}/xxx   : Tomcat的docBase下的某个文件夹
 	 *     4.绝对路径
 	 * @param webRoot
 	 */
 	public void setWebRoot(String webRoot) {
+		webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
 		this.webRoot = webRoot;
 	}
 

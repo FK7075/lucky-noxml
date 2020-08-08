@@ -2,6 +2,7 @@ package com.lucky.jacklamb.servlet.core;
 
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
@@ -402,8 +403,16 @@ public class Model {
      * @return
      */
     public String getRealPath(String file) {
-        return req.getServletContext().getRealPath(file);
+        if(docBaseIsExist()){
+            return req.getServletContext().getRealPath(file);
+        }
+        throw new NotFindDocBaseFolderException("您没有配置「docBase」，无法获取其中的文件！");
     }
+
+    public boolean docBaseIsExist(){
+        return AppConfig.getAppConfig().getServerConfig().getDocBase()!=null;
+    }
+
 
     /**
      * 返回项目发布后file文件(夹)的File对象
@@ -413,11 +422,7 @@ public class Model {
      */
     public File getRealFile(String file) {
         String path = getRealPath(file);
-        if (path != null) {
-            File fileF = new File(path);
-            return fileF;
-        }
-        return null;
+        return new File(path);
     }
 
     /**
