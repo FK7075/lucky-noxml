@@ -2,7 +2,7 @@ package com.lucky.jacklamb.servlet.staticsource;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.file.utils.FileCopyUtils;
+import com.lucky.jacklamb.file.utils.LuckyFileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
@@ -90,7 +90,7 @@ public class StaticResourceManage {
 
     public static void response(Model model, String uri) throws IOException {
         if(docBaseFileIsExist(model,uri)){
-            FileCopyUtils.preview(model, model.getRealFile(uri));
+            LuckyFileUtils.preview(model, model.getRealFile(uri));
             return;
         }
         String webRoot=WebRoot;
@@ -99,20 +99,20 @@ public class StaticResourceManage {
             webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
             webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
             InputStream staticStream=ApplicationBeans.class.getResourceAsStream(webRoot+uri);
-            FileCopyUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
+            LuckyFileUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
         }else if(webRoot.startsWith("${user.dir}")){
             webRoot=webRoot.substring(11);
             webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
             webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
             File staticFile = new File(System.getProperty("user.dir") + webRoot + uri);
-            FileCopyUtils.preview(model, staticFile);
+            LuckyFileUtils.preview(model, staticFile);
         }else if(webRoot.startsWith("${docBase}")){
             webRoot=webRoot.substring(10);
             File staticFile=model.getRealFile(webRoot+uri);
-            FileCopyUtils.preview(model, staticFile);
+            LuckyFileUtils.preview(model, staticFile);
         }else{
             File staticFile=new File(webRoot+uri);
-            FileCopyUtils.preview(model, staticFile);
+            LuckyFileUtils.preview(model, staticFile);
         }
     }
 

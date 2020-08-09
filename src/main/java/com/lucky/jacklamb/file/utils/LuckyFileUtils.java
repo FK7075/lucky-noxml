@@ -12,7 +12,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 
-public abstract class FileCopyUtils {
+public abstract class LuckyFileUtils {
 
     public static final int BUFFER_SIZE = 4096;
 

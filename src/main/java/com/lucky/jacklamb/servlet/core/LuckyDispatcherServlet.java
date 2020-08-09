@@ -3,7 +3,7 @@ package com.lucky.jacklamb.servlet.core;
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
-import com.lucky.jacklamb.file.utils.FileCopyUtils;
+import com.lucky.jacklamb.file.utils.LuckyFileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.servlet.exceptionhandler.LuckyExceptionDispose;
@@ -43,10 +43,10 @@ public class LuckyDispatcherServlet extends BaseServlet {
                 resp.setContentType("image/x-icon");
                 InputStream favStream = ApplicationBeans.class.getResourceAsStream("/ico/favicon.ico");
                 if (favStream != null) {
-                    FileCopyUtils.preview(model, favStream,"favicon.ico");
+                    LuckyFileUtils.preview(model, favStream,"favicon.ico");
                     return;
                 }
-                FileCopyUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/lucky-config/static/favicon.ico"), "favicon.ico");
+                LuckyFileUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/lucky-config/static/favicon.ico"), "favicon.ico");
                 return;
             }
             //全局资源的IP限制

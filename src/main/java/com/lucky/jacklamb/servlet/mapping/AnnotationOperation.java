@@ -6,7 +6,7 @@ import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
-import com.lucky.jacklamb.file.utils.FileCopyUtils;
+import com.lucky.jacklamb.file.utils.LuckyFileUtils;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -199,7 +199,7 @@ public class AnnotationOperation {
 
                         File uploadFile = new File(file.getAbsolutePath() + File.separator + filename);
                         FileOutputStream out = new FileOutputStream(uploadFile);
-                        FileCopyUtils.copy(in, out);
+                        LuckyFileUtils.copy(in, out);
                         item.delete();
                         uploadNames[fileIndex] = uploadFile;
                         fileIndex++;
@@ -298,7 +298,7 @@ public class AnnotationOperation {
                 fileName = "lucky_" + LuckyUtils.getRandomNumber() + url.substring(url.lastIndexOf("."));
             else
                 fileName.replaceAll("attachment;filename=", "").trim();
-            FileCopyUtils.download(model.getResponse(), buffer, fileName);
+            LuckyFileUtils.download(model.getResponse(), buffer, fileName);
             return;
         } else {
             String fileName = dl.name();
@@ -317,7 +317,7 @@ public class AnnotationOperation {
             } else if (filePath.startsWith("http:")) {//暴露一个网络上的文件库
                 String url = filePath + file;
                 byte[] buffer = HttpClientCall.getCallByte(url, new HashMap<>());
-                FileCopyUtils.download(model.getResponse(), buffer, file);
+                LuckyFileUtils.download(model.getResponse(), buffer, file);
                 return;
             } else {
                 path = model.getRealPath(filePath) + file; // 默认认为文件在当前项目的docBase目录
@@ -333,7 +333,7 @@ public class AnnotationOperation {
             fis = new FileInputStream(f);
             downName = f.getName();
         }
-        FileCopyUtils.download(model.getResponse(), fis, downName);
+        LuckyFileUtils.download(model.getResponse(), fis, downName);
     }
 
     /**
