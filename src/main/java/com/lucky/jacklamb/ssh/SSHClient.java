@@ -1,9 +1,12 @@
 package com.lucky.jacklamb.ssh;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.lucky.jacklamb.rest.LSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,61 +22,58 @@ public class SSHClient {
 
     private static final Logger log= LogManager.getLogger(SSHClient.class);
 
-    private String user="root";
-
-    private String host="localhost";
-
-    private int port=22;
-
-    private String password="";
-
-    private final static int CONNECT_TIMEOUT = 30000;
-
-    private final static Integer SESSION_TIMEOUT = 30000;
-
+    private Remote remote;
+    
     private Session session;
 
+    public SSHClient(){
+        remote=new Remote();
+    }
+
     public SSHClient setUser(String user){
-        this.user=user;
+        this.remote.setUser(user);;
         return this;
     }
 
     public SSHClient setPassword(String password){
-        this.password=password;
+        this.remote.setPassword(password);
+        return this;
+    }
+
+    public SSHClient setIdentity(String identity) {
+        this.remote.setIdentity(identity);
+        return this;
+    }
+
+    public SSHClient setPassphrase(String passphrase) {
+        this.remote.setPassphrase(passphrase);
         return this;
     }
 
     public SSHClient setHost(String host){
-        this.host=host;
+        this.remote.setHost(host);
         return this;
     }
 
     public SSHClient setPort(int port){
-        this.port=port;
+        this.remote.setPort(port);
         return this;
     }
 
-    public SSHClient login() throws JSchException {
+    public void login() throws JSchException {
         JSch jSch = new JSch();
-        session = jSch.getSession(user, host,port);
-        session.setPassword(password);
+        if(Files.exists(Paths.get(remote.getIdentity()))){
+            jSch.addIdentity(remote.getIdentity(),remote.getPassphrase());
+        }
+        session = jSch.getSession(remote.getUser(), remote.getHost(),remote.getPort());
+        session.setPassword(remote.getPassword());
         session.setConfig("StrictHostKeyChecking", "no");
-        session.connect(SESSION_TIMEOUT);
-        System.out.println("Host("+host+") connected.");
-        return this;
+        session.connect(remote.getSessionTimeout());
+        System.out.println("Host("+remote.getHost()+") connected.");
     }
 
-    public SSHClient(String user, String host, int port, String password) {
-        this.user = user;
-        this.host = host;
-        this.port = port;
-        this.password = password;
-    }
-
-    public SSHClient( String host, String user,String password) {
-        this.user = user;
-        this.host = host;
-        this.password = password;
+    public SSHClient(Remote remote) {
+        this.remote=remote;
     }
 
     /**
@@ -83,7 +83,7 @@ public class SSHClient {
      * @throws JSchException
      */
     public String sendCmd(String command) throws JSchException {
-        if(session.isConnected()){
+        if(!session.isConnected()){
             login();
         }
         System.out.println(">> "+command);
@@ -93,7 +93,7 @@ public class SSHClient {
             channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
             InputStream input = channel.getInputStream();
-            channel.connect(CONNECT_TIMEOUT);
+            channel.connect(remote.getConnectTimeout());
             try {
                 BufferedReader inputReader = new BufferedReader(new InputStreamReader(input));
                 String inputLine = null;
@@ -126,6 +126,7 @@ public class SSHClient {
 
     public void logOut(){
         this.session.disconnect();
+        System.out.println("Host("+remote.getHost()+") exits....");
     }
 
     /**
@@ -147,7 +148,7 @@ public class SSHClient {
             }
             command += " -t " + destination;
             channel.setCommand(command);
-            channel.connect(CONNECT_TIMEOUT);
+            channel.connect(remote.getConnectTimeout());
             if (checkAck(in) != 0) {
                 return -1;
             }
@@ -328,24 +329,26 @@ public class SSHClient {
         return b;
     }
 
-    public boolean remoteEdit(String source, Function<List<String>, List<String>> process) {
+    /**
+     * 远程编辑[逐行编辑]
+     * @param source 源文件在远程服务中的绝对路径
+     * @param process 逐行编辑的实现
+     * @return
+     */
+    public boolean remoteEditLine(String source, Function<List<String>, List<String>> process) {
         InputStream in = null;
         OutputStream out = null;
+        File oldFile=null;
+        File newFile=null;
         try {
-            String fileName = source;
-            int index = source.lastIndexOf('/');
-            if (index >= 0) {
-                fileName = source.substring(index + 1);
-            }
-            //backup source
-            sendCmd(String.format("cp %s %s", source, source + ".bak." +System.currentTimeMillis()));
-            //scp from remote
-            String tmpSource = System.getProperty("java.io.tmpdir") + session.getHost() +"-" + fileName;
-            scpFrom(source, tmpSource);
-            in = new FileInputStream(tmpSource);
+            String tmpSource =dataPull(source);
+            oldFile=new File(tmpSource);
+            in = new FileInputStream(oldFile);
             //edit file according function process
             String tmpDestination = tmpSource + ".des";
-            out = new FileOutputStream(tmpDestination);
+
+            newFile=new File(tmpDestination);
+            out = new FileOutputStream(newFile);
             List<String> inputLines = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String inputLine = null;
@@ -378,25 +381,81 @@ public class SSHClient {
                     log.error("output stream close error", e);
                 }
             }
+            oldFile.delete();
+            newFile.delete();
         }
     }
 
-    /*
-
-    remoteExecute(session, "pwd");
-    remoteExecute(session, "mkdir /root/jsch-demo");
-    remoteExecute(session, "ls /root/jsch-demo");
-    remoteExecute(session, "touch /root/jsch-demo/test1; touch /root/jsch-demo/test2");
-    remoteExecute(session, "echo 'It a test file.' > /root/jsch-demo/test-file");
-    remoteExecute(session, "ls -all /root/jsch-demo");
-    remoteExecute(session, "ls -all /root/jsch-demo | grep test");
-    remoteExecute(session, "cat /root/jsch-demo/test-file");
+    /**
+     * 远程编辑[流式编辑]
+     * @param source 源文件在远程服务中的绝对路径
+     * @param editing 流式编辑的实现
+     * @return
      */
+    public boolean remoteEdit(String source,RemoteEditing editing) {
+        InputStream in = null;
+        OutputStream out = null;
+        File oldFile=null;
+        File newFile=null;
+        try {
+            String tmpSource = dataPull(source);
+            oldFile=new File(tmpSource);
+            in = new FileInputStream(oldFile);
+            //edit file according function process
+            String tmpDestination = tmpSource + ".des";
+            newFile=new File(tmpDestination);
+            out = new FileOutputStream(newFile);
+            editing.editor(in,out);
+            scpTo(tmpDestination,source);
+            return true;
+        } catch (Exception e) {
+            log.error("remote edit error, ", e);
+            return false;
+        } finally {
+            oldFile.delete();
+            newFile.delete();
+        }
+    }
+
+    private String dataPull(String source) throws JSchException {
+        String fileName = source;
+        String currFolder="/";
+        int index = source.lastIndexOf('/');
+        if (index >= 0) {
+            fileName = source.substring(index + 1);
+            currFolder=source.substring(0,index+1);
+        }
+        String backupFolder = currFolder + fileName + "_BACKUP/";
+        //原数据数据备份
+        sendCmd("mkdir "+backupFolder);
+        sendCmd(String.format("cp %s %s", source, backupFolder+ fileName+ ".bak." +System.currentTimeMillis()));
+        //scp from remote
+        String tmpSource = System.getProperty("java.io.tmpdir") + session.getHost() +"-" + fileName;
+        scpFrom(source, tmpSource);
+        return tmpSource;
+    }
+
+
     public static void main(String[] args) throws JSchException {
-        SSHClient ssh=new SSHClient("192.168.0.167","root","123456").login();
-        ssh.remoteEdit("/mytest/test.txt",(inLs)->{
-            return inLs.stream().map(l->l.toUpperCase()).collect(Collectors.toList());
+        System.out.println(System.getProperty("java.io.tmpdir"));
+        SSHClient ssh=new SSHClient().setHost("192.168.0.170").setPassword("123456");
+        ssh.login();
+//        ssh.scpTo("D:\\GitHub-Project\\lucky-noxml\\src\\main\\resources\\lucky-config\\config\\ContentType.json","/home/mytest/");
+        ssh.remoteEdit("/home/mytest/ContentType.json",(in,out)->{
+            BufferedReader br=new BufferedReader(new InputStreamReader(in));
+            Gson gson=new Gson();
+            List<String[]> list = gson.fromJson(br, new TypeToken<List<String[]>>() {
+            }.getType());
+            for (String[] array : list) {
+                array[0]="HELLO";
+                array[1]="SB";
+            }
+            BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(out));
+            bw.write(new LSON().toFormatJsonByGson(list));
+            bw.close();
+            br.close();
         });
-        ssh.sendCmd("cat /mytest/test.txt");
+        ssh.sendCmd("cat /home/mytest/ContentType.json");
+        ssh.logOut();
     }
 }

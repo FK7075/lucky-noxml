@@ -19,6 +19,7 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
+import static com.lucky.jacklamb.start.RunParam.*;
 
 import static com.lucky.jacklamb.sqlcore.datasource.SectionKey.*;
 
@@ -56,11 +57,16 @@ public class IniFilePars {
 	public IniFilePars() {
 		try {
 			iniMap=new HashMap<>();
-			File dirFile=new File(System.getProperty("user.dir")+File.separator+"appconfig.ini");
-			if(dirFile.exists()){
-				iniInputStream=new FileInputStream(dirFile);
-			}else{
-				iniInputStream=IniFilePars.class.getClassLoader().getResourceAsStream("appconfig.ini");
+			String runIni = System.getProperty(LUCKY_CONFIG_LOCATION);
+			if(runIni!=null){
+				iniInputStream=new FileInputStream(runIni);
+			}else {
+				File dirFile=new File(System.getProperty("user.dir")+File.separator+"appconfig.ini");
+				if(dirFile.exists()){
+					iniInputStream=new FileInputStream(dirFile);
+				}else{
+					iniInputStream=IniFilePars.class.getClassLoader().getResourceAsStream("appconfig.ini");
+				}
 			}
 			iniName="appconfig.ini";
 			if(iniMap.isEmpty())

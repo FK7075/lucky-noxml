@@ -15,10 +15,16 @@ import org.apache.tomcat.websocket.server.WsSci;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
+import static com.lucky.jacklamb.start.RunParam.*;
 
 public class LuckyApplication {
 
-    private static final Logger log= LogManager.getLogger(LuckyApplication.class);
+    private static Logger log;
+
+    static {
+        System.setProperty("log4j.skipJansi","false");
+        log= LogManager.getLogger(LuckyApplication.class);
+    }
 
 
     /**
@@ -27,7 +33,13 @@ public class LuckyApplication {
      *
      * @param applicationClass
      */
-    public static void run(Class<?> applicationClass) {
+    public static void run(Class<?> applicationClass,String[] args) {
+        for (String arg : args) {
+            String[] mainKV = arg.split("=");
+            if(isRunParam(mainKV[0].trim())){
+                System.setProperty(mainKV[0].trim(),mainKV[1]);
+            }
+        }
         doShutDownWork();
         AppConfig.applicationClass = applicationClass;
         run();
@@ -36,7 +48,11 @@ public class LuckyApplication {
     private static void run() {
         ServerConfig serverCfg = AppConfig.getAppConfig().getServerConfig();
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(serverCfg.getPort());
+        String runPort = System.getProperty(SERVER_PORT);
+        if(runPort!=null)
+            tomcat.setPort(Integer.parseInt(runPort));
+        else
+            tomcat.setPort(serverCfg.getPort());
         tomcat.setBaseDir(serverCfg.getBaseDir());
         tomcat.getHost().setAutoDeploy(serverCfg.isAutoDeploy());
         if (serverCfg.getClosePort() != null)
