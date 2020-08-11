@@ -14,6 +14,16 @@ public class WebConfig  implements LuckyConfig  {
 	 * 请求参数编码格式
 	 */
 	private String encoding;
+
+	/**
+	 * 设置单个文件大小为限制1M(单位：kb)
+	 */
+	private long multipartMaxFileSize;
+
+	/**
+	 * 总上传的数据大小也为10M(单位：kb)
+	 */
+	private long multipartMaxRequestSize;
 	
 	/**
 	 * 静态资源映射配置
@@ -70,9 +80,10 @@ public class WebConfig  implements LuckyConfig  {
 	 */
 	private int socketTimeout;
 
-	
 	private WebConfig() {
 		webRoot="${classpath}/webapps";
+		multipartMaxFileSize=1*1024;
+		multipartMaxRequestSize=10*1024;
 		encoding="UTF-8";
 		openStaticResourceManage=false;
 		postChangeMethod=false;
@@ -91,6 +102,30 @@ public class WebConfig  implements LuckyConfig  {
 		if(webConfig==null)
 			webConfig=new WebConfig();
 		return webConfig;
+	}
+
+	public long getMultipartMaxFileSize() {
+		return multipartMaxFileSize;
+	}
+
+	/**
+	 * 设置单个文件大小限制(单位：kb)
+	 * @param multipartMaxFileSize
+	 */
+	public void setMultipartMaxFileSize(long multipartMaxFileSize) {
+		this.multipartMaxFileSize = multipartMaxFileSize;
+	}
+
+	public long getMultipartMaxRequestSize() {
+		return multipartMaxRequestSize;
+	}
+
+	/**
+	 * 设置总文件大小限制(单位：kb)
+	 * @param multipartMaxRequestSize
+	 */
+	public void setMultipartMaxRequestSize(long multipartMaxRequestSize) {
+		this.multipartMaxRequestSize = multipartMaxRequestSize;
 	}
 
 	public String getWebRoot() {

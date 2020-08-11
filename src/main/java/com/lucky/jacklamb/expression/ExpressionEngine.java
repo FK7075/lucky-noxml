@@ -95,8 +95,6 @@ public abstract class ExpressionEngine {
     }
 
 	public static void main(String[] args) {
-		String str="aaa${5 }bbb${4}cccc${5}ddd";
-		Object[] arr= {1,"we",23.5,"FKFK",445};
-		System.out.println(removeSymbol(str,arr,"${","}"));
+		System.out.println(calculate("1024*10"));
 	}
 }

@@ -37,8 +37,14 @@ public @interface Upload {
 	String type() default "";
 	
 	/**
-	 * 允许上传的最大文件大小(单位:kb)，默认不做限制
+	 * 允许上传的最大文件大小(单位:kb)，默认1024
 	 * @return
 	 */
-	int maxSize() default 0;
+	long maxSize() default 0;
+
+	/**
+	 * 允许上传的最大文件大小(单位:kb)，默认1024*10
+	 * @return
+	 */
+	long totalSize() default 0;
 }

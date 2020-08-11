@@ -10,6 +10,8 @@ import com.lucky.jacklamb.file.utils.LuckyFileUtils;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.ioc.config.AppConfig;
+import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.servlet.core.Model;
@@ -41,6 +43,8 @@ public class AnnotationOperation {
 
     private static final Logger log = LogManager.getLogger(AnnotationOperation.class);
 
+    private static final WebConfig webCfg= AppConfig.getAppConfig().getWebConfig();
+
     /**
      * 基于MultipartFile的多文件上传
      *
@@ -51,7 +55,7 @@ public class AnnotationOperation {
      * @throws ServletException
      */
     private void moreMultipartFil(Model model, Method method)
-            throws IOException, FileUploadException {
+            throws IOException, FileUploadException, FileSizeCrossingException, RequestFileSizeCrossingException {
         Parameter[] parameters = method.getParameters();
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         List<String> paramlist = new ArrayList<>();
@@ -68,7 +72,7 @@ public class AnnotationOperation {
      *
      * @param model Model对象
      */
-    public void setMultipartFileMap(Model model) throws FileUploadException, IOException {
+    public void setMultipartFileMap(Model model) throws FileUploadException, IOException, FileSizeCrossingException, RequestFileSizeCrossingException {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
@@ -91,6 +95,8 @@ public class AnnotationOperation {
                     String filename = item.getName();
                     isFile = true;
                     InputStream in = item.getInputStream();
+                    if(in.available()/1024>webCfg.getMultipartMaxFileSize())
+                        throw new FileSizeCrossingException("单个文件超过最大上传限制："+webCfg.getMultipartMaxFileSize()+"kb");
                     MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
                     multipartFiles[fileIndex] = mfp;
                     fileIndex++;
@@ -101,8 +107,17 @@ public class AnnotationOperation {
                     }
                 }
             }
-            if (isFile)
-                model.addMultipartFile(fn, multipartFiles);
+            if (isFile){
+                double totalSize=0;
+                for (MultipartFile mu : multipartFiles) {
+                    totalSize+=mu.getFileSize();
+                }
+                if(totalSize/1024>webCfg.getMultipartMaxRequestSize()){
+                    throw new RequestFileSizeCrossingException("总文件超过最大上传限制："+webCfg.getMultipartMaxRequestSize()+"kb");
+                }else{
+                    model.addMultipartFile(fn, multipartFiles);
+                }
+            }
         }
     }
 
@@ -115,13 +130,14 @@ public class AnnotationOperation {
      * @throws IOException
      * @throws ServletException
      */
-    private void moreUpload(Model model, Method method) throws IOException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException {
+    private void moreUpload(Model model, Method method) throws IOException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, RequestFileSizeCrossingException {
         if (method.isAnnotationPresent(Upload.class)) {
             Upload upload = method.getAnnotation(Upload.class);
             String[] files = upload.names();
             String[] savePaths = upload.filePath();
             String types = upload.type();
-            int maxSize = upload.maxSize();
+            long maxSize = upload.maxSize();
+            long totalSize=upload.totalSize();
             Map<String, String> fieldAndFolder = new HashMap<>();
             if (savePaths.length == 1) {
                 for (String file : files)
@@ -130,7 +146,7 @@ public class AnnotationOperation {
                 for (int i = 0; i < savePaths.length; i++)
                     fieldAndFolder.put(files[i], savePaths[i]);
             }
-            upload(model, fieldAndFolder, types, maxSize);
+            upload(model, fieldAndFolder, types, maxSize,totalSize);
         }
     }
 
@@ -141,9 +157,9 @@ public class AnnotationOperation {
      * @param model          Model对象
      * @param fieldAndFolder name与folder组成的Map
      * @param type           允许上传的文件类型
-     * @param maxSize        允许上传文件的最大大小
+     * @param fileSize        允许上传文件的最大大小
      */
-    public void upload(Model model, Map<String, String> fieldAndFolder, String type, int maxSize) throws FileTypeIllegalException, IOException, FileSizeCrossingException, FileUploadException {
+    public void upload(Model model, Map<String, String> fieldAndFolder, String type, long fileSize,long totalSize) throws FileTypeIllegalException, IOException, FileSizeCrossingException, FileUploadException, RequestFileSizeCrossingException {
         String savePath = model.getRealPath("/");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
@@ -162,6 +178,7 @@ public class AnnotationOperation {
             fileItemList = sameNameFileItemMap.get(fn);
             boolean isFile = false;
             uploadNames = new File[fileItemList.size()];
+            List<UploadCopy> uploadCopyList=new ArrayList<>();
             int fileIndex = 0;
             for (FileItem item : fileItemList) {
                 if (!item.isFormField()) {
@@ -173,35 +190,28 @@ public class AnnotationOperation {
                         if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase()))
                             throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
                         String pathSave = fieldAndFolder.get(fn);
-                        File file;
+                        String filePath;
                         if (pathSave.startsWith("abs:")) {//绝对路径写法
-                            file = new File(pathSave.substring(4));
+                            filePath=pathSave.substring(4);
                         } else {//相对路径写法
-                            file = new File(savePath + pathSave);
+                            filePath=savePath + pathSave;
                         }
                         filename = NoSuffix + "_" + new Date().getTime() + "_" + LuckyUtils.getRandomNumber() + suffix;
-                        InputStream in = item.getInputStream();
-                        if (maxSize != 0) {
-                            int size = in.available();
-                            int filesize = size / 1024;
-                            if (filesize > maxSize) {
-                                throw new FileSizeCrossingException("上传文件的大小(" + filesize + "kb)超出设置的最大值" + maxSize + "kb");
-                            }
-                        }
-
-                        if (!file.isDirectory()) {
-                            file.mkdirs();
-                        }
-
                         if (filename == null || filename.trim().equals("")) {
                             continue;
                         }
-
-                        File uploadFile = new File(file.getAbsolutePath() + File.separator + filename);
-                        FileOutputStream out = new FileOutputStream(uploadFile);
-                        LuckyFileUtils.copy(in, out);
+                        filePath=filePath.endsWith(File.separator)?filePath.substring(0,filePath.length()-1):filePath;
+                        filePath=filePath+File.separator + filename;
+                        InputStream in = item.getInputStream();
+                        fileSize=fileSize==0?webCfg.getMultipartMaxFileSize():fileSize;
+                        int size = in.available();
+                        int filesize = size / 1024;
+                        if (filesize > fileSize) {
+                            throw new FileSizeCrossingException("单个上传文件的大小超出最大上传限制：" + fileSize + "kb");
+                        }
+                        uploadCopyList.add(new UploadCopy(in,new File(filePath)));
                         item.delete();
-                        uploadNames[fileIndex] = uploadFile;
+                        uploadNames[fileIndex] = new File(filePath);
                         fileIndex++;
                     }
                 } else {
@@ -211,8 +221,19 @@ public class AnnotationOperation {
                     }
                 }
             }
-            if (isFile)
-                model.addUploadFile(fn, uploadNames);
+            if (isFile){
+                double msxSize=UploadCopy.getTotalSize(uploadCopyList);
+                totalSize=totalSize==0?webCfg.getMultipartMaxRequestSize():totalSize;
+                if(msxSize/1024>totalSize){
+                    throw new RequestFileSizeCrossingException("总文件超过最大上传限制："+webCfg.getMultipartMaxRequestSize()+"kb");
+                }else{
+                    for (UploadCopy uploadCopy : uploadCopyList) {
+                        uploadCopy.copy();
+                    }
+                    model.addUploadFile(fn, uploadNames);
+                }
+
+            }
         }
     }
 
@@ -348,7 +369,7 @@ public class AnnotationOperation {
      * @throws IllegalAccessException
      */
     public Object[] getControllerMethodParam(Model model, Class<?> controllerClass, Method method)
-            throws IOException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException, IllegalParameterException {
+            throws IOException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException, IllegalParameterException, RequestFileSizeCrossingException {
         //获取当前Controller方法参数列表所有的参数名
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         Parameter[] parameters = method.getParameters();
@@ -688,5 +709,33 @@ public class AnnotationOperation {
             }
         }
         return map;
+    }
+}
+
+class UploadCopy{
+    private InputStream in;
+    private File out;
+
+    public UploadCopy(InputStream in, File out) {
+        this.in = in;
+        this.out = out;
+    }
+
+    public void copy() throws IOException {
+        if(!out.getParentFile().exists())
+            out.getParentFile().mkdirs();
+        LuckyFileUtils.copy(in,new BufferedOutputStream(new FileOutputStream(out)));
+    }
+
+    public int getFileSize() throws IOException {
+        return in.available();
+    }
+
+    public static double getTotalSize(List<UploadCopy> list) throws IOException {
+        long t=0;
+        for (UploadCopy uploadCopy : list) {
+           t+=uploadCopy.getFileSize();
+        }
+        return t;
     }
 }

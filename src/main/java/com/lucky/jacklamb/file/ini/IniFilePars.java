@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 
 import com.lucky.jacklamb.enums.Scan;
 import com.lucky.jacklamb.expression.$Expression;
+import com.lucky.jacklamb.expression.ExpressionEngine;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
@@ -296,8 +297,14 @@ public class IniFilePars {
 	}
 	
 	private void webSetting(WebConfig web,Map<String, String> sectionMap) {
+		if(sectionMap.containsKey("multipartMaxFileSize")){
+			web.setMultipartMaxFileSize(Long.parseLong(ExpressionEngine.calculate(sectionMap.get("multipartMaxFileSize"))));
+		}
+		if(sectionMap.containsKey("multipartMaxRequestSize")){
+			web.setMultipartMaxRequestSize(Long.parseLong(ExpressionEngine.calculate(sectionMap.get("multipartMaxRequestSize"))));
+		}
 		if(sectionMap.containsKey("webRoot")){
-			web.setWebRoot($Expression.translation(sectionMap.get("webRoot")));
+			web.setWebRoot(sectionMap.get("webRoot"));
 		}
 		if(sectionMap.containsKey("httpClient-connectTimeout")){
 			web.setConnectTimeout($Expression.translation(sectionMap.get("httpClient-connectTimeout"),int.class));
@@ -401,10 +408,10 @@ public class IniFilePars {
 			server.setShutdown($Expression.translation(sectionMap.get("shutdown")));
 		}
 		if(sectionMap.containsKey("docBase")) {
-			server.setDocBase($Expression.translation(sectionMap.get("docBase")));
+			server.setDocBase(sectionMap.get("docBase"));
 		}
 		if(sectionMap.containsKey("baseDir")) {
-			server.setBaseDir($Expression.translation(sectionMap.get("baseDir")));
+			server.setBaseDir(sectionMap.get("baseDir"));
 		}
 		if(sectionMap.containsKey("contextPath")) {
 			server.setContextPath($Expression.translation(sectionMap.get("contextPath")));
