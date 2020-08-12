@@ -73,7 +73,7 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	@Insert(setautoId=true)
-	public int insertAutoID(T pojo);
+	public int insertAutoId(T pojo);
 	
 	/**
 	 * 添加操作

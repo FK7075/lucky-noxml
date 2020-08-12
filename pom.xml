@@ -31,7 +31,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- HikariCPs数据库连接池 -->
+    <!-- HikariCP数据库连接池 -->
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
@@ -185,7 +185,7 @@
       <version>2.8.5</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
+    <!-- SSH https://mvnrepository.com/artifact/com.jcraft/jsch -->
     <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch</artifactId>
@@ -206,7 +206,7 @@
       <version>2.3.2</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs -->
+    <!-- Quartz定时任务 https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs -->
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz-jobs</artifactId>

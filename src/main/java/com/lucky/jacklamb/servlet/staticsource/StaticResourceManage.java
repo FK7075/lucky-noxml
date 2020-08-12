@@ -15,11 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 静态资源管理器
+ * @author fk-7075
+ */
 public class StaticResourceManage {
 
     private static Map<String,String> contentTypeMap;
 
     private static final String WebRoot=AppConfig.getAppConfig().getWebConfig().getWebRoot();
+
+    private static String WEB_ROOT_PREFIX;
+
+    private static String TARGET_WEB_ROOT;
 
     static{
         try {
@@ -30,14 +38,34 @@ public class StaticResourceManage {
             for (String[] kv : arrContentType) {
                 contentTypeMap.put(kv[0],kv[1]);
             }
+            String webRoot=WebRoot;
+            if(webRoot.startsWith("${classpath}")){
+                webRoot=webRoot.substring(12);
+                webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
+                TARGET_WEB_ROOT=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
+                WEB_ROOT_PREFIX="CP";
+            }else if(webRoot.startsWith("${user.dir}")){
+                webRoot=webRoot.substring(11);
+                webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
+                webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
+                TARGET_WEB_ROOT=System.getProperty("user.dir") + webRoot;
+                WEB_ROOT_PREFIX="UD";
+            }else if(webRoot.startsWith("${docBase}")){
+                TARGET_WEB_ROOT=webRoot.substring(10);
+                WEB_ROOT_PREFIX="DB";
+            }else{
+                TARGET_WEB_ROOT=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
+                WEB_ROOT_PREFIX="ABS";
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static boolean isLegalIp(WebConfig webCfg, String currIp) {
-        if (!webCfg.getStaticResourcesIpRestrict().isEmpty() && !webCfg.getStaticResourcesIpRestrict().contains(currIp))
+        if (!webCfg.getStaticResourcesIpRestrict().isEmpty() && !webCfg.getStaticResourcesIpRestrict().contains(currIp)) {
             return false;
+        }
         return true;
     }
 
@@ -46,8 +74,9 @@ public class StaticResourceManage {
     }
 
     public static boolean isStaticResource(HttpServletResponse resp, String uri) {
-        if(!uri.contains("."))
+        if(!uri.contains(".")) {
             return false;
+        }
         String lowercaseUri = uri.toLowerCase();
         lowercaseUri=lowercaseUri.substring(lowercaseUri.lastIndexOf("."));
         if(contentTypeMap.containsKey(lowercaseUri)){
@@ -59,25 +88,13 @@ public class StaticResourceManage {
 
     public static boolean resources(Model model, String uri){
         //uri /xxx/xxx
-        if(docBaseFileIsExist(model,uri))
+        if(docBaseFileIsExist(model,uri)) {
             return true;
-        String webRoot=WebRoot;
-        if(webRoot.startsWith("${classpath}")){
-            webRoot=webRoot.substring(12);
-            // /xxx
-            webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
-            webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
-            return ApplicationBeans.class.getResourceAsStream(webRoot+uri)!=null;
-        }else if(webRoot.startsWith("${user.dir}")){
-            webRoot=webRoot.substring(11);
-            webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
-            webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
-            return new File(System.getProperty("user.dir")+webRoot+uri).exists();
-        }else if(webRoot.startsWith("${docBase}")){
-            webRoot=webRoot.substring(10);
-            return model.getRealFile(webRoot+uri)!=null;
-        }else{
-            return new File(webRoot+uri).exists();
+        }
+        switch (WEB_ROOT_PREFIX){
+            case "CP" :return ApplicationBeans.class.getResourceAsStream(TARGET_WEB_ROOT+uri)!=null;
+            case "DB" :return model.getRealFile(TARGET_WEB_ROOT+uri)!=null;
+            default   :return new File(TARGET_WEB_ROOT+uri).exists();
         }
     }
 
@@ -93,26 +110,22 @@ public class StaticResourceManage {
             LuckyFileUtils.preview(model, model.getRealFile(uri));
             return;
         }
-        String webRoot=WebRoot;
-        if(webRoot.startsWith("${classpath}")){
-            webRoot=webRoot.substring(12);
-            webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
-            webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
-            InputStream staticStream=ApplicationBeans.class.getResourceAsStream(webRoot+uri);
-            LuckyFileUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
-        }else if(webRoot.startsWith("${user.dir}")){
-            webRoot=webRoot.substring(11);
-            webRoot=webRoot.startsWith("/")?webRoot:"/"+webRoot;
-            webRoot=webRoot.endsWith("/")?webRoot.substring(0,webRoot.length()-1):webRoot;
-            File staticFile = new File(System.getProperty("user.dir") + webRoot + uri);
-            LuckyFileUtils.preview(model, staticFile);
-        }else if(webRoot.startsWith("${docBase}")){
-            webRoot=webRoot.substring(10);
-            File staticFile=model.getRealFile(webRoot+uri);
-            LuckyFileUtils.preview(model, staticFile);
-        }else{
-            File staticFile=new File(webRoot+uri);
-            LuckyFileUtils.preview(model, staticFile);
+        switch (WEB_ROOT_PREFIX){
+            case "CP" :{
+                InputStream staticStream=ApplicationBeans.class.getResourceAsStream(TARGET_WEB_ROOT+uri);
+                LuckyFileUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
+                break;
+            }
+            case "DB" :{
+                File staticFile=model.getRealFile(TARGET_WEB_ROOT+uri);
+                LuckyFileUtils.preview(model, staticFile);
+                break;
+            }
+            default: {
+                File staticFile=new File(TARGET_WEB_ROOT+uri);
+                LuckyFileUtils.preview(model, staticFile);
+                break;
+            }
         }
     }
 

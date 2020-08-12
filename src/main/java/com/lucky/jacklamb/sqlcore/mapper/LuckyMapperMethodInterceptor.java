@@ -88,7 +88,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         List<String> fieldname = LuckyUtils.getSqlField(noSql);
         Map<String, Object> fieldNameValueMap = Conversion.getSourceNameValueMap(obj, "");
         List<Object> fields = new ArrayList<>();
-        for (String fieldName : fieldname)
+        for (String fieldName : fieldname) {
             if (fieldNameValueMap.containsKey(fieldName)){
                 Object objp = fieldNameValueMap.get(fieldName);
                 if(objp instanceof Collection){
@@ -96,6 +96,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                 }
                 fields.add(fieldNameValueMap.get(fieldName));
             }
+        }
         //得到预编译的SQL语句
         noSql=noSql.replaceAll(Sharp, "?");
         sqlArr.setSql(noSql);
@@ -163,16 +164,19 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                         return sqlCore.getObject(args[0]);
                     }
                 } else {// 有指定列的标注
-                    if (sel.hResults().length != 0 && sel.sResults().length != 0)
+                    if (sel.hResults().length != 0 && sel.sResults().length != 0) {
                         throw new RuntimeException("@Select注解的\"hResults\"属性和\"sResults\"属性不可以同时使用！错误位置：" + method);
+                    }
                     Parameter[] parameters = method.getParameters();
                     QueryBuilder query = new QueryBuilder();
                     query.addObject(args);
                     query.setJoin(JOIN.INNER_JOIN);
-                    if (sel.sResults().length != 0)
+                    if (sel.sResults().length != 0) {
                         query.addResult(sel.sResults());
-                    if (sel.hResults().length != 0)
+                    }
+                    if (sel.hResults().length != 0) {
                         query.hiddenResult(sel.hResults());
+                    }
                     if (List.class.isAssignableFrom(c)) {
                         Class<?> listGeneric = getListGeneric(method);
                         return sqlCore.query(query, listGeneric);
@@ -187,8 +191,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                 }
             } else {
                 if (sql.contains("#{")) {
-                    if (method.getParameterCount() == 3)
+                    if (method.getParameterCount() == 3) {
                         pageParam(method, args);
+                    }
                     SqlAndArray sqlArr = noSqlTo(args[0], sql);
                     if (List.class.isAssignableFrom(c)) {
                         Class<?> listGeneric = getListGeneric(method);
@@ -274,8 +279,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      */
     private <T> int update(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Update upd = method.getAnnotation(Update.class);
-        if (upd.batch())
+        if (upd.batch()) {
             return sqlCore.updateByCollection((Collection<T>) args[0]);
+        }
         String sql = upd.value();
         if ("".equals(sql)) {
             List<String> list = new ArrayList<>();
@@ -297,11 +303,13 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             }
             array = new String[list.size()];
             list.toArray(array);
-            if (pojo == null)
+            if (pojo == null) {
                 throw new RuntimeException("@Update更新操作异常：没有找到用于更新操作的实体类对象!错误位置：" + method);
+            }
             return sqlCore.update(pojo, array);
-        } else
+        } else {
             return updateSql(method, args, sql_fp, sql);
+        }
     }
 
     /**
@@ -318,15 +326,18 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      */
     private <T> int delete(Method method, Object[] args, SqlFragProce sql_fp) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Delete del = method.getAnnotation(Delete.class);
-        if (del.byid())
+        if (del.byid()) {
             return sqlCore.delete((Class<?>) args[0], args[1]);
-        if (del.batch())
+        }
+        if (del.batch()) {
             return sqlCore.deleteByCollection((Collection<T>) args[0]);
+        }
         String sql = del.value();
-        if ("".equals(sql))
+        if ("".equals(sql)) {
             return sqlCore.delete(args[0]);
-        else
+        } else {
             return updateSql(method, args, sql_fp, sql);
+        }
     }
 
 
@@ -373,15 +384,18 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
         Type[] entry = type.getActualTypeArguments();
         Class<?> cla;
-        if (LuckyMapperGeneric != null && ("query".equals(method.getName()) || "selectLimit".equals(method.getName())))
+        if (LuckyMapperGeneric != null && ("query".equals(method.getName()) || "selectLimit".equals(method.getName()))) {
             cla = LuckyMapperGeneric;
-        else
+        } else {
             cla = (Class<?>) entry[0];
+        }
         if (query.queryBuilder()) {
-            if (parameters.length != 1)
+            if (parameters.length != 1) {
                 throw new RuntimeException("@Query参数数量溢出异常  size:" + parameters.length + "！@Query注解的\"queryBuilder\"模式下的参数只能是唯一，而且类型必须是 com.lucky.jacklamb.query.QueryBuilder！错误位置：" + method);
-            if (!QueryBuilder.class.isAssignableFrom(parameters[0].getType()))
+            }
+            if (!QueryBuilder.class.isAssignableFrom(parameters[0].getType())) {
                 throw new RuntimeException("@Query参数类型异常  错误类型:" + parameters[0].getType().getName() + "！@Query注解的\"queryBuilder\"模式下的参数只能是唯一，而且类型必须是 com.lucky.jacklamb.query.QueryBuilder！错误位置：" + method);
+            }
             return sqlCore.query((QueryBuilder) args[0], cla, query.expression());
         }
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -412,9 +426,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                 if (method.isAnnotationPresent(AutoId.class)) {
                     Field idField = PojoManage.getIdField(args[0].getClass());
                     Id id = idField.getAnnotation(Id.class);
-                    if (id.type() == PrimaryType.AUTO_INT)
+                    if (id.type() == PrimaryType.AUTO_INT) {
                         sqlCore.setNextId(args[0]);
-                    else if (id.type() == PrimaryType.AUTO_UUID) {
+                    } else if (id.type() == PrimaryType.AUTO_UUID) {
                         idField.setAccessible(true);
                         idField.set(args[0], UUID.randomUUID().toString());
                     }
@@ -427,8 +441,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                     list.add(args[1]);
                     list.add(args[2]);
                     args = list.toArray();
-                } else
+                } else {
                     args = sqlArr.getArray();
+                }
             }
             if (sqlCopy.contains("SELECT")) {
                 if ("C:".equalsIgnoreCase(sqlCopy.substring(0, 2))) {
@@ -476,8 +491,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                 } catch (IllegalJPAExpressionException e) {
                     throw new RuntimeException("找不到与Mapper接口方法 "+method+" 相关的SQL配置，尝试使用JPA查询解释器解析该方法的方法名！解析失败，该方法名不符合JPA查询规范...",e);
                 }
-                if(result==null||result.isEmpty())
+                if(result==null||result.isEmpty()) {
                     return null;
+                }
                 return result.get(0);
             }
         }else{
@@ -521,20 +537,21 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
 
         //用户自定义Mapper接口方法的代理
         SqlFragProce sql_fp = SqlFragProce.getSqlFP();
-        if (method.isAnnotationPresent(Select.class))
+        if (method.isAnnotationPresent(Select.class)) {
             return select(method, params, sql_fp);
-        else if (method.isAnnotationPresent(Update.class))
+        } else if (method.isAnnotationPresent(Update.class)) {
             return (Object) update(method, params, sql_fp);
-        else if (method.isAnnotationPresent(Delete.class))
+        } else if (method.isAnnotationPresent(Delete.class)) {
             return (Object) delete(method, params, sql_fp);
-        else if (method.isAnnotationPresent(Insert.class))
+        } else if (method.isAnnotationPresent(Insert.class)) {
             return (Object) insert(method, params, sql_fp);
-        else if (method.isAnnotationPresent(Query.class))
+        } else if (method.isAnnotationPresent(Query.class)) {
             return join(method, params);
-        else if (method.isAnnotationPresent(Count.class))
+        } else if (method.isAnnotationPresent(Count.class)) {
             return (Object) sqlCore.count(params[0]);
-        else
+        } else {
             return notHave(method, params, sql_fp, LuckyMapperGeneric);
+        }
     }
 
 
@@ -557,8 +574,9 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         List<Object> objectlist = new ArrayList<>();
         Object[] objectarray;
         if (query.limit()) {//分页模式，优先过滤掉两个分页参数
-            if (parameters.length < 3)
+            if (parameters.length < 3) {
                 throw new RuntimeException("@Query参数缺失异常！@Query注解的\"Like\"模式下的参数至少为3个，而且最后两个参数必须为int类型的分页参数(page,rows)！错误位置：" + method.getName());
+            }
             indexs.add(end - 1);
             indexs.add(end - 2);
             for (int i = 0; i < end - 2; i++) {
@@ -629,10 +647,12 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         for (String sort : query.sort()) {
             String[] fs = sort.replaceAll(" ", "").split(":");
             int parseInt = Integer.parseInt(fs[1]);
-            if (parseInt == 1)
+            if (parseInt == 1) {
                 queryBuilder.addSort(fs[0], Sort.ASC);
-            if (parseInt == -1)
+            }
+            if (parseInt == -1) {
                 queryBuilder.addSort(fs[0], Sort.DESC);
+            }
         }
     }
 
@@ -643,12 +663,15 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
      * @param queryBuilder
      */
     private void setResults(Method method, Query query, QueryBuilder queryBuilder) {
-        if (query.hResults().length != 0 && query.sResults().length != 0)
+        if (query.hResults().length != 0 && query.sResults().length != 0) {
             throw new RuntimeException("@Query注解的\"hResults\"属性和\"sResults\"属性不可以同时使用！错误位置：" + method.getName());
-        if (query.sResults().length != 0)
+        }
+        if (query.sResults().length != 0) {
             queryBuilder.addResult(query.sResults());
-        if (query.hResults().length != 0)
+        }
+        if (query.hResults().length != 0) {
             queryBuilder.hiddenResult(query.hResults());
+        }
     }
 
 

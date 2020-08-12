@@ -56,11 +56,15 @@ public class ZipUtils {
     }
 
     private static void compress(ZipOutputStream out, File f, String base)
-            throws IOException { // 方法重载
-        if (f.isDirectory()) { // 测试此抽象路径名表示的文件是否是一个目录
-            File[] fl = f.listFiles(); // 获取路径数组
-            if (!"".equals(base))
-                out.putNextEntry(new ZipEntry(base + "/")); // 写入此目录的entry
+            throws IOException {
+        // 测试此抽象路径名表示的文件是否是一个目录
+        if (f.isDirectory()) {
+            // 获取路径数组
+            File[] fl = f.listFiles();
+            if (!"".equals(base)) {
+                // 写入此目录的entry
+                out.putNextEntry(new ZipEntry(base + "/"));
+            }
             base = base.length() == 0 ? "" : base + "/"; // 判断参数是否为空
             for (int i = 0; i < fl.length; i++) { // 循环遍历数组中文件
                 compress(out, fl[i], base + fl[i].getName());
