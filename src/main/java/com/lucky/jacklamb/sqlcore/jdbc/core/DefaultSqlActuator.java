@@ -29,9 +29,6 @@ public class DefaultSqlActuator extends SqlActuator{
 	@Override
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
-		if(isCache) {
-			return queryCache(sp,c);
-		}
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dataSource.getDbname());
 		List<T> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
@@ -42,9 +39,6 @@ public class DefaultSqlActuator extends SqlActuator{
 	@Override
 	public int update(String sql, Object...obj) {
 		SqlAndParams sp=new SqlAndParams(sql,obj);
-		if(isCache) {
-			clear();
-		}
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 		int result = sqlOperation.setSql(sp.precompileSql, sp.params);
@@ -55,9 +49,6 @@ public class DefaultSqlActuator extends SqlActuator{
 	@Override
 	public <T> List<T> autoPackageToListMethod(Class<T> c, Method method,String sql, Object[] obj) {
 		SqlAndParams sp=new SqlAndParams(method,sql,obj);
-		if(isCache) {
-			return queryCache(sp,c);
-		}
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 		List<T> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
@@ -68,8 +59,6 @@ public class DefaultSqlActuator extends SqlActuator{
 	@Override
 	public int updateMethod(Method method, String sql, Object[]obj) {
 		SqlAndParams sp=new SqlAndParams(method,sql,obj);
-		if(isCache)
-			clear();
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 		int result = sqlOperation.setSql(sp.precompileSql, sp.params);
@@ -79,9 +68,6 @@ public class DefaultSqlActuator extends SqlActuator{
 
 	@Override
 	public int[] updateBatch(String sql,Object[][] obj) {
-		if(isCache) {
-			clear();
-		}
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 		int[] result = sqlOperation.setSqlBatch(sql, obj);
@@ -91,29 +77,11 @@ public class DefaultSqlActuator extends SqlActuator{
 
 	@Override
 	public int[] updateBatch(String...completeSqls){
-		if(isCache) {
-			clear();
-		}
 		Connection connection = dataSource.getConnection();
 		SqlOperation sqlOperation=new SqlOperation(connection,dbname);
 		int[] result = sqlOperation.setSqlBatch(completeSqls);
 		LuckyDataSource.release(null,null,connection);
 		return result;
-	}
-
-	@Override
-	public <T> List<T> queryCache(SqlAndParams sp,Class<T> c){
-		String completeSql= CreateSql.getCompleteSql(sp.precompileSql,sp.params);
-		if(lruCache.get(dbname).containsKey(completeSql)){
-			return (List<T>) lruCache.get(dbname).get(completeSql);
-		}else{
-			Connection connection = dataSource.getConnection();
-			SqlOperation sqlOperation=new SqlOperation(connection,dbname);
-			List<?> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
-			lruCache.get(dbname).put(completeSql,result);
-			LuckyDataSource.release(null,null,connection);
-			return (List<T>) result;
-		}
 	}
 
 	private final String ERROR="当前使用的SQL执行器[DefaultSqlActuator]不支持事务机制，无法开启事务！若要使用事务机制请使用执行器[TransactionSqlActuator]！";

@@ -52,7 +52,8 @@ public class QFilter {
 			Class<?> pojoClass=pojo.getClass();
 			Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 			for(Field field:pojoFields){
-                allFields.add(PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(field));
+				if(!field.isAnnotationPresent(NoColumn.class))
+                	allFields.add(PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(field));
 			}
 		}
 	}

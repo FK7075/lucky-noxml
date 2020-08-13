@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 public class ObjectToJoinSql{
 
@@ -51,35 +54,31 @@ public class ObjectToJoinSql{
 	 * @return
 	 */
 	private String andFragment() {
-		String sql = "";
+		StringBuilder sql=new StringBuilder();
 		int p = 0;
 		for (int i = 0; i < obj.length; i++) {
 			Class<?> clzz = obj[i].getClass();
-			Field[] fields = clzz.getDeclaredFields();
+			Field[] fields = ClassUtils.getAllFields(clzz);
 			for (int j = 0; j < fields.length; j++) {
-				fields[j].setAccessible(true);
-				Object fk;
-				try {
-					fk = fields[j].get(obj[i]);
-					if (fk != null) {
-						if (p == 0) {
-							sql += " WHERE " + PojoManage.tableAlias(clzz) + "." + PojoManage.getTableField(fields[j])
-									+ "=?";
-							p++;
-						} else {
-							sql += " AND " + PojoManage.tableAlias(clzz) + "." + PojoManage.getTableField(fields[j])
-									+ "=?";
+				if(fields[j].isAnnotationPresent(NoColumn.class))
+					continue;
+				Object fk= FieldUtils.getValue(obj[i],fields[j]);
+				if (fk != null) {
+					if (p == 0) {
+						sql.append(" WHERE " ).append(PojoManage.tableAlias(clzz))
+								.append(".").append(PojoManage.getTableField(fields[j]))
+								.append("=?");
+						p++;
+					} else {
+						sql.append(" AND ").append(PojoManage.tableAlias(clzz))
+								.append(".").append(PojoManage.getTableField(fields[j]))
+								.append("=?");
 
-						}
 					}
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
 				}
 			}
 		}
-		return sql;
+		return sql.toString();
 	}
 
 	/**

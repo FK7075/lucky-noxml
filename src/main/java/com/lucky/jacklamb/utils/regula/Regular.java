@@ -110,6 +110,7 @@ public abstract class Regular {
         String sql="SELECT * FROM user WHERE a=#{name} AND b=@sex AND c=#{id} ";
         System.out.println(getArrayByExpression(sql, Sharp));
         System.out.println(sql.replaceAll(Sharp, "?"));
+        System.out.println(getArrayByExpression(sql, "\\?"));
         System.out.println(check("@er53", $SQL));
     }
 }

@@ -42,7 +42,7 @@ public class LuckyApplication {
         }
         doShutDownWork();
         AppConfig.applicationClass = applicationClass;
-        run();
+        new Thread(()->run(),"main-lucky").start();
     }
 
     private static void run() {

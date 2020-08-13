@@ -9,8 +9,10 @@ import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +102,6 @@ public class ReaderInI {
 		for (Field field : fields) {
 			fieldName=field.getName();
 			if(dataSectionMap.containsKey(fieldName)){
-				field.setAccessible(true);
 				String valueStr = dataSectionMap.get(fieldName);
 				if("createTable".equals(fieldName)){
 					List<Class<?>> tables=new ArrayList<>();
@@ -114,13 +115,13 @@ public class ReaderInI {
 							throw new NoDataSourceException("不正确的自动建表配置信息，无法执行建表程序，请检查classpath下的appconfig.ini配置文件中["+luckyDataSource.getDbname()+"]节中的'createTable'属性的配置信息。err=>"+tab+"=\""+classPath+"\"");
 						}
 					}
-					try {
-						field.set(luckyDataSource, tables);
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					}
+					FieldUtils.setValue(luckyDataSource,field,tables);
 				}else if("poolType".equals(fieldName)){
 					continue;
+				}else if("formatSqlLog".equals(fieldName)){
+					Boolean log= (boolean) JavaConversion.strToBasic(dataSectionMap.get("formatSqlLog"),Boolean.class);
+					Boolean[] p={log};
+					MethodUtils.invoke(luckyDataSource,"setFormatSqlLog",p);
 				}else{
 					if(FieldUtils.isCanOperation(field)){
 						FieldUtils.setValue(luckyDataSource,field, JavaConversion.strToBasic(valueStr,field.getType(),true));

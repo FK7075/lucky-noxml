@@ -1,37 +1,26 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
-import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
-import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * SQL执行器，用来执行一条SQL语句，并且将返回的结果自动封装为对应的对象
+ */
 public abstract class SqlActuator {
 
     protected LuckyDataSource dataSource;
 
     protected String dbname;
 
-    protected static Map<String,LRUCache<String,List<?>>> lruCache=new HashMap<>();
-
-    protected boolean isCache;
-
     public SqlActuator(String dbname) {
         this.dbname=dbname;
         this.dataSource=ReaderInI.getDataSource(dbname);
-        isCache= ReaderInI.getDataSource(dbname).getCache();
         //初始化数据源
         dataSource.init();
-        //如果用户开启了缓存配置，测初始化一个LRU缓存
-        if(isCache&&!lruCache.containsKey(dbname)){
-            LRUCache<String,List<?>> dbCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
-            lruCache.put(dbname,dbCache);
-        }
     }
 
     /**
@@ -86,24 +75,23 @@ public abstract class SqlActuator {
      */
     public abstract int[] updateBatch(String...completeSqls);
 
-
     /**
-     * 从LRU缓存中查询结果
-     * @param sp
-     * @param c
-     * @param <T>
+     * 开启事务
      * @return
      */
-    public abstract <T> List<T> queryCache(SqlAndParams sp,Class<T> c);
-
     public abstract Transaction openTransaction();
 
+    /**
+     * 开启缓存，并且设置隔离级别
+     * @param isolationLevel
+     * @return
+     */
     public abstract Transaction openTransaction(int isolationLevel);
 
     /**
      * 清空缓存
      */
     public void clear(){
-        lruCache.get(dbname).clear();
+        SqlOperation.lruCache.get(dbname).clear();
     }
 }

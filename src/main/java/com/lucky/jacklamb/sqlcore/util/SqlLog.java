@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.util;
 
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 import java.io.PrintStream;
 
@@ -46,7 +47,7 @@ public class SqlLog {
 	}
 	
 	private void log(String sql, Object[] obj) {
-		StringBuilder sb=new StringBuilder("\nDatabase   : ");
+		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ");
 		sb.append(jdbcUrl).append("\n").append("SQL        : ").append(formatSql(sql));
 		if (obj == null)
 			sb.append("\nParameters : { }");
@@ -65,7 +66,7 @@ public class SqlLog {
 	 * @param obj
 	 */
 	private void logBatch(String sql,Object obj[][]) {
-		StringBuilder sb=new StringBuilder("\nDatabase   : ");
+		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ");
 		sb.append(jdbcUrl).append("\n").append("SQL        : ").append(formatSql(sql));
 		if(obj==null||obj.length==0)
 			sb.append("\nParameters : { }");
@@ -86,7 +87,7 @@ public class SqlLog {
 		for (String sql : sqls) {
 			sqlB.append(sql).append("\n");
 		}
-		StringBuilder sb=new StringBuilder("\nDatabase   : ").append(jdbcUrl).append("\n");
+		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ").append(jdbcUrl).append("\n");
 		sb.append("SQL        : ").append("\n");
 		sb.append(sqlB.toString());
 		loger.println(sb.toString());
