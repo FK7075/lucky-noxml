@@ -7,6 +7,7 @@ import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.conversion.JDBCConversion;
 import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.util.SqlLog;
+import com.lucky.jacklamb.utils.regula.Regular;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -132,10 +133,9 @@ public class SqlOperation {
 	public ResultSet getResultSet(String sql, Object...obj) {
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			if (obj != null) {
-				for (int i = 0; i < obj.length; i++) {
-					ps.setObject(i + 1, obj[i]);
-				}
+			int count=Regular.getArrayByExpression(sql, "\\?").size();
+			for (int i = 0; i <count; i++) {
+				ps.setObject(i + 1, obj[i]);
 			}
 			ResultSet resultSet = ps.executeQuery();
 			new SqlLog(dbname).isShowLog(sql, obj);
@@ -249,11 +249,10 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		ResultSet rs=null;
 		try{
+			int count=Regular.getArrayByExpression(sql, "\\?").size();
 			ps = conn.prepareStatement(sql);
-			if (obj != null) {
-				for (int i = 0; i < obj.length; i++) {
-					ps.setObject(i + 1, obj[i]);
-				}
+			for (int i = 0; i <count; i++) {
+				ps.setObject(i + 1, obj[i]);
 			}
 			rs = ps.executeQuery();
 			log.isShowLog(sql, obj);
@@ -262,7 +261,7 @@ public class SqlOperation {
 			while (rs.next()){
 				Map<String,Object> rowData = new HashMap<>();
 				for (int i = 1; i <= columnCount; i++) {
-					rowData.put(md.getColumnName(i), rs.getObject(i));
+					rowData.put(md.getColumnLabel(i), rs.getObject(i));
 				}
 				queryResult.add(rowData);
 			}
@@ -272,10 +271,6 @@ public class SqlOperation {
 		}finally {
 			LuckyDataSource.release(rs,ps,null);
 		}
-	}
-
-	public int questionMarkCount(String precompiledSql){
-		return 0;
 	}
 
 //	/**
