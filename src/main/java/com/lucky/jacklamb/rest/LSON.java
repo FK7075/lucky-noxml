@@ -1,5 +1,8 @@
 package com.lucky.jacklamb.rest;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.sql.Time;
@@ -81,12 +84,32 @@ public class LSON {
 	}
 
 	/**
+	 * 用Google的GSON将Json格式的Reader转为Json字符串
+	 * @param jsonReader
+	 * @return
+	 */
+	public String toJsonByGson(Reader jsonReader){
+		gson = gsonBuilder.create();
+		return gson.toJson(jsonReader);
+	}
+
+	/**
+	 * 用Google的GSON将Json格式的InputStream转为Json字符串
+	 * @param jsonIn
+	 * @return
+	 */
+	public String toJsonByGson(InputStream jsonIn){
+		gson = gsonBuilder.create();
+		return gson.toJson(jsonIn);
+	}
+
+	/**
 	 * 传入一个Json字符串,返回一个指定类型的对象
 	 * @param objectClass 返回对象的类型
 	 * @param jsonStr Json字符串
 	 * @return
 	 */
-	public <T> T toObject(Class<T> objectClass, String jsonStr) {
+	public <T> T fromJson(Class<T> objectClass, String jsonStr) {
 		gson=gsonBuilder.create();
 		return gson.fromJson(jsonStr,objectClass);
 	}
@@ -98,7 +121,7 @@ public class LSON {
 	 * @param jsonStr Json字符串
 	 * @return
 	 */
-	public Object toObject(TypeToken typeToken,String jsonStr){
+	public Object fromJson(TypeToken typeToken, String jsonStr){
 		gson=gsonBuilder.create();
 		return gson.fromJson(jsonStr,typeToken.getType());
 	}
@@ -109,10 +132,27 @@ public class LSON {
 	 * @param jsonStr Json字符串
 	 * @return
 	 */
-	public Object toObject(Type type,String jsonStr){
+	public Object fromJson(Type type, String jsonStr){
 		gson=gsonBuilder.create();
 		return gson.fromJson(jsonStr,type);
 	}
+
+	public <T> T fromJson(Class<T> pojoClass,Reader reader){
+		gson = gsonBuilder.create();
+		return gson.fromJson(reader,pojoClass);
+	}
+
+	public Object fromJson(Type type,Reader reader){
+		gson = gsonBuilder.create();
+		return gson.fromJson(reader,type);
+	}
+
+	public Object fromJson(TypeToken typeToken,Reader reader){
+		gson = gsonBuilder.create();
+		return gson.fromJson(reader,typeToken.getType());
+	}
+
+
 
 	
 	

@@ -24,7 +24,7 @@ public class LuckyClientController extends LuckyController {
     private static final Logger log = LogManager.getLogger(LuckyClientController.class);
 
     //服务状态验证
-    @RestBody(Rest.TXT)
+    @ResponseBody(Rest.TXT)
     @RequestMapping("@rqe-lucy-xfl-0721/#{serviceName}")
     public int request(@RestParam("serviceName") String serviceName) {
         return SERVICE_NAME.equals(serviceName) ? 1 : -1;

@@ -3,7 +3,7 @@ package com.lucky.jacklamb.httpclient.registry;
 import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.RequestMapping;
 import com.lucky.jacklamb.annotation.mvc.RequestParam;
-import com.lucky.jacklamb.annotation.mvc.RestBody;
+import com.lucky.jacklamb.annotation.mvc.ResponseBody;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -52,14 +52,14 @@ public final class RegistrationController extends LuckyController {
     }
 
     //得到所有已经注册的服务的地址
-    @RestBody
+    @ResponseBody
     @RequestMapping("allService")
     public Map<String, Map<String, ServiceInfo>> allService() {
         return serviceCenter.getClientMap();
     }
 
     //关闭服务器(远程关机)
-    @RestBody(Rest.TXT)
+    @ResponseBody(Rest.TXT)
     @RequestMapping("lucyxfl/off")
     public String serverClose(@RequestParam("ip") String ip,
                               @RequestParam(value = "closePort",def = "null")Integer closePort,
@@ -69,14 +69,14 @@ public final class RegistrationController extends LuckyController {
 
 
     //将项目名解析为地址
-    @RestBody
+    @ResponseBody
     @RequestMapping("lucyxfl/getUrl")
     public String[] getUrlByServiceName(String serviceName) {
         return serviceCenter.getUrlByServiceName(serviceName);
     }
 
     //请求转发接口，支持文件上传
-    @RestBody(Rest.TXT)
+    @ResponseBody(Rest.TXT)
     @RequestMapping("#{SERVIC_ENAME}/#{API}*")
     public String request(@RestParam("SERVIC_ENAME") String serviceName,
                           @RestParam("API") String api,

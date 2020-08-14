@@ -199,6 +199,13 @@
       <version>1.6.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.4.11.1</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
     <dependency>
       <groupId>org.quartz-scheduler</groupId>

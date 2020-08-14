@@ -10,6 +10,7 @@ import com.lucky.jacklamb.ioc.ServiceIOC;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.servlet.core.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,10 +19,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.UUID;
@@ -128,7 +126,11 @@ public abstract class LuckyController {
 	 * @return
 	 */
 	protected <T> T fromJson(Class<T> targetClass,String jsonString){
-		return lson.toObject(targetClass,jsonString);
+		return lson.fromJson(targetClass,jsonString);
+	}
+
+	protected <T> T fromJson(Class<T> pojoClass,Reader reader){
+		return lson.fromJson(pojoClass, reader);
 	}
 
 	/**
@@ -138,7 +140,11 @@ public abstract class LuckyController {
 	 * @return
 	 */
 	protected Object fromJson(TypeToken token,String jsonString){
-		return lson.toObject(token,jsonString);
+		return lson.fromJson(token,jsonString);
+	}
+
+	protected Object fromJson(TypeToken token, Reader reader){
+		return lson.fromJson(token.getType(),reader);
 	}
 
 	/**
@@ -148,7 +154,35 @@ public abstract class LuckyController {
 	 * @return
 	 */
 	protected Object fromJson(Type type, String jsonString){
-		return lson.toObject(type,jsonString);
+		return lson.fromJson(type,jsonString);
+	}
+
+	protected Object fromJson(Type type, Reader reader){
+		return lson.fromJson(type,reader);
+	}
+
+	protected String toXml(Object pojo){
+		return new LXML().toXml(pojo);
+	}
+
+	protected void toXml(Object pojo,Writer writer){
+		new LXML().toXml(pojo,writer);
+	}
+
+	protected void toXml(Object pojo,OutputStream out){
+		new LXML().toXml(pojo,out);
+	}
+
+	protected Object fromXml(String xmlStr){
+		return new LXML().fromXml(xmlStr);
+	}
+
+	protected Object fromXml(Reader xmlReader){
+		return new LXML().fromXml(xmlReader);
+	}
+
+	protected Object fromXml(InputStream xmlIn){
+		return new LXML().fromXml(xmlIn);
 	}
 
 	/**

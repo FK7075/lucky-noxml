@@ -4,6 +4,7 @@ import com.lucky.jacklamb.annotation.ioc.Controller;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.enums.Code;
+import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.file.utils.LuckyFileUtils;
@@ -14,6 +15,7 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
@@ -44,7 +46,10 @@ public class AnnotationOperation {
     private static final Logger log = LogManager.getLogger(AnnotationOperation.class);
 
     private static final WebConfig webCfg= AppConfig.getAppConfig().getWebConfig();
+    
+    private static final LSON lson=new LSON();
 
+    private static final LXML lxml=new LXML();
     /**
      * 基于MultipartFile的多文件上传
      *
@@ -95,8 +100,9 @@ public class AnnotationOperation {
                     String filename = item.getName();
                     isFile = true;
                     InputStream in = item.getInputStream();
-                    if(in.available()/1024>webCfg.getMultipartMaxFileSize())
+                    if(in.available()/1024>webCfg.getMultipartMaxFileSize()) {
                         throw new FileSizeCrossingException("单个文件超过最大上传限制："+webCfg.getMultipartMaxFileSize()+"kb");
+                    }
                     MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
                     multipartFiles[fileIndex] = mfp;
                     fileIndex++;
@@ -140,11 +146,13 @@ public class AnnotationOperation {
             long totalSize=upload.totalSize();
             Map<String, String> fieldAndFolder = new HashMap<>();
             if (savePaths.length == 1) {
-                for (String file : files)
+                for (String file : files) {
                     fieldAndFolder.put(file, savePaths[0]);
+                }
             } else {
-                for (int i = 0; i < savePaths.length; i++)
+                for (int i = 0; i < savePaths.length; i++) {
                     fieldAndFolder.put(files[i], savePaths[i]);
+                }
             }
             upload(model, fieldAndFolder, types, maxSize,totalSize);
         }
@@ -187,8 +195,9 @@ public class AnnotationOperation {
                         String filename = item.getName();
                         String suffix = filename.substring(filename.lastIndexOf("."));
                         String NoSuffix = filename.substring(0, filename.lastIndexOf("."));
-                        if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase()))
+                        if (!"".equals(type) && !type.toLowerCase().contains(suffix.toLowerCase())) {
                             throw new FileTypeIllegalException("上传的文件格式" + suffix + "不合法！合法的文件格式为：" + type);
+                        }
                         String pathSave = fieldAndFolder.get(fn);
                         String filePath;
                         if (pathSave.startsWith("abs:")) {//绝对路径写法
@@ -197,7 +206,7 @@ public class AnnotationOperation {
                             filePath=savePath + pathSave;
                         }
                         filename = NoSuffix + "_" + new Date().getTime() + "_" + LuckyUtils.getRandomNumber() + suffix;
-                        if (filename == null || filename.trim().equals("")) {
+                        if (filename == null || "".equals(filename.trim())) {
                             continue;
                         }
                         filePath=filePath.endsWith(File.separator)?filePath.substring(0,filePath.length()-1):filePath;
@@ -274,8 +283,9 @@ public class AnnotationOperation {
                         File[] uploadFiles = model.getUploadFileArray(fi.getName());
                         if (fi.getType() == String[].class) {
                             String[] uploadFileNames = new String[uploadFiles.length];
-                            for (int x = 0; x < uploadFiles.length; i++)
+                            for (int x = 0; x < uploadFiles.length; i++) {
                                 uploadFileNames[x] = uploadFiles[x].getName();
+                            }
                             fi.set(pojo, uploadFiles);
                         } else if (fi.getType() == String.class) {
                             fi.set(pojo, uploadFiles[0].getName());
@@ -315,10 +325,11 @@ public class AnnotationOperation {
             String url = dl.url();
             byte[] buffer = HttpClientCall.getCallByte(url, new HashMap<>());
             String fileName = model.getResponse().getHeader("Content-Disposition");
-            if (fileName == null)
+            if (fileName == null) {
                 fileName = "lucky_" + LuckyUtils.getRandomNumber() + url.substring(url.lastIndexOf("."));
-            else
+            } else {
                 fileName.replaceAll("attachment;filename=", "").trim();
+            }
             LuckyFileUtils.download(model.getResponse(), buffer, fileName);
             return;
         } else {
@@ -326,7 +337,7 @@ public class AnnotationOperation {
             String filePath = dl.library();
             String file;
             if (model.parameterMapContainsKey(fileName)) {
-                file = model.getRequestPrarmeter(fileName);// 客户端传递的需要下载的文件名
+                file = model.getRequestParameter(fileName);// 客户端传递的需要下载的文件名
             } else if (model.restMapContainsKey(fileName)) {
                 file = model.getRestParam(fileName);
             } else {
@@ -378,8 +389,9 @@ public class AnnotationOperation {
 
         //得到@Upload文件操作执行后的String类型参数(文件名)
         moreUpload(model, method);
-        if (model.getUploadFileMap().isEmpty())
+        if (model.getUploadFileMap().isEmpty()) {
             moreMultipartFil(model, method);   //得到类型为MultipartFile的参数
+        }
 
         //得到参数列表中的所有pojo类型参数
         Map<String, Object> pojoMap = pojoParam(model, method);
@@ -395,8 +407,9 @@ public class AnnotationOperation {
                     args[i] = uploadFiles[0].getName();
                 } else if (String[].class == parameters[i].getType()) {
                     String[] uploadFileNames = new String[uploadFiles.length];
-                    for (int x = 0; x < uploadFiles.length; x++)
+                    for (int x = 0; x < uploadFiles.length; x++) {
                         uploadFileNames[x] = uploadFiles[x].getName();
+                    }
                     args[i] = uploadFileNames;
                 } else if (File.class == parameters[i].getType()) {
                     args[i] = uploadFiles[0];
@@ -434,13 +447,27 @@ public class AnnotationOperation {
                 args[i] = model;
                 continue;
             } else if (parameters[i].isAnnotationPresent(RequestBody.class)) {
-                args[i] = new LSON().toObject(parameters[i].getType(), model.getRequestPrarmeter(paramNames[i]));
+                RequestBody requestBody=parameters[i].getAnnotation(RequestBody.class);
+                String paramValue;
+                if(model.getParameterSize()==1){
+                    paramValue=model.getDefaultParameterValue();
+                }else{
+                    paramValue = model.getRequestParameter(paramNames[i]);
+                }
+                if(requestBody.rest()==Rest.JSON){
+                    args[i] = lson.fromJson(parameters[i].getType(),paramValue);
+                }else if (requestBody.rest()==Rest.XML){
+                    args[i]=lxml.fromXml(paramValue);
+                }else{
+                    continue;
+                }
                 continue;
             } else if (parameters[i].isAnnotationPresent(RestParam.class)) {
                 RestParam rp = parameters[i].getAnnotation(RestParam.class);
                 String restKey = rp.value();
-                if (!model.restMapContainsKey(restKey))
+                if (!model.restMapContainsKey(restKey)) {
                     throw new NotFindRequestException("缺少Rest请求参数：#{" + restKey + "} ,错误位置：" + method);
+                }
                 args[i] = JavaConversion.strToBasic(model.getRestMap().get(restKey), parameters[i].getType());
                 sb.append("[Rest-Java] " + restKey + "=" + args[i] + "\n");
                 continue;
@@ -448,12 +475,13 @@ public class AnnotationOperation {
                 String defparam = getRequeatParamDefValue(parameters[i]);
                 if (parameters[i].getType().isArray() && parameters[i].getType().getClassLoader() == null) {
                     if (model.parameterMapContainsKey(paramName)) {
-                        args[i] = model.getArray(paramName, parameters[i].getType());
+                        args[i] = JavaConversion.strToBasic(model.getRequestParameter(paramName),parameters[i].getType());
                         sb.append("[URL-Array] " + paramName + "=" + args[i] + "\n");
                         continue;
                     } else {
-                        if (defparam == null)
+                        if (defparam == null) {
                             throw new NotFindRequestException("缺少请求参数：" + paramName + ",错误位置：" + method);
+                        }
                         if ("null".equals(defparam)) {
                             args[i] = null;
                             sb.append("[Default-Array] " + paramName + "=" + args[i] + "\n");
@@ -466,7 +494,7 @@ public class AnnotationOperation {
                     }
                 } else {
                     if (model.parameterMapContainsKey(paramName)) {
-                        args[i] = model.getArray(paramName, parameters[i].getType())[0];
+                        args[i] = JavaConversion.strToBasic(model.getRequestParameter(paramName),parameters[i].getType());
                         sb.append("[URL-Java] " + paramName + "=" + args[i] + "\n");
                         continue;
                     } else if (model.restMapContainsKey(paramName)) {
@@ -474,8 +502,9 @@ public class AnnotationOperation {
                         sb.append("[Rest-Java] " + paramName + "=" + args[i] + "\n");
                         continue;
                     } else {
-                        if (defparam == null)
+                        if (defparam == null) {
                             args[i] = null;
+                        }
                         if ("null".equals(defparam)) {
                             args[i] = null;
                             sb.append("[Default-Java] " + paramName + "=" + args[i] + "\n");
@@ -501,8 +530,9 @@ public class AnnotationOperation {
         for (int i = 0; i < parameters.length; i++) {
             if (parameters[i].isAnnotationPresent(Check.class)) {
                 check = parameters[i].getAnnotation(Check.class);
-                if (!Regular.check(args[i].toString(), check.value()))
+                if (!Regular.check(args[i].toString(), check.value())) {
                     throw new IllegalParameterException(model, paramNames[i], args[i].toString(), check.value());
+                }
             }
             if (parameters[i].isAnnotationPresent(MD5.class)) {
                 md5 = parameters[i].getAnnotation(MD5.class);
@@ -529,8 +559,8 @@ public class AnnotationOperation {
                 if (fie.getType().isArray()) {
                     fie.set(pojo, model.getArray(fie.getName(), fie.getType()));
                 } else {
-                    if (model.getArray(fie.getName(), fie.getType()) != null) {
-                        fie.set(pojo, model.getArray(fie.getName(), fie.getType())[0]);
+                    if (model.parameterMapContainsKey(fie.getName())) {
+                        fie.set(pojo, JavaConversion.strToBasic(model.getRequestParameter(fie.getName()), fie.getType()));
                     }
                     if (model.getRestMap().containsKey(fie.getName())) {
                         fie.set(pojo, model.getRestParam(fie.getName(), fie.getType()));
@@ -556,8 +586,9 @@ public class AnnotationOperation {
         if (param.isAnnotationPresent(RequestParam.class)) {
             RequestParam rp = param.getAnnotation(RequestParam.class);
             String defValue = rp.def();
-            if ("LCL*#*$FK%_58314@XFL_*#*LCL".equals(defValue))
+            if ("LCL*#*$FK%_58314@XFL_*#*LCL".equals(defValue)) {
                 return null;
+            }
             return defValue;
         } else {
             return null;
@@ -574,8 +605,9 @@ public class AnnotationOperation {
     private boolean canInjection(Class<?> pojoClass, Model model) {
         Field[] pojoFields = pojoClass.getDeclaredFields();
         for (Field field : pojoFields) {
-            if (model.parameterMapContainsKey(field.getName()) || model.restMapContainsKey(field.getName()))
+            if (model.parameterMapContainsKey(field.getName()) || model.restMapContainsKey(field.getName())) {
                 return true;
+            }
         }
         return false;
     }
@@ -619,12 +651,15 @@ public class AnnotationOperation {
         //方法上不存在@CallApi注解，或者存在@CallApi注解但是value()为"",
         //此时使用ControllerApi与@xxxMapping的value()拼接得到完整的url
         if (!method.isAnnotationPresent(CallApi.class) || "".equals(method.getAnnotation(CallApi.class).value())) {
-            if ("".equals(controllerApi))
+            if ("".equals(controllerApi)) {
                 throw new NotFoundCallUrlException("找不到可使用的远程服务地址，错误的远程服务方法：" + method);
-            if (!controllerApi.endsWith("/"))
+            }
+            if (!controllerApi.endsWith("/")) {
                 controllerApi += "/";
-            if (mappingValue.startsWith("/"))
+            }
+            if (mappingValue.startsWith("/")) {
                 mappingValue = mappingValue.substring(1);
+            }
             return controllerApi + mappingValue;
         }
         CallApi callApi = method.getAnnotation(CallApi.class);
@@ -636,12 +671,15 @@ public class AnnotationOperation {
         }
 
         //@CallApi注解中的value()不是一个完整的Url，需要与ControllerApi进行拼接
-        if ("".equals(controllerApi))
+        if ("".equals(controllerApi)) {
             throw new NotFoundCallUrlException("找不到可使用的远程服务地址，错误的远程服务方法：" + method);
-        if (!controllerApi.endsWith("/"))
+        }
+        if (!controllerApi.endsWith("/")) {
             controllerApi += "/";
-        if (methodCallApi.startsWith("/"))
+        }
+        if (methodCallApi.startsWith("/")) {
             methodCallApi = methodCallApi.substring(1);
+        }
         return controllerApi + methodCallApi;
     }
 
@@ -654,7 +692,7 @@ public class AnnotationOperation {
      */
     private Object callRestAndBody(Parameter currParameter, String strResult) {
         if (currParameter.isAnnotationPresent(CallBody.class)) {
-            return new LSON().toObject(currParameter.getType(), strResult);
+            return lson.fromJson(currParameter.getType(), strResult);
         }
         return JavaConversion.strToBasic(strResult, currParameter.getType());
     }
@@ -684,7 +722,7 @@ public class AnnotationOperation {
                     if (model.restMapContainsKey(currParam)) {
                         map.put(currParam, model.getRestParam(currParam));
                     } else if (model.parameterMapContainsKey(currParam)) {
-                        map.put(currParam, model.getRequestPrarmeter(currParam));
+                        map.put(currParam, model.getRequestParameter(currParam));
                     } else if (getRequeatParamDefValue(parameters[i]) != null) {
                         map.put(currParam, getRequeatParamDefValue(parameters[i]));
                     } else {
@@ -704,8 +742,9 @@ public class AnnotationOperation {
             for (Field field : fields) {
                 field.setAccessible(true);
                 fieldValue = field.get(pojo);
-                if (fieldValue != null)
+                if (fieldValue != null) {
                     map.put(field.getName(), fieldValue.toString());
+                }
             }
         }
         return map;
@@ -722,8 +761,9 @@ class UploadCopy{
     }
 
     public void copy() throws IOException {
-        if(!out.getParentFile().exists())
+        if(!out.getParentFile().exists()) {
             out.getParentFile().mkdirs();
+        }
         LuckyFileUtils.copy(in,new BufferedOutputStream(new FileOutputStream(out)));
     }
 

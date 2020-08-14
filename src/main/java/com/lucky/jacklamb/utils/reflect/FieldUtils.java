@@ -103,6 +103,21 @@ public abstract class FieldUtils {
         return true;
     }
 
+    public static Field getField(Class<?> clzz,String name){
+        try {
+            return clzz.getField(name);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("在"+clzz+"中找不到属性名为\""+name+"\"的属性",e);
+        }
+    }
+
+    public static Field getDeclaredField(Class<?> clzz,String name){
+        try {
+            return clzz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("在"+clzz+"中找不到属性名为\""+name+"\"的属性",e);
+        }
+    }
 
     /**
      * 反射机制获取Field的值

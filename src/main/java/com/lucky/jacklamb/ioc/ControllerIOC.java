@@ -204,8 +204,8 @@ public class ControllerIOC extends ComponentFactory{
 					come.addIds(mappingIps);
 					if(clzz.getAnnotation(Controller.class).rest()!=Rest.NO)
 						come.setRest(clzz.getAnnotation(Controller.class).rest());
-					if(method.isAnnotationPresent(RestBody.class))
-						come.setRest(method.getAnnotation(RestBody.class).value());
+					if(method.isAnnotationPresent(ResponseBody.class))
+						come.setRest(method.getAnnotation(ResponseBody.class).value());
 					come.setIpSection(clzz.getAnnotation(Controller.class).ipSection());
 					come.setIpSection(md.ipSection);
 					come.setController(entry.getValue());

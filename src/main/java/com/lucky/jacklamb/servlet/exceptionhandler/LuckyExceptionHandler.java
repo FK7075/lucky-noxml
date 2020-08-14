@@ -2,7 +2,7 @@ package com.lucky.jacklamb.servlet.exceptionhandler;
 
 import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.annotation.mvc.ExceptionHandler;
-import com.lucky.jacklamb.annotation.mvc.RestBody;
+import com.lucky.jacklamb.annotation.mvc.ResponseBody;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.servlet.ResponseControl;
@@ -81,8 +81,8 @@ public abstract class LuckyExceptionHandler {
         ControllerExceptionHandler ceh=this.getClass().getAnnotation(ControllerExceptionHandler.class);
         Rest rest = ceh.rest();
         Rest methodRest = null;
-        if (method.isAnnotationPresent(RestBody.class)) {
-            methodRest = method.getAnnotation(RestBody.class).value();
+        if (method.isAnnotationPresent(ResponseBody.class)) {
+            methodRest = method.getAnnotation(ResponseBody.class).value();
         }
         rest = methodRest == null ? rest : methodRest;
         Parameter[] parameters = method.getParameters();

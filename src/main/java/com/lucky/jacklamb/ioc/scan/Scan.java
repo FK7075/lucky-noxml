@@ -21,6 +21,7 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.rest.XStreamAllowType;
 import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,6 +87,8 @@ public abstract class Scan {
 	private AppConfig configuration;
 
 	protected List<Class<?>> pojoClass;
+
+	protected List<Class<?>> deserializationXStream;
 	
 	protected boolean isFirst=true;
 	
@@ -99,6 +102,7 @@ public abstract class Scan {
 		aspectClass=new ArrayList<>();
 		webSocketClass=new ArrayList<>();
 		pojoClass=new ArrayList<>();
+		deserializationXStream=new ArrayList<>();
 	}
 
 	public List<Class<?>> getPojoClass() {
@@ -124,6 +128,7 @@ public abstract class Scan {
 		componentClassMap.put("component", componentClass);
 		componentClassMap.put("aspect", aspectClass);
 		componentClassMap.put("websocket", webSocketClass);
+		componentClassMap.put("xStream",deserializationXStream);
 	}
 	
 	public List<Class<?>> getComponentClass(String iocCode){
@@ -170,26 +175,29 @@ public abstract class Scan {
 	  * @param fileClass
 	  */
 	public void load(Class<?> fileClass){
-		if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class))
+		if(fileClass.isAnnotationPresent(XStreamAllowType.class)){
+			deserializationXStream.add(fileClass);
+		}
+		if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class)) {
 			controllerClass.add(fileClass);
-		else if(fileClass.isAnnotationPresent(Service.class))
+		} else if(fileClass.isAnnotationPresent(Service.class)) {
 			serviceClass.add(fileClass);
-		else if(fileClass.isAnnotationPresent(Repository.class)||fileClass.isAnnotationPresent(Mapper.class))
+		} else if(fileClass.isAnnotationPresent(Repository.class)||fileClass.isAnnotationPresent(Mapper.class)) {
 			repositoryClass.add(fileClass);
-		else if(fileClass.isAnnotationPresent(Component.class)
+		} else if(fileClass.isAnnotationPresent(Component.class)
 				||fileClass.isAnnotationPresent(Configuration.class)
 				||fileClass.isAnnotationPresent(ControllerExceptionHandler.class)
 				||fileClass.isAnnotationPresent(LuckyServlet.class)
 				||fileClass.isAnnotationPresent(LuckyFilter.class)
 				||fileClass.isAnnotationPresent(LuckyListener.class)
 				|| fileClass.isAnnotationPresent(Conversion.class)
-				|| fileClass.isAnnotationPresent(QuartzJobs.class))
+				|| fileClass.isAnnotationPresent(QuartzJobs.class)) {
 			componentClass.add(fileClass);
-		else if(fileClass.isAnnotationPresent(Table.class))
+		} else if(fileClass.isAnnotationPresent(Table.class)) {
 			pojoClass.add(fileClass);
-		else if(fileClass.isAnnotationPresent(Aspect.class)|| Point.class.isAssignableFrom(fileClass))
+		} else if(fileClass.isAnnotationPresent(Aspect.class)|| Point.class.isAssignableFrom(fileClass)) {
 			aspectClass.add(fileClass);
-		else {
+		}else {
 			try {
 				if(fileClass.isAnnotationPresent(ServerEndpoint.class)|| ServerApplicationConfig.class.isAssignableFrom(fileClass)|| Endpoint.class.isAssignableFrom(fileClass)) {
 					webSocketClass.add(fileClass);
@@ -289,6 +297,17 @@ public abstract class Scan {
 							Stream.of(ctrlClasses).forEach(aspectClass::add);
 						} else {
 							throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+						}
+					}else if(iocCode == IocCode.X_STREAM){
+						config = method.invoke(cfgObj);
+						if (returnType == Class.class) {
+							Class ctrlClass = (Class) config;
+							deserializationXStream.add(ctrlClass);
+						} else if (returnType == Class[].class) {
+							Class[] ctrlClasses = (Class[]) config;
+							Stream.of(ctrlClasses).forEach(deserializationXStream::add);
+						} else {
+							throw new RuntimeException("尝试创建一个@XStreamAllowType组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
 						}
 					} else if (iocCode == IocCode.WEBSOCKET) {
 						config = method.invoke(cfgObj);

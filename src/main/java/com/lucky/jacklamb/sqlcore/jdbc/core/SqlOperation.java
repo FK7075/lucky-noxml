@@ -49,12 +49,12 @@ public class SqlOperation {
 		PreparedStatement ps=null;
 		try {
 			ps = conn.prepareStatement(sql);
-			if (obj != null) {
-				for (int i = 0; i < obj.length; i++) {
-					ps.setObject(i + 1, obj[i]);
-				}
+			int count=Regular.getArrayByExpression(sql, "\\?").size();
+			for (int i = 0; i <count; i++) {
+				ps.setObject(i + 1, obj[i]);
 			}
 			int result = ps.executeUpdate();
+			obj=count>0?obj:new Object[]{};
 			new SqlLog(dbname).isShowLog(sql, obj);
 			clearCache();
 			return result;
@@ -79,13 +79,15 @@ public class SqlOperation {
 				int[] result={ps.executeUpdate()};
 				return result;
 			}else {
+				int count=Regular.getArrayByExpression(sql, "\\?").size();
 				for(int i=0;i<obj.length;i++) {
-					for(int j=0;j<obj[i].length;j++) {
+					for(int j=0;j<count;j++) {
 						ps.setObject(j+1, obj[i][j]);
 					}
 					ps.addBatch();
 				}
 				int[] result = ps.executeBatch();
+				obj=count>0?obj:new Object[][]{};
 				new SqlLog(dbname).isShowLog(sql, obj);
 				clearCache();
 				return  result;
@@ -138,6 +140,7 @@ public class SqlOperation {
 				ps.setObject(i + 1, obj[i]);
 			}
 			ResultSet resultSet = ps.executeQuery();
+			obj=count>0?obj:new Object[]{};
 			new SqlLog(dbname).isShowLog(sql, obj);
 			return resultSet;
 		} catch (SQLException e) {
@@ -158,73 +161,6 @@ public class SqlOperation {
 			return JDBCConversion.conversion(getCacheQueryResult(sql,obj),c);
 		}
 		return JDBCConversion.conversion(getQueryResult(sql,obj),c);
-//		PreparedStatement ps=null;
-//		SqlLog log=new SqlLog(dbname);
-//		ResultSet rs=null;
-//		try {
-//			ps = conn.prepareStatement(sql);
-//			if (obj != null) {
-//				for (int i = 0; i < obj.length; i++) {
-//					ps.setObject(i + 1, obj[i]);
-//				}
-//			}
-//			rs = ps.executeQuery();
-//			log.isShowLog(sql, obj);
-//		} catch (SQLException e) {
-//			throw new LuckySqlOperationException(sql,obj,e);
-//		}
-//		List<T> collection=new ArrayList<>();
-//		if(c.getClassLoader()!=null) {
-//			Field[] fields = ClassUtils.getAllFields(c);
-//			Object object = null;
-//			try {
-//				while (rs.next()) {
-//					object = c.newInstance();
-//					for (Field f : fields) {
-//						if(f.isAnnotationPresent(NoPackage.class))
-//							continue;
-//						if (f.getType().getClassLoader()!=null) {
-//							Class<?> cl=f.getType();
-//							Field[] fils= ClassUtils.getAllFields(cl);
-//							Object onfk=cl.newInstance();
-//							for (Field ff : fils) {
-//								if(ff.isAnnotationPresent(NoPackage.class))
-//									continue;
-//								String field_tab= PojoManage.getTableField(ff);
-//								if (isExistColumn(rs, field_tab)) {
-//									ff.setAccessible(true);
-//									ff.set(onfk, rs.getObject(field_tab));
-//								}
-//							}
-//							f.setAccessible(true);
-//							f.set(object, onfk);
-//						} else {
-//							String field_tab=PojoManage.getTableField(f);
-//							if (isExistColumn(rs, field_tab)) {
-//								f.setAccessible(true);
-//								f.set(object, rs.getObject(field_tab));
-//							}
-//						}
-//					}
-//					collection.add((T) object);
-//				}
-//			} catch (Exception e) {
-//				throw new AutoPackageException("表类映射错误，无法自动包装查询结果！请检查检查映射配置。包装类：Class:"+c.getName()+"   SQl:"+sql,e);
-//			}finally {
-//				LuckyDataSource.release(rs,ps,null);
-//			}
-//		}else {
-//			try {
-//				while(rs.next()) {
-//					collection.add((T) JavaConversion.strToBasic(rs.getObject(1).toString(), c));
-//				}
-//			} catch (SQLException e) {
-//				throw new LuckySqlOperationException(sql,obj,e);
-//			}finally {
-//				LuckyDataSource.release(rs,ps,null);
-//			}
-//		}
-//		return collection;
 	}
 
 	public void clearCache(){
@@ -255,6 +191,7 @@ public class SqlOperation {
 				ps.setObject(i + 1, obj[i]);
 			}
 			rs = ps.executeQuery();
+			obj=count>0?obj:new Object[]{};
 			log.isShowLog(sql, obj);
 			ResultSetMetaData md = rs.getMetaData();
 			int columnCount = md.getColumnCount();
@@ -272,25 +209,4 @@ public class SqlOperation {
 			LuckyDataSource.release(rs,ps,null);
 		}
 	}
-
-//	/**
-//	 * 判断结果集中是否有指定的列
-//	 * @param rs 结果集对象
-//	 * @param columnName  类名
-//	 * @return 结果集中有指定的列则反true
-//	 */
-//	public boolean isExistColumn(ResultSet rs, String columnName) {
-//		try {
-//			ResultSetMetaData metaData = rs.getMetaData();
-//			int size=metaData.getColumnCount();
-//			for(int i=1;i<=size;i++) {
-//				if(columnName.equalsIgnoreCase(metaData.getColumnLabel(i))) {
-//					return true;
-//				}
-//			}
-//			return false;
-//		} catch (SQLException e) {
-//			throw new LuckySqlOperationException(e);
-//		}
-//	}
 }

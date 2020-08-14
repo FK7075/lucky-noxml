@@ -1,203 +1,80 @@
 package com.lucky.jacklamb.rest;
 
-import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.ioc.scan.ScanFactory;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.DataHolder;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
+import java.io.*;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.Map.Entry;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class LXML {
 
-    private String xmlStr;
+    private static XStream xstream;
 
+    private static final String HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
-    public String getXmlStr() {
-        return xmlStr;
+    static {
+        xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
+        XStream.setupDefaultSecurity(xstream);
+        List<Class<?>> allowClasses = ScanFactory.createScan().getComponentClass("xStream");
+        Class<?>[] allowTypes = new Class[allowClasses.size()];
+        allowClasses.toArray(allowTypes);
+        xstream.allowTypes(allowTypes);
     }
 
-    /**
-     * 将pojo转化为XML字符
-     *
-     * @param pojo
-     */
-    public LXML(Object pojo) {
-        xmlStr= XmlFileUtil.createXmlDocument(pojo);
-//        if (pojo == null)
-//            xmlStr = "<null/>";
-//        else {
-//            Class<?> clzz = pojo.getClass();
-//            if (Collection.class.isAssignableFrom(clzz)) {
-//                try {
-//                    xmlStr = collectionToxmlStr((Collection<?>) pojo);
-//                } catch (IllegalArgumentException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            } else if (clzz.isEnum()) {
-//                xmlStr = pojo.toString();
-//            } else if (clzz.isArray()) {
-//                try {
-//                    xmlStr = arrayToxmlStr((Object[]) pojo);
-//                } catch (IllegalArgumentException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            } else if (Map.class.isAssignableFrom(clzz)) {
-//                xmlStr = mapToxmlStr((Map<Object, Object>) pojo);
-//            } else if (clzz.getClassLoader() != null) {
-//                try {
-//                    xmlStr = objectToxmlStr(pojo);
-//                } catch (IllegalArgumentException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                xmlStr = pojo.toString();
-//            }
-//        }
-
+    public String toXml(Object pojo) {
+        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
+        return HEAD + xstream.toXML(pojo);
     }
 
-    private String mapToxmlStr(Map<Object, Object> map) {
-        if (map == null || map.isEmpty()) {
-            return "<map/>";
-        }
-        StringBuilder str = new StringBuilder("<map>");
-        for (Entry<Object, Object> entry : map.entrySet()) {
-            str.append("<").append(entry.getKey()).append(">").append(new LXML(entry.getValue()).getXmlStr()).append("</").append(entry.getKey()).append(">");
-        }
-        return str.toString() + "</map>";
+    public void toXml(Object pojo, Writer writer) {
+        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
+        xstream.toXML(pojo, writer);
     }
 
-    private String arrayToxmlStr(Object[] objects) throws IllegalArgumentException, IllegalAccessException {
-        if (objects == null || objects.length == 0) {
-            return "<array/>";
-        }
-        StringBuilder arrayxmlStr = new StringBuilder("<array>");
-        List<String> field_json_copy = new ArrayList<>();
-        List<String> field_json = new ArrayList<>();
-        for (Object objStr : objects) {
-            field_json_copy.add(objectToxmlStr(objStr));
-        }
-        field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
-        for (int i = 0; i < field_json.size(); i++) {
-            arrayxmlStr.append("<element>").append(field_json.get(i)).append("</element>");
-        }
-        return arrayxmlStr.toString() + "</array>";
+    public void toXml(Object pojo, OutputStream out) {
+        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
+        xstream.toXML(pojo, out);
     }
 
-    /**
-     * 将List集合形式的Pojo转化为Json格式
-     *
-     * @param list pojo格式的数据
-     * @return
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
-     */
-    private <T> String collectionToxmlStr(Collection<T> list) throws IllegalArgumentException, IllegalAccessException {
-        if (list.isEmpty() || list == null) {
-            return "<collection/>";
-        }
-        StringBuilder listxmlStr = new StringBuilder("<collection>");
-        List<String> field_json_copy = new ArrayList<>();
-        List<String> field_json = new ArrayList<>();
-        for (T objStr : list) {
-            field_json_copy.add(objectToxmlStr(objStr));
-        }
-        field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
-        for (int i = 0; i < field_json.size(); i++) {
-            String string = field_json.get(i);
-            if (string.startsWith("<") && string.endsWith(">"))
-                listxmlStr.append(string);
-            else
-                listxmlStr.append("<element>").append(string).append("</element>");
-        }
-        return listxmlStr.toString() + "</collection>";
+    public void marshal(Object pojo, HierarchicalStreamWriter writer) {
+        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
+        xstream.marshal(pojo, writer);
     }
 
-    /**
-     * 将pojo对象转化为JSON格式的数据
-     *
-     * @param object pojo对象
-     * @return
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
-     */
-    private String objectToxmlStr(Object object) throws IllegalArgumentException, IllegalAccessException {
-        if (object == null) {
-            return "";
-        }
-        if (object.getClass().getClassLoader() != null) {
-            String className = LuckyUtils.TableToClass1(object.getClass().getSimpleName());
-            StringBuilder objxmlStr = new StringBuilder("<").append(className).append(">");
-            List<String> field_json_copy = new ArrayList<>();
-            List<String> field_json = new ArrayList<>();
-            Field[] fields = object.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if (!field.getType().getName().equals(object.getClass().getName()))
-                    field_json_copy.add(fieldToxmlStr(object, field));
-            }
-            field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
-            for (int i = 0; i < field_json.size(); i++) {
-                objxmlStr.append(field_json.get(i));
-            }
-            return objxmlStr.toString() + "</" + className + ">";
-        } else {
-            return object.toString();
-        }
-
+    public void marshal(Object pojo, HierarchicalStreamWriter writer, DataHolder dataHolder) {
+        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
+        xstream.marshal(pojo, writer, dataHolder);
     }
 
-    /**
-     * 将不为null的属性转变为json格式
-     *
-     * @param field_Obj 目标对象
-     * @param field     目标属性
-     * @return
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     */
-    private String fieldToxmlStr(Object field_Obj, Field field)
-            throws IllegalArgumentException, IllegalAccessException {
-        StringBuilder fieldxmlStr = new StringBuilder();
-        field.setAccessible(true);
-        Object obj = field.get(field_Obj);
-        Class<?> fieldClass = field.getType();
-        if (obj != null) {
-            String fieldXmlStr = new LXML(obj).getXmlStr();
-            if (fieldClass.isArray()) {
-                if (!"<array/>".equals(fieldXmlStr) && !"<array></array>".equals(fieldXmlStr)) {
-                    fieldXmlStr = fieldXmlStr.replaceAll("<array>", "<" + AttrUtil.getField(field) + ">").replaceAll("</array>", "</" + AttrUtil.getField(field) + ">");
-                    fieldxmlStr.append(fieldXmlStr);
-                    return "";
-                } else {
-                    return fieldxmlStr.toString();
-                }
-            }
-            if (Collection.class.isAssignableFrom(fieldClass)) {
-                if (!"<collection/>".equals(fieldXmlStr) && !"<collection></collection>".equals(fieldXmlStr)) {
-                    fieldXmlStr = fieldXmlStr.replaceAll("<collection>", "<" + AttrUtil.getField(field) + ">").replaceAll("</collection>", "</" + AttrUtil.getField(field) + ">");
-                    fieldxmlStr.append(fieldXmlStr);
-                    return fieldxmlStr.toString();
-                } else {
-                    return "";
-                }
-            }
-            if (Map.class.isAssignableFrom(fieldClass)) {
-                if (!"<map/>".equals(fieldXmlStr) && !"<map></map>".equals(fieldXmlStr)) {
-                    fieldXmlStr = fieldXmlStr.replaceAll("<map>", "<" + AttrUtil.getField(field) + ">").replaceAll("</map>", "</" + AttrUtil.getField(field) + ">");
-                    fieldxmlStr.append(fieldXmlStr);
-                    return fieldxmlStr.toString();
-                } else {
-                    return "";
-                }
-            }
-            return "<" + AttrUtil.getField(field) + ">" + fieldXmlStr + "</" + AttrUtil.getField(field) + ">";
-        }
-        return fieldxmlStr.toString();
+    public Object fromXml(String xml) {
+        return xstream.fromXML(xml);
+    }
+
+    public Object fromXml(Reader reader) {
+        return xstream.fromXML(reader);
+    }
+
+    public Object fromXml(InputStream in) {
+        return xstream.fromXML(in);
+    }
+
+    public Object fromXml(URL url) {
+        return xstream.fromXML(url);
+    }
+
+    public Object fromXml(File file) {
+        return xstream.fromXML(file);
     }
 
     public static void main(String[] args) {
@@ -226,11 +103,28 @@ public class LXML {
         map_bb.put("map2", bb);
         map_bb.put("map3", new BB("MAPBB"));
         object.setMap_BB(map_bb);
-        LXML l = new LXML(object);
-        System.out.println(l.getXmlStr());
+        LXML l = new LXML();
+        System.out.println(l.toXml(object));
 
     }
 
+}
+
+class ClassToken {
+
+    private Object targetObject;
+
+    public ClassToken(Object targetObject) {
+        this.targetObject = targetObject;
+    }
+
+    public Class<?>[] getGeneric() {
+        Field field = FieldUtils.getDeclaredField(this.getClass(), "targetObject");
+        Class<?>[] genericType = FieldUtils.getGenericType(field);
+        if (genericType == null)
+            return new Class<?>[]{targetObject.getClass()};
+        return genericType;
+    }
 }
 
 class TT {
@@ -339,3 +233,196 @@ class BB {
 }
 
 
+
+
+//    private String xmlStr;
+//
+//
+//    public String getXmlStr() {
+//        return xmlStr;
+//    }
+//
+//    /**
+//     * 将pojo转化为XML字符
+//     *
+//     * @param pojo
+//     */
+//    public LXML(Object pojo) {
+////        xmlStr= XmlFileUtil.createXmlDocument(pojo);
+////        if (pojo == null)
+////            xmlStr = "<null/>";
+////        else {
+////            Class<?> clzz = pojo.getClass();
+////            if (Collection.class.isAssignableFrom(clzz)) {
+////                try {
+////                    xmlStr = collectionToxmlStr((Collection<?>) pojo);
+////                } catch (IllegalArgumentException e) {
+////                    e.printStackTrace();
+////                } catch (IllegalAccessException e) {
+////                    e.printStackTrace();
+////                }
+////            } else if (clzz.isEnum()) {
+////                xmlStr = pojo.toString();
+////            } else if (clzz.isArray()) {
+////                try {
+////                    xmlStr = arrayToxmlStr((Object[]) pojo);
+////                } catch (IllegalArgumentException e) {
+////                    e.printStackTrace();
+////                } catch (IllegalAccessException e) {
+////                    e.printStackTrace();
+////                }
+////            } else if (Map.class.isAssignableFrom(clzz)) {
+////                xmlStr = mapToxmlStr((Map<Object, Object>) pojo);
+////            } else if (clzz.getClassLoader() != null) {
+////                try {
+////                    xmlStr = objectToxmlStr(pojo);
+////                } catch (IllegalArgumentException e) {
+////                    e.printStackTrace();
+////                } catch (IllegalAccessException e) {
+////                    e.printStackTrace();
+////                }
+////            } else {
+////                xmlStr = pojo.toString();
+////            }
+////        }
+//
+//    }
+//
+//    private String mapToxmlStr(Map<Object, Object> map) {
+//        if (map == null || map.isEmpty()) {
+//            return "<map/>";
+//        }
+//        StringBuilder str = new StringBuilder("<map>");
+//        for (Entry<Object, Object> entry : map.entrySet()) {
+//            str.append("<").append(entry.getKey()).append(">").append(new LXML(entry.getValue()).getXmlStr()).append("</").append(entry.getKey()).append(">");
+//        }
+//        return str.toString() + "</map>";
+//    }
+//
+//    private String arrayToxmlStr(Object[] objects) throws IllegalArgumentException, IllegalAccessException {
+//        if (objects == null || objects.length == 0) {
+//            return "<array/>";
+//        }
+//        StringBuilder arrayxmlStr = new StringBuilder("<array>");
+//        List<String> field_json_copy = new ArrayList<>();
+//        List<String> field_json = new ArrayList<>();
+//        for (Object objStr : objects) {
+//            field_json_copy.add(objectToxmlStr(objStr));
+//        }
+//        field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
+//        for (int i = 0; i < field_json.size(); i++) {
+//            arrayxmlStr.append("<element>").append(field_json.get(i)).append("</element>");
+//        }
+//        return arrayxmlStr.toString() + "</array>";
+//    }
+//
+//    /**
+//     * 将List集合形式的Pojo转化为Json格式
+//     *
+//     * @param list pojo格式的数据
+//     * @return
+//     * @throws IllegalArgumentException
+//     * @throws IllegalAccessException
+//     */
+//    private <T> String collectionToxmlStr(Collection<T> list) throws IllegalArgumentException, IllegalAccessException {
+//        if (list.isEmpty() || list == null) {
+//            return "<collection/>";
+//        }
+//        StringBuilder listxmlStr = new StringBuilder("<collection>");
+//        List<String> field_json_copy = new ArrayList<>();
+//        List<String> field_json = new ArrayList<>();
+//        for (T objStr : list) {
+//            field_json_copy.add(objectToxmlStr(objStr));
+//        }
+//        field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
+//        for (int i = 0; i < field_json.size(); i++) {
+//            String string = field_json.get(i);
+//            if (string.startsWith("<") && string.endsWith(">"))
+//                listxmlStr.append(string);
+//            else
+//                listxmlStr.append("<element>").append(string).append("</element>");
+//        }
+//        return listxmlStr.toString() + "</collection>";
+//    }
+//
+//    /**
+//     * 将pojo对象转化为XML格式的数据
+//     *
+//     * @param object pojo对象
+//     * @return
+//     * @throws IllegalArgumentException
+//     * @throws IllegalAccessException
+//     */
+//    private String objectToxmlStr(Object object) throws IllegalArgumentException, IllegalAccessException {
+//        if (object == null) {
+//            return "";
+//        }
+//        if (object.getClass().getClassLoader() != null) {
+//            String className = LuckyUtils.TableToClass1(object.getClass().getSimpleName());
+//            StringBuilder objxmlStr = new StringBuilder("<").append(className).append(">");
+//            List<String> field_json_copy = new ArrayList<>();
+//            List<String> field_json = new ArrayList<>();
+//            Field[] fields = object.getClass().getDeclaredFields();
+//            for (Field field : fields) {
+//                if (!field.getType().getName().equals(object.getClass().getName()))
+//                    field_json_copy.add(fieldToxmlStr(object, field));
+//            }
+//            field_json_copy.stream().filter(str -> !"".equals(str)).forEach(field_json::add);
+//            for (int i = 0; i < field_json.size(); i++) {
+//                objxmlStr.append(field_json.get(i));
+//            }
+//            return objxmlStr.toString() + "</" + className + ">";
+//        } else {
+//            return object.toString();
+//        }
+//
+//    }
+//
+//    /**
+//     * 将不为null的属性转变为json格式
+//     *
+//     * @param field_Obj 目标对象
+//     * @param field     目标属性
+//     * @return
+//     * @throws IllegalAccessException
+//     * @throws IllegalArgumentException
+//     */
+//    private String fieldToxmlStr(Object field_Obj, Field field)
+//            throws IllegalArgumentException, IllegalAccessException {
+//        StringBuilder fieldxmlStr = new StringBuilder();
+//        field.setAccessible(true);
+//        Object obj = field.get(field_Obj);
+//        Class<?> fieldClass = field.getType();
+//        if (obj != null) {
+//            String fieldXmlStr = new LXML(obj).getXmlStr();
+//            if (fieldClass.isArray()) {
+//                if (!"<array/>".equals(fieldXmlStr) && !"<array></array>".equals(fieldXmlStr)) {
+//                    fieldXmlStr = fieldXmlStr.replaceAll("<array>", "<" + AttrUtil.getField(field) + ">").replaceAll("</array>", "</" + AttrUtil.getField(field) + ">");
+//                    fieldxmlStr.append(fieldXmlStr);
+//                    return "";
+//                } else {
+//                    return fieldxmlStr.toString();
+//                }
+//            }
+//            if (Collection.class.isAssignableFrom(fieldClass)) {
+//                if (!"<collection/>".equals(fieldXmlStr) && !"<collection></collection>".equals(fieldXmlStr)) {
+//                    fieldXmlStr = fieldXmlStr.replaceAll("<collection>", "<" + AttrUtil.getField(field) + ">").replaceAll("</collection>", "</" + AttrUtil.getField(field) + ">");
+//                    fieldxmlStr.append(fieldXmlStr);
+//                    return fieldxmlStr.toString();
+//                } else {
+//                    return "";
+//                }
+//            }
+//            if (Map.class.isAssignableFrom(fieldClass)) {
+//                if (!"<map/>".equals(fieldXmlStr) && !"<map></map>".equals(fieldXmlStr)) {
+//                    fieldXmlStr = fieldXmlStr.replaceAll("<map>", "<" + AttrUtil.getField(field) + ">").replaceAll("</map>", "</" + AttrUtil.getField(field) + ">");
+//                    fieldxmlStr.append(fieldXmlStr);
+//                    return fieldxmlStr.toString();
+//                } else {
+//                    return "";
+//                }
+//            }
+//            return "<" + AttrUtil.getField(field) + ">" + fieldXmlStr + "</" + AttrUtil.getField(field) + ">";
+//        }
+//        return fieldxmlStr.toString();
+//    }

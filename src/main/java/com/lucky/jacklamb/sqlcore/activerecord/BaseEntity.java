@@ -1,8 +1,10 @@
 package com.lucky.jacklamb.sqlcore.activerecord;
 
+import com.google.gson.annotations.Expose;
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
@@ -23,17 +25,17 @@ public abstract class BaseEntity<Entity> {
 
     @NoPackage
     @NoColumn
-    private SqlCore sqlCore;
+    private transient SqlCore sqlCore;
 
     @NoPackage
     @NoColumn
-    private final Field idField= PojoManage.getIdField(this.getClass());
+    private transient final Field idField= PojoManage.getIdField(this.getClass());
 
     public BaseEntity(){
         sqlCore= SqlCoreFactory.createSqlCore();
     }
 
-    protected void setSqlCore(SqlCore sqlCore){
+    public void setSqlCore(SqlCore sqlCore){
         this.sqlCore=sqlCore;
     }
 
@@ -41,14 +43,14 @@ public abstract class BaseEntity<Entity> {
      * 设置数据源内核
      * @param dbName
      */
-    protected void setDbName(String dbName){
+    public void setDbName(String dbName){
         sqlCore=SqlCoreFactory.createSqlCore(dbName);
     }
 
     /**
      * 创建实体对应的数据库表
      */
-    protected void createTable(){
+    public void createTable(){
         sqlCore.createTable(this.getClass());
     }
 
@@ -57,7 +59,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 实体
      * @return
      */
-    protected int insert(Entity entity){
+    public int insert(Entity entity){
         return sqlCore.insert(entity);
     }
 
@@ -65,7 +67,7 @@ public abstract class BaseEntity<Entity> {
      * 将当前实体添加到数据库
      * @return
      */
-    protected int insert(){
+    public int insert(){
         return sqlCore.insert(this);
     }
 
@@ -74,7 +76,7 @@ public abstract class BaseEntity<Entity> {
      * @param entities
      * @return
      */
-    protected int insert(Collection<Entity> entities){
+    public int insert(Collection<Entity> entities){
         return sqlCore.insertByCollection(entities);
     }
 
@@ -83,7 +85,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity
      * @return
      */
-    protected int insertSetId(Entity entity){
+    public int insertSetId(Entity entity){
         return sqlCore.insertSetId(entity);
     }
 
@@ -91,7 +93,7 @@ public abstract class BaseEntity<Entity> {
      * 添加并返回ID
      * @return
      */
-    protected int insertSetId(){
+    public int insertSetId(){
         return sqlCore.insertSetId(this);
     }
 
@@ -100,7 +102,7 @@ public abstract class BaseEntity<Entity> {
      * @param id 字段ID
      * @return
      */
-    protected int deleteById(Object id){
+    public int deleteById(Object id){
         return sqlCore.delete(this.getClass(),id);
     }
 
@@ -108,7 +110,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前ID的ID删除
      * @return
      */
-    protected int deleteById(){
+    public int deleteById(){
         return sqlCore.delete(this.getClass(),FieldUtils.getValue(this,idField));
     }
 
@@ -117,7 +119,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 要删除的实体
      * @return
      */
-    protected int delete(Entity entity){
+    public int delete(Entity entity){
         return sqlCore.delete(entity);
     }
 
@@ -125,7 +127,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前实体的实体删除
      * @return
      */
-    protected int delete(){
+    public int delete(){
         return sqlCore.delete(this);
     }
 
@@ -134,7 +136,7 @@ public abstract class BaseEntity<Entity> {
      * @param entities
      * @return
      */
-    protected int delete(Collection<Entity> entities){
+    public int delete(Collection<Entity> entities){
         return sqlCore.deleteByCollection(entities);
     }
 
@@ -143,7 +145,7 @@ public abstract class BaseEntity<Entity> {
      * @param ids 要删除数据的ID集合
      * @return
      */
-    protected int batchDeleteById(Object ...ids){
+    public int batchDeleteById(Object ...ids){
         return sqlCore.deleteByIdIn(this.getClass(),ids);
     }
 
@@ -152,7 +154,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 实体
      * @return
      */
-    protected int update(Entity entity){
+    public int update(Entity entity){
         return sqlCore.update(entity);
     }
 
@@ -160,7 +162,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前实体的实体更新
      * @return
      */
-    protected int update(){
+    public int update(){
         return sqlCore.update(this);
     }
 
@@ -170,7 +172,7 @@ public abstract class BaseEntity<Entity> {
      * @param conditions WHERE条件字段名
      * @return
      */
-    protected int updateByColumn(Entity entity,String...conditions){
+    public int updateByColumn(Entity entity,String...conditions){
         return sqlCore.update(entity,conditions);
     }
 
@@ -180,7 +182,7 @@ public abstract class BaseEntity<Entity> {
      * @param conditions WHERE条件字段名
      * @return
      */
-    protected int updateByColumn(String...conditions){
+    public int updateByColumn(String...conditions){
         return sqlCore.update(this,conditions);
     }
 
@@ -190,7 +192,7 @@ public abstract class BaseEntity<Entity> {
      * @param id 字段ID
      * @return
      */
-    protected Entity selectById(Object id){
+    public Entity selectById(Object id){
         return (Entity) sqlCore.getOne(this.getClass(),id);
     }
 
@@ -198,7 +200,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前ID的ID查询
      * @return
      */
-    protected Entity selectById(){
+    public Entity selectById(){
         return (Entity) sqlCore.getOne(this.getClass(), FieldUtils.getValue(this,idField));
     }
 
@@ -207,7 +209,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 要查询的实体
      * @return
      */
-    protected Entity selectOne(Entity entity){
+    public Entity selectOne(Entity entity){
         return sqlCore.getObject(entity);
     }
 
@@ -215,7 +217,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前实体的实体查询,返回单一对象
      * @return
      */
-    protected Entity selectOne(){
+    public Entity selectOne(){
         return (Entity) sqlCore.getObject(this);
     }
 
@@ -224,7 +226,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 要查询的实体
      * @return
      */
-    protected List<Entity> select(Entity entity){
+    public List<Entity> select(Entity entity){
         return sqlCore.getList(entity);
     }
 
@@ -232,7 +234,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前实体的实体查询,返回List集合
      * @return
      */
-    protected List<Entity> select(){
+    public List<Entity> select(){
         return (List<Entity>) sqlCore.getList(this);
     }
 
@@ -240,7 +242,7 @@ public abstract class BaseEntity<Entity> {
      * 全表内容查询
      * @return
      */
-    protected List<Entity> selectAll(){
+    public List<Entity> selectAll(){
         return (List<Entity>) sqlCore.getList(this.getClass());
     }
 
@@ -251,7 +253,7 @@ public abstract class BaseEntity<Entity> {
      * @param rows 每页记录数
      * @return
      */
-    protected List<Entity> limit(Entity entity,int page,int rows){
+    public List<Entity> limit(Entity entity,int page,int rows){
         return sqlCore.getPageList(entity,page,rows);
     }
 
@@ -261,7 +263,7 @@ public abstract class BaseEntity<Entity> {
      * @param rows 每页记录数
      * @return
      */
-    protected List<Entity> limit(int page,int rows){
+    public List<Entity> limit(int page,int rows){
         return (List<Entity>) sqlCore.getPageList(this,page,rows);
     }
 
@@ -270,7 +272,7 @@ public abstract class BaseEntity<Entity> {
      * @param entity 实体
      * @return
      */
-    protected int selectCount(Entity entity){
+    public int selectCount(Entity entity){
         return sqlCore.count(entity);
     }
 
@@ -278,7 +280,7 @@ public abstract class BaseEntity<Entity> {
      * 使用当前实体的查询实体Count
      * @return
      */
-    protected int selectCount(){
+    public int selectCount(){
         return sqlCore.count(this);
     }
 
@@ -286,7 +288,7 @@ public abstract class BaseEntity<Entity> {
      * 查询全表的Count
      * @return
      */
-    protected int count(){
+    public int count(){
         return sqlCore.count(this.getClass());
     }
 
@@ -295,7 +297,7 @@ public abstract class BaseEntity<Entity> {
      * @param queryBuilder QueryBuilder对象
      * @return
      */
-    protected List<Entity> query(QueryBuilder queryBuilder){
+    public List<Entity> query(QueryBuilder queryBuilder){
         return (List<Entity>) sqlCore.query(queryBuilder,this.getClass());
     }
 
@@ -306,7 +308,7 @@ public abstract class BaseEntity<Entity> {
      * @param params SQl参数
      * @return
      */
-    protected List<Entity> query(String sql,Object...params){
+    public List<Entity> query(String sql,Object...params){
         return (List<Entity>) sqlCore.getList(this.getClass(),sql,params);
     }
 
@@ -316,11 +318,7 @@ public abstract class BaseEntity<Entity> {
      * @param params SQl参数
      * @return
      */
-    protected int edit(String sql,Object...params){
+    public int updateBySql(String sql,Object...params){
         return sqlCore.updateBySql(sql,params);
     }
-
-
-
-
 }

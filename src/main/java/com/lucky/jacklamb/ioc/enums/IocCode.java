@@ -52,8 +52,14 @@ public enum IocCode {
 
     /**
      *Job组件
-     * -@Job.java
+     * -@Job
      */
-    JOB
+    JOB,
+
+    /**
+     * Xstream的允许类型
+     * -@XStreamAllowType
+     */
+    X_STREAM
 
 }

@@ -69,7 +69,7 @@ public class CallControllerMethodInterceptor implements MethodInterceptor {
                     return callResult;
                 }else{
                     try{
-                        return new LSON().toObject(returnClass,callResult);
+                        return new LSON().fromJson(returnClass,callResult);
                     }catch (Exception e){
                         throw new JsonConversionException(apiUrl,returnClass,callResult,e);
                     }

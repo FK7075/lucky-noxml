@@ -16,6 +16,6 @@ import com.lucky.jacklamb.enums.Rest;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RestBody {
+public @interface ResponseBody {
 	Rest value() default Rest.JSON;
 }

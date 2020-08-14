@@ -25,9 +25,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -198,6 +196,15 @@ public class Model {
         return parameterMap;
     }
 
+    public int getParameterSize() {
+        return parameterMap.size();
+    }
+
+    public String getDefaultParameterValue(){
+        String[] values = new ArrayList<>(parameterMap.values()).get(0);
+        return values[values.length-1];
+    }
+
     /**
      * 得到当前请求的请求类型
      *
@@ -298,8 +305,9 @@ public class Model {
      * @param name
      * @return
      */
-    public String getRequestPrarmeter(String name) {
-        return req.getParameter(name);
+    public String getRequestParameter(String name) {
+        String[] array = getArray(name);
+        return array[array.length-1];
     }
 
     /**
@@ -362,10 +370,11 @@ public class Model {
      * @throws IOException
      */
     public void writerXml(Object pojo) {
-        LXML lson = new LXML(pojo);
-        log.debug(lson.getXmlStr());
+        LXML lxml = new LXML();
+        String xml=lxml.toXml(pojo);
+        log.debug(xml);
         resp.setContentType("application/xml");
-        writer(lson.getXmlStr());
+        writer(xml);
     }
 
     /**
@@ -738,4 +747,5 @@ class ExceptionMessage{
     public void setErrType(String errType) {
         this.errType = errType;
     }
+
 }

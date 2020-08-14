@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.annotation.mvc;
 
+import com.lucky.jacklamb.enums.Rest;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,5 +15,7 @@ import java.lang.annotation.*;
 public @interface RequestBody {
 
 	String value() default "";
+
+	Rest rest() default Rest.JSON;
 
 }
