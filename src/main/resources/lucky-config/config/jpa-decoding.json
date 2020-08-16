@@ -26,5 +26,6 @@
   "@25": " IS NOT NULL ",
   "@26": " NOT NULL ",
   "@27": " NOT LIKE ? ",
-  "@28": " UPPER(@X) = UPPER(?) "
+  "@28": " UPPER(@X) = UPPER(?) ",
+  "@29": " NOT BETWEEN ? AND ?"
 }

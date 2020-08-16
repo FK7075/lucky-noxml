@@ -12,4 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface XStreamAllowType {
+    String value() default "XStream-XFL-FK@0922@0721";
 }

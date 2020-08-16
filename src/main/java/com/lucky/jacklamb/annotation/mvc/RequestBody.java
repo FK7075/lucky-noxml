@@ -14,8 +14,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface RequestBody {
 
-	String value() default "";
-
-	Rest rest() default Rest.JSON;
+	Rest value() default Rest.JSON;
 
 }

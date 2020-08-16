@@ -12,5 +12,5 @@ public interface RemoteEditing {
      * @param in 旧的数据
      * @param out 新的数据
      */
-    public void editor(InputStream in, OutputStream out) throws IOException;
+    void editor(InputStream in, OutputStream out) throws IOException;
 }

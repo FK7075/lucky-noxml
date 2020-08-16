@@ -27,33 +27,34 @@ public class LXML {
         xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
         XStream.setupDefaultSecurity(xstream);
         List<Class<?>> allowClasses = ScanFactory.createScan().getComponentClass("xStream");
+        allowClasses.stream().forEach((c)-> {
+            XStreamAllowType xst=c.getAnnotation(XStreamAllowType.class);
+            String alias="XStream-XFL-FK@0922@0721".equals(xst.value())
+                    ?c.getSimpleName():xst.value();
+            xstream.alias(alias,c);
+        });
         Class<?>[] allowTypes = new Class[allowClasses.size()];
         allowClasses.toArray(allowTypes);
         xstream.allowTypes(allowTypes);
     }
 
     public String toXml(Object pojo) {
-        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
         return HEAD + xstream.toXML(pojo);
     }
 
     public void toXml(Object pojo, Writer writer) {
-        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
         xstream.toXML(pojo, writer);
     }
 
     public void toXml(Object pojo, OutputStream out) {
-        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
         xstream.toXML(pojo, out);
     }
 
     public void marshal(Object pojo, HierarchicalStreamWriter writer) {
-        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
         xstream.marshal(pojo, writer);
     }
 
     public void marshal(Object pojo, HierarchicalStreamWriter writer, DataHolder dataHolder) {
-        Stream.of(new ClassToken(pojo).getGeneric()).forEach(c -> xstream.alias(c.getSimpleName(), c));
         xstream.marshal(pojo, writer, dataHolder);
     }
 
@@ -108,23 +109,6 @@ public class LXML {
 
     }
 
-}
-
-class ClassToken {
-
-    private Object targetObject;
-
-    public ClassToken(Object targetObject) {
-        this.targetObject = targetObject;
-    }
-
-    public Class<?>[] getGeneric() {
-        Field field = FieldUtils.getDeclaredField(this.getClass(), "targetObject");
-        Class<?>[] genericType = FieldUtils.getGenericType(field);
-        if (genericType == null)
-            return new Class<?>[]{targetObject.getClass()};
-        return genericType;
-    }
 }
 
 class TT {

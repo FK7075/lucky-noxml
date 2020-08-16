@@ -21,9 +21,11 @@ import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,7 +83,7 @@ public class AnnotationOperation {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
-        if (!ServletFileUpload.isMultipartContent(model.getRequest())) {
+        if (!FileUploadBase.isMultipartContent(new ServletRequestContext(model.getRequest()))){
             return;
         }
         List<FileItem> list = upload.parseRequest(model.getRequest());
@@ -454,9 +456,9 @@ public class AnnotationOperation {
                 }else{
                     paramValue = model.getRequestParameter(paramNames[i]);
                 }
-                if(requestBody.rest()==Rest.JSON){
+                if(requestBody.value()==Rest.JSON){
                     args[i] = lson.fromJson(parameters[i].getType(),paramValue);
-                }else if (requestBody.rest()==Rest.XML){
+                }else if (requestBody.value()==Rest.XML){
                     args[i]=lxml.fromXml(paramValue);
                 }else{
                     continue;

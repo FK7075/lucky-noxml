@@ -26,5 +26,6 @@
     "IsNotNull"             :"@25",
     "NotNull"               :"@26",
     "NotLike"               :"@27",
-    "IgnoreCase"            :"@28"
+    "IgnoreCase"            :"@28",
+    "NotBetween"            :"@29"
 }

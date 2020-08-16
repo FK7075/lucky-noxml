@@ -164,8 +164,9 @@ public class SqlOperation {
 	}
 
 	public void clearCache(){
-		if(isCache)
+		if(isCache) {
 			lruCache.get(dbname).clear();
+		}
 	}
 
 	public List<Map<String,Object>> getCacheQueryResult(String sql, Object...obj){
