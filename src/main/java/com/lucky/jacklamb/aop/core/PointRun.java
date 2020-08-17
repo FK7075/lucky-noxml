@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class PointRun {
 	
-	private Point point;
+	private AopPoint point;
 	
 	private String pointCutClass;
 	
@@ -27,10 +27,10 @@ public class PointRun {
 	 * 使用一个Point对象构造PointRun
 	 * @param point
 	 */
-	public PointRun(Point point) {
+	public PointRun(AopPoint point) {
 		Method proceedMethod;
 		try {
-			proceedMethod = point.getClass().getDeclaredMethod("proceed", Chain.class);
+			proceedMethod = point.getClass().getDeclaredMethod("proceed", AopChain.class);
 			Around exp = proceedMethod.getAnnotation(Around.class);
 			this.point = point;
 			this.point.setPriority(exp.priority());
@@ -53,11 +53,11 @@ public class PointRun {
 	public PointRun(Class<?> pointClass) {
 		Method proceedMethod;
 		try {
-			proceedMethod =pointClass.getDeclaredMethod("proceed", Chain.class);
+			proceedMethod =pointClass.getDeclaredMethod("proceed", AopChain.class);
 			Around exp = proceedMethod.getAnnotation(Around.class);
 			Constructor<?> constructor = pointClass.getConstructor();
 			constructor.setAccessible(true);
-			this.point = (Point) constructor.newInstance();
+			this.point = (AopPoint) constructor.newInstance();
 			this.point.setPriority(exp.priority());
 			this.pointCutClass = exp.pointCutClass();
 			this.pointCutMethod = exp.pointCutMethod();
@@ -105,11 +105,11 @@ public class PointRun {
 		this.pointCutMethod = mateMethod;
 	}
 
-	public Point getPoint() {
+	public AopPoint getPoint() {
 		return point;
 	}
 
-	public void setPoint(Point point) {
+	public void setPoint(AopPoint point) {
 		this.point = point;
 	}
 	
@@ -218,11 +218,11 @@ public class PointRun {
 	 * @param location 增强位置
 	 * @return
 	 */
-	private Point conversion(Object expand, Method expandMethod,Location location) {
-		Point cpoint=new Point() {
+	private AopPoint conversion(Object expand, Method expandMethod, Location location) {
+		AopPoint cpoint=new AopPoint() {
 			
 			@Override
-			public Object proceed(Chain chain) throws Throwable {
+			public Object proceed(AopChain chain) throws Throwable {
 				if(location==Location.BEFORE) {
 					perform(expand,expandMethod);
 					return chain.proceed();

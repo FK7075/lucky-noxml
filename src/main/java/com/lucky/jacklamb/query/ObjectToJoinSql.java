@@ -10,13 +10,15 @@ import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
+import com.lucky.jacklamb.utils.regula.Regular;
 
 public class ObjectToJoinSql{
 
-	/**
-	 * 连接查询的连接方式
-	 */
-	private String join;
+	private static final String ANGLE="<([\\d]*?)(L|R|)?>";
+
+	private static final String LINE="--(R|L)?";
+
+	private static final String ARROW="-->(R|L)?";
 
 	/**
 	 * 需要操作的对象
@@ -41,7 +43,6 @@ public class ObjectToJoinSql{
 	private SqlGroup sqlGroup;
 
 	public ObjectToJoinSql(QueryBuilder query) {
-		this.join = query.getJoin().getJoin();
 		this.obj = query.getObjectArray();
 		this.sort=query.getSort();
         this.like=query.getLike();
@@ -143,7 +144,7 @@ public class ObjectToJoinSql{
 			if(i==0) {
 				onsql+=PojoManage.selectFromTableAlias(parsExpression.get(0).getClzz());
 			}else {
-				onsql+=" "+join+" "+PojoManage.selectFromTableAlias(parsExpression.get(i).getClzz())+" ON "+getEquation(parsExpression.get(i).getClzz(),parsExpression.get(i-1-parsExpression.get(i).getSite()).getClzz());
+				onsql+=parsExpression.get(i).getJoin()+PojoManage.selectFromTableAlias(parsExpression.get(i).getClzz())+" ON "+getEquation(parsExpression.get(i).getClzz(),parsExpression.get(i-1-parsExpression.get(i).getSite()).getClzz());
 			}
 		}
 		return onsql;
@@ -174,7 +175,7 @@ public class ObjectToJoinSql{
 	 */
 	public List<ClassControl> parsExpression(String expression){
 		 List<ClassControl> cctlist=new ArrayList<>();
-		String order=expression.replaceAll("\\b<\\S*?>\\b", ",").replaceAll("-->", ",").replaceAll("--", ",").toLowerCase();
+		String order=expression.replaceAll(ANGLE, ",").replaceAll(ARROW, ",").replaceAll(LINE, ",").toLowerCase();
 		String symbol=expression.toLowerCase();
 		String[] splitName = order.split(",");
 		for(String name:splitName) {
@@ -185,23 +186,41 @@ public class ObjectToJoinSql{
 		}
 		String[] symArr=symbol.split(",");
 		for(int i=0;i<symArr.length;i++) {
-			cctlist.get(i).setSite(symbolToInt(symArr[i]));
+			symbolToInt(cctlist.get(i),symArr[i]);
 		}
 		return cctlist;
 	}
 	
-	public int symbolToInt(String symbol) {
+	public void symbolToInt(ClassControl cct,String symbol) {
 		if("".equals(symbol)) {
-			return -1;
+			cct.setSite(-1);
 		}else if("--".equals(symbol)) {
-			return 1;
+			cct.setSite(1);
+		}else if("--R".equals(symbol)) {
+			cct.setSite(1);
+			cct.setJoin(" RIGHT JOIN ");
+		}else if("--L".equals(symbol)) {
+			cct.setSite(1);
+			cct.setJoin(" LEFT JOIN ");
 		}else if("-->".equals(symbol)) {
-			return 0;
-		}else if(symbol.startsWith("<")&&symbol.endsWith(">")) {
-			symbol=symbol.replaceAll("<", "").replaceAll(">", "");
-			return Integer.parseInt(symbol);
+			cct.setSite(0);
+		}else if("-->R".equals(symbol)) {
+			cct.setSite(0);
+			cct.setJoin(" RIGHT JOIN ");
+		}else if("-->L".equals(symbol)) {
+			cct.setSite(0);
+			cct.setJoin(" LEFT JOIN ");
+		}else if(Regular.check(symbol,ANGLE)) {
+			symbol=symbol.substring(1,symbol.length()-1);
+			if(symbol.endsWith("R")){
+				cct.setSite(Integer.parseInt(symbol.substring(0,symbol.length()-1)));
+				cct.setJoin(" RIGHT JOIN ");
+			}else if(symbol.endsWith("L")){
+				cct.setSite(Integer.parseInt(symbol.substring(0,symbol.length()-1)));
+				cct.setJoin(" LEFT JOIN ");
+			}
 		}else {
-			return -2;
+			cct.setSite(-2);
 		}
 		
 	}
@@ -212,7 +231,16 @@ class ClassControl{
 	private Class<?> clzz;
 	
 	private int site=-1;
-	
+
+	private String join=" JOIN ";
+
+	public String getJoin() {
+		return join;
+	}
+
+	public void setJoin(String join) {
+		this.join = join;
+	}
 
 	public Class<?> getClzz() {
 		return clzz;
@@ -232,8 +260,11 @@ class ClassControl{
 
 	@Override
 	public String toString() {
-		return "ClassControl [clzz=" + clzz + ", site=" + site + "]";
+		final StringBuilder sb = new StringBuilder("ClassControl{");
+		sb.append("clzz=").append(clzz);
+		sb.append(", site=").append(site);
+		sb.append(", join='").append(join).append('\'');
+		sb.append('}');
+		return sb.toString();
 	}
-	
-	
 }

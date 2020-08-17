@@ -10,7 +10,7 @@ import com.lucky.jacklamb.annotation.ioc.*;
 import com.lucky.jacklamb.annotation.mvc.*;
 import com.lucky.jacklamb.annotation.orm.Table;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.httpclient.registry.RegistrationController;
 import com.lucky.jacklamb.httpclient.service.LuckyClientController;
@@ -195,7 +195,7 @@ public abstract class Scan {
 			componentClass.add(fileClass);
 		} else if(fileClass.isAnnotationPresent(Table.class)) {
 			pojoClass.add(fileClass);
-		} else if(fileClass.isAnnotationPresent(Aspect.class)|| Point.class.isAssignableFrom(fileClass)) {
+		} else if(fileClass.isAnnotationPresent(Aspect.class)|| AopPoint.class.isAssignableFrom(fileClass)) {
 			aspectClass.add(fileClass);
 		}else {
 			try {

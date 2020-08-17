@@ -7,7 +7,7 @@ import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
  * @author fk-7075
  *
  */
-public abstract class Point {
+public abstract class AopPoint {
 
 	/**
 	 * 优先级
@@ -37,6 +37,6 @@ public abstract class Point {
 	 * @param chain
 	 * @return
 	 */
-	public abstract Object proceed(Chain chain) throws Throwable;
+	public abstract Object proceed(AopChain chain) throws Throwable;
 
 }

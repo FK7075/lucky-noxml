@@ -170,7 +170,6 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                     Parameter[] parameters = method.getParameters();
                     QueryBuilder query = new QueryBuilder();
                     query.addObject(args);
-                    query.setJoin(JOIN.INNER_JOIN);
                     if (sel.sResults().length != 0) {
                         query.addResult(sel.sResults());
                     }
@@ -568,7 +567,6 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
          * queryBuilder对象的设置有一定的顺序，addObjects()方法必须优先执行，
          * 所以必须先找到接口中用于查询的对象，之后才能设置查询的细节
          */
-        queryBuilder.setJoin(query.join());
         int end = parameters.length;//用于记录非模糊查询参数的索引
         List<Integer> indexs = new ArrayList<>();
         List<Object> objectlist = new ArrayList<>();

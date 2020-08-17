@@ -1,7 +1,6 @@
 package com.lucky.jacklamb.ioc;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.Map;
 import com.lucky.jacklamb.annotation.aop.After;
 import com.lucky.jacklamb.annotation.aop.Aspect;
 import com.lucky.jacklamb.annotation.aop.Before;
-import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
@@ -111,9 +110,9 @@ public class AspectAOP {
 				} else {
 					name = agann.value();
 				}
-				if (Point.class.isAssignableFrom(aspect)) {
+				if (AopPoint.class.isAssignableFrom(aspect)) {
 					name += ".proceed";
-					pointRun = new PointRun((Point) ClassUtils.newObject(aspect));
+					pointRun = new PointRun((AopPoint) ClassUtils.newObject(aspect));
 					addAspectMap(name, pointRun);
 					log.info("@Aspect \"[location=Around id=" + name + " class=" + pointRun + "]\"");
 				} else {

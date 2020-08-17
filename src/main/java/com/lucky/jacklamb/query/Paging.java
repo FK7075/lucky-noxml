@@ -172,7 +172,6 @@ public class Paging <T>{
 			QueryBuilder query=new QueryBuilder();
 			for(Object po:initializePojo.getPojos().toArray())
 				query.addObject(po);
-			query.setJoin(JOIN.INNER_JOIN);
 			ObjectToJoinSql join=new ObjectToJoinSql(query);
 			String sql=join.getJoinSql();
 			Object[] object=join.getJoinObject();
@@ -203,7 +202,6 @@ public class Paging <T>{
 		QueryBuilder query=new QueryBuilder();
 		for(Object po:pojos)
 			query.addObject(po);
-		query.setJoin(JOIN.INNER_JOIN);
 		ObjectToJoinSql join=new ObjectToJoinSql(query);
 		String sql=join.getJoinSql();
 		Object[] object=join.getJoinObject();

@@ -1,8 +1,8 @@
 package com.lucky.jacklamb.aop.expandpoint;
 
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.core.Chain;
-import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.AopChain;
+import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.exception.TransactionPerformException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author fk7075
  * @version 1.0.0
  */
-public class TransactionPoint extends Point {
+public class TransactionPoint extends AopPoint {
 
     /*
         事务机制原理
@@ -63,7 +63,7 @@ public class TransactionPoint extends Point {
     private static final Method[] objectMethod=Object.class.getDeclaredMethods();
 
     @Override
-    public Object proceed(Chain chain) throws Throwable {
+    public Object proceed(AopChain chain) throws Throwable {
         TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
         Method method=targetMethodSignature.getCurrMethod();
         Class<?> targetClass=targetMethodSignature.getTargetClass();
@@ -89,7 +89,7 @@ public class TransactionPoint extends Point {
     }
 
     //事务的执行流程
-    public Object transactionResult(Chain chain,TargetMethodSignature tms,int isolationLevel){
+    public Object transactionResult(AopChain chain, TargetMethodSignature tms, int isolationLevel){
         //数据备份
         backup(tms);
         //替换核心，并开启事务

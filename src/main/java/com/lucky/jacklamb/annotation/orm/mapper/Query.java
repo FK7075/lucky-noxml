@@ -39,7 +39,6 @@ import com.lucky.jacklamb.enums.JOIN;
 public @interface Query {
 	boolean queryBuilder() default false;
 	String expression() default "";
-	JOIN join() default JOIN.INNER_JOIN;
 	boolean limit() default false;
 	String[] sort() default {};
 	String[] sResults() default {};

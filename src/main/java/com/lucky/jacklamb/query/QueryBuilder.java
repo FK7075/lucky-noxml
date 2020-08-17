@@ -17,11 +17,6 @@ import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 public class QueryBuilder {
 
     /**
-     * 连接操作的连接方式
-     */
-    private JOIN join = JOIN.INNER_JOIN;
-
-    /**
      * 需要操作的对象
      */
     private List<Object> objects;
@@ -132,15 +127,6 @@ public class QueryBuilder {
         for(String col:column)
             qFilter.hidden(col);
     }
-
-    public JOIN getJoin() {
-        return join;
-    }
-
-    public void setJoin(JOIN join) {
-        this.join = join;
-    }
-
 
     public String getSort() {
         return qFilter.sort(sortSets);

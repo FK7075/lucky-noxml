@@ -10,10 +10,14 @@ import java.util.*;
 
 public class SqlAndParams{
 
-	private final String S ="?s";
-	private final String E ="?e";
-	private final String C ="?c";
-	private final String In="?C";
+	/** ?s <=> XX LIKE YY% */
+	private final String START ="?s";
+	/** ?e <=> XX LIKE %YY */
+	private final String END ="?e";
+	/** ?c <=> XX LIKE %YY% */
+	private final String CONTAIN ="?c";
+	/** ?CONTAIN <=> (?,?,?,?) */
+	private final String In="?CONTAIN";
 
 	String precompileSql;
 
@@ -36,7 +40,7 @@ public class SqlAndParams{
 		finalProce();
 	}
 
-	/*最后处理，处理预编译Sql中的特殊参数[?s,?e,?c,?C]
+	/*最后处理，处理预编译Sql中的特殊参数[?s,?e,?c,?CONTAIN]
 	    ---------------------------------------------------------------------------
 	    ?e  : EndingWith    ->LIKE %param      以param结尾
 	        SELECT * FROM table WHERE name LIKE ?e       Params["Jack"]
@@ -47,16 +51,16 @@ public class SqlAndParams{
 	    ?s  : StartingWith  ->LIKE param%      以param开头
 	    ?c  : Containing    ->LIKE %param%     包含param
 	    -----------------------------------------------------------------------------
-	    ?C  : In            ->In [Collection]  条件范围为Collection集合
-	        SELECT * FROM table WHERE age IN ?C           Params[Collection[1,2,3,4]]
+	    ?CONTAIN  : In            ->In [Collection]  条件范围为Collection集合
+	        SELECT * FROM table WHERE age IN ?CONTAIN           Params[Collection[1,2,3,4]]
 	        	                 |
 	                             V
 	        SELECT * FROM table WHERE age IN (?,?,?,?)    Params[1,2,3,4]
 	    -----------------------------------------------------------------------------
 	 */
 	public void finalProce(){
-		if(precompileSql.contains(In)||precompileSql.contains(S)||
-			precompileSql.contains(E)||precompileSql.contains(C)){
+		if(precompileSql.contains(In)||precompileSql.contains(START)||
+			precompileSql.contains(END)||precompileSql.contains(CONTAIN)){
 			List<Integer> indexs=new ArrayList<>();
 			setQuestionMarkIndex(precompileSql,indexs,"?");
 			Map<Integer,Integer> indexMap=new HashMap<>();
@@ -72,7 +76,7 @@ public class SqlAndParams{
 	//处理?s,同dealithW_c
 	public void dealithW_s(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		setQuestionMarkIndex(precompileSql,escIndex,S);
+		setQuestionMarkIndex(precompileSql,escIndex, START);
 		precompileSql=precompileSql.replaceAll("\\?s","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -83,7 +87,7 @@ public class SqlAndParams{
     //处理?e,同dealithW_s
 	public void dealithW_e(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		setQuestionMarkIndex(precompileSql,escIndex,E);
+		setQuestionMarkIndex(precompileSql,escIndex, END);
 		precompileSql=precompileSql.replaceAll("\\?e","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -100,7 +104,7 @@ public class SqlAndParams{
 	 */
 	public void dealithW_c(Map<Integer,Integer>indexMap){
 		List<Integer> escIndex=new ArrayList<>();
-		setQuestionMarkIndex(precompileSql,escIndex,C);
+		setQuestionMarkIndex(precompileSql,escIndex, CONTAIN);
 		precompileSql=precompileSql.replaceAll("\\?c","?l");
 		for (Integer index : escIndex) {
 			int idx=indexMap.get(index);
@@ -108,22 +112,22 @@ public class SqlAndParams{
 		}
 	}
 
-	/*处理?C  (IN操作类似的范围限定操作)
+	/*处理?CONTAIN  (IN操作类似的范围限定操作)
 	    indexMap:?在SQL中的位置(KEY)与(=>)?对应参数在参数数组中的位置(VALUE)
 	     1.得到所有?C在SQl中出现的位置所组成的集合(escIndex)
 	     2.如果(escIndex)中没有元素则结束，否则进入第三步
 	     3.遍历(escIndex),将使用(indexMap)将escIndex翻译为对应参数数组的位置(idx)
 	     4.使用(idx)拿到原参数，并将其强转为Collection类型，如果出现异常会抛出一个RuntimeException
 	     5.将Collection转化为数组(collArray),转化后将(idx)和(collArray)添加到Map(inCollectionMap)中 ==> inCollectionMap.put(idx,collArray)
-	     6.得到一个包含(collArray)长度个数的? ==>  (?,?,?,?) ,然后使用这个替换掉原SQL中的第一个?C
+	     6.得到一个包含(collArray)长度个数的? ==>  (?,?,?,?) ,然后使用这个替换掉原SQL中的第一个?CONTAIN
 	     7.生产新的参数数组Object[] newParams；
 	        新数组长度=原数组长度+原数组中所有集合参数的元素个数和-集合参数的个数
-	        newParamsSize=params.length+S(inCollectionMap.value.length)-inCollectionMap.size
+	        newParamsSize=params.length+START(inCollectionMap.value.length)-inCollectionMap.size
 	     8.使用原数组和inCollectionMap数组填充新数组
 	     9.将新数组赋值给原数组
 
 	     ------------------------------------------------------------------------------------------------------------------------------
-	      SQL : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN ?C AND f3=? OR f4=? AND f5 IN ?C f6 NOT IN ?C
+	      SQL : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN ?CONTAIN AND f3=? OR f4=? AND f5 IN ?CONTAIN f6 NOT IN ?CONTAIN
 	      Params               [0,1,2C,3,4,5C,6C]    l=7
 
 	      inCollectionMap                            lm=3
@@ -197,16 +201,16 @@ public class SqlAndParams{
 		indexs.add(sqlCopy.indexOf(target));
 		if("?".equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?","@");
-		}else if(S.equals(target)){
+		}else if(START.equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?s","@L");
-		}else if(E.equals(target)){
+		}else if(END.equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?e","@L");
-		}else if(C.equals(target)){
+		}else if(CONTAIN.equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?c","@L");
 		}else if(In.equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?C","@L");
 		}else{
-			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?C]");
+			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?CONTAIN]");
 		}
 
 		setQuestionMarkIndex(sqlCopy,indexs,target);

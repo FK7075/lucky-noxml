@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.sf.cglib.proxy.MethodProxy;
 
-public class Chain {
+public class AopChain {
 	
-	private List<Point> points;
+	private List<AopPoint> points;
 	
 	private int index=-1;
 	
@@ -16,7 +16,7 @@ public class Chain {
 	
 	private MethodProxy methodProxy;
 	
-	public Chain(List<Point> points, Object target, Object[] params, MethodProxy methodProxy) {
+	public AopChain(List<AopPoint> points, Object target, Object[] params, MethodProxy methodProxy) {
 		this.points = points;
 		this.target = target;
 		this.params = params;
@@ -69,7 +69,7 @@ public class Chain {
 		if(++index==points.size()) {
 			result=methodProxy.invokeSuper(target, params);
 		}else {
-			Point point=points.get(index);
+			AopPoint point=points.get(index);
 			result=point.proceed(this);
 		}
 		return result;

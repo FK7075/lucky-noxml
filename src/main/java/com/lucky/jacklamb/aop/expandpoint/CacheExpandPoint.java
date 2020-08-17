@@ -3,19 +3,19 @@ package com.lucky.jacklamb.aop.expandpoint;
 import java.lang.reflect.Method;
 
 import com.lucky.jacklamb.annotation.aop.Cacheable;
-import com.lucky.jacklamb.aop.core.Chain;
-import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.AopChain;
+import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.expression.ExpressionEngine;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 
-public class CacheExpandPoint extends Point{
+public class CacheExpandPoint extends AopPoint {
 	
 	private ApplicationBeans beans;
 	
 	@SuppressWarnings("unchecked")
-	public Object cacheResult(Chain chain) throws Throwable {
+	public Object cacheResult(AopChain chain) throws Throwable {
 //		String condition = cachAnn.condition();//表达式，满足就走缓存,依赖表达式解析引擎，后期完善
 		TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
 		Method method=targetMethodSignature.getCurrMethod();
@@ -48,7 +48,7 @@ public class CacheExpandPoint extends Point{
 	}
 	
 	@Override
-	public Object proceed(Chain chain) throws Throwable {
+	public Object proceed(AopChain chain) throws Throwable {
 		// 返回缓存中的值
 		return cacheResult(chain);
 	}

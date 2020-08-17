@@ -220,6 +220,13 @@
       <version>2.3.2</version>
     </dependency>
 
+<!--    &lt;!&ndash; mp 依赖 &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>com.baomidou</groupId>-->
+<!--      <artifactId>mybatis-plus</artifactId>-->
+<!--      <version>2.3</version>-->
+<!--    </dependency>-->
+
   </dependencies>
 
   <!--打包插件，将java项目打包为可运行的jar包(jar包中包含第三方包)-->

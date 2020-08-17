@@ -4,8 +4,8 @@ import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.annotation.aop.Transaction;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
 import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
-import com.lucky.jacklamb.aop.core.Chain;
-import com.lucky.jacklamb.aop.core.Point;
+import com.lucky.jacklamb.aop.core.AopChain;
+import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -45,12 +45,12 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 
 	@Override
 	public Object intercept(Object target, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
-		final List<Point> points=new ArrayList<>();
+		final List<AopPoint> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
 
 		//被@Cacheable注解标注的方法优先执行缓存代理
 		if(method.isAnnotationPresent(Cacheable.class)) {
-			Point cacheExpandPoint = new CacheExpandPoint();
+			AopPoint cacheExpandPoint = new CacheExpandPoint();
 			cacheExpandPoint.init(targetMethodSignature);
 			cacheExpandPoint.setPriority(0);
 			points.add(cacheExpandPoint);
@@ -60,17 +60,18 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 		//被@Transaction注解标注的方法执行事务代理
 		if(target.getClass().getSuperclass().isAnnotationPresent(Transaction.class)||
 				method.isAnnotationPresent(Transaction.class)){
-			Point transactionPoint = new TransactionPoint();
+			AopPoint transactionPoint = new TransactionPoint();
 			transactionPoint.init(targetMethodSignature);
 			transactionPoint.setPriority(1);
 			points.add(transactionPoint);
 		}
 		//得到所有自定义的的环绕增强节点
-		pointRuns.stream().filter(a->a.standard(method)).forEach((a)->{Point p=a.getPoint();p.init(targetMethodSignature);points.add(p);});
+		pointRuns.stream().filter(a->a.standard(method)).forEach((a)->{
+			AopPoint p=a.getPoint();p.init(targetMethodSignature);points.add(p);});
 
 		//将所的环绕增强节点根据优先级排序后组成一个执行链
-		Chain chain=new Chain(points.stream()
-				.sorted(Comparator.comparing(Point::getPriority))
+		AopChain chain=new AopChain(points.stream()
+				.sorted(Comparator.comparing(AopPoint::getPriority))
 				.collect(Collectors.toList()),target,params,methodProxy);
 		Object resule;
 		
