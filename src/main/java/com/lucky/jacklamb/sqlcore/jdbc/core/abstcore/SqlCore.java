@@ -355,6 +355,16 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		}
 	}
 
+	public int update(Translator tr){
+		StringBuilder sql=new StringBuilder(tr.getUPDATE());
+		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
+			sql.append(tr.getSql());
+		}else{
+			sql.append(" WHERE ").append(tr.getSql());
+		}
+		return updateBySql(sql.toString(),tr.getParams().toArray());
+	}
+
 	public int update(Object pojo, Translator tr){
 		StringBuilder sql=new StringBuilder("UPDATE ").append(PojoManage.getTable(pojo.getClass())).append(" SET ");
 		List<Object> params=new ArrayList<>();

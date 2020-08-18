@@ -587,9 +587,11 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             }
             case "UPDATE" :{
                 if(LuckyMapperGeneric!=null){
-                    return sqlCore.update(LuckyMapperGeneric,tr);
+                    tr.setPojoClass(LuckyMapperGeneric);
+                    return sqlCore.update(tr);
                 }else{
-                    sqlCore.update(getListGeneric(method),tr);
+                    tr.setPojoClass(getListGeneric(method));
+                    sqlCore.update(tr);
                 }
             }
             default:{

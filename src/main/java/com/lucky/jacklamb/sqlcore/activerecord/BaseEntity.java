@@ -1,11 +1,9 @@
 package com.lucky.jacklamb.sqlcore.activerecord;
 
-import com.google.gson.annotations.Expose;
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Translator;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
@@ -323,8 +321,13 @@ public abstract class BaseEntity<Entity> {
         return sqlCore.updateBySql(sql,params);
     }
 
-    public int update(Translator tr){
+    public int updateThis(Translator tr){
         return sqlCore.update(this,tr);
+    }
+
+    public int update(Translator tr){
+        tr.setPojoClass(this.getClass());
+        return sqlCore.update(tr);
     }
 
     public int update(Entity pojo,Translator tr){

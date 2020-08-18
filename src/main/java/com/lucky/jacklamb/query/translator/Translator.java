@@ -18,6 +18,8 @@ public class Translator {
 
     private String SELECT="SELECT * FROM @:table ";
 
+    private String UPDATE="UPDATE @:table SET @:set";
+
     private Class<?> pojoClass;
 
     private boolean isNoPack=true;
@@ -26,6 +28,10 @@ public class Translator {
 
     public String getSELECT() {
         return SELECT;
+    }
+
+    public String getUPDATE() {
+        return UPDATE;
     }
 
     private StringBuilder sql;
@@ -71,11 +77,24 @@ public class Translator {
             this.packClass=pojoClass;
         }
         SELECT=SELECT.replaceAll("@:table",PojoManage.getTable(pojoClass));
+        UPDATE=UPDATE.replaceAll("@:table",PojoManage.getTable(pojoClass));
         return this;
     }
 
     public Translator setSqlSelect(String columns){
         SELECT=SELECT.replaceAll("\\*",columns);
+        return this;
+    }
+
+    public Translator setSqlUpdate(String columns,Object...params){
+        UPDATE=UPDATE.replaceAll("@:set",columns);
+        if(this.params.isEmpty()){
+            this.params.addAll(Arrays.asList(params));
+        }else{
+            for(int i=params.length-1;i>=0;i--){
+                this.params.add(0,params[i]);
+            }
+        }
         return this;
     }
 
@@ -321,4 +340,5 @@ public class Translator {
         String trim = sql.toString().trim().toUpperCase();
         return !trim.endsWith("AND")&&!trim.endsWith("OR")&&!trim.endsWith("(")&&!trim.endsWith("WHERE")&&!trim.endsWith("HAVING");
     }
+
 }
