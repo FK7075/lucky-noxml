@@ -3,13 +3,10 @@ package com.lucky.jacklamb.query.translator;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
+import com.sun.javafx.binding.StringFormatter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
 
 /**
  * 翻译器，将对象化的查询语句转化为SQL语句
@@ -17,7 +14,19 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @date 2020/8/16 10:51 上午
  */
-public abstract class Translator<E> {
+public class Translator {
+
+    private String SELECT="SELECT * FROM @:table ";
+
+    private Class<?> pojoClass;
+
+    private boolean isNoPack=true;
+
+    private Class<?> packClass;
+
+    public String getSELECT() {
+        return SELECT;
+    }
 
     private StringBuilder sql;
 
@@ -32,11 +41,43 @@ public abstract class Translator<E> {
     }
 
     public Translator(){
-        sql=new StringBuilder();
+        sql=new StringBuilder(" WHERE ");
         params=new ArrayList<>();
     }
 
-    public abstract Translator setSqlSelect(String...columns);
+    public Translator(Class<?> pojoClass){
+        sql=new StringBuilder(" WHERE ");
+        setPojoClass(pojoClass);
+        params=new ArrayList<>();
+    }
+
+    public Class<?> getPackClass() {
+        return packClass;
+    }
+
+    public Class<?> getPojoClass() {
+        return pojoClass;
+    }
+
+    public Translator setPackClass(Class<?> packClass) {
+        this.packClass = packClass;
+        isNoPack=false;
+        return this;
+    }
+
+    public Translator setPojoClass(Class<?> pojoClass){
+        this.pojoClass=pojoClass;
+        if(isNoPack){
+            this.packClass=pojoClass;
+        }
+        SELECT=SELECT.replaceAll("@:table",PojoManage.getTable(pojoClass));
+        return this;
+    }
+
+    public Translator setSqlSelect(String columns){
+        SELECT=SELECT.replaceAll("\\*",columns);
+        return this;
+    }
 
     public Translator add(){
         sql.append(" AND ");
@@ -45,7 +86,7 @@ public abstract class Translator<E> {
 
     public Translator add(String sqlAnd,Object...params){
         sql.append(" AND ").append(sqlAnd).append(" ");
-        Stream.of(params).forEach(this.params::add);
+        this.params.addAll(Arrays.asList(params));
         return this;
     }
 
@@ -56,7 +97,7 @@ public abstract class Translator<E> {
 
     public Translator or(String sqlOr,Object...params){
         sql.append(" OR ").append(sqlOr).append(" ");
-        Stream.of(params).forEach(this.params::add);
+        this.params.addAll(Arrays.asList(params));
         return this;
     }
 
@@ -84,7 +125,7 @@ public abstract class Translator<E> {
     }
 
     private Field[] allField;
-    public Translator allEq(E pojo){
+    public Translator allEq(Object pojo){
         if(allField==null){
             allField= ClassUtils.getAllFields(pojo.getClass());
         }
@@ -168,11 +209,27 @@ public abstract class Translator<E> {
         return this;
     }
 
+    public Translator in(String column,String inSQL, Object[] params){
+        if(isEndBrackets())
+            add();
+        sql.append(column).append(String.format(" IN (%s)",inSQL).toString());
+        this.params.addAll(Arrays.asList(params));
+        return this;
+    }
+
     public Translator notIn(String columns, Collection<?>collection){
         if(isEndBrackets())
             add();
         sql.append(columns).append(" NOT IN ?C");
         params.add(collection);
+        return this;
+    }
+
+    public Translator ontIn(String column,String inSQL, Object[] params){
+        if(isEndBrackets())
+            add();
+        sql.append(column).append(StringFormatter.format(" NOT IN (%s)",inSQL));
+        this.params.addAll(Arrays.asList(params));
         return this;
     }
 
@@ -191,13 +248,28 @@ public abstract class Translator<E> {
     }
 
     public Translator groupBy(String columns){
-        if(isEndBrackets())
-            add();
         sql.append(" GROUP BY ").append(columns).append(" ");
         return this;
     }
 
-    public abstract Translator having(String havingSQl,Object...params);
+    public Translator where(){
+        if(sql.toString().toUpperCase().trim().endsWith("WHERE"))
+            return this;
+        return where("");
+    }
+
+    public Translator where(String whereSQl,Object...params){
+
+        sql.append(" WHERE ").append(whereSQl).append(" ");
+        this.params.addAll(Arrays.asList(params));
+        return this;
+    }
+
+    public Translator having(String havingSQl,Object...params){
+        sql.append(" HAVING ").append(havingSQl).append(" ");
+        this.params.addAll(Arrays.asList(params));
+        return this;
+    }
 
     public Translator orderAsc(String columns){
         sql.append(" ORDER BY ").append(columns).append(" ASC ");
@@ -209,9 +281,17 @@ public abstract class Translator<E> {
         return this;
     }
 
-    public abstract Translator exists(String value);
+    public Translator exists(String existsSql,Object...params){
+        sql.append(String.format(" EXISTS (%s)",existsSql).toString());
+        this.params.addAll(Arrays.asList(params));
+        return this;
+    }
 
-    public abstract Translator notExists(String value);
+    public Translator notExists(String existsSql,Object...params){
+        sql.append(StringFormatter.format(" NOT EXISTS (%s)",existsSql).toString());
+        this.params.addAll(Arrays.asList(params));
+        return this;
+    }
 
     public Translator between(String column,Object val1,Object val2){
         if(isEndBrackets())
@@ -231,13 +311,14 @@ public abstract class Translator<E> {
         return this;
     }
 
-    public void last(String sql,Object...params){
+    public Translator setSql(String sql,Object...params){
         this.sql.append(" ").append(sql);
-        Stream.of(params).forEach(this.params::add);
+        this.params.addAll(Arrays.asList(params));
+        return this;
     }
 
     public boolean isEndBrackets(){
         String trim = sql.toString().trim().toUpperCase();
-        return !trim.endsWith("AND")&&!trim.endsWith("OR")&&!trim.endsWith("(")&&!trim.endsWith("WHERE");
+        return !trim.endsWith("AND")&&!trim.endsWith("OR")&&!trim.endsWith("(")&&!trim.endsWith("WHERE")&&!trim.endsWith("HAVING");
     }
 }

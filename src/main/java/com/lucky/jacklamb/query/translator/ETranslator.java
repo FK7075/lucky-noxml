@@ -1,5 +1,9 @@
 package com.lucky.jacklamb.query.translator;
 
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -8,34 +12,20 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2020/8/16 10:50 上午
  */
-public class ETranslator<E> extends Translator<E>{
+public class ETranslator extends Translator{
 
-
-    @Override
-    public Translator setSqlSelect(String... columns) {
-        return null;
-    }
-    @Override
-    public Translator having(String havingSQl, Object... params) {
-        return null;
-    }
-    @Override
-    public Translator exists(String value) {
-        return null;
-    }
-
-    @Override
-    public Translator notExists(String value) {
-        return null;
+    public ETranslator(Class<?> pojoClass) {
+        super(pojoClass);
     }
 
     public static void main(String[] args) {
-        ETranslator<Book> et=new ETranslator();
+        ETranslator et=new ETranslator(Book.class);
+        Class<?>[] genericType = ClassUtils.getGenericType(et.getClass().getGenericSuperclass());
         Book b=new Book();
         b.setId("book-id");
         b.setName("NAME");
         b.setInventory(123);
-        et.orS().allEq(b).end();
+        et.where().allEq(b).in("inventory","SELECT inventory FROM table",new Object[]{});
         System.out.println(et.getSql());
         System.out.println(et.getParams());
 

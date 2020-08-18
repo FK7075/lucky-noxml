@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.mapper.*;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Translator;
 
 import java.util.Collection;
 import java.util.List;
@@ -157,5 +158,16 @@ public interface LuckyMapper<T> {
 	 * @return
 	 */
 	public List<T> selectByIdIn(List<?> ids);
-	
+
+	@QueryTr("SELECT")
+	public List<?> select(Translator tr);
+
+	@QueryTr("SELECT")
+	public Object selectOne(Translator tr);
+
+	@QueryTr("UPDATE")
+	public int update(Translator tr);
+
+	@QueryTr("DELETE")
+	public int delete(Translator tr);
 }

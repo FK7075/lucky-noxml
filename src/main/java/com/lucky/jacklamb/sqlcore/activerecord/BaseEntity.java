@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
@@ -320,5 +321,27 @@ public abstract class BaseEntity<Entity> {
      */
     public int updateBySql(String sql,Object...params){
         return sqlCore.updateBySql(sql,params);
+    }
+
+    public int update(Translator tr){
+        return sqlCore.update(this,tr);
+    }
+
+    public int update(Entity pojo,Translator tr){
+        return sqlCore.update(pojo,tr);
+    }
+
+    public int delete(Translator tr){
+        return sqlCore.delete(this.getClass(),tr);
+    }
+
+    public List<Entity> select(Translator tr){
+        tr.setPojoClass(this.getClass());
+        return (List<Entity>) sqlCore.getList(tr);
+    }
+
+    public Entity selectOne(Translator tr){
+        tr.setPojoClass(this.getClass());
+        return (Entity) sqlCore.getObject(tr);
     }
 }

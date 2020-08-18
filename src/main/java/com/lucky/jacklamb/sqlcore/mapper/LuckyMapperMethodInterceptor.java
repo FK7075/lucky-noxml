@@ -9,6 +9,7 @@ import com.lucky.jacklamb.enums.Sort;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.SqlAndObject;
 import com.lucky.jacklamb.query.SqlFragProce;
+import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.IllegalJPAExpressionException;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
@@ -546,10 +547,54 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             return (Object) insert(method, params, sql_fp);
         } else if (method.isAnnotationPresent(Query.class)) {
             return join(method, params);
-        } else if (method.isAnnotationPresent(Count.class)) {
+        }  else if (method.isAnnotationPresent(QueryTr.class)) {
+            return qtr(method, params);
+        }else if (method.isAnnotationPresent(Count.class)) {
             return (Object) sqlCore.count(params[0]);
         } else {
             return notHave(method, params, sql_fp, LuckyMapperGeneric);
+        }
+    }
+
+    private Object qtr(Method method, Object[] args){
+        QueryTr query = method.getAnnotation(QueryTr.class);
+        Class<?> returnType = method.getReturnType();
+        Translator tr=(Translator) args[0];
+        switch (query.value()){
+            case "SELECT" :{
+             if(List.class.isAssignableFrom(returnType)) {
+                if(LuckyMapperGeneric!=null){
+                    tr.setPojoClass(LuckyMapperGeneric);
+                    return sqlCore.getList(tr);
+                }
+                tr.setPojoClass(getListGeneric(method));
+                return sqlCore.getList(tr);
+             } else{
+                 if(LuckyMapperGeneric!=null){
+                     tr.setPojoClass(LuckyMapperGeneric);
+                     return sqlCore.getObject(tr);
+                 }
+                 tr.setPojoClass(getListGeneric(method));
+                 return sqlCore.getObject(tr);
+             }
+            }
+            case "DELETE" :{
+                if(LuckyMapperGeneric!=null){
+                    return sqlCore.delete(LuckyMapperGeneric,tr);
+                }else{
+                    sqlCore.delete(getListGeneric(method),tr);
+                }
+            }
+            case "UPDATE" :{
+                if(LuckyMapperGeneric!=null){
+                    return sqlCore.update(LuckyMapperGeneric,tr);
+                }else{
+                    sqlCore.update(getListGeneric(method),tr);
+                }
+            }
+            default:{
+                throw new RuntimeException("错误的@QueryTr属性！");
+            }
         }
     }
 

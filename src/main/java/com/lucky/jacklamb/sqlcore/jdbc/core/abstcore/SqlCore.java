@@ -1,15 +1,19 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -351,4 +355,48 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		}
 	}
 
+	public int update(Object pojo, Translator tr){
+		StringBuilder sql=new StringBuilder("UPDATE ").append(PojoManage.getTable(pojo.getClass())).append(" SET ");
+		List<Object> params=new ArrayList<>();
+		Field[] allFields = ClassUtils.getAllFields(pojo.getClass());
+		for (Field field : allFields) {
+			sql.append(PojoManage.getTableField(field)).append("=?,");
+			params.add(FieldUtils.getValue(pojo,field));
+		}
+		sql.substring(0,sql.length()-1);
+		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
+			sql.append(tr.getSql());
+		}else{
+			sql.append(" WHERE ").append(tr.getSql());
+		}
+		params.addAll(tr.getParams());
+		return updateBySql(sql.toString(),params.toArray());
+	}
+
+	public int delete(Class<?> pojoClass,Translator tr){
+		StringBuilder sql=new StringBuilder("DELETE FROM ").append(PojoManage.getTable(pojoClass));
+		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
+			sql.append(tr.getSql());
+		}else{
+			sql.append(" WHERE ").append(tr.getSql());
+		}
+		return updateBySql(sql.toString(),tr.getParams().toArray());
+	}
+
+	public <T> List<T> getList(Translator tr){
+		StringBuilder sql=new StringBuilder(tr.getSELECT());
+		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
+			sql.append(tr.getSql());
+		}else{
+			sql.append(" WHERE ").append(tr.getSql());
+		}
+		return (List<T>) getList(tr.getPackClass(),sql.toString(),tr.getParams().toArray());
+	}
+
+	public <T> T getObject(Translator tr){
+		List<T> list = getList(tr);
+		if(list!=null&&!list.isEmpty())
+			return list.get(0);
+		return null;
+	}
 }

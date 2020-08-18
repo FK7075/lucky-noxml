@@ -51,4 +51,13 @@ public abstract class JDBCConversion {
         return result;
     }
 
+    public static <E> E conversion(Map<String,Object> queryResult,Class<E> entityClass,Map<String,String> resultMap){
+        E result = ClassUtils.newObject(entityClass);
+        Field[] allFields = ClassUtils.getAllFields(entityClass);
+        for (Field field : allFields) {
+
+        }
+        return result;
+    }
+
 }
