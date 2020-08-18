@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
+ *
  * 翻译器，将对象化的查询语句转化为SQL语句
  * @author fk7075
  * @version 1.0.0
@@ -136,8 +137,9 @@ public class Translator {
     }
 
     public Translator eq(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" =?");
         params.add(param);
         return this;
@@ -150,8 +152,9 @@ public class Translator {
         }
         for (Field field : allField) {
             Object value = FieldUtils.getValue(pojo, field);
-            if(value!=null)
+            if(value!=null) {
                 eq(PojoManage.getTableField(field),value);
+            }
         }
         return this;
     }
@@ -165,8 +168,9 @@ public class Translator {
 
     /** 不等于*/
     public Translator ne(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append( "<>? ");
         params.add(param);
         return this;
@@ -174,8 +178,9 @@ public class Translator {
 
     /** 大于 >*/
     public Translator gt(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" >? ");
         params.add(param);
         return this;
@@ -190,8 +195,9 @@ public class Translator {
 
     /** 小于 <*/
     public Translator lt(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" <? ");
         params.add(param);
         return this;
@@ -199,16 +205,18 @@ public class Translator {
 
     /** 小于等于 <=*/
     public Translator le(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" <=?");
         params.add(param);
         return this;
     }
 
     public Translator like(String columns,Object param){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" LIKE ?c");
         params.add(param);
         return this;
@@ -221,47 +229,53 @@ public class Translator {
     }
 
     public Translator in(String columns, Collection<?> collection){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" IN ?C");
         params.add(collection);
         return this;
     }
 
     public Translator in(String column,String inSQL, Object[] params){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(column).append(String.format(" IN (%s)",inSQL).toString());
         this.params.addAll(Arrays.asList(params));
         return this;
     }
 
     public Translator notIn(String columns, Collection<?>collection){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" NOT IN ?C");
         params.add(collection);
         return this;
     }
 
     public Translator ontIn(String column,String inSQL, Object[] params){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(column).append(StringFormatter.format(" NOT IN (%s)",inSQL));
         this.params.addAll(Arrays.asList(params));
         return this;
     }
 
     public Translator isNull(String columns){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" IS NULL");
         return this;
     }
 
     public Translator isNotNull(String columns){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(columns).append(" IS NOT NULL");
         return this;
     }
@@ -272,8 +286,9 @@ public class Translator {
     }
 
     public Translator where(){
-        if(sql.toString().toUpperCase().trim().endsWith("WHERE"))
+        if(sql.toString().toUpperCase().trim().endsWith("WHERE")) {
             return this;
+        }
         return where("");
     }
 
@@ -313,8 +328,9 @@ public class Translator {
     }
 
     public Translator between(String column,Object val1,Object val2){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(column).append(" BETWEEN ? AND ?");
         params.add(val1);
         params.add(val2);
@@ -322,8 +338,9 @@ public class Translator {
     }
 
     public Translator notBetween(String column,Object val1,Object val2){
-        if(isEndBrackets())
+        if(isEndBrackets()) {
             add();
+        }
         sql.append(column).append(" NOT BETWEEN ? AND ?");
         params.add(val1);
         params.add(val2);
