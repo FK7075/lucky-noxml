@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * JDBC相关操作类
  * @author fk-7075
- *
  */
 @SuppressWarnings("unchecked")
 public class SqlOperation {
