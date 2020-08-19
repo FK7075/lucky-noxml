@@ -30,6 +30,7 @@ public class SqlAndParams{
 	public SqlAndParams(String haveNumSql,Object[] params){
 		numSql(haveNumSql,params);
 		finalProce(null);
+		sortOut();
 	}
 
 	public SqlAndParams(Method method, String haveNumSql, Object[] params){
@@ -40,6 +41,16 @@ public class SqlAndParams{
 			nameSQl(method,names,haveNumSql,params);
 		}
 		finalProce(method);
+		sortOut();
+	}
+
+	private void sortOut(){
+		int count=Regular.getArrayByExpression(precompileSql, "\\?").size();
+		Object[] newParams=new Object[count];
+		for(int i=0;i<count;i++){
+			newParams[i]=params[i];
+		}
+		params=newParams;
 	}
 
 	public Map<Integer,Integer> getIndexMap(){
@@ -156,14 +167,15 @@ public class SqlAndParams{
 			}
 			sp=dySqlWar.dySql(DY_DATA);
 			precompileSql=precompileSql.replaceFirst("\\?D",sp.getpSql());
-			Object[] newParams=new Object[params.length+sp.getParams().size()-1];
+			int dySize = sp.getParams().size();
+			Object[] newParams=new Object[params.length+dySize-1];
 			for (int i=0,j=newParams.length;i<j;i++){
 				if(i<idx){
 					newParams[i]=params[i];
-				}else if(i>=idx&&i<(idx+sp.getParams().size())){
+				}else if(i>=idx&&i<(idx+dySize)){
 					newParams[i]=sp.getParams().get(i-idx);
 				}else{
-					newParams[i]=params[i-idx];
+					newParams[i]=params[i-dySize+1];
 				}
 			}
 			params=newParams;

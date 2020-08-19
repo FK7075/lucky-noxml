@@ -49,12 +49,10 @@ public class SqlOperation {
 		PreparedStatement ps=null;
 		try {
 			ps = conn.prepareStatement(sql);
-			int count=Regular.getArrayByExpression(sql, "\\?").size();
-			for (int i = 0; i <count; i++) {
+			for (int i = 0,count=obj.length; i <count; i++) {
 				ps.setObject(i + 1, obj[i]);
 			}
 			int result = ps.executeUpdate();
-			obj=count>0?obj:new Object[]{};
 			new SqlLog(dbname).isShowLog(sql, obj);
 			clearCache();
 			return result;
@@ -79,15 +77,13 @@ public class SqlOperation {
 				int[] result={ps.executeUpdate()};
 				return result;
 			}else {
-				int count=Regular.getArrayByExpression(sql, "\\?").size();
 				for(int i=0;i<obj.length;i++) {
-					for(int j=0;j<count;j++) {
+					for(int j=0,count=obj[i].length;j<count;j++) {
 						ps.setObject(j+1, obj[i][j]);
 					}
 					ps.addBatch();
 				}
 				int[] result = ps.executeBatch();
-				obj=count>0?obj:new Object[][]{};
 				new SqlLog(dbname).isShowLog(sql, obj);
 				clearCache();
 				return  result;
@@ -135,12 +131,10 @@ public class SqlOperation {
 	public ResultSet getResultSet(String sql, Object...obj) {
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			int count=Regular.getArrayByExpression(sql, "\\?").size();
-			for (int i = 0; i <count; i++) {
+			for (int i = 0,count=obj.length; i <count; i++) {
 				ps.setObject(i + 1, obj[i]);
 			}
 			ResultSet resultSet = ps.executeQuery();
-			obj=count>0?obj:new Object[]{};
 			new SqlLog(dbname).isShowLog(sql, obj);
 			return resultSet;
 		} catch (SQLException e) {
@@ -186,13 +180,11 @@ public class SqlOperation {
 		SqlLog log=new SqlLog(dbname);
 		ResultSet rs=null;
 		try{
-			int count=Regular.getArrayByExpression(sql, "\\?").size();
 			ps = conn.prepareStatement(sql);
-			for (int i = 0; i <count; i++) {
+			for (int i = 0,count=obj.length; i <count; i++) {
 				ps.setObject(i + 1, obj[i]);
 			}
 			rs = ps.executeQuery();
-			obj=count>0?obj:new Object[]{};
 			log.isShowLog(sql, obj);
 			ResultSetMetaData md = rs.getMetaData();
 			int columnCount = md.getColumnCount();
