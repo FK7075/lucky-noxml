@@ -4,6 +4,7 @@ import com.lucky.jacklamb.conversion.EntityAndDto;
 import com.lucky.jacklamb.conversion.LuckyConversion;
 import com.lucky.jacklamb.conversion.annotation.Mapping;
 import com.lucky.jacklamb.conversion.annotation.Mappings;
+import com.lucky.jacklamb.conversion.annotation.NoConversion;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
@@ -27,8 +28,10 @@ public abstract class Conversion {
         Object fieldValue;
         String fieldName;
         for(Field field:fields){
-            field.setAccessible(true);
-            fieldValue=field.get(sourceObject);
+            if(field.isAnnotationPresent(NoConversion.class)){
+                continue;
+            }
+            fieldValue=FieldUtils.getValue(sourceObject,field);
             fieldName="".equals(initialName)?field.getName():initialName+"."+field.getName();
             if(FieldUtils.isBasicSimpleType(field)){
                 sourceNameValueMap.put(fieldName,fieldValue);

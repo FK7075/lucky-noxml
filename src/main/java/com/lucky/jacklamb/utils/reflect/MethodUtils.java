@@ -3,6 +3,7 @@ package com.lucky.jacklamb.utils.reflect;
 import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.mapping.Mapping;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMistakesException;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 
 import java.io.IOException;
@@ -156,9 +157,13 @@ public abstract class MethodUtils {
      * @return
      * @throws IOException
      */
-    public static Map<String,Object> getMethodParamsNV(Method method, Object[] params) throws IOException {
-        Map<String, Object> interfaceMethodParamsNV = getInterfaceMethodParamsNV(method, params);
-        return interfaceMethodParamsNV.isEmpty()?getClassMethodParamsNV(method,params):interfaceMethodParamsNV;
+    public static Map<String,Object> getMethodParamsNV(Method method, Object[] params) {
+        try {
+            Map<String, Object> interfaceMethodParamsNV = getInterfaceMethodParamsNV(method, params);
+            return interfaceMethodParamsNV.isEmpty()?getClassMethodParamsNV(method,params):interfaceMethodParamsNV;
+        } catch (IOException e) {
+            throw new LuckySqlGrammarMistakesException(method,e);
+        }
     }
 
     /**

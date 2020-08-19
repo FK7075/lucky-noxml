@@ -217,6 +217,33 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
+        sql.append(columns).append(" LIKE ?");
+        params.add(param);
+        return this;
+    }
+
+    public Translator likeE(String columns,Object param){
+        if(isEndBrackets()) {
+            add();
+        }
+        sql.append(columns).append(" LIKE ?e");
+        params.add(param);
+        return this;
+    }
+
+    public Translator likeS(String columns,Object param){
+        if(isEndBrackets()) {
+            add();
+        }
+        sql.append(columns).append(" LIKE ?s");
+        params.add(param);
+        return this;
+    }
+
+    public Translator likeC(String columns,Object param){
+        if(isEndBrackets()) {
+            add();
+        }
         sql.append(columns).append(" LIKE ?c");
         params.add(param);
         return this;

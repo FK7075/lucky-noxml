@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.activerecord;
 
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
+import com.lucky.jacklamb.conversion.annotation.NoConversion;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
@@ -22,12 +23,12 @@ import java.util.List;
  */
 public abstract class BaseEntity<Entity> {
 
-    @NoPackage
-    @NoColumn
+    @NoConversion
+    @NoPackage@NoColumn
     private transient SqlCore sqlCore;
 
-    @NoPackage
-    @NoColumn
+    @NoConversion
+    @NoPackage@NoColumn
     private transient final Field idField= PojoManage.getIdField(this.getClass());
 
     public BaseEntity(){
@@ -321,28 +322,65 @@ public abstract class BaseEntity<Entity> {
         return sqlCore.updateBySql(sql,params);
     }
 
+    /**
+     * Translator方式的更新，不用设置SET语句，修改以当前对象为模板
+     * @param tr
+     * @return
+     */
     public int updateThis(Translator tr){
         return sqlCore.update(this,tr);
     }
 
+    /**
+     * Translator方式更新，需要使用Translator对象的setSqlUpdate方法设置SET规则
+     * @param tr Translator对象
+     * @return
+     */
     public int update(Translator tr){
         tr.setPojoClass(this.getClass());
         return sqlCore.update(tr);
     }
 
+    /**
+     * Translator方式更新,以出入的对象为模板
+     * @param pojo 模板对象
+     * @param tr Translator对象
+     * @return
+     */
     public int update(Entity pojo,Translator tr){
         return sqlCore.update(pojo,tr);
     }
 
+    /**
+     * Translator方式删除
+     * @param tr Translator对象
+     * @return
+     */
     public int delete(Translator tr){
         return sqlCore.delete(this.getClass(),tr);
     }
 
+    /**
+     * <p>
+     * Translator方式查询，可以通过Translator对象的setPackClass方法来指定接受本次查询结果的类型
+     * 如果不指定，则使用当前实体类型接受
+     * </p>
+     * @param tr Translator对象
+     * @return
+     */
     public List<Entity> select(Translator tr){
         tr.setPojoClass(this.getClass());
         return (List<Entity>) sqlCore.getList(tr);
     }
 
+    /**
+     * <p>
+     * Translator方式查询单个对象(针对返回结果只有一条记录的情况)，可以通过Translator对象的setPackClass方法来指定接受本次查询结果的类型
+     * 如果不指定，则使用当前实体类型接受
+     * </p>
+     * @param tr Translator对象
+     * @return
+     */
     public Entity selectOne(Translator tr){
         tr.setPojoClass(this.getClass());
         return (Entity) sqlCore.getObject(tr);

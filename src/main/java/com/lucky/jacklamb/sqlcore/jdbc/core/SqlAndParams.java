@@ -16,8 +16,10 @@ public class SqlAndParams{
 	private final String END ="?e";
 	/** ?c <=> XX LIKE %YY% */
 	private final String CONTAIN ="?c";
-	/** ?CONTAIN <=> (?,?,?,?) */
-	private final String In="?CONTAIN";
+	/** ?C <=> (?,?,?,?) */
+	private final String In="?C";
+	/** ?D <=> 动态SQL */
+	private final String DYSQL="?D";
 
 	String precompileSql;
 
@@ -27,7 +29,7 @@ public class SqlAndParams{
 
 	public SqlAndParams(String haveNumSql,Object[] params){
 		numSql(haveNumSql,params);
-		finalProce();
+		finalProce(null);
 	}
 
 	public SqlAndParams(Method method, String haveNumSql, Object[] params){
@@ -37,10 +39,20 @@ public class SqlAndParams{
 		}else{
 			nameSQl(method,names,haveNumSql,params);
 		}
-		finalProce();
+		finalProce(method);
 	}
 
-	/*最后处理，处理预编译Sql中的特殊参数[?s,?e,?c,?CONTAIN]
+	public Map<Integer,Integer> getIndexMap(){
+		List<Integer> indexs=new ArrayList<>();
+		setQuestionMarkIndex(precompileSql,indexs,"?");
+		Map<Integer,Integer> indexMap=new HashMap<>();
+		for (int i = 0; i < indexs.size(); i++) {
+			indexMap.put(indexs.get(i),i);
+		}
+		return indexMap;
+	}
+
+	/*最后处理，处理预编译Sql中的特殊参数[?s,?e,?c,?C,?D]
 	    ---------------------------------------------------------------------------
 	    ?e  : EndingWith    ->LIKE %param      以param结尾
 	        SELECT * FROM table WHERE name LIKE ?e       Params["Jack"]
@@ -51,24 +63,37 @@ public class SqlAndParams{
 	    ?s  : StartingWith  ->LIKE param%      以param开头
 	    ?c  : Containing    ->LIKE %param%     包含param
 	    -----------------------------------------------------------------------------
-	    ?CONTAIN  : In            ->In [Collection]  条件范围为Collection集合
-	        SELECT * FROM table WHERE age IN ?CONTAIN           Params[Collection[1,2,3,4]]
+	    ?C  : In            ->In [Collection]  条件范围为Collection集合
+	        SELECT * FROM table WHERE age IN ?C           Params[Collection[1,2,3,4]]
 	        	                 |
 	                             V
 	        SELECT * FROM table WHERE age IN (?,?,?,?)    Params[1,2,3,4]
 	    -----------------------------------------------------------------------------
+	    ?D	: DySql         -> DynamicSqlWrapper 动态SQL生成规则
+	    	SELECT * FROM table ?D				   Params[(map)->{if(map.get("name")==null){return new SP("WHERE name>?",map.get("name"))}else{return new SP()}}]
+	    						 |
+	    						 V
+	    	SELECT * FROM table  OR
+	    	SELECT * FROM table WHERE name=?              Params["jack"]
 	 */
-	public void finalProce(){
+	public void finalProce(Method method){
 		if(precompileSql.contains(In)||precompileSql.contains(START)||
-			precompileSql.contains(END)||precompileSql.contains(CONTAIN)){
-			List<Integer> indexs=new ArrayList<>();
-			setQuestionMarkIndex(precompileSql,indexs,"?");
-			Map<Integer,Integer> indexMap=new HashMap<>();
-			for (int i = 0; i < indexs.size(); i++) {
-				indexMap.put(indexs.get(i),i);
+			precompileSql.contains(END)||precompileSql.contains(CONTAIN)||
+			precompileSql.contains(DYSQL)){
+			Map<String,Object> DY_DATA=new HashMap<>();
+			if(method!=null){
+				DY_DATA=MethodUtils.getMethodParamsNV(method,params);
+			}else{
+				for (int i = 0,j=params.length; i < j; i++) {
+					DY_DATA.put(i+"",params[i]);
+				}
 			}
+			Map<Integer,Integer> indexMap=getIndexMap();
+			dealithW_D(DY_DATA);
+			indexMap=getIndexMap();
 			dealithW_s(indexMap);dealithW_e(indexMap);dealithW_c(indexMap);
 			precompileSql=precompileSql.replaceAll("\\?l","?");
+			indexMap=getIndexMap();
 			dealithW_C(indexMap);
 		}
 	}
@@ -112,7 +137,58 @@ public class SqlAndParams{
 		}
 	}
 
-	/*处理?CONTAIN  (IN操作类似的范围限定操作)
+	public void dealithW_D(Map<String,Object> DY_DATA){
+		while (true){
+			if(!precompileSql.contains("?D")){
+				break;
+			}
+			Map<Integer, Integer> indexMap = getIndexMap();
+			List<Integer> escIndex=new ArrayList<>();
+			setQuestionMarkIndex(precompileSql,escIndex,DYSQL);
+			DynamicSqlWrapper dySqlWar;
+			SP sp;
+			int idx=0;
+			try{
+				idx=indexMap.get(escIndex.get(0));
+				dySqlWar=(DynamicSqlWrapper)params[idx];
+			}catch (Exception e){
+				throw new RuntimeException("SQL操作符 \"?D\" 对应的参数类型必须为"+DynamicSqlWrapper.class+"！错误的类型:"+params[idx].getClass(),e);
+			}
+			sp=dySqlWar.dySql(DY_DATA);
+			precompileSql=precompileSql.replaceFirst("\\?D",sp.getpSql());
+			Object[] newParams=new Object[params.length+sp.getParams().size()-1];
+			for (int i=0,j=newParams.length;i<j;i++){
+				if(i<idx){
+					newParams[i]=params[i];
+				}else if(i>=idx&&i<(idx+sp.getParams().size())){
+					newParams[i]=sp.getParams().get(i-idx);
+				}else{
+					newParams[i]=params[i-idx];
+				}
+			}
+			params=newParams;
+		}
+//		List<Integer> escIndex=new ArrayList<>();
+//		Map<Integer,Integer>indexMap;
+//		setQuestionMarkIndex(precompileSql,escIndex,In);
+//		if(!escIndex.isEmpty()){
+//			DynamicSqlWrapper dySqlWar;
+//			SP sp;
+//			for (Integer index : escIndex) {
+//				int idx=indexMap.get(index);
+//				try{
+//					dySqlWar=(DynamicSqlWrapper)params[idx];
+//				}catch (Exception e){
+//					throw new RuntimeException("SQL操作符 \"?D\" 对应的参数类型必须为"+DynamicSqlWrapper.class+"！错误的类型:"+params[idx].getClass(),e);
+//				}
+//				sp=dySqlWar.dySql(DY_DATA);
+//				precompileSql.replaceFirst("\\?D",sp.getpSql());
+//			}
+//		}
+
+	}
+
+	/*处理?C  (IN操作类似的范围限定操作)
 	    indexMap:?在SQL中的位置(KEY)与(=>)?对应参数在参数数组中的位置(VALUE)
 	     1.得到所有?C在SQl中出现的位置所组成的集合(escIndex)
 	     2.如果(escIndex)中没有元素则结束，否则进入第三步
@@ -127,7 +203,7 @@ public class SqlAndParams{
 	     9.将新数组赋值给原数组
 
 	     ------------------------------------------------------------------------------------------------------------------------------
-	      SQL : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN ?CONTAIN AND f3=? OR f4=? AND f5 IN ?CONTAIN f6 NOT IN ?CONTAIN
+	      SQL : SELECT * FROM table WHERE f0=? AND f1=? AND f2 IN ?C AND f3=? OR f4=? AND f5 IN ?CONTAIN f6 NOT IN ?CONTAIN
 	      Params               [0,1,2C,3,4,5C,6C]    l=7
 
 	      inCollectionMap                            lm=3
@@ -153,7 +229,7 @@ public class SqlAndParams{
 				try{
                     collections=(Collection)params[idx];
                 }catch (Exception e){
-				    throw new RuntimeException("SQL操作符 \"IN\" 对应的参数类型必须为Collection的子类！错误的类型:"+params[idx].getClass(),e);
+				    throw new RuntimeException("SQL操作符 \"?C\" 对应的参数类型必须为Collection的子类！错误的类型:"+params[idx].getClass(),e);
                 }
 				int collSize=collections.size();
 				newArraySize+=collSize;
@@ -209,10 +285,11 @@ public class SqlAndParams{
 			sqlCopy=sqlCopy.replaceFirst("\\?c","@L");
 		}else if(In.equals(target)){
 			sqlCopy=sqlCopy.replaceFirst("\\?C","@L");
+		}else if(DYSQL.equals(target)){
+			sqlCopy=sqlCopy.replaceFirst("\\?D","@L");
 		}else{
 			throw new RuntimeException("错误的参数："+target+",正确的参数为[?,?s,?e,?c,?CONTAIN]");
 		}
-
 		setQuestionMarkIndex(sqlCopy,indexs,target);
 	}
 
@@ -249,22 +326,18 @@ public class SqlAndParams{
 	}
 
 	private Object[] validation(Method method,List<String> names,Object[] params,String haveNumSql){
-		try {
-			Map<String,Object> methodParamsNV= MethodUtils.getMethodParamsNV(method,params);
-			int size=names.size();
-			String name;
-			Object[] targetParams=new Object[size];
-			for (int i = 0; i < size; i++) {
-				name=names.get(i).substring(1);
-				if(methodParamsNV.containsKey(name)){
-					targetParams[i]=methodParamsNV.get(name);
-				}else {
-					throw new LuckySqlGrammarMistakesException(method,haveNumSql,name);
-				}
+		Map<String,Object> methodParamsNV= MethodUtils.getMethodParamsNV(method,params);
+		int size=names.size();
+		String name;
+		Object[] targetParams=new Object[size];
+		for (int i = 0; i < size; i++) {
+			name=names.get(i).substring(1);
+			if(methodParamsNV.containsKey(name)){
+				targetParams[i]=methodParamsNV.get(name);
+			}else {
+				throw new LuckySqlGrammarMistakesException(method,haveNumSql,name);
 			}
-			return targetParams;
-		} catch (IOException e) {
-			throw new LuckySqlGrammarMistakesException(method,e);
 		}
+		return targetParams;
 	}
 }
