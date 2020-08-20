@@ -84,26 +84,32 @@ public class SplicingRules {
         return pSql.toString();
     }
 
+    //去前缀
     public String getpSql(){
         if(removePrefix!=null){
-            if(pSql.toString().startsWith(removePrefix)){
-                pSql=new StringBuilder(pSql.substring(removePrefix.length()));
+            String currsql = pSql.toString();
+            if(currsql.trim().startsWith(removePrefix.trim())){
+                int sp=currsql.indexOf(removePrefix.trim());
+                pSql=new StringBuilder(pSql.substring(sp+removePrefix.trim().length()));
             }
         }
         if(addPrefix!=null){
             String currsql = pSql.toString();
             if(!"".equals(currsql)&&!currsql.trim().startsWith(addPrefix.trim())){
-                pSql=new StringBuilder(addPrefix).append(pSql);
+                pSql=new StringBuilder(String.format(" %s ",addPrefix.trim())).append(pSql);
             }
         }
+        // 去后缀
         if(removeSuffix!=null){
-            if(pSql.toString().endsWith(removeSuffix)){
-                pSql=new StringBuilder(pSql.substring(0,pSql.length()-removeSuffix.length()));
+            String currsql = pSql.toString();
+            if(currsql.trim().endsWith(removeSuffix.trim())){
+                int sp=currsql.lastIndexOf(removeSuffix.trim());
+                pSql=new StringBuilder(pSql.substring(0,sp));
             }
         }
         if(addSuffix!=null){
             if(!pSql.toString().trim().endsWith(addSuffix.trim()))
-                pSql.append(addSuffix);
+                pSql.append(String.format(" %s ",addSuffix.trim()));
         }
         return pSql.toString();
     }
