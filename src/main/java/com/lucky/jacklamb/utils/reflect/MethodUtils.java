@@ -50,6 +50,22 @@ public abstract class MethodUtils {
     }
 
     /**
+     * 使用反射机制执行方法
+     * @param targetObject 对象实例
+     * @param declaredMethodName 要执行的方法的方法名
+     * @param params 方法执行所需要的参数
+     * @return
+     */
+    public static Object invokeDeclaredMethod(Object targetObject,String declaredMethodName,Object[] params){
+        try {
+            Method method=targetObject.getClass().getDeclaredMethod(declaredMethodName,ClassUtils.array2Class(params));
+            return invoke(targetObject,method,params);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * interface Method : public void method(String name,Double price)
      *      ->
      * List[name,price]

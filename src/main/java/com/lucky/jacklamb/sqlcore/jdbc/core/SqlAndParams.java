@@ -4,7 +4,6 @@ import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlGrammarMist
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -157,7 +156,6 @@ public class SqlAndParams{
 			List<Integer> escIndex=new ArrayList<>();
 			setQuestionMarkIndex(precompileSql,escIndex,DYSQL);
 			DynamicSqlWrapper dySqlWar;
-			SP sp;
 			int idx=0;
 			try{
 				idx=indexMap.get(escIndex.get(0));
@@ -165,7 +163,9 @@ public class SqlAndParams{
 			}catch (Exception e){
 				throw new RuntimeException("SQL操作符 \"?D\" 对应的参数类型必须为"+DynamicSqlWrapper.class+"！错误的类型:"+params[idx].getClass(),e);
 			}
-			sp=dySqlWar.dySql(DY_DATA);
+			SplicingRules sp=new SplicingRules();
+			sp.setData(DY_DATA);
+			dySqlWar.dySql(sp);
 			precompileSql=precompileSql.replaceFirst("\\?D",sp.getpSql());
 			int dySize = sp.getParams().size();
 			Object[] newParams=new Object[params.length+dySize-1];

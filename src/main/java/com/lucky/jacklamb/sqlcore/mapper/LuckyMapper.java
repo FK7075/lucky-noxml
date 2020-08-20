@@ -101,7 +101,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Insert(batch = true)
-    public boolean batchInsert(Collection<T> pojos);
+    public int batchInsert(Collection<T> pojos);
 
     /**
      * 批量更新
@@ -110,7 +110,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Update(batch = true)
-    public boolean batchUpdate(Collection<T> pojos);
+    public int batchUpdate(Collection<T> pojos);
 
     /**
      * 批量删除

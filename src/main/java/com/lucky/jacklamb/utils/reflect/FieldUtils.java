@@ -193,4 +193,13 @@ public abstract class FieldUtils {
         return false;
     }
 
+    /**
+     *
+     * @param field
+     * @return
+     */
+    public static boolean isJDKType(Field field){
+        return field.getType().getClassLoader()==null;
+    }
+
 }

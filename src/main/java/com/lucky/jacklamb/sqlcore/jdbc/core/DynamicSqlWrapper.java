@@ -10,6 +10,7 @@ import java.util.Map;
 @FunctionalInterface
 public interface DynamicSqlWrapper {
 
-    public SP dySql(Map<String,Object> data);
+    public void dySql(SplicingRules sp);
+
 
 }
