@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * 规则定义器，定义生成动态SQL的规则
  * @author fk7075
  * @version 1.0
  * @date 2020/8/19 10:24
@@ -84,8 +85,9 @@ public class SplicingRules {
         return pSql.toString();
     }
 
-    //去前缀
+
     public String getpSql(){
+        //去前缀
         if(removePrefix!=null){
             String currsql = pSql.toString();
             if(currsql.trim().startsWith(removePrefix.trim())){

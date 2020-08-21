@@ -8,6 +8,10 @@ public class LuckySqlGrammarMistakesException extends RuntimeException {
         super("错误的预编译SQl,SQL中的参数描述错误！索引超过参数列表的范围！ERROR-index: [?"+index+"] , ERROR-SQL："+errSql);
     }
 
+    public LuckySqlGrammarMistakesException(String message){
+        super(message);
+    }
+
     public LuckySqlGrammarMistakesException(Method method,String errsql, String name){
         super("错误的预编译SQl,SQL中的参数描述错误！找不到可以匹配的参数[@:"+name+"], SQL: "+errsql+" , Method:"+method);
     }

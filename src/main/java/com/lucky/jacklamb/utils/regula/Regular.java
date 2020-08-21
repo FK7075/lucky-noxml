@@ -14,10 +14,16 @@ public abstract class Regular {
 
     public static final String Sharp="\\#\\{[\\w|:|\\[|\\]|.|-]+\\}";
 
+    public static final String SQL_PLACEHOLDER="(\\@[_a-zA-Z][_a-zA-Z0-9]*|\\?\\d+|\\?(c|e|C|D)\\d+|\\?(c|e|C|D)|\\?)";
+
+    public static final String SIMPLE_SQL_PLACEHOLDER="(\\@[_a-zA-Z][_a-zA-Z0-9]*|\\?\\d+)";
+
     /**
      * 带数字标识的预编译SQL  ?1 ?2
      */
     public static final  String NUMSQL="\\?\\d+";
+
+    public static final String SQL_DY_NUN="\\?(c|e|C|D)\\d+";
 
     /**
      * eg -> @name @age
@@ -116,11 +122,16 @@ public abstract class Regular {
     }
 
     public static void main(String[] args) {
-        String sql="SELECT * FROM user WHERE a=#{name} AND b=#{sex} AND c=#{id} ";
-        System.out.println(getArrayByExpression(sql, Sharp));
-        String SQL = sql.replaceAll(Sharp, "?");
+        String sql="SELECT * FROM user WHERE a=@name AND b=?3 AND c=@price AND g=?2 OR f=?C5 OR h=?";
+        List<String> plas = getArrayByExpression(sql, SQL_PLACEHOLDER);
+        System.out.println(plas);
+        for (String pla : plas) {
+            if(check(pla,$SQL))
+                System.out.println(pla);
+        }
+        String SQL = sql.replaceAll(SIMPLE_SQL_PLACEHOLDER, "?");
         System.out.println(questionMarkCount(SQL, 0));
-        System.out.println(sql.replaceAll(Sharp, "?"));
+        System.out.println(SQL);
         System.out.println(getArrayByExpression(SQL, "\\?"));
         System.out.println(check("@er53", $SQL));
     }
