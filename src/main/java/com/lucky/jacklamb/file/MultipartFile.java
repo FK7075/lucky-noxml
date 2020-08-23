@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.file;
 
-import com.lucky.jacklamb.file.utils.LuckyFileUtils;
+import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 import java.io.*;
@@ -87,7 +87,7 @@ public class MultipartFile {
 		if(!folder.exists())
 			folder.mkdirs();
 		FileOutputStream outfile=new FileOutputStream(folder.getAbsoluteFile()+File.separator+uploadFileName);//projectPath+"/"+docRelativePath+"/"+uploadFileName);
-		LuckyFileUtils.copy(originalFileInputStream,outfile);
+		FileUtils.copy(originalFileInputStream,outfile);
 	}
 
 	/**

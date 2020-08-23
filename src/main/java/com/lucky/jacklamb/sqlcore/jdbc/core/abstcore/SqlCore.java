@@ -343,16 +343,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	
 	public void setNextUUID(Object pojo) {
 		Field idField=PojoManage.getIdField(pojo.getClass());
-		idField.setAccessible(true);
-		try {
-			idField.set(pojo, UUID.randomUUID().toString());
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		FieldUtils.setValue(pojo,idField,UUID.randomUUID().toString());
 	}
 
 	public int update(Translator tr){
@@ -393,18 +384,18 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		return updateBySql(sql.toString(),tr.getParams().toArray());
 	}
 
-	public <T> List<T> getList(Translator tr){
+	public List<?> getList(Translator tr){
 		StringBuilder sql=new StringBuilder(tr.getSELECT());
 		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
 			sql.append(tr.getSql());
 		}else{
 			sql.append(" WHERE ").append(tr.getSql());
 		}
-		return (List<T>) getList(tr.getPackClass(),sql.toString(),tr.getParams().toArray());
+		return getList(tr.getPackClass(),sql.toString(),tr.getParams().toArray());
 	}
 
-	public <T> T getObject(Translator tr){
-		List<T> list = getList(tr);
+	public Object getObject(Translator tr){
+		List<?> list = getList(tr);
 		if(list!=null&&!list.isEmpty())
 			return list.get(0);
 		return null;

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -24,12 +25,12 @@ public class JarScan extends Scan {
 	protected String prefix;
 
 
-	public JarScan(Class<?> clzz) {
+	public JarScan(Class<?> clzz) throws URISyntaxException {
 		lson=new LSON();
 		String allname=clzz.getName();
 		String simpleName=clzz.getSimpleName();
 		prefix=allname.substring(0, allname.length()-simpleName.length()).replaceAll("\\.", "/");
-		jarpath=clzz.getResource("").getPath();
+		jarpath=clzz.getResource("").toURI().getPath();
 		jarpath=jarpath.substring(5);
 		if(jarpath.contains(".jar!")){
 			if(jarpath.contains(":")){

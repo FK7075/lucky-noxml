@@ -7,7 +7,7 @@ import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.*;
 import com.lucky.jacklamb.file.MultipartFile;
-import com.lucky.jacklamb.file.utils.LuckyFileUtils;
+import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -332,7 +332,7 @@ public class AnnotationOperation {
             } else {
                 fileName.replaceAll("attachment;filename=", "").trim();
             }
-            LuckyFileUtils.download(model.getResponse(), buffer, fileName);
+            FileUtils.download(model.getResponse(), buffer, fileName);
             return;
         } else {
             String fileName = dl.name();
@@ -351,7 +351,7 @@ public class AnnotationOperation {
             } else if (filePath.startsWith("http:")) {//暴露一个网络上的文件库
                 String url = filePath + file;
                 byte[] buffer = HttpClientCall.getCallByte(url, new HashMap<>());
-                LuckyFileUtils.download(model.getResponse(), buffer, file);
+                FileUtils.download(model.getResponse(), buffer, file);
                 return;
             } else {
                 path = model.getRealPath(filePath) + file; // 默认认为文件在当前项目的docBase目录
@@ -367,7 +367,7 @@ public class AnnotationOperation {
             fis = new FileInputStream(f);
             downName = f.getName();
         }
-        LuckyFileUtils.download(model.getResponse(), fis, downName);
+        FileUtils.download(model.getResponse(), fis, downName);
     }
 
     /**
@@ -766,7 +766,7 @@ class UploadCopy{
         if(!out.getParentFile().exists()) {
             out.getParentFile().mkdirs();
         }
-        LuckyFileUtils.copy(in,new BufferedOutputStream(new FileOutputStream(out)));
+        FileUtils.copy(in,new BufferedOutputStream(new FileOutputStream(out)));
     }
 
     public int getFileSize() throws IOException {

@@ -2,7 +2,7 @@ package com.lucky.jacklamb.servlet.staticsource;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.file.utils.LuckyFileUtils;
+import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
@@ -107,23 +107,23 @@ public class StaticResourceManage {
 
     public static void response(Model model, String uri) throws IOException {
         if(docBaseFileIsExist(model,uri)){
-            LuckyFileUtils.preview(model, model.getRealFile(uri));
+            FileUtils.preview(model, model.getRealFile(uri));
             return;
         }
         switch (WEB_ROOT_PREFIX){
             case "CP" :{
                 InputStream staticStream=ApplicationBeans.class.getResourceAsStream(TARGET_WEB_ROOT+uri);
-                LuckyFileUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
+                FileUtils.preview(model,staticStream,uri.substring(uri.lastIndexOf("/")));
                 break;
             }
             case "DB" :{
                 File staticFile=model.getRealFile(TARGET_WEB_ROOT+uri);
-                LuckyFileUtils.preview(model, staticFile);
+                FileUtils.preview(model, staticFile);
                 break;
             }
             default: {
                 File staticFile=new File(TARGET_WEB_ROOT+uri);
-                LuckyFileUtils.preview(model, staticFile);
+                FileUtils.preview(model, staticFile);
                 break;
             }
         }

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -32,9 +33,9 @@ public class PackageScan extends Scan {
 	private LuckyClassLoader luckyClassLoader;
 	
 	
-	public PackageScan() {
+	public PackageScan() throws URISyntaxException {
 		super();
-		projectPath=PackageScan.class.getClassLoader().getResource("").getPath();
+		projectPath=PackageScan.class.getClassLoader().getResource("").toURI().getPath();
 		log.info("Project Start Path "+System.getProperty("user.dir"));
 		log.info("Class File Root Directory "+projectPath);
 		if(projectPath.endsWith("/classes/")) {

@@ -3,7 +3,7 @@ package com.lucky.jacklamb.servlet;
 import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.file.ZipUtils;
-import com.lucky.jacklamb.file.utils.LuckyFileUtils;
+import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.ioc.ComponentIOC;
 import com.lucky.jacklamb.ioc.RepositoryIOC;
 import com.lucky.jacklamb.ioc.ServiceIOC;
@@ -60,7 +60,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void download(byte[] byteArray,String setDownloadName) throws IOException {
-		LuckyFileUtils.download(response,byteArray,setDownloadName);
+		FileUtils.download(response,byteArray,setDownloadName);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void download(File in) throws IOException {
-		LuckyFileUtils.download(response,in);
+		FileUtils.download(response,in);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void download(InputStream in,String setDownloadName) throws IOException {
-		LuckyFileUtils.download(response,in,setDownloadName);
+		FileUtils.download(response,in,setDownloadName);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(byte[] byteArray,String fileName) throws IOException {
-		LuckyFileUtils.preview(model,byteArray,fileName);
+		FileUtils.preview(model,byteArray,fileName);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(File in) throws IOException {
-		LuckyFileUtils.preview(model,in);
+		FileUtils.preview(model,in);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class LuckyController {
 	 * @throws IOException
 	 */
 	protected void preview(InputStream in,String fileName) throws IOException {
-		LuckyFileUtils.preview(model,in,fileName);
+		FileUtils.preview(model,in,fileName);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public abstract class LuckyController {
 		}else{
 			File zip=new File(baseDir+ UUID.randomUUID().toString()+suffix);
 			File srcCopy=new File(baseDir+UUID.randomUUID().toString());
-			LuckyFileUtils.copyFolders(srcFile,srcCopy);
+			FileUtils.copyFolders(srcFile,srcCopy);
 			try{
 				if(!zip.exists())
 					zip.createNewFile();
@@ -312,7 +312,7 @@ public abstract class LuckyController {
 				download(new FileInputStream(zip),compressName+suffix);
 			}finally {
 				zip.delete();
-				LuckyFileUtils.deleteFile(srcCopy);
+				FileUtils.deleteFile(srcCopy);
 			}
 		}
 	}

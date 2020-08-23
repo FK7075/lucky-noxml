@@ -121,6 +121,7 @@ public class Translator {
         return this;
     }
 
+
     public Translator orS(){
         sql.append(" OR (");
         return this;
@@ -380,7 +381,7 @@ public class Translator {
         return this;
     }
 
-    public boolean isEndBrackets(){
+    private boolean isEndBrackets(){
         String trim = sql.toString().trim().toUpperCase();
         return !trim.endsWith("AND")&&!trim.endsWith("OR")&&!trim.endsWith("(")&&!trim.endsWith("WHERE")&&!trim.endsWith("HAVING");
     }
