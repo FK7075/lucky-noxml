@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.servlet;
+package com.lucky.jacklamb.servlet.utils;
 
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;

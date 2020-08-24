@@ -7,7 +7,7 @@ import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
-import com.lucky.jacklamb.servlet.LuckyController;
+import com.lucky.jacklamb.servlet.utils.LuckyController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

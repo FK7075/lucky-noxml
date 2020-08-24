@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.servlet;
+package com.lucky.jacklamb.servlet.utils;
 
 import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.annotation.ioc.Autowired;
@@ -52,6 +52,8 @@ public abstract class LuckyController {
 	protected ServletContext application;
 
 	protected static LSON lson=new LSON();
+
+	private static VerificationCode vcCode=new VerificationCode();
 
 	/**
 	 * 文件下载
@@ -326,5 +328,49 @@ public abstract class LuckyController {
 	protected void downloadZip(String[] docBaseFiles,String zipFileName) throws IOException {
 		List<File> files = Stream.of(docBaseFiles).map(f -> model.getRealFile(f)).collect(Collectors.toList());
 		downloadZip(files,zipFileName);
+	}
+
+	/**
+	 * 生成图片验证码
+	 * @throws IOException
+	 */
+	protected void generateVerificationCode() throws IOException {
+		vcCode.generateVerificationCode(request,response);
+	}
+
+	/**
+	 * 生成指定字符长度的图片验证码
+	 * @throws IOException
+	 */
+	protected void generateVerificationCode(int CHAR_LENGTH) throws IOException {
+		vcCode.CHAR_LENGTH=CHAR_LENGTH;
+		vcCode.IMG_WIDTH=20*CHAR_LENGTH;
+		vcCode.generateVerificationCode(request,response);
+	}
+
+	/**
+	 * 获取验证码信息
+	 * @return
+	 */
+	protected String getVerificationCode(){
+		return (String) model.getSessionAttribute(VerificationCode.SESSION_NAME);
+	}
+
+	/**
+	 * 验证码比对，英文需要区分大小写
+	 * @param inputCode 用户输入的验证码
+	 * @return
+	 */
+	protected boolean codeInspection(String inputCode){
+		return inputCode.equals(getVerificationCode());
+	}
+
+	/**
+	 * 验证码比对,忽略英文的大小写
+	 * @param inputCode 用户输入的验证码
+	 * @return
+	 */
+	protected boolean codeInspectionIgnoreCase(String inputCode){
+		return inputCode.equalsIgnoreCase(getVerificationCode());
 	}
 }

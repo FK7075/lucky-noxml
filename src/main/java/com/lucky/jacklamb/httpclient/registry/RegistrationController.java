@@ -7,7 +7,7 @@ import com.lucky.jacklamb.annotation.mvc.ResponseBody;
 import com.lucky.jacklamb.annotation.mvc.RestParam;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
-import com.lucky.jacklamb.servlet.LuckyController;
+import com.lucky.jacklamb.servlet.utils.LuckyController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
