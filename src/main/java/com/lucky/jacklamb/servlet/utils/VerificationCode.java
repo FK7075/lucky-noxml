@@ -25,8 +25,6 @@ public class VerificationCode {
     private final int CHAR_SIZE=23;
     private final String CHAR_FONT="Arial Black";
 
-    public static final String SESSION_NAME="6a45345f9d5a8bb93ee094274df26dee";
-
     public VerificationCode(){
         IMG_HEIGHT=CHAR_SIZE+4;
         mFont= new Font("Arial Black", Font.PLAIN, CHAR_SIZE);
@@ -65,12 +63,7 @@ public class VerificationCode {
         }
     }
 
-    public void generateVerificationCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // 设置禁止缓存
-        response.setHeader("Pragma", "No-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-        response.setContentType("image/jpeg");
+    public ImagAndString createVerificationCodeImage(){
         BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         Random random = new Random();
@@ -108,12 +101,6 @@ public class VerificationCode {
             g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
             g.drawString(tmp, 15 * i + 10, 20);
         }
-        // 获取HttpSession对象
-        HttpSession session = request.getSession(true);
-        session.removeAttribute(SESSION_NAME);
-        session.setAttribute(SESSION_NAME, sRand);
-        g.dispose();
-        // 向输出流中输出图片
-        ImageIO.write(image, "JPEG", response.getOutputStream());
+        return new ImagAndString(image,sRand);
     }
 }
