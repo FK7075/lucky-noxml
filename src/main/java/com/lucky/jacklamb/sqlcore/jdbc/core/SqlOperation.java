@@ -190,7 +190,7 @@ public class SqlOperation {
 			while (rs.next()){
 				Map<String,Object> rowData = new HashMap<>();
 				for (int i = 1; i <= columnCount; i++) {
-					rowData.put(md.getColumnLabel(i), rs.getObject(i));
+					rowData.put(md.getColumnLabel(i).toUpperCase(), rs.getObject(i));
 				}
 				queryResult.add(rowData);
 			}

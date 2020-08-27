@@ -27,10 +27,11 @@ public abstract class JDBCConversion {
         Field[] allFields = ClassUtils.getAllFields(entityClass);
         String entityFieldName;
         for (Field entityField : allFields) {
-            if(entityField.isAnnotationPresent(NoPackage.class))
+            if(entityField.isAnnotationPresent(NoPackage.class)){
                 continue;
+            }
             if(FieldUtils.isBasicSimpleType(entityField)){
-                entityFieldName=PojoManage.getTableField(entityField);
+                entityFieldName=PojoManage.getTableField(entityField).toUpperCase();
                 if(queryResult.containsKey(entityFieldName)){
                     FieldUtils.setValue(result,entityField,queryResult.get(entityFieldName));
                 }

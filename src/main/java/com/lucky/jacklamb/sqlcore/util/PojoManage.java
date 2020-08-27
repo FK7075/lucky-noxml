@@ -11,6 +11,7 @@ import com.lucky.jacklamb.annotation.orm.*;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.exception.NotFindFlieException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
 /**
  * 实体类管理工具
@@ -72,22 +73,22 @@ public class PojoManage {
 		if(field.isAnnotationPresent(Column.class)) {
 			Column coumn=field.getAnnotation(Column.class);
 			if("".equals(coumn.value()))
-				return field.getName().toLowerCase();
-			return coumn.value().toLowerCase();
+				return field.getName();
+			return coumn.value();
 		}else if(field.isAnnotationPresent(Id.class)) {
 			Id id=field.getAnnotation(Id.class);
 			if("".equals(id.value()))
-				return field.getName().toLowerCase();
+				return field.getName();
 			return id.value().toLowerCase();
 		}else if(field.isAnnotationPresent(Key.class)) {
 			Key key=field.getAnnotation(Key.class);
 			if("".equals(key.value()))
-				return field.getName().toLowerCase();
-			return key.value().toLowerCase();
+				return field.getName();
+			return key.value();
 		}else if(field.isAnnotationPresent(NoColumn.class)){
 			return "";
 		}else{
-			return field.getName().toLowerCase();
+			return field.getName();
 		}
 	}
 	
@@ -129,7 +130,7 @@ public class PojoManage {
 	 * @return
 	 */
 	public static Field getIdField(Class<?> pojoClass) {
-		Field[] pojoFields=pojoClass.getDeclaredFields();
+		Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 		for(Field field:pojoFields) {
 			if(field.isAnnotationPresent(Id.class)) {
 				return field;
@@ -146,9 +147,10 @@ public class PojoManage {
 	public static String getTable(Class<?> pojoClass) {
 		if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			if("".equals(table.value()))
+			if("".equals(table.value())){
 				return pojoClass.getSimpleName().toLowerCase();
-			return table.value().toLowerCase();
+			}
+			return table.value();
 		}else {
 			return pojoClass.getSimpleName().toLowerCase();
 		}
@@ -201,7 +203,7 @@ public class PojoManage {
 	 */
 	public static Map<Field,Class<?>> getKeyFieldMap(Class<?> pojoClass){
 		Map<Field,Class<?>> keys=new HashMap<>();
-		Field[] pojoFields=pojoClass.getDeclaredFields();
+		Field[] pojoFields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:pojoFields) {
 			if(field.isAnnotationPresent(Key.class)) {
 				Key key=field.getAnnotation(Key.class);
