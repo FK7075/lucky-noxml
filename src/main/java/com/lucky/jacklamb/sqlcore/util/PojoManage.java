@@ -91,11 +91,8 @@ public abstract class PojoManage {
 			}
 			return field.getName();
 
-		}else if(field.isAnnotationPresent(NoColumns.class)){
-			if(isNoColumn(field.getAnnotation(NoColumns.class),dbname)){
-				return "";
-			}
-			return field.getName();
+		}else if(isNoColumn(field,dbname)){
+			return "";
 		}else if(field.isAnnotationPresent(Column.class)) {
 			Column coumn=field.getAnnotation(Column.class);
 			if("".equals(coumn.value()))
