@@ -15,6 +15,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Key {
+
+	/**
+	 * 数据源
+	 * @return
+	 */
+	String dbname() default "UNIVERSAL";
 	
 	/**
 	 * 外键字段名

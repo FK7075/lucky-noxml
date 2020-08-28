@@ -16,7 +16,7 @@ import java.util.*;
  */
 public abstract class JDBCConversion {
 
-    public static <E> E conversion(Map<String,Object> queryResult,Class<E> entityClass){
+    public static <E> E conversion(String dbname,Map<String,Object> queryResult,Class<E> entityClass){
         if(ClassUtils.isBasic(entityClass)){
             for(Map.Entry<String,Object> en:queryResult.entrySet()){
                 return (E) JavaConversion.strToBasic(en.getValue().toString(),entityClass);
@@ -30,13 +30,22 @@ public abstract class JDBCConversion {
             if(entityField.isAnnotationPresent(NoPackage.class)){
                 continue;
             }
+            Class<?> fieldClass=entityField.getType();
             if(FieldUtils.isBasicSimpleType(entityField)){
-                entityFieldName=PojoManage.getTableField(entityField).toUpperCase();
+                entityFieldName=PojoManage.getTableField(dbname,entityField).toUpperCase();
                 if(queryResult.containsKey(entityFieldName)){
-                    FieldUtils.setValue(result,entityField,queryResult.get(entityFieldName));
+                    Object fieldValue = queryResult.get(entityFieldName);
+                    if(fieldValue==null){
+                        continue;
+                    }
+                    if(fieldClass==fieldValue.getClass()){
+                        FieldUtils.setValue(result,entityField,fieldValue);
+                    }else{
+                        FieldUtils.setValue(result,entityField,JavaConversion.strToBasic(fieldValue.toString(),fieldClass));
+                    }
                 }
             }else{
-                Object fieldObject=conversion(queryResult,entityField.getType());
+                Object fieldObject=conversion(dbname,queryResult,entityField.getType());
                 FieldUtils.setValue(result,entityField,fieldObject);
             }
 
@@ -44,10 +53,10 @@ public abstract class JDBCConversion {
         return result;
     }
 
-    public static <E> List<E> conversion(List<Map<String,Object>> queryResult,Class<E> entityClass){
+    public static <E> List<E> conversion(String dbname,List<Map<String,Object>> queryResult,Class<E> entityClass){
         List<E> result=new ArrayList<>();
         for (Map<String, Object> entry : queryResult) {
-            result.add(conversion(entry,entityClass));
+            result.add(conversion(dbname,entry,entityClass));
         }
         return result;
     }

@@ -151,9 +151,9 @@ public class SqlOperation {
 	 */
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		if(isCache){
-			return JDBCConversion.conversion(getCacheQueryResult(sql,obj),c);
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c);
 		}
-		return JDBCConversion.conversion(getQueryResult(sql,obj),c);
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c);
 	}
 
 	public void clearCache(){

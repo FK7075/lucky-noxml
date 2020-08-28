@@ -24,19 +24,22 @@ public class QFilter {
 
 	private Map<String,PojoAndField> pojoAndFields;
 
+	private String dbname;
+
 
 
 	/**
 	 * 设置查询返回列
 	 * @param pojoClass
 	 */
-	public QFilter(Class<?> pojoClass) {
+	public QFilter(Class<?> pojoClass,String dbname) {
+		this.dbname=dbname;
 		allFields=new ArrayList<>();
 		addFields =new ArrayList<>();
 		Field[] fields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:fields) {
 			if(!field.isAnnotationPresent(NoColumn.class))
-				this.allFields.add(PojoManage.getTableField(field));
+				this.allFields.add(PojoManage.getTableField(dbname,field));
 		}
 	}
 
@@ -44,7 +47,8 @@ public class QFilter {
 	 * query操作时使用
 	 * @param pojos
 	 */
-	public QFilter(Object... pojos) {
+	public QFilter(String dbname,Object... pojos) {
+		this.dbname=dbname;
         allFields=new ArrayList<>();
         addFields =new ArrayList<>();
         setFieldAndObject(pojos);
@@ -53,7 +57,7 @@ public class QFilter {
 			Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 			for(Field field:pojoFields){
 				if(!field.isAnnotationPresent(NoColumn.class))
-                	allFields.add(PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(field));
+                	allFields.add(PojoManage.tableAlias(pojoClass,dbname)+"."+PojoManage.getTableField(dbname,field));
 			}
 		}
 	}
@@ -152,7 +156,7 @@ public class QFilter {
 	        Class<?> pojoClass=pojo.getClass();
 	        Field[] fields=ClassUtils.getAllFields(pojoClass);
 	        for(Field f:fields){
-	            String key=PojoManage.tableAlias(pojoClass)+"."+PojoManage.getTableField(f);
+	            String key=PojoManage.tableAlias(pojoClass,dbname)+"."+PojoManage.getTableField(dbname,f);
                 pojoAndFields.put(key,new PojoAndField(pojo,f));
             }
         }

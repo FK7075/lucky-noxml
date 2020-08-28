@@ -18,6 +18,11 @@ public final class OracleCore extends SqlCore {
 	}
 
 	@Override
+	public SqlGroup getSqlGroup() {
+		return new OracleSqlGroup();
+	}
+
+	@Override
 	public void createJavaBean() {
 		// TODO Auto-generated method stub
 		
@@ -48,16 +53,8 @@ public final class OracleCore extends SqlCore {
 	}
 
 	@Override
-	public <T> List<T> getPageList(T t, int page, int rows) {
-		QueryBuilder queryBuilder=new QueryBuilder();
-		queryBuilder.setWheresql(new OracleSqlGroup());
-		queryBuilder.addObject(t);
-		queryBuilder.limit(page, rows);
-		return (List<T>) query(queryBuilder,t.getClass());
-	}
-
-	@Override
 	public <T> List<T> query(QueryBuilder queryBuilder, Class<T> resultClass, String... expression) {
+		queryBuilder.setDbname(getDbName());
 		queryBuilder.setWheresql(new OracleSqlGroup());
 		ObjectToJoinSql join = new ObjectToJoinSql(queryBuilder);
 		String sql = join.getJoinSql(expression);
@@ -68,7 +65,7 @@ public final class OracleCore extends SqlCore {
 	@Override
 	public <T> int insertByCollection(Collection<T> collection) {
 		setUUID(collection);
-		BatchInsert bbi=new BatchInsert(collection);
+		BatchInsert bbi=new BatchInsert(collection,dbname);
 		return statementCore.update(bbi.OrcaleInsetSql(), bbi.getInsertObject());
 	}
 

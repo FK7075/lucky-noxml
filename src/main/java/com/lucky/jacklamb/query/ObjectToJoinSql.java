@@ -1,16 +1,16 @@
 package com.lucky.jacklamb.query;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class ObjectToJoinSql{
 
@@ -42,12 +42,15 @@ public class ObjectToJoinSql{
 
 	private SqlGroup sqlGroup;
 
+	private String dbname;
+
 	public ObjectToJoinSql(QueryBuilder query) {
 		this.obj = query.getObjectArray();
 		this.sort=query.getSort();
         this.like=query.getLike();
         this.sqlGroup=query.getWheresql();
         this.result=query.getResult();
+        this.dbname=query.getDbname();
 	}
 
 	/**
@@ -66,13 +69,13 @@ public class ObjectToJoinSql{
 				Object fk= FieldUtils.getValue(obj[i],fields[j]);
 				if (fk != null) {
 					if (p == 0) {
-						sql.append(" WHERE " ).append(PojoManage.tableAlias(clzz))
-								.append(".").append(PojoManage.getTableField(fields[j]))
+						sql.append(" WHERE " ).append(PojoManage.tableAlias(clzz,dbname))
+								.append(".").append(PojoManage.getTableField(dbname,fields[j]))
 								.append("=?");
 						p++;
 					} else {
-						sql.append(" AND ").append(PojoManage.tableAlias(clzz))
-								.append(".").append(PojoManage.getTableField(fields[j]))
+						sql.append(" AND ").append(PojoManage.tableAlias(clzz,dbname))
+								.append(".").append(PojoManage.getTableField(dbname,fields[j]))
 								.append("=?");
 
 					}
@@ -132,7 +135,7 @@ public class ObjectToJoinSql{
 		String expre="";
 		if(expression.length==0||"".equals(expression[0])) {
 			for(Object object:obj) {
-				expre+=PojoManage.getTable(object.getClass())+"-->";
+				expre+=PojoManage.getTable(object.getClass(),dbname)+"-->";
 			}
 			expre=expre.substring(0,expre.length()-3);
 		}else {
@@ -142,9 +145,9 @@ public class ObjectToJoinSql{
 		List<ClassControl> parsExpression = parsExpression(expre);
 		for(int i=0;i<parsExpression.size();i++) {
 			if(i==0) {
-				onsql+=PojoManage.selectFromTableAlias(parsExpression.get(0).getClzz());
+				onsql+=PojoManage.selectFromTableAlias(parsExpression.get(0).getClzz(),dbname);
 			}else {
-				onsql+=parsExpression.get(i).getJoin()+PojoManage.selectFromTableAlias(parsExpression.get(i).getClzz())+" ON "+getEquation(parsExpression.get(i).getClzz(),parsExpression.get(i-1-parsExpression.get(i).getSite()).getClzz());
+				onsql+=parsExpression.get(i).getJoin()+PojoManage.selectFromTableAlias(parsExpression.get(i).getClzz(),dbname)+" ON "+getEquation(parsExpression.get(i).getClzz(),parsExpression.get(i-1-parsExpression.get(i).getSite()).getClzz());
 			}
 		}
 		return onsql;
@@ -159,10 +162,10 @@ public class ObjectToJoinSql{
 	@SuppressWarnings("unchecked")
 	public String getEquation(Class<?> clax,Class<?> clay) {
 		try {
-			List<Class<?>> claxKeyClasss = (List<Class<?>>) PojoManage.getKeyFields(clax, false);
+			List<Class<?>> claxKeyClasss = (List<Class<?>>) PojoManage.getKeyFields(clax, dbname,false);
 			if(claxKeyClasss.contains(clay))
-				return PojoManage.tableAlias(clax)+"."+PojoManage.getTableField(PojoManage.classToField(clax, clay))+"="+PojoManage.tableAlias(clay)+"."+PojoManage.getIdString(clay);
-			return PojoManage.tableAlias(clay)+"."+PojoManage.getTableField(PojoManage.classToField(clay, clax))+"="+PojoManage.tableAlias(clax)+"."+PojoManage.getIdString(clax);
+				return PojoManage.tableAlias(clax,dbname)+"."+PojoManage.getTableField(dbname,PojoManage.classToField(clax, clay, dbname))+"="+PojoManage.tableAlias(clay,dbname)+"."+PojoManage.getIdString(clay, dbname);
+			return PojoManage.tableAlias(clay,dbname)+"."+PojoManage.getTableField(dbname,PojoManage.classToField(clay, clax, dbname))+"="+PojoManage.tableAlias(clax,dbname)+"."+PojoManage.getIdString(clax, dbname);
 		}catch(Exception e) {
 			throw new RuntimeException(clax.getName()+" 与  "+clay.getName()+"不存在'主外键关系',请检查您的相关配置(@Key,@Id，连接查询表达式['->' '--' '<?>'] )....",e);
 		}
@@ -181,7 +184,7 @@ public class ObjectToJoinSql{
 		for(String name:splitName) {
 			symbol=symbol.replaceAll(name, ",");
 			ClassControl cctl=new ClassControl();
-			Stream.of(obj).map(obj->obj.getClass()).filter(c->name.equals(PojoManage.getTable(c))).forEach(cctl::setClzz);
+			Stream.of(obj).map(obj->obj.getClass()).filter(c->name.equals(PojoManage.getTable(c,dbname))).forEach(cctl::setClzz);
 			cctlist.add(cctl);
 		}
 		String[] symArr=symbol.split(",");

@@ -10,8 +10,8 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface NoColumn {
+public @interface NoColumns {
 	
-	String value() default "UNIVERSAL";
+	NoColumn[] value();
 
 }

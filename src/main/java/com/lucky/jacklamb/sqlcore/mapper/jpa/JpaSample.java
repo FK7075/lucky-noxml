@@ -111,13 +111,13 @@ public class JpaSample {
         }
     }
 
-    public JpaSample(Class<?> pojoClass) {
+    public JpaSample(Class<?> pojoClass,String dbname) {
         this.pojoClass=pojoClass;
-        selectSql = new StringBuilder("SELECT * FROM ").append(PojoManage.getTable(pojoClass));
+        selectSql = new StringBuilder("SELECT * FROM ").append(PojoManage.getTable(pojoClass,dbname));
         fieldColumnMap = new HashMap<>();
         Field[] fields = ClassUtils.getAllFields(pojoClass);
         for (Field field : fields) {
-            fieldColumnMap.put(LuckyUtils.TableToClass(field.getName()), PojoManage.getTableField(field));
+            fieldColumnMap.put(LuckyUtils.TableToClass(field.getName()), PojoManage.getTableField(dbname,field));
         }
         lengthSortField = new ArrayList<>(fieldColumnMap.keySet());
         Collections.sort(lengthSortField, new SortByLengthComparator());

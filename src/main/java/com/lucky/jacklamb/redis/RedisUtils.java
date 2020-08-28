@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 public class RedisUtils {
 
-    private static Jedis getJdeis(){
+    public static Jedis getJdeis(){
         JedisPoolConfig jpc=new JedisPoolConfig();
         JedisPool jpl=new JedisPool(jpc,"127.0.0.1",6379);
         return jpl.getResource();

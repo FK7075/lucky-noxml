@@ -41,7 +41,7 @@ public class DeleteKeySql {
 		List<String> deleteKeySQL=new ArrayList<>();
 		for (Class<?> clazz : classlist) {
 			try {
-				String table = PojoManage.getTable(clazz);
+				String table = PojoManage.getTable(clazz,dbname);
 				String sql = "SHOW CREATE TABLE " + table;
 				ResultSet rs = sqlop.getResultSet(sql);
 				List<String> keyList=new ArrayList<>();

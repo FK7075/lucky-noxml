@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface NoPackage {
 	
-	String value() default "";
+	String value() default "UNIVERSAL";
 
 }

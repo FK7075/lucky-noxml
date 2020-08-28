@@ -14,6 +14,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Table {
+
+	/**
+	 * 数据源
+	 * @return
+	 */
+	String dbname() default "UNIVERSAL";
 	
 	/**
 	 * 表名映射

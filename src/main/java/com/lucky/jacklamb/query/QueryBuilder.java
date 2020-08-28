@@ -42,7 +42,18 @@ public class QueryBuilder {
 
     private SqlGroup sqlGroup;
 
+    private String dbname;
+
+    public String getDbname() {
+        return dbname;
+    }
+
+    public void setDbname(String dbname) {
+        this.dbname = dbname;
+    }
+
     public QueryBuilder(){
+        dbname="defaultDB";
         objects=new ArrayList<>();
         sortSets=new ArrayList<>();
     }
@@ -97,7 +108,7 @@ public class QueryBuilder {
      */
     public void addObject(Object...obj){
         objects.addAll(Arrays.asList(obj));
-        qFilter=new QFilter(obj);
+        qFilter=new QFilter(dbname,obj);
     }
 
     /**

@@ -12,6 +12,7 @@ import com.lucky.jacklamb.sqlcore.util.BatchInsert;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.createtable.CreateTable;
 import com.lucky.jacklamb.tcconversion.reverse.TableToJava;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 @SuppressWarnings("unchecked")
 public final class MySqlCore extends SqlCore {
@@ -22,6 +23,11 @@ public final class MySqlCore extends SqlCore {
 	public MySqlCore(String dbname) {
 		super(dbname);
 		tableToJava=new TableToJava(dbname);
+	}
+
+	@Override
+	public SqlGroup getSqlGroup() {
+		return new MySqlGroup();
 	}
 
 	@Override
@@ -58,16 +64,8 @@ public final class MySqlCore extends SqlCore {
 	}
 
 	@Override
-	public <T> List<T> getPageList(T t, int page, int size) {
-		QueryBuilder queryBuilder=new QueryBuilder();
-		queryBuilder.limit(page,size);
-		queryBuilder.setWheresql(new MySqlGroup());
-		queryBuilder.addObject(t);
-		return (List<T>) query(queryBuilder,t.getClass());
-	}
-
-	@Override
 	public <T> List<T> query(QueryBuilder queryBuilder, Class<T> resultClass, String... expression) {
+		queryBuilder.setDbname(getDbName());
 		queryBuilder.setWheresql(new MySqlGroup());
 		ObjectToJoinSql join = new ObjectToJoinSql(queryBuilder);
 		String sql = join.getJoinSql(expression);
@@ -80,7 +78,7 @@ public final class MySqlCore extends SqlCore {
 		if(collection.isEmpty())
 			return -1;
 		setUUID(collection);
-		BatchInsert bbi=new BatchInsert(collection);
+		BatchInsert bbi=new BatchInsert(collection,dbname);
 		return statementCore.update(bbi.getInsertSql(), bbi.getInsertObject());
 	}
 
@@ -92,16 +90,9 @@ public final class MySqlCore extends SqlCore {
 	public void setNextId(Object pojo) {
 		Class<?> pojoClass=pojo.getClass();
 		String sql="SELECT auto_increment FROM information_schema.`TABLES` WHERE TABLE_SCHEMA=? AND table_name=?";
-		int nextid= statementCore.getObject(int.class, sql, PojoManage.getDatabaseName(dbname),PojoManage.getTable(pojoClass))-1;
+		int nextid= statementCore.getObject(int.class, sql, PojoManage.getDatabaseName(dbname),PojoManage.getTable(pojoClass,getDbName()))-1;
 		Field idf=PojoManage.getIdField(pojoClass);
-		idf.setAccessible(true);
-		try {
-			idf.set(pojo, nextid);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		FieldUtils.setValue(pojo,idf,nextid);
 	}
 }
 

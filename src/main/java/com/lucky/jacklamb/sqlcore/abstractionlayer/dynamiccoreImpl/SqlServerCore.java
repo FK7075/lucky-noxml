@@ -5,12 +5,18 @@ import java.util.List;
 
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 
 public final class SqlServerCore extends SqlCore {
 
 	public SqlServerCore(String dbname) {
 		super(dbname);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public SqlGroup getSqlGroup() {
+		return null;
 	}
 
 	@Override
@@ -41,12 +47,6 @@ public final class SqlServerCore extends SqlCore {
 	public void createTable() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public <T> List<T> getPageList(T t, int index, int size) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

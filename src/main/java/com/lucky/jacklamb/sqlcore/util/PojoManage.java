@@ -12,13 +12,14 @@ import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.exception.NotFindFlieException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import javafx.scene.control.Tab;
 
 /**
  * 实体类管理工具
  * @author fk-7075
  *
  */
-public class PojoManage {
+public abstract class PojoManage {
 	
 	public static String getIpPort(String dbname){
 		String url = ReaderInI.getDataSource(dbname).getJdbcUrl();
@@ -65,12 +66,37 @@ public class PojoManage {
 	}
 	
 	/**
-	 * 得到该实体类属性对应的数据库映射
+	 * 得到该实体类属性对应的数据库字段映射
 	 * @param field
 	 * @return
 	 */
-	public static String getTableField(Field field) {
-		if(field.isAnnotationPresent(Column.class)) {
+	public static String getTableField(String dbname,Field field) {
+		if(field.isAnnotationPresent(Columns.class)){
+			Column column=getColumn(field.getAnnotation(Columns.class),dbname);
+			if(column!=null){
+				return column.value();
+			}
+			return field.getName();
+
+		}else if(field.isAnnotationPresent(Ids.class)){
+			Id id=getId(field.getAnnotation(Ids.class),dbname);
+			if(id!=null){
+				return id.value();
+			}
+			return field.getName();
+		}else if(field.isAnnotationPresent(Keys.class)){
+			Key key=getKey(field.getAnnotation(Keys.class),dbname);
+			if(key!=null){
+				return key.value();
+			}
+			return field.getName();
+
+		}else if(field.isAnnotationPresent(NoColumns.class)){
+			if(isNoColumn(field.getAnnotation(NoColumns.class),dbname)){
+				return "";
+			}
+			return field.getName();
+		}else if(field.isAnnotationPresent(Column.class)) {
 			Column coumn=field.getAnnotation(Column.class);
 			if("".equals(coumn.value()))
 				return field.getName();
@@ -97,8 +123,20 @@ public class PojoManage {
 	 * @param field
 	 * @return
 	 */
-	public static boolean allownull(Field field) {
-		if(field.isAnnotationPresent(Column.class)) {
+	public static boolean allownull(Field field,String dbname) {
+		if(field.isAnnotationPresent(Columns.class)){
+			Column column=getColumn(field.getAnnotation(Columns.class),dbname);
+			if(column!=null){
+				return column.allownull();
+			}
+			return true;
+		}else if(field.isAnnotationPresent(Keys.class)){
+			Key key=getKey(field.getAnnotation(Keys.class),dbname);
+			if(key!=null){
+				return key.allownull();
+			}
+			return true;
+		}else if(field.isAnnotationPresent(Column.class)) {
 			return field.getAnnotation(Column.class).allownull();
 		}else if(field.isAnnotationPresent(Key.class)) {
 			return field.getAnnotation(Key.class).allownull();
@@ -112,8 +150,26 @@ public class PojoManage {
 	 * @param field
 	 * @return
 	 */
-	public static int getLength(Field field) {
-		if(field.isAnnotationPresent(Id.class)) {
+	public static int getLength(Field field,String dbname) {
+		if(field.isAnnotationPresent(Ids.class)){
+			Id id=getId(field.getAnnotation(Ids.class),dbname);
+			if(id!=null){
+				return id.length();
+			}
+			return 100;
+		}else if(field.isAnnotationPresent(Keys.class)){
+			Key key=getKey(field.getAnnotation(Keys.class),dbname);
+			if(key!=null){
+				return key.length();
+			}
+			return 100;
+		}else if(field.isAnnotationPresent(Columns.class)){
+			Column column=getColumn(field.getAnnotation(Columns.class),dbname);
+			if(column!=null){
+				return column.length();
+			}
+			return 100;
+		}else if(field.isAnnotationPresent(Id.class)) {
 			return field.getAnnotation(Id.class).length();
 		}else if(field.isAnnotationPresent(Key.class)) {
 			return field.getAnnotation(Key.class).length();
@@ -132,11 +188,11 @@ public class PojoManage {
 	public static Field getIdField(Class<?> pojoClass) {
 		Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 		for(Field field:pojoFields) {
-			if(field.isAnnotationPresent(Id.class)) {
+			if(field.isAnnotationPresent(Id.class)||field.isAnnotationPresent(Ids.class)) {
 				return field;
 			}
 		}
-		throw new NotFindFlieException("没有找到"+pojoClass.getName()+"的Id属性，请检查该类的ID属性上是否有配置@Id注解.");
+		throw new NotFindFlieException("没有找到"+pojoClass.getName()+"的Id属性，请检查该类的ID属性上是否有配置@Id或@Ids注解.");
 	}
 	
 	/**
@@ -144,8 +200,18 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String getTable(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static String getTable(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)) {
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				if("".equals(table.value())){
+					return pojoClass.getSimpleName().toLowerCase();
+				}
+				return table.value();
+			}else {
+				return pojoClass.getSimpleName().toLowerCase();
+			}
+		}else if(pojoClass.isAnnotationPresent(Table.class)){
 			Table table=pojoClass.getAnnotation(Table.class);
 			if("".equals(table.value())){
 				return pojoClass.getSimpleName().toLowerCase();
@@ -161,8 +227,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static boolean cascadeDelete(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static boolean cascadeDelete(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.cascadeDelete();
+			}
+			return false;
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.cascadeDelete();
 		}
@@ -174,8 +246,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static boolean cascadeUpdate(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static boolean cascadeUpdate(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.cascadeUpdate();
+			}
+			return false;
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.cascadeUpdate();
 		}
@@ -187,12 +265,24 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String getIdString(Class<?> pojoClass) {
+	public static String getIdString(Class<?> pojoClass,String dbname) {
 		Field idField = getIdField(pojoClass);
-		Id id = idField.getAnnotation(Id.class);
-		if("".equals(id.value()))
-			return idField.getName();
-		return id.value();
+		if(idField.isAnnotationPresent(Ids.class)){
+			Id id=getId(idField.getAnnotation(Ids.class),dbname);
+			if(id!=null){
+				if("".equals(id.value())){
+					return idField.getName();
+				}
+				return id.value();
+			}
+			return id.value();
+		}else{
+			Id id = idField.getAnnotation(Id.class);
+			if("".equals(id.value())){
+				return idField.getName();
+			}
+			return id.value();
+		}
 	}
 	
 
@@ -201,11 +291,16 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static Map<Field,Class<?>> getKeyFieldMap(Class<?> pojoClass){
+	public static Map<Field,Class<?>> getKeyFieldMap(Class<?> pojoClass,String dbname){
 		Map<Field,Class<?>> keys=new HashMap<>();
 		Field[] pojoFields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:pojoFields) {
-			if(field.isAnnotationPresent(Key.class)) {
+			if(field.isAnnotationPresent(Keys.class)){
+				Key key=getKey(field.getAnnotation(Keys.class),dbname);
+				if(key!=null){
+					keys.put(field, key.pojo());
+				}
+			}else if(field.isAnnotationPresent(Key.class)) {
 				Key key=field.getAnnotation(Key.class);
 				keys.put(field, key.pojo());
 			}
@@ -220,8 +315,8 @@ public class PojoManage {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Field classToField(Class<?> clap,Class<?> clak) {
-		List<Field> clapKeyFields = (List<Field>) getKeyFields(clap, true);
+	public static Field classToField(Class<?> clap,Class<?> clak,String dbname) {
+		List<Field> clapKeyFields = (List<Field>) getKeyFields(clap, dbname,true);
 		for(Field field: clapKeyFields) {
 			Key key=field.getAnnotation(Key.class);
 			if(key.pojo().equals(clak))
@@ -236,8 +331,8 @@ public class PojoManage {
 	 * @param iskey true(返回外键属性集合)/false(返回外键对应的的实体Class)
 	 * @return
 	 */
-	public static List<?> getKeyFields(Class<?> pojoClass,boolean iskey){
-		Map<Field,Class<?>> keyAdnField=getKeyFieldMap(pojoClass);
+	public static List<?> getKeyFields(Class<?> pojoClass,String dbname,boolean iskey){
+		Map<Field,Class<?>> keyAdnField=getKeyFieldMap(pojoClass,dbname);
 		List<Field> keys=new ArrayList<>();
 		List<Class<?>> clzzs=new ArrayList<>();
 		for(Entry<Field,Class<?>> entry:keyAdnField.entrySet()) {
@@ -255,10 +350,21 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static PrimaryType getIdType(Class<?> pojoClass) {
+	public static PrimaryType getIdType(Class<?> pojoClass,String dbname) {
 		Field idF=getIdField(pojoClass);
-		Id id=idF.getAnnotation(Id.class);
-		return id.type();
+		if(idF.isAnnotationPresent(Ids.class)){
+			Id id=getId(idF.getAnnotation(Ids.class),dbname);
+			if(id!=null){
+				return id.type();
+			}
+			return PrimaryType.DEFAULT;
+		}else if(idF.isAnnotationPresent(Id.class)){
+			Id id=idF.getAnnotation(Id.class);
+			return id.type();
+		}else{
+			return PrimaryType.DEFAULT;
+		}
+
 	}
 	
 	/**
@@ -266,8 +372,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String primary(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static String primary(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.primary();
+			}
+			return "";
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.primary();
 		}else {
@@ -280,8 +392,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String[] index(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static String[] index(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.index();
+			}
+			return new String[0];
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.index();
 		}else {
@@ -294,8 +412,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String[] unique(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static String[] unique(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.unique();
+			}
+			return new String[0];
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.unique();
 		}else {
@@ -308,8 +432,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String[] fulltext(Class<?> pojoClass) {
-		if(pojoClass.isAnnotationPresent(Table.class)) {
+	public static String[] fulltext(Class<?> pojoClass,String dbname) {
+		if(pojoClass.isAnnotationPresent(Tables.class)){
+			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
+			if(table!=null){
+				return table.fulltext();
+			}
+			return new String[0];
+		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
 			return table.fulltext();
 		}else {
@@ -322,14 +452,14 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String tableAlias(Class<?> pojoClass){
+	public static String tableAlias(Class<?> pojoClass,String dbname){
 		if(pojoClass.isAnnotationPresent(Table.class)){
 			String alias=pojoClass.getAnnotation(Table.class).alias();
 			if(!"".equals(alias))
 				return alias;
-			return getTable(pojoClass);
+			return getTable(pojoClass,dbname);
 		}
-		return getTable(pojoClass);
+		return getTable(pojoClass,dbname);
 	}
 
 	/**
@@ -337,9 +467,71 @@ public class PojoManage {
 	 * @param pojoClass
 	 * @return
 	 */
-	public static String selectFromTableAlias(Class<?> pojoClass){
-		if(tableAlias(pojoClass).equals(getTable(pojoClass)))
-			return getTable(pojoClass);
-		return getTable(pojoClass)+" "+tableAlias(pojoClass);
+	public static String selectFromTableAlias(Class<?> pojoClass,String dbname){
+		if(tableAlias(pojoClass,dbname).equals(getTable(pojoClass,dbname)))
+			return getTable(pojoClass,dbname);
+		return getTable(pojoClass,dbname)+" "+tableAlias(pojoClass,dbname);
+	}
+
+	private static final String UNIVERSAL="UNIVERSAL";
+
+	private static Column getColumn(Columns columns,String dbname){
+		Column[] columnsArray=columns.value();
+		Map<String,Column> columnMap=new HashMap<>();
+		for (Column column : columnsArray) {
+			columnMap.put(column.dbname(),column);
+		}
+		if(columnMap.containsKey(dbname)){
+			return columnMap.get(dbname);
+		}
+		return columnMap.containsKey(UNIVERSAL)?columnMap.get(UNIVERSAL):null;
+	}
+
+	private static Id getId(Ids ids,String dbname){
+		Id[] idArray=ids.value();
+		Map<String,Id> idMap=new HashMap<>();
+		for (Id id : idArray) {
+			idMap.put(id.dbname(),id);
+		}
+		if(idMap.containsKey(dbname)){
+			return idMap.get(dbname);
+		}
+		return idMap.containsKey(UNIVERSAL)?idMap.get(UNIVERSAL):null;
+	}
+
+	private static Key getKey(Keys keys,String dbname){
+		Key[] keyArray=keys.value();
+		Map<String,Key> keyMap=new HashMap<>();
+		for (Key key : keyArray) {
+			keyMap.put(key.dbname(),key);
+		}
+		if(keyMap.containsKey(dbname)){
+			return keyMap.get(dbname);
+		}
+		return keyMap.containsKey(UNIVERSAL)?keyMap.get(UNIVERSAL):null;
+	}
+
+	private static boolean isNoColumn(NoColumns noColumns,String dbname){
+		NoColumn[] noColumnArray=noColumns.value();
+		Map<String,NoColumn> noColumnMap=new HashMap<>();
+		for (NoColumn noColumn : noColumnArray) {
+			noColumnMap.put(noColumn.value(),noColumn);
+		}
+		if(noColumnMap.containsKey(dbname)){
+			return true;
+		}
+		return false;
+	}
+
+	private static Table getTable(Tables tables,String dbname){
+		Table[] tableArray=tables.value();
+		Map<String,Table> tableMap=new HashMap<>();
+		for (Table table : tableArray) {
+			tableMap.put(table.dbname(),table);
+		}
+		if(tableMap.containsKey(dbname)){
+			return tableMap.get(dbname);
+		}
+		return tableMap.containsKey(UNIVERSAL)?tableMap.get(UNIVERSAL):null;
 	}
 }

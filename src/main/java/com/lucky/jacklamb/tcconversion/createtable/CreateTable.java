@@ -25,7 +25,7 @@ public class CreateTable {
      * @param tableClass
      */
     public void createTable(Class<?> tableClass) {
-        List<String> createIndexSQL = CreateTableSql.getIndexKey(tableClass);
+        List<String> createIndexSQL = CreateTableSql.getIndexKey(tableClass,dbname);
         String[] createSQLS = new String[createIndexSQL.size() + 1];
         createSQLS[0] = CreateTableSql.getCreateTable(dbname, tableClass);
         for (int i = 0; i < createIndexSQL.size(); i++) {
@@ -46,8 +46,8 @@ public class CreateTable {
         autoPackage.updateBatch(ctsqls);
         dtlkeysql.deleteKeySql().stream().forEach(SQLS::add);// 删除所有现有的外键的SQL
         for (Class<?> str : classlist) {
-            CreateTableSql.getForeignKey(str).stream().forEach(SQLS::add);//添加外键的SQL
-            CreateTableSql.getIndexKey(str).stream().forEach(SQLS::add);//添加索引的SQL
+            CreateTableSql.getForeignKey(str,dbname).stream().forEach(SQLS::add);//添加外键的SQL
+            CreateTableSql.getIndexKey(str,dbname).stream().forEach(SQLS::add);//添加索引的SQL
         }
         String[] sqls=new String[SQLS.size()];
         SQLS.toArray(sqls);

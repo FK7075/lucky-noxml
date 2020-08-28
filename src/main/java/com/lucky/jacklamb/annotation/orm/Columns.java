@@ -3,15 +3,14 @@ package com.lucky.jacklamb.annotation.orm;
 import java.lang.annotation.*;
 
 /**
- * 标注属性不参与SQL的生产
+ * 确定类属性与表字段的映射关系
+ * 
  * @author fk-7075
  *
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface NoColumn {
-	
-	String value() default "UNIVERSAL";
-
+public @interface Columns {
+	Column[] value();
 }

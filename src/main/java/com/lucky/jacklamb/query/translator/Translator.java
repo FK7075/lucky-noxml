@@ -17,6 +17,12 @@ import java.util.*;
  */
 public class Translator {
 
+    private String dbname;
+
+    public void setDbname(String dbname) {
+        this.dbname = dbname;
+    }
+
     private String SELECT="SELECT * FROM @:table ";
 
     private String UPDATE="UPDATE @:table SET @:set";
@@ -50,6 +56,13 @@ public class Translator {
     public Translator(){
         sql=new StringBuilder(" WHERE ");
         params=new ArrayList<>();
+        dbname="defaultDB";
+    }
+
+    public Translator(String dbname){
+        sql=new StringBuilder(" WHERE ");
+        params=new ArrayList<>();
+        this.dbname=dbname;
     }
 
     public Translator(Class<?> pojoClass){
@@ -77,8 +90,8 @@ public class Translator {
         if(isNoPack){
             this.packClass=pojoClass;
         }
-        SELECT=SELECT.replaceAll("@:table",PojoManage.getTable(pojoClass));
-        UPDATE=UPDATE.replaceAll("@:table",PojoManage.getTable(pojoClass));
+        SELECT=SELECT.replaceAll("@:table",PojoManage.getTable(pojoClass,dbname));
+        UPDATE=UPDATE.replaceAll("@:table",PojoManage.getTable(pojoClass,dbname));
         return this;
     }
 
@@ -154,7 +167,7 @@ public class Translator {
         for (Field field : allField) {
             Object value = FieldUtils.getValue(pojo, field);
             if(value!=null) {
-                eq(PojoManage.getTableField(field),value);
+                eq(PojoManage.getTableField(dbname,field),value);
             }
         }
         return this;

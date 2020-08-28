@@ -38,7 +38,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 
 	public GeneralObjectCoreBase(String dbname){
 		this.dbname=dbname;
-		gcg=new GeneralSqlGenerator();
+		gcg=new GeneralSqlGenerator(dbname);
 		this.dataSource= ReaderInI.getDataSource(dbname);
 	}
 
@@ -181,11 +181,12 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		for (T t : collection) {
 			if (pClass == null) {
 				pClass = t.getClass();
-				idField = PojoManage.getIdField(pClass);
-				isUUID = idField.getAnnotation(Id.class).type() == PrimaryType.AUTO_UUID;
+				idField=PojoManage.getIdField(pClass);
+				isUUID=PojoManage.getIdType(pClass,dbname)==PrimaryType.AUTO_UUID;
 			}
-			if (isUUID && FieldUtils.getValue(t, idField) == null)
+			if (isUUID) {
 				FieldUtils.setValue(t, idField, UUID.randomUUID().toString());
+			}
 		}
 	}
 

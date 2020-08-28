@@ -10,6 +10,7 @@ import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.BatchInsert;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 @SuppressWarnings("unchecked")
 public final class PostgreSqlCore extends SqlCore {
@@ -17,6 +18,11 @@ public final class PostgreSqlCore extends SqlCore {
 	public PostgreSqlCore(String dbname) {
 		super(dbname);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public SqlGroup getSqlGroup() {
+		return new PostgreSqlGroup();
 	}
 
 	@Override
@@ -49,17 +55,10 @@ public final class PostgreSqlCore extends SqlCore {
 		
 	}
 
-	@Override
-	public <T> List<T> getPageList(T t, int page, int size) {
-		QueryBuilder queryBuilder=new QueryBuilder();
-		queryBuilder.limit(page,size);
-		queryBuilder.setWheresql(new PostgreSqlGroup());
-		queryBuilder.addObject(t);
-		return (List<T>) query(queryBuilder,t.getClass());
-	}
 
 	@Override
 	public <T> List<T> query(QueryBuilder queryBuilder, Class<T> resultClass, String... expression) {
+		queryBuilder.setDbname(getDbName());
 		queryBuilder.setWheresql(new PostgreSqlGroup());
 		ObjectToJoinSql join = new ObjectToJoinSql(queryBuilder);
 		String sql = join.getJoinSql(expression);
@@ -70,26 +69,17 @@ public final class PostgreSqlCore extends SqlCore {
 	@Override
 	public <T> int insertByCollection(Collection<T> collection) {
 		setUUID(collection);
-		BatchInsert bbi=new BatchInsert(collection);
+		BatchInsert bbi=new BatchInsert(collection,dbname);
 		return statementCore.update(bbi.getInsertSql(), bbi.getInsertObject());
 	}
 
 	@Override
 	public void setNextId(Object pojo) {
 		Class<?> pojoClass=pojo.getClass();
-		String sql="SELECT last_value FROM "+PojoManage.getTable(pojoClass)+"_"+PojoManage.getIdString(pojoClass)+"_seq";
+		String sql="SELECT last_value FROM "+PojoManage.getTable(pojoClass,dbname)+"_"+PojoManage.getIdString(pojoClass,dbname)+"_seq";
 		int nextid= statementCore.getObject(int.class, sql);
 		Field idf=PojoManage.getIdField(pojoClass);
-		idf.setAccessible(true);
-		try {
-			idf.set(pojo, nextid);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		FieldUtils.setValue(pojo,idf,nextid);
 	}
 
 }

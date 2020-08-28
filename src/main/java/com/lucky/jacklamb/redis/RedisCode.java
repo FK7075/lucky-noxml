@@ -1,8 +1,10 @@
 package com.lucky.jacklamb.redis;
 
+import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.rest.LSON;
 import redis.clients.jedis.Jedis;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -15,11 +17,19 @@ public class RedisCode {
     private static LSON lson=new LSON();
     private static Jedis jedis;
     static {
-        jedis=new Jedis("192.168.126.128", 6379);
+        jedis=RedisUtils.getJdeis();
     }
 
     public <T> T getObject(String key,Class<T> tClass){
         return lson.fromJson(tClass,jedis.get(key));
+    }
+
+    public Object getObject(String key, Type type){
+        return lson.fromJson(type,jedis.get(key));
+    }
+
+    public <T> T getObject(String key, TypeToken<T> token){
+        return (T) lson.fromJson(token,jedis.get(key));
     }
 
     public void setObject(String key,Object value){

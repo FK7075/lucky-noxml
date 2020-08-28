@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.util;
 
 import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ public class FieldAndValue {
 	private Map<String, Object> fieldNameAndValue;
 	
 	private Object pojo;
+
+	private String dbname;
 
 	public String getIdField() {
 		return idField;
@@ -41,17 +44,11 @@ public class FieldAndValue {
 		this.fieldNameAndValue = fieldNameAndValue;
 	}
 
-	public FieldAndValue(Object pojo) {
-		try {
-			this.pojo=pojo;
-			setIDField(pojo);
-			setNotNullFields(pojo);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("不合法参数异常！",e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("非法访问异常",e);
-		}
-		
+	public FieldAndValue(Object pojo,String dbname) {
+		this.dbname=dbname;
+		this.pojo=pojo;
+		setIDField(pojo);
+		setNotNullFields(pojo);
 	}
 	
 	public boolean containsField(String field) {
@@ -66,15 +63,14 @@ public class FieldAndValue {
 		return true;
 	}
 
-	public void setIDField(Object pojo) throws IllegalArgumentException, IllegalAccessException {
+	public void setIDField(Object pojo){
 		Class<?> pojoClass = pojo.getClass();
 		Field id = PojoManage.getIdField(pojoClass);
-		id.setAccessible(true);
-		this.idField = PojoManage.getTableField(id);
-		this.idValue = id.get(pojo);
+		this.idField = PojoManage.getTableField(dbname,id);
+		this.idValue= FieldUtils.getValue(pojo,id);
 	}
 
-	public void setNotNullFields(Object pojo) throws IllegalArgumentException, IllegalAccessException {
+	public void setNotNullFields(Object pojo){
 		fieldNameAndValue = new HashMap<>();
 		Class<?> pojoClass = pojo.getClass();
 		Field[] fields = ClassUtils.getAllFields(pojoClass);
@@ -82,10 +78,9 @@ public class FieldAndValue {
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(NoColumn.class))
 				continue;
-			field.setAccessible(true);
-			fieldValue = field.get(pojo);
+			fieldValue=FieldUtils.getValue(pojo,field);
 			if (fieldValue != null)
-				fieldNameAndValue.put(PojoManage.getTableField(field), fieldValue);
+				fieldNameAndValue.put(PojoManage.getTableField(dbname,field), fieldValue);
 		}
 	}
 }

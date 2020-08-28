@@ -18,6 +18,12 @@ import com.lucky.jacklamb.enums.PrimaryType;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Id {
+
+	/**
+	 * 数据源
+	 * @return
+	 */
+	String dbname() default "UNIVERSAL";
 	
 	/**
 	 * 标识主键，设置映射名

@@ -170,6 +170,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                     }
                     Parameter[] parameters = method.getParameters();
                     QueryBuilder query = new QueryBuilder();
+                    query.setDbname(sqlCore.getDbName());
                     query.addObject(args);
                     if (sel.sResults().length != 0) {
                         query.addResult(sel.sResults());
@@ -399,6 +400,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             return sqlCore.query((QueryBuilder) args[0], cla, query.expression());
         }
         QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setDbname(sqlCore.getDbName());
         setQueryBuilder(query, parameters, method, args, queryBuilder);
         return sqlCore.query(queryBuilder, cla, query.expression());
     }
@@ -476,7 +478,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
                 }
             }
         } else if(luckyMapperGeneric!=null){
-            JpaSample jpaSample = new JpaSample(luckyMapperGeneric);
+            JpaSample jpaSample = new JpaSample(luckyMapperGeneric,sqlCore.getDbName());
             Class<?> returnType = method.getReturnType();
             if(List.class.isAssignableFrom(returnType)){
                 try {
@@ -560,6 +562,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         QueryTr query = method.getAnnotation(QueryTr.class);
         Class<?> returnType = method.getReturnType();
         Translator tr=(Translator) args[0];
+        tr.setDbname(sqlCore.getDbName());
         switch (query.value()){
             case "SELECT" :{
              if(List.class.isAssignableFrom(returnType)) {

@@ -14,6 +14,12 @@ import com.lucky.jacklamb.query.QFilter;
  *
  */
 public class GeneralSqlGenerator {
+
+	private String dbname;
+
+	public GeneralSqlGenerator(String dbname){
+		this.dbname=dbname;
+	}
 	
 	/**
 	 * id查询的SQL
@@ -22,9 +28,9 @@ public class GeneralSqlGenerator {
 	 */
 	public String getOneSql(Class<?> c) {
 		StringBuilder sql=new StringBuilder("SELECT ");
-		sql.append(new QFilter(c).lines()).append(" FROM ")
-		.append(PojoManage.getTable(c)).append(" WHERE ")
-		.append(PojoManage.getIdString(c)).append(" =?");
+		sql.append(new QFilter(c,dbname).lines()).append(" FROM ")
+		.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
+		.append(PojoManage.getIdString(c,dbname)).append(" =?");
 		return sql.toString();
 	}
 	
@@ -35,8 +41,8 @@ public class GeneralSqlGenerator {
 	 */
 	public String deleteOneSql(Class<?> c) {
 		StringBuilder sql=new StringBuilder("DELETE FROM ");
-		sql.append(PojoManage.getTable(c)).append(" WHERE ")
-		.append(PojoManage.getIdString(c)).append(" =?");
+		sql.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
+		.append(PojoManage.getIdString(c,dbname)).append(" =?");
 		return sql.toString();
 	}
 	
@@ -68,8 +74,8 @@ public class GeneralSqlGenerator {
 		}else{
 			sql=new StringBuilder("SELECT * FROM ");
 		}
-		sql.append(PojoManage.getTable(c)).append(" WHERE ")
-				.append(PojoManage.getIdString(c)).append(" IN ");
+		sql.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
+				.append(PojoManage.getIdString(c,dbname)).append(" IN ");
 		for(int i=0;i<ids.length;i++) {
 			if(first) {
 				sql.append("(?");
@@ -89,7 +95,7 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleCount(Object pojo) {
 		StringBuilder sql=new StringBuilder("SELECT COUNT(");
-		sql.append(PojoManage.getIdString(pojo.getClass())).append(")").append(" FROM ").append(PojoManage.getTable(pojo.getClass()));
+		sql.append(PojoManage.getIdString(pojo.getClass(),dbname)).append(")").append(" FROM ").append(PojoManage.getTable(pojo.getClass(),dbname));
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -103,7 +109,7 @@ public class GeneralSqlGenerator {
 	public PrecompileSqlAndObject singleSelect(Object pojo) {
 		Class<?> objClass=pojo.getClass();
 		StringBuilder sql=new StringBuilder("SELECT ");
-		sql.append(new QFilter(objClass).lines()).append(" FROM ").append(PojoManage.getTable(objClass));
+		sql.append(new QFilter(objClass,dbname).lines()).append(" FROM ").append(PojoManage.getTable(objClass,dbname));
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -116,7 +122,7 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleDelete(Object pojo) {
 		StringBuilder sql=new StringBuilder("DELETE FROM ");
-		sql.append(PojoManage.getTable(pojo.getClass()));
+		sql.append(PojoManage.getTable(pojo.getClass(),dbname));
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -129,10 +135,10 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleInsert(Object pojo){
 		PrecompileSqlAndObject psaq=new PrecompileSqlAndObject();
-		FieldAndValue fv=new FieldAndValue(pojo);
+		FieldAndValue fv=new FieldAndValue(pojo,dbname);
 		boolean first=true;
 		StringBuilder insertSql=new StringBuilder("INSERT INTO ");
-		insertSql.append(PojoManage.getTable(pojo.getClass())).append("(");
+		insertSql.append(PojoManage.getTable(pojo.getClass(),dbname)).append("(");
 		StringBuilder valuesSql=new StringBuilder(" VALUES(");
 		Map<String, Object> fvMap = fv.getFieldNameAndValue();
 		for(Entry<String, Object> entry:fvMap.entrySet()) {
@@ -158,14 +164,14 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleUpdate(Object pojo,String...conditions) {
 		PrecompileSqlAndObject psao=new PrecompileSqlAndObject();
-		FieldAndValue fv=new FieldAndValue(pojo);
+		FieldAndValue fv=new FieldAndValue(pojo,dbname);
 		StringBuilder updateSql=new StringBuilder("UPDATE ");
-		updateSql.append(PojoManage.getTable(pojo.getClass())).append(" SET ");
+		updateSql.append(PojoManage.getTable(pojo.getClass(),dbname)).append(" SET ");
 		StringBuilder whereSql=new StringBuilder();
 		Map<String, Object> fvMap = fv.getFieldNameAndValue();
 		if(conditions.length==0) {
 			boolean first=true;
-			whereSql.append(" WHERE ").append(PojoManage.getIdString(pojo.getClass())).append("=?");
+			whereSql.append(" WHERE ").append(PojoManage.getIdString(pojo.getClass(),dbname)).append("=?");
 			for(Entry<String,Object> entry:fvMap.entrySet()) {
 				if(!fv.getIdField().equals(entry.getKey())) {
 					if(first) {
@@ -218,7 +224,7 @@ public class GeneralSqlGenerator {
 	 * @return
 	 */
 	public PrecompileSqlAndObject singleWhere(Object pojo) {
-		FieldAndValue fv=new FieldAndValue(pojo);
+		FieldAndValue fv=new FieldAndValue(pojo,dbname);
 		PrecompileSqlAndObject psaq=new PrecompileSqlAndObject();
 		StringBuilder sql=new StringBuilder();
 		boolean first=true;

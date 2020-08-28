@@ -22,6 +22,8 @@ public class BatchInsert {
 
     private int size;
 
+    private String dbname;
+
     public String getInsertSql() {
         return insertSql;
     }
@@ -30,8 +32,9 @@ public class BatchInsert {
         return insertObject;
     }
 
-    public <T> BatchInsert(Collection<T> collection) {
+    public <T> BatchInsert(Collection<T> collection,String dbname) {
         size = collection.size();
+        this.dbname=dbname;
         if (!collection.isEmpty()) {
             Class<?> pojoClass = null;
             for (T t : collection) {
@@ -43,15 +46,15 @@ public class BatchInsert {
         }
     }
 
-    public static String createInsertSql(Class<?> clzz, int size) {
+    public String createInsertSql(Class<?> clzz, int size) {
         Field[] fields = ClassUtils.getAllFields(clzz);
-        StringBuffer prefix = new StringBuffer("INSERT INTO " + PojoManage.getTable(clzz));
+        StringBuffer prefix = new StringBuffer("INSERT INTO " + PojoManage.getTable(clzz,dbname));
         StringBuffer suffix = new StringBuffer(" VALUES ");
         boolean isFirst = true;
         List<Field> list;
-        if (PojoManage.getIdType(clzz) == PrimaryType.AUTO_INT) {
-            String id = PojoManage.getIdString(clzz);
-            list = Stream.of(fields).filter(field -> !id.equals(PojoManage.getTableField(field))
+        if (PojoManage.getIdType(clzz,dbname) == PrimaryType.AUTO_INT) {
+            String id = PojoManage.getIdString(clzz,dbname);
+            list = Stream.of(fields).filter(field -> !id.equals(PojoManage.getTableField(dbname,field))
                     &&FieldUtils.isJDKType(field)
                     && !FieldUtils.isParentClass(field,Collection.class)).collect(Collectors.toList());
         } else {
@@ -65,10 +68,10 @@ public class BatchInsert {
             }
             if (isFirst) {
                 isFirst = false;
-                prefix.append("(").append(PojoManage.getTableField(list.get(i))).append(",");
+                prefix.append("(").append(PojoManage.getTableField(dbname,list.get(i))).append(",");
                 fk.append("(?,");
             } else {
-                prefix.append(PojoManage.getTableField(list.get(i))).append(",");
+                prefix.append(PojoManage.getTableField(dbname,list.get(i))).append(",");
                 fk.append("?,");
             }
         }
@@ -130,7 +133,7 @@ public class BatchInsert {
         list.add(new Book(1, "b1", 23.4));
         list.add(new Book(2, null, 28.8));
         list.add(new Book(3, "b3", null));
-        BatchInsert bi = new BatchInsert(list);
+        BatchInsert bi = new BatchInsert(list,"defaultDb");
         String insertSql2 = bi.getInsertSql();
         System.out.println(insertSql2);
         System.out.println(Arrays.toString(bi.getInsertObject()));

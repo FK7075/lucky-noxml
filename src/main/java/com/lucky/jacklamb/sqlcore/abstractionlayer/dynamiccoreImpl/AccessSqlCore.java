@@ -5,11 +5,17 @@ import java.util.List;
 
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 
 public final class AccessSqlCore extends SqlCore {
 
 	public AccessSqlCore(String dbname) {
 		super(dbname);
+	}
+
+	@Override
+	public SqlGroup getSqlGroup() {
+		return null;
 	}
 
 	@Override
@@ -40,12 +46,6 @@ public final class AccessSqlCore extends SqlCore {
 	public void createTable() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public <T> List<T> getPageList(T t, int index, int size) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

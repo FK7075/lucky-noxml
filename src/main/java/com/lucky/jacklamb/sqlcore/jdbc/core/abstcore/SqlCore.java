@@ -1,11 +1,12 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Translator;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
@@ -311,7 +312,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 
 	@Override
 	public <T> int insert(T t) {
-		if(PojoManage.getIdType(t.getClass())==PrimaryType.AUTO_UUID)
+		if(PojoManage.getIdType(t.getClass(),getDbName())==PrimaryType.AUTO_UUID)
 			setNextUUID(t);
 		return super.insert(t);
 	}
@@ -319,7 +320,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	@Override
 	public <T> int insertSetId(T t) {
 		int result = insert(t);
-		if(PojoManage.getIdType(t.getClass())==PrimaryType.AUTO_INT)
+		if(PojoManage.getIdType(t.getClass(),getDbName())==PrimaryType.AUTO_INT)
 			setNextId(t);
 		return result;
 	}
@@ -356,12 +357,24 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		return updateBySql(sql.toString(),tr.getParams().toArray());
 	}
 
+	@Override
+	public <T> List<T> getPageList(T t, int page, int size) {
+		QueryBuilder queryBuilder=new QueryBuilder();
+		queryBuilder.setDbname(getDbName());
+		queryBuilder.limit(page,size);
+		queryBuilder.setWheresql(getSqlGroup());
+		queryBuilder.addObject(t);
+		return (List<T>) query(queryBuilder,t.getClass());
+	}
+
+	public abstract SqlGroup getSqlGroup();
+
 	public int update(Object pojo, Translator tr){
-		StringBuilder sql=new StringBuilder("UPDATE ").append(PojoManage.getTable(pojo.getClass())).append(" SET ");
+		StringBuilder sql=new StringBuilder("UPDATE ").append(PojoManage.getTable(pojo.getClass(),dbname)).append(" SET ");
 		List<Object> params=new ArrayList<>();
 		Field[] allFields = ClassUtils.getAllFields(pojo.getClass());
 		for (Field field : allFields) {
-			sql.append(PojoManage.getTableField(field)).append("=?,");
+			sql.append(PojoManage.getTableField(dbname,field)).append("=?,");
 			params.add(FieldUtils.getValue(pojo,field));
 		}
 		sql.substring(0,sql.length()-1);
@@ -375,7 +388,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 
 	public int delete(Class<?> pojoClass,Translator tr){
-		StringBuilder sql=new StringBuilder("DELETE FROM ").append(PojoManage.getTable(pojoClass));
+		StringBuilder sql=new StringBuilder("DELETE FROM ").append(PojoManage.getTable(pojoClass,dbname));
 		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
 			sql.append(tr.getSql());
 		}else{

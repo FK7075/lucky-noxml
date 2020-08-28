@@ -27,33 +27,33 @@ public class CreateTableSql {
 	public static String getCreateTable(String dbname,Class<?> clzz) {
 		TypeConversion jDChangeFactory = JDBChangeFactory.jDBChangeFactory(dbname);
 		StringBuilder sql=new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-		sql.append(PojoManage.getTable(clzz)).append(" (");
+		sql.append(PojoManage.getTable(clzz,dbname)).append(" (");
 		Field[] fields = clzz.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			String fieldType=fields[i].getType().getSimpleName();
 			if (i < fields.length - 1) {
-				if (PojoManage.getTableField(fields[i]).equals(PojoManage.getIdString(clzz)))
-					sql.append(PojoManage.getIdString(clzz)).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i])).append(")")
-					.append(" NOT NULL ").append(isAutoInt(clzz)).append(" PRIMARY KEY,");
-				else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
+				if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(clzz,dbname))) {
+					sql.append(PojoManage.getIdString(clzz,dbname)).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
+					.append(" NOT NULL ").append(isAutoInt(clzz,dbname)).append(" PRIMARY KEY,");
+				} else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
 						|| "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
 						|| "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
-					sql.append(PojoManage.getTableField(fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i])).append(") ")
-					.append(allownull(fields[i])).append(",");
+					sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
+					.append(allownull(fields[i],dbname)).append(",");
 				} else {
-					sql.append(PojoManage.getTableField(fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i])).append(",");
+					sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname)).append(",");
 				}
 			} else {
-				if (PojoManage.getTableField(fields[i]).equals(PojoManage.getIdString(clzz)))
-					sql.append(PojoManage.getTableField(fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i])).append(")")
+				if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(clzz,dbname))) {
+					sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
 					.append(" NOT NULL AUTO_INCREMENT PRIMARY KEY");
-				else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
+				} else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
 						|| "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
 						|| "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
-					sql.append(PojoManage.getTableField(fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i])).append(") ")
-					.append(allownull(fields[i]));
+					sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
+					.append(allownull(fields[i],dbname));
 				} else {
-					sql.append(PojoManage.getTableField(fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i]));
+					sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname));
 				}
 			}
 		}
@@ -67,17 +67,17 @@ public class CreateTableSql {
 	 * 目标类的Class
 	 * @return
 	 */
-	public static List<String> getForeignKey(Class<?> clzz) {
+	public static List<String> getForeignKey(Class<?> clzz,String dbname) {
 		List<String> stlist = new ArrayList<String>();
-		List<Field> keys = (List<Field>) PojoManage.getKeyFields(clzz, true);
+		List<Field> keys = (List<Field>) PojoManage.getKeyFields(clzz, dbname,true);
 		if (keys.isEmpty()) {
 			return stlist;
 		} else {
-			List<Class<?>> cs = (List<Class<?>>) PojoManage.getKeyFields(clzz, false);
+			List<Class<?>> cs = (List<Class<?>>) PojoManage.getKeyFields(clzz, dbname,false);
 			for (int i = 0; i < cs.size(); i++) {
-				String sql = "ALTER TABLE " + PojoManage.getTable(clzz) + " ADD CONSTRAINT " + getRandomStr()
-						+ " FOREIGN KEY (" + PojoManage.getTableField(keys.get(i)) + ") REFERENCES " + PojoManage.getTable(cs.get(i)) + "("
-						+ PojoManage.getIdString(cs.get(i)) + ")"+isCascadeDel(cs.get(i))+isCascadeUpd(cs.get(i));
+				String sql = "ALTER TABLE " + PojoManage.getTable(clzz,dbname) + " ADD CONSTRAINT " + getRandomStr()
+						+ " FOREIGN KEY (" + PojoManage.getTableField(dbname,keys.get(i)) + ") REFERENCES " + PojoManage.getTable(cs.get(i),dbname) + "("
+						+ PojoManage.getIdString(cs.get(i),dbname) + ")"+isCascadeDel(cs.get(i),dbname)+isCascadeUpd(cs.get(i),dbname);
 				stlist.add(sql);
 			}
 			return stlist;
@@ -89,13 +89,13 @@ public class CreateTableSql {
 	 * @param clzz
 	 * @return
 	 */
-	public static List<String> getIndexKey(Class<?> clzz){
-		String table_name=PojoManage.getTable(clzz);
+	public static List<String> getIndexKey(Class<?> clzz,String dbname){
+		String table_name=PojoManage.getTable(clzz,dbname);
 		List<String> indexlist = new ArrayList<String>();
-		String primary = PojoManage.primary(clzz);
-		String[] indexs = PojoManage.index(clzz);
-		String[] fulltextes = PojoManage.fulltext(clzz);
-		String[] uniques = PojoManage.unique(clzz);
+		String primary = PojoManage.primary(clzz,dbname);
+		String[] indexs = PojoManage.index(clzz,dbname);
+		String[] fulltextes = PojoManage.fulltext(clzz,dbname);
+		String[] uniques = PojoManage.unique(clzz,dbname);
 		if(!"".equals(primary)){
 			String p_key="ALTER TABLE "+table_name+" ADD PRIMARY KEY("+primary+")";
 			indexlist.add(p_key);
@@ -117,10 +117,11 @@ public class CreateTableSql {
 		String key="ALTER TABLE "+tablename+" ADD ";
 		for(String index:indexs) {
 			String indexkey;
-			if("INDEX".equals(type))
+			if("INDEX".equals(type)) {
 				indexkey=key+type+" "+getRandomStr()+"(";
-			else
+			} else {
 				indexkey=key+type+"(";
+			}
 			 indexkey+=index+")";
 			indexlist.add(indexkey);
 		}
@@ -140,10 +141,11 @@ public class CreateTableSql {
 	 * @param clzz
 	 * @return
 	 */
-	private static String isAutoInt(Class<?> clzz) {
-		PrimaryType idType = PojoManage.getIdType(clzz);
-		if(idType==PrimaryType.AUTO_INT)
+	private static String isAutoInt(Class<?> clzz,String dbname) {
+		PrimaryType idType = PojoManage.getIdType(clzz,dbname);
+		if(idType==PrimaryType.AUTO_INT) {
 			return "AUTO_INCREMENT";
+		}
 		return "";
 	}
 	
@@ -152,9 +154,10 @@ public class CreateTableSql {
 	 * @param clzz
 	 * @return
 	 */
-	private static String isCascadeDel(Class<?> clzz) {
-		if(PojoManage.cascadeDelete(clzz))
+	private static String isCascadeDel(Class<?> clzz,String dbname) {
+		if(PojoManage.cascadeDelete(clzz,dbname)) {
 			return " ON DELETE CASCADE";
+		}
 		return "";
 	}
 	
@@ -163,9 +166,10 @@ public class CreateTableSql {
 	 * @param clzz
 	 * @return
 	 */
-	private static String isCascadeUpd(Class<?> clzz) {
-		if(PojoManage.cascadeUpdate(clzz))
+	private static String isCascadeUpd(Class<?> clzz,String dbname) {
+		if(PojoManage.cascadeUpdate(clzz,dbname)) {
 			return " ON UPDATE CASCADE";
+		}
 		return "";
 	}
 	
@@ -174,8 +178,8 @@ public class CreateTableSql {
 	 * @param field
 	 * @return
 	 */
-	private static String allownull(Field field) {
-		if(PojoManage.allownull(field)) {
+	private static String allownull(Field field,String dbname) {
+		if(PojoManage.allownull(field,dbname)) {
 			return " DEFAULT NULL ";
 		}
 		return " NOT NULL ";
