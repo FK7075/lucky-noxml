@@ -1,13 +1,14 @@
 package com.lucky.jacklamb.sqlcore.jdbc.conversion;
 
-import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fk7075
@@ -27,7 +28,7 @@ public abstract class JDBCConversion {
         Field[] allFields = ClassUtils.getAllFields(entityClass);
         String entityFieldName;
         for (Field entityField : allFields) {
-            if(entityField.isAnnotationPresent(NoPackage.class)){
+            if(PojoManage.isNoPackage(entityField,dbname)){
                 continue;
             }
             Class<?> fieldClass=entityField.getType();

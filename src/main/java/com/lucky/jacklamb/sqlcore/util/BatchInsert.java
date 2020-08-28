@@ -1,5 +1,10 @@
 package com.lucky.jacklamb.sqlcore.util;
 
+import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,12 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.lucky.jacklamb.annotation.orm.Id;
-import com.lucky.jacklamb.annotation.orm.NoColumn;
-import com.lucky.jacklamb.enums.PrimaryType;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
-import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
 public class BatchInsert {
 
@@ -63,7 +62,7 @@ public class BatchInsert {
         }
         StringBuffer fk = new StringBuffer("");
         for (int i = 0, j = list.size(); i < j; i++) {
-            if (list.get(i).isAnnotationPresent(NoColumn.class)) {
+            if (PojoManage.isNoColumn(list.get(i),dbname)) {
                 continue;
             }
             if (isFirst) {
@@ -93,7 +92,7 @@ public class BatchInsert {
             Class<?> clzz = t.getClass();
             Field[] fields = ClassUtils.getAllFields(clzz);
             for (Field field : fields) {
-                if(field.isAnnotationPresent(NoColumn.class)){
+                if(PojoManage.isNoColumn(field,dbname)){
                     continue;
                 }
                 if(field.isAnnotationPresent(Id.class)){
@@ -145,7 +144,6 @@ public class BatchInsert {
 class Book {
     @Id(type = PrimaryType.AUTO_INT)
     private Integer bid;
-    @NoColumn
     private String bname;
     private Double price;
 

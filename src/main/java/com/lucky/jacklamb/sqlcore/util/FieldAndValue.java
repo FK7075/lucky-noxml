@@ -1,6 +1,5 @@
 package com.lucky.jacklamb.sqlcore.util;
 
-import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
@@ -76,7 +75,7 @@ public class FieldAndValue {
 		Field[] fields = ClassUtils.getAllFields(pojoClass);
 		Object fieldValue;
 		for (Field field : fields) {
-			if(field.isAnnotationPresent(NoColumn.class))
+			if(PojoManage.isNoColumn(field,dbname))
 				continue;
 			fieldValue=FieldUtils.getValue(pojo,field);
 			if (fieldValue != null)

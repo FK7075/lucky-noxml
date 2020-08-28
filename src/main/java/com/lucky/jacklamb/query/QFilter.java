@@ -1,8 +1,7 @@
 package com.lucky.jacklamb.query;
 
-import com.lucky.jacklamb.annotation.orm.NoColumn;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -38,8 +37,9 @@ public class QFilter {
 		addFields =new ArrayList<>();
 		Field[] fields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:fields) {
-			if(!field.isAnnotationPresent(NoColumn.class))
+			if(!PojoManage.isNoColumn(field,dbname)) {
 				this.allFields.add(PojoManage.getTableField(dbname,field));
+			}
 		}
 	}
 
@@ -56,8 +56,9 @@ public class QFilter {
 			Class<?> pojoClass=pojo.getClass();
 			Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 			for(Field field:pojoFields){
-				if(!field.isAnnotationPresent(NoColumn.class))
-                	allFields.add(PojoManage.tableAlias(pojoClass,dbname)+"."+PojoManage.getTableField(dbname,field));
+				if(!PojoManage.isNoColumn(field,dbname)) {
+					allFields.add(PojoManage.tableAlias(pojoClass,dbname)+"."+PojoManage.getTableField(dbname,field));
+				}
 			}
 		}
 	}
@@ -99,17 +100,21 @@ public class QFilter {
 
 	public String qfieldName(String input){
         int i = afterMatching(input);
-        if(i==0)
-            throw new RuntimeException("没有找到与\""+input+"\"字段所匹配的属性！");
-        if(i>1)
-            throw new RuntimeException("存在多个与\""+input+"\"字段所匹配的实体！请您标明该字段所属的实体。（标明方法：实体.属性）");
-        if(allFields.contains(input))
-            return input;
+        if(i==0) {
+			throw new RuntimeException("没有找到与\""+input+"\"字段所匹配的属性！");
+		}
+        if(i>1) {
+			throw new RuntimeException("存在多个与\""+input+"\"字段所匹配的实体！请您标明该字段所属的实体。（标明方法：实体.属性）");
+		}
+        if(allFields.contains(input)) {
+			return input;
+		}
         for(String fd:allFields){
             int start=fd.indexOf(".");
             String mfd=fd.substring(start+1);
-            if(mfd.equals(input))
-                return fd;
+            if(mfd.equals(input)) {
+				return fd;
+			}
         }
         return null;
     }
@@ -117,8 +122,9 @@ public class QFilter {
 	public int afterMatching(String field){
 	    int s=0;
 	    if(field.contains(".")){
-	        if(allFields.contains(field))
-	            return 1;
+	        if(allFields.contains(field)) {
+				return 1;
+			}
 	        return 0;
         }
 	    for(String fd:allFields){
@@ -126,8 +132,9 @@ public class QFilter {
 	        String mfd=fd.substring(start+1);
 	        if(mfd.equals(field)){
 				s++;
-				if(s==2)
+				if(s==2) {
 					return s;
+				}
 			}
         }
 	    return s;

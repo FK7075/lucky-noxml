@@ -1,6 +1,5 @@
 package com.lucky.jacklamb.query;
 
-import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
@@ -64,7 +63,7 @@ public class ObjectToJoinSql{
 			Class<?> clzz = obj[i].getClass();
 			Field[] fields = ClassUtils.getAllFields(clzz);
 			for (int j = 0; j < fields.length; j++) {
-				if(fields[j].isAnnotationPresent(NoColumn.class))
+				if(PojoManage.isNoColumn(fields[j],dbname))
 					continue;
 				Object fk= FieldUtils.getValue(obj[i],fields[j]);
 				if (fk != null) {

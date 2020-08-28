@@ -523,6 +523,18 @@ public abstract class PojoManage {
 		return false;
 	}
 
+	private static boolean isNoPackage(NoPackages noPackages,String dbname){
+		NoPackage[] noPackageArray=noPackages.value();
+		Map<String,NoPackage> noColumnMap=new HashMap<>();
+		for (NoPackage noPackage : noPackageArray) {
+			noColumnMap.put(noPackage.value(),noPackage);
+		}
+		if(noColumnMap.containsKey(dbname)){
+			return true;
+		}
+		return false;
+	}
+
 	private static Table getTable(Tables tables,String dbname){
 		Table[] tableArray=tables.value();
 		Map<String,Table> tableMap=new HashMap<>();
@@ -533,5 +545,25 @@ public abstract class PojoManage {
 			return tableMap.get(dbname);
 		}
 		return tableMap.containsKey(UNIVERSAL)?tableMap.get(UNIVERSAL):null;
+	}
+
+	public static boolean isNoColumn(Field field,String dbname){
+		if(field.isAnnotationPresent(NoColumn.class)){
+			return true;
+		}else if(field.isAnnotationPresent(NoColumns.class)){
+			return isNoColumn(field.getAnnotation(NoColumns.class),dbname);
+		}else{
+			return false;
+		}
+	}
+
+	public static boolean isNoPackage(Field field,String dbname){
+		if(field.isAnnotationPresent(NoPackage.class)){
+			return true;
+		}else if(field.isAnnotationPresent(NoPackages.class)){
+			return isNoPackage(field.getAnnotation(NoPackages.class),dbname);
+		}else{
+			return false;
+		}
 	}
 }
