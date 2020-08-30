@@ -5,7 +5,6 @@ import com.lucky.jacklamb.rest.LSON;
 import redis.clients.jedis.Jedis;
 
 import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * @author fk7075
@@ -16,9 +15,6 @@ public class RedisCode {
 
     private static LSON lson=new LSON();
     private static Jedis jedis;
-    static {
-        jedis=RedisUtils.getJdeis();
-    }
 
     public <T> T getObject(String key,Class<T> tClass){
         return lson.fromJson(tClass,jedis.get(key));

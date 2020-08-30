@@ -34,20 +34,27 @@ public abstract class PojoManage {
 	 */
 	public static String getDatabaseType(String dbname) {
 		String jdbcDriver= ReaderInI.getDataSource(dbname).getDriverClass();
-		if(jdbcDriver.contains("mysql"))
+		if(jdbcDriver.contains("mysql")) {
 			return "MYSQL";
-		if(jdbcDriver.contains("db2"))
+		}
+		if(jdbcDriver.contains("db2")) {
 			return "DB2";
-		if(jdbcDriver.contains("oracle"))
+		}
+		if(jdbcDriver.contains("oracle")) {
 			return "ORACLE";
-		if(jdbcDriver.contains("postgresql"))
+		}
+		if(jdbcDriver.contains("postgresql")) {
 			return "POSTGRESQL";
-		if(jdbcDriver.contains("sqlserver"))
+		}
+		if(jdbcDriver.contains("sqlserver")) {
 			return "SQL SERVER";
-		if(jdbcDriver.contains("sybase"))
+		}
+		if(jdbcDriver.contains("sybase")) {
 			return "SYBASE";
-		if(jdbcDriver.contains("access"))
+		}
+		if(jdbcDriver.contains("access")) {
 			return "ACCESS";
+		}
 		return null;
 	}
 	
@@ -95,19 +102,31 @@ public abstract class PojoManage {
 			return "";
 		}else if(field.isAnnotationPresent(Column.class)) {
 			Column coumn=field.getAnnotation(Column.class);
-			if("".equals(coumn.value()))
-				return field.getName();
-			return coumn.value();
+			if(dbname.equals(coumn.dbname())){
+				if("".equals(coumn.value())) {
+					return field.getName();
+				}
+				return coumn.value();
+			}
+			return field.getName();
 		}else if(field.isAnnotationPresent(Id.class)) {
 			Id id=field.getAnnotation(Id.class);
-			if("".equals(id.value()))
-				return field.getName();
-			return id.value().toLowerCase();
+			if(dbname.equals(id.dbname())){
+				if("".equals(id.value())) {
+					return field.getName();
+				}
+				return id.value();
+			}
+			return field.getName();
 		}else if(field.isAnnotationPresent(Key.class)) {
 			Key key=field.getAnnotation(Key.class);
-			if("".equals(key.value()))
-				return field.getName();
-			return key.value();
+			if(dbname.equals(key.dbname())){
+				if("".equals(key.value())) {
+					return field.getName();
+				}
+				return key.value();
+			}
+			return field.getName();
 		}else if(field.isAnnotationPresent(NoColumn.class)){
 			return "";
 		}else{
@@ -134,9 +153,17 @@ public abstract class PojoManage {
 			}
 			return true;
 		}else if(field.isAnnotationPresent(Column.class)) {
-			return field.getAnnotation(Column.class).allownull();
+			Column column = field.getAnnotation(Column.class);
+			if(dbname.endsWith(column.dbname())){
+				return column.allownull();
+			}
+			return true;
 		}else if(field.isAnnotationPresent(Key.class)) {
-			return field.getAnnotation(Key.class).allownull();
+			Key key = field.getAnnotation(Key.class);
+			if(dbname.equals(key.dbname())){
+				return key.allownull();
+			}
+			return true;
 		}else {
 			return true;
 		}
@@ -167,11 +194,23 @@ public abstract class PojoManage {
 			}
 			return 100;
 		}else if(field.isAnnotationPresent(Id.class)) {
-			return field.getAnnotation(Id.class).length();
+			Id id = field.getAnnotation(Id.class);
+			if(dbname.equals(id.dbname())){
+				return id.length();
+			}
+			return 100;
 		}else if(field.isAnnotationPresent(Key.class)) {
-			return field.getAnnotation(Key.class).length();
+			Key key = field.getAnnotation(Key.class);
+			if(dbname.equals(key.dbname())){
+				return key.length();
+			}
+			return 100;
 		}else if(field.isAnnotationPresent(Column.class)) {
-			return field.getAnnotation(Column.class).length();
+			Column column = field.getAnnotation(Column.class);
+			if(dbname.equals(column.dbname())){
+				return column.length();
+			}
+			return 100;
 		}else {
 			return 100;
 		}
@@ -210,10 +249,13 @@ public abstract class PojoManage {
 			}
 		}else if(pojoClass.isAnnotationPresent(Table.class)){
 			Table table=pojoClass.getAnnotation(Table.class);
-			if("".equals(table.value())){
-				return pojoClass.getSimpleName().toLowerCase();
+			if(dbname.equals(table.dbname())){
+				if("".equals(table.value())){
+					return pojoClass.getSimpleName().toLowerCase();
+				}
+				return table.value();
 			}
-			return table.value();
+			return pojoClass.getSimpleName().toLowerCase();
 		}else {
 			return pojoClass.getSimpleName().toLowerCase();
 		}
@@ -233,7 +275,10 @@ public abstract class PojoManage {
 			return false;
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.cascadeDelete();
+			if(dbname.equals(table.dbname())){
+				return table.cascadeDelete();
+			}
+			return false;
 		}
 		return false;
 	}
@@ -252,7 +297,10 @@ public abstract class PojoManage {
 			return false;
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.cascadeUpdate();
+			if(dbname.equals(table.dbname())){
+				return table.cascadeUpdate();
+			}
+			return false;
 		}
 		return false;
 	}
@@ -272,13 +320,16 @@ public abstract class PojoManage {
 				}
 				return id.value();
 			}
-			return id.value();
+			return idField.getName();
 		}else{
 			Id id = idField.getAnnotation(Id.class);
-			if("".equals(id.value())){
-				return idField.getName();
+			if(dbname.equals(id.dbname())){
+				if("".equals(id.value())){
+					return idField.getName();
+				}
+				return id.value();
 			}
-			return id.value();
+			return idField.getName();
 		}
 	}
 	
@@ -316,8 +367,9 @@ public abstract class PojoManage {
 		List<Field> clapKeyFields = (List<Field>) getKeyFields(clap, dbname,true);
 		for(Field field: clapKeyFields) {
 			Key key=field.getAnnotation(Key.class);
-			if(key.pojo().equals(clak))
+			if(key.pojo().equals(clak)) {
 				return field;
+			}
 		}
 		return null;
 	}
@@ -336,10 +388,11 @@ public abstract class PojoManage {
 			keys.add(entry.getKey());
 			clzzs.add(entry.getValue());
 		}
-		if(iskey)
+		if(iskey) {
 			return keys;
-		else
+		} else {
 			return clzzs;
+		}
 	}
 	
 	/**
@@ -357,7 +410,10 @@ public abstract class PojoManage {
 			return PrimaryType.DEFAULT;
 		}else if(idF.isAnnotationPresent(Id.class)){
 			Id id=idF.getAnnotation(Id.class);
-			return id.type();
+			if(dbname.equals(id.dbname())){
+				return id.type();
+			}
+			return PrimaryType.DEFAULT;
 		}else{
 			return PrimaryType.DEFAULT;
 		}
@@ -378,7 +434,10 @@ public abstract class PojoManage {
 			return "";
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.primary();
+			if(dbname.equals(table.dbname())){
+				return table.primary();
+			}
+			return "";
 		}else {
 			return "";
 		}
@@ -398,7 +457,10 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.index();
+			if(dbname.equals(table.dbname())){
+				return table.index();
+			}
+			return new String[0];
 		}else {
 			return new String[0];
 		}
@@ -418,7 +480,10 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.unique();
+			if(dbname.equals(table.dbname())){
+				return table.unique();
+			}
+			return new String[0];
 		}else {
 			return new String[0];
 		}
@@ -438,7 +503,10 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			return table.fulltext();
+			if(dbname.equals(table.dbname())){
+				return table.fulltext();
+			}
+			return new String[0];
 		}else {
 			return new String[0];
 		}
@@ -452,8 +520,9 @@ public abstract class PojoManage {
 	public static String tableAlias(Class<?> pojoClass,String dbname){
 		if(pojoClass.isAnnotationPresent(Table.class)){
 			String alias=pojoClass.getAnnotation(Table.class).alias();
-			if(!"".equals(alias))
+			if(!"".equals(alias)) {
 				return alias;
+			}
 			return getTable(pojoClass,dbname);
 		}
 		return getTable(pojoClass,dbname);
@@ -465,8 +534,9 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String selectFromTableAlias(Class<?> pojoClass,String dbname){
-		if(tableAlias(pojoClass,dbname).equals(getTable(pojoClass,dbname)))
+		if(tableAlias(pojoClass,dbname).equals(getTable(pojoClass,dbname))) {
 			return getTable(pojoClass,dbname);
+		}
 		return getTable(pojoClass,dbname)+" "+tableAlias(pojoClass,dbname);
 	}
 

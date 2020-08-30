@@ -30,7 +30,8 @@ public class JarScan extends Scan {
 		String allname=clzz.getName();
 		String simpleName=clzz.getSimpleName();
 		prefix=allname.substring(0, allname.length()-simpleName.length()).replaceAll("\\.", "/");
-		jarpath=clzz.getResource("").toURI().getPath();
+		jarpath=clzz.getResource("").getPath();
+		System.out.println(jarpath);
 		jarpath=jarpath.substring(5);
 		if(jarpath.contains(".jar!")){
 			if(jarpath.contains(":")){

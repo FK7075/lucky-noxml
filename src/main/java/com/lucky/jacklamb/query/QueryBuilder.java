@@ -58,6 +58,12 @@ public class QueryBuilder {
         sortSets=new ArrayList<>();
     }
 
+    public QueryBuilder(String dbname){
+        this.dbname=dbname;
+        objects=new ArrayList<>();
+        sortSets=new ArrayList<>();
+    }
+
     public SqlGroup getWheresql() {
         return sqlGroup;
     }

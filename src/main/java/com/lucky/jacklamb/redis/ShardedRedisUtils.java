@@ -7,12 +7,13 @@ import java.util.List;
 
 /**
  * @author fk7075
- * @version 1.0.0
- * @date 2020/8/29 7:50 下午
+ * @version 1.0
+ * @date 2020/8/27 15:23
  */
-public class RedisUtils {
+public class ShardedRedisUtils {
 
-    private static JedisPool jsp=null;
+    private static ShardedJedisPool pool=null;
+
     private static RedisConfig redisConfig=null;
 
     static {
@@ -30,12 +31,10 @@ public class RedisUtils {
         }
         List<JedisShardInfo> list = new LinkedList<>();
         list.add(jedisShardInfo1);
-        jsp = new JedisPool(config, redisConfig.getHost(), redisConfig.getPort());
+        pool = new ShardedJedisPool(config, list);
     }
 
-    public static Jedis getJedis() {
-        Jedis jedis = jsp.getResource();
-        jedis.select(redisConfig.getDbNumber());
-        return jedis;
+    public static ShardedJedis getShardedJedis() {
+        return pool.getResource();
     }
 }
