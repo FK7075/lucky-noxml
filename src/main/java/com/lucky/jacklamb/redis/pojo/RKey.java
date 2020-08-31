@@ -2,6 +2,8 @@ package com.lucky.jacklamb.redis.pojo;
 
 import com.lucky.jacklamb.redis.JedisFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
 import java.util.Set;
 
@@ -248,8 +250,69 @@ public class RKey {
         return jedis.randomKey();
     }
 
-    public void RENAME(){
+    /**
+     * 修改 key 的名称
+     * @param redisKey
+     * @param newKey 新的key
+     * @return
+     */
+    public String rename(RedisKey redisKey,String newKey){
+        redisKey.setKey(newKey);
+        return jedis.rename(redisKey.getKey(),newKey);
+    }
 
+    /**
+     * 修改 key 的名称
+     * @param redisKey
+     * @param newKey 新的key
+     * @return
+     */
+    public String rename(String redisKey,String newKey){
+        return jedis.rename(redisKey,newKey);
+    }
+
+    /**
+     *仅当 newkey 不存在时，将 key 改名为 newkey 。
+     * @param redisKey
+     * @param newKey
+     * @return
+     */
+    public Long renamenx(String redisKey,String newKey){
+        return jedis.renamenx(redisKey,newKey);
+    }
+
+    /**
+     * 仅当 newkey 不存在时，将 key 改名为 newkey 。
+     * @param redisKey
+     * @param newKey
+     * @return
+     */
+    public boolean renamenx(RedisKey redisKey,String newKey){
+        if(!exists(newKey)){
+            redisKey.setKey(newKey);
+            jedis.renamenx(redisKey.getKey(),newKey);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 迭代数据库中的数据库键。
+     * @param cursor
+     * @param scanParams
+     * @return
+     */
+    public ScanResult<String> scan(String cursor, ScanParams scanParams){
+        return jedis.scan(cursor,scanParams);
+    }
+
+    /**
+     * 返回 key 所储存的值的类型。
+     * @param redisKey
+     * @return
+     */
+    public String type(String redisKey){
+        return jedis.type(redisKey);
     }
 
     /**

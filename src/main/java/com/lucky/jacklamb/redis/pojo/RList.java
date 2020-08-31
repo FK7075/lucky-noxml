@@ -30,6 +30,26 @@ public class RList<Pojo> implements RedisKey{
     private static LSON lson=new LSON();
 
     public RList(String key) {
+        init();
+    }
+
+    public RList(String key,int dbNubmer) {
+        init();
+        jedis.select(dbNubmer);
+    }
+
+    public RList(String key,int dbNubmer,int seconds) {
+        init();
+        jedis.select(dbNubmer);
+        jedis.expire(this.key,seconds);
+    }
+
+    public RList(int seconds,String key) {
+        init();
+        jedis.expire(this.key,seconds);
+    }
+
+    public void init(){
         jedis= JedisFactory.getJedis();
         type= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         this.key = "RList<"+type.getTypeName()+">-["+key+"]";
@@ -39,8 +59,14 @@ public class RList<Pojo> implements RedisKey{
      * 获取RedisKey
      * @return
      */
+    @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public void setKey(String newKey) {
+        this.key = "RList<"+type.getTypeName()+">-["+key+"]";
     }
 
     /**

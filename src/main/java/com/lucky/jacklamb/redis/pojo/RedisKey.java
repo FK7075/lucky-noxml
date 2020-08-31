@@ -8,4 +8,6 @@ package com.lucky.jacklamb.redis.pojo;
 public interface RedisKey {
 
     String getKey();
+
+    void setKey(String newKey);
 }

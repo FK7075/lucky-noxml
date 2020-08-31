@@ -1,7 +1,6 @@
 package com.lucky.jacklamb.redis.pojo;
 
 import com.lucky.jacklamb.redis.JedisFactory;
-import com.lucky.jacklamb.redis.RedisCode;
 import com.lucky.jacklamb.rest.LSON;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanParams;
@@ -57,8 +56,14 @@ public class RHash<Field,Pojo> implements RedisKey {
      * 获取RedisKey
      * @return
      */
+    @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public void setKey(String newKey) {
+        this.key = "RHash<"+fieldType.getTypeName()+","+pojoType.getTypeName()+">-["+newKey+"]";
     }
 
     /**

@@ -40,8 +40,14 @@ public class RSet<Pojo> implements RedisKey{
      * 获取RedisKey
      * @return
      */
+    @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public void setKey(String newKey) {
+        this.key = "RSet<"+type.getTypeName()+">-["+key+"]";
     }
 
     /**

@@ -29,8 +29,14 @@ public class RString<Pojo> implements RedisKey{
         this.key = "RString<"+type.getTypeName()+">-["+key+"]";
     }
 
+    @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public void setKey(String newKey) {
+        this.key = "RString<"+type.getTypeName()+">-["+key+"]";
     }
 
     public void set(Pojo pojo, SetParams setParams){
