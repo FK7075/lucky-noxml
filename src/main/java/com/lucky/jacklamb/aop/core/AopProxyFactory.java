@@ -41,14 +41,8 @@ public class AopProxyFactory {
 	 * @param iocCode 当前组件的组件代码(Controller,Service,Repository,Component)
 	 * @param beanid 当前组件的组件id
 	 * @param beanClass 当前组件Class
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
 	 */
-	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass) throws  SecurityException,IllegalArgumentException{
+	public static Object Aspect(Map<String,PointRun> AspectMap,String iocCode, String beanid,Class<?> beanClass){
 		List<PointRun> findPointbyBean = findPointbyBean(AspectMap,iocCode,beanid,beanClass);
 		if(!findPointbyBean.isEmpty()) {
 			return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointbyBean);

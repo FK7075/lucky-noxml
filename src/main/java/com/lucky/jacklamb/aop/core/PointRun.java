@@ -9,6 +9,8 @@ import com.lucky.jacklamb.enums.Location;
 import com.lucky.jacklamb.exception.IllegaAopparametersException;
 import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
@@ -28,22 +30,12 @@ public class PointRun {
 	 * @param point
 	 */
 	public PointRun(AopPoint point) {
-		Method proceedMethod;
-		try {
-			proceedMethod = point.getClass().getDeclaredMethod("proceed", AopChain.class);
-			Around exp = proceedMethod.getAnnotation(Around.class);
-			this.point = point;
-			this.point.setPriority(exp.priority());
-			this.pointCutClass = exp.pointCutClass();
-			this.pointCutMethod = exp.pointCutMethod();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		Method proceedMethod=MethodUtils.getDeclaredMethod(point.getClass(),"proceed",AopChain.class);
+		Around exp = proceedMethod.getAnnotation(Around.class);
+		this.point = point;
+		this.point.setPriority(exp.priority());
+		this.pointCutClass = exp.pointCutClass();
+		this.pointCutMethod = exp.pointCutMethod();
 	}
 	
 	/**
@@ -51,19 +43,12 @@ public class PointRun {
 	 * @param pointClass
 	 */
 	public PointRun(Class<?> pointClass) {
-		Method proceedMethod;
-		try {
-			proceedMethod =pointClass.getDeclaredMethod("proceed", AopChain.class);
-			Around exp = proceedMethod.getAnnotation(Around.class);
-			Constructor<?> constructor = pointClass.getConstructor();
-			constructor.setAccessible(true);
-			this.point = (AopPoint) constructor.newInstance();
-			this.point.setPriority(exp.priority());
-			this.pointCutClass = exp.pointCutClass();
-			this.pointCutMethod = exp.pointCutMethod();
-		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			throw new PointRunException(e);
-		}
+		Method proceedMethod=MethodUtils.getDeclaredMethod(pointClass,"proceed", AopChain.class);
+		Around exp = proceedMethod.getAnnotation(Around.class);
+		this.point = (AopPoint) ClassUtils.newObject(pointClass);
+		this.point.setPriority(exp.priority());
+		this.pointCutClass = exp.pointCutClass();
+		this.pointCutMethod = exp.pointCutMethod();
 
 	}
 
@@ -118,8 +103,6 @@ public class PointRun {
 	 * @param method
 	 * @return
 	 */
-
-
 	public boolean standard(Method method) {
 		try {
 			return standardStart(method);

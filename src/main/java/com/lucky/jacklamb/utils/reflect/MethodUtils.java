@@ -201,5 +201,21 @@ public abstract class MethodUtils {
         return ClassUtils.getGenericType(type);
     }
 
+    public static Method getMethod(Class<?> targetClass,String methodName,Class<?>...paramClasses){
+        try {
+            return targetClass.getMethod(methodName,paramClasses);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("在"+targetClass+"中找不到方法名为\""+methodName+"\"，参数列表为("+Arrays.toString(paramClasses)+")的方法",e);
+        }
+    }
+
+    public static Method getDeclaredMethod(Class<?> targetClass,String methodName,Class<?>...paramClasses){
+        try {
+            return targetClass.getDeclaredMethod(methodName,paramClasses);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("在"+targetClass+"中找不到方法名为\""+methodName+"\"，参数列表为("+Arrays.toString(paramClasses)+")的方法",e);
+        }
+    }
+
 
 }

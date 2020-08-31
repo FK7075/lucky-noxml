@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
  * @version 1.0.0
  * @date 2020/8/29 3:06 下午
  */
-public class RString<Pojo> {
+public class RString<Pojo> implements RedisKey{
 
     private String key;
 
