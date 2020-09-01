@@ -14,6 +14,14 @@ public abstract class JedisFactory {
        return RedisUtils.getJedis();
     }
 
+    public static void initJedisPool(){
+        RedisUtils.init();
+    }
+
+    public static void initShardedJedisPool(){
+        ShardedRedisUtils.init();
+    }
+
     public static ShardedJedis getShardedJedis(){
         return ShardedRedisUtils.getShardedJedis();
     }

@@ -3,7 +3,7 @@ package com.lucky.jacklamb.sqlcore.abstractionlayer.cache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LRUCache<K,V> extends LinkedHashMap<K,V> {
+public class LRUCache<K,V> extends LinkedHashMap<K,V>implements Cache<K,V> {
 
     private final int MAX_CACHE_SIZE;
 

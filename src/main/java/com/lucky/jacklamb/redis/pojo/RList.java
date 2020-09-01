@@ -19,49 +19,23 @@ import static com.lucky.jacklamb.redis.pojo.Constant.DEL;
  * @version 1.0.0
  * @date 2020/8/29 3:05 下午
  */
-public class RList<Pojo> implements RedisKey{
+public class RList<Pojo> extends RedisKey{
 
-    private String key;
-
-    private Type type;
-
-    private Jedis jedis;
-
-    private static LSON lson=new LSON();
 
     public RList(String key) {
-        init();
+        super(key);
     }
 
-    public RList(String key,int dbNubmer) {
-        init();
-        jedis.select(dbNubmer);
+    public RList(String key, int dbNubmer) {
+        super(key, dbNubmer);
     }
 
-    public RList(String key,int dbNubmer,int seconds) {
-        init();
-        jedis.select(dbNubmer);
-        jedis.expire(this.key,seconds);
+    public RList(String key, int dbNubmer, int seconds) {
+        super(key, dbNubmer, seconds);
     }
 
-    public RList(int seconds,String key) {
-        init();
-        jedis.expire(this.key,seconds);
-    }
-
-    public void init(){
-        jedis= JedisFactory.getJedis();
-        type= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.key = "RList<"+type.getTypeName()+">-["+key+"]";
-    }
-
-    /**
-     * 获取RedisKey
-     * @return
-     */
-    @Override
-    public String getKey() {
-        return key;
+    public RList(int seconds, String key) {
+        super(seconds, key);
     }
 
     @Override

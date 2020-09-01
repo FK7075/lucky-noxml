@@ -20,34 +20,28 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @date 2020/8/29 3:05 下午
  */
-public class RSet<Pojo> implements RedisKey{
+public class RSet<Pojo> extends RedisKey{
 
-    private String key;
-
-    private Type type;
-
-    private Jedis jedis;
-
-    private static LSON lson=new LSON();
 
     public RSet(String key) {
-        jedis= JedisFactory.getJedis();
-        type= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.key = "RSet<"+type.getTypeName()+">-["+key+"]";
+        super(key);
     }
 
-    /**
-     * 获取RedisKey
-     * @return
-     */
-    @Override
-    public String getKey() {
-        return key;
+    public RSet(String key, int dbNubmer) {
+        super(key, dbNubmer);
+    }
+
+    public RSet(String key, int dbNubmer, int seconds) {
+        super(key, dbNubmer, seconds);
+    }
+
+    public RSet(int seconds, String key) {
+        super(seconds, key);
     }
 
     @Override
     public void setKey(String newKey) {
-        this.key = "RSet<"+type.getTypeName()+">-["+key+"]";
+        this.key = "RSet<"+type.getTypeName()+">-["+newKey+"]";
     }
 
     /**

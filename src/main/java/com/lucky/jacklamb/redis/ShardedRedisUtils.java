@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.redis;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.*;
 
 import java.util.LinkedList;
@@ -12,8 +14,9 @@ import java.util.List;
  */
 public class ShardedRedisUtils {
 
-    private static ShardedJedisPool pool=null;
+    private static final Logger log= LogManager.getLogger(ShardedRedisUtils.class);
 
+    private static ShardedJedisPool pool=null;
     private static RedisConfig redisConfig=null;
 
     static {
@@ -36,5 +39,9 @@ public class ShardedRedisUtils {
 
     public static ShardedJedis getShardedJedis() {
         return pool.getResource();
+    }
+
+    public static void init(){
+        log.info("Redis initialized successfully.");
     }
 }

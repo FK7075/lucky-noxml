@@ -20,6 +20,8 @@ import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.ioc.config.ServiceConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
+import com.lucky.jacklamb.redis.JedisFactory;
+
 import static com.lucky.jacklamb.start.RunParam.*;
 
 import static com.lucky.jacklamb.sqlcore.datasource.SectionKey.*;
@@ -209,6 +211,9 @@ public class IniFilePars {
 	public void modifyAllocation(ScanConfig scan, WebConfig web, ServerConfig server, ServiceConfig service) {
 		if(iniMap.isEmpty())
 			return;
+		if(iniMap.containsKey("Redis")){
+			JedisFactory.initJedisPool();
+		}
 		Map<String, String> sectionMap;
 		if(this.iniMap.containsKey(SECTION_SERVICE)){
 			sectionMap=this.getSectionMap(SECTION_SERVICE);

@@ -13,30 +13,18 @@ import java.lang.reflect.Type;
  * @version 1.0.0
  * @date 2020/8/29 3:06 下午
  */
-public class RString<Pojo> implements RedisKey{
-
-    private String key;
+public class RString<Pojo> extends RedisKey{
 
     private Type type;
 
-    private Jedis jedis;
-
-    private static LSON lson=new LSON();
-
     public RString(String key) {
-        jedis= JedisFactory.getJedis();
+        super(key);
         type= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.key = "RString<"+type.getTypeName()+">-["+key+"]";
-    }
-
-    @Override
-    public String getKey() {
-        return key;
     }
 
     @Override
     public void setKey(String newKey) {
-        this.key = "RString<"+type.getTypeName()+">-["+key+"]";
+        this.key = "RString<"+type.getTypeName()+">-["+newKey+"]";
     }
 
     public void set(Pojo pojo, SetParams setParams){

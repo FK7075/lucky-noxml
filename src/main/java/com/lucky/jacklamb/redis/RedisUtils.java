@@ -1,5 +1,8 @@
 package com.lucky.jacklamb.redis;
 
+import com.lucky.jacklamb.ioc.ControllerIOC;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.*;
 
 import java.util.LinkedList;
@@ -11,6 +14,8 @@ import java.util.List;
  * @date 2020/8/29 7:50 下午
  */
 public class RedisUtils {
+
+    private static final Logger log= LogManager.getLogger(RedisUtils.class);
 
     private static JedisPool jsp=null;
     private static RedisConfig redisConfig=null;
@@ -37,5 +42,9 @@ public class RedisUtils {
         Jedis jedis = jsp.getResource();
         jedis.select(redisConfig.getDbNumber());
         return jedis;
+    }
+
+    public static void init(){
+        log.info("Redis initialized successfully.");
     }
 }

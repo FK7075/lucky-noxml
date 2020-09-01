@@ -43,7 +43,6 @@ public class LSON {
 
 	public LSON() {
 		gsonBuilder = new GsonBuilder();
-		gsonBuilder.setPrettyPrinting();
 		gsonBuilder.serializeNulls();
 		gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
@@ -69,6 +68,7 @@ public class LSON {
 	 * @return JSON字符串
 	 */
 	public String toFormatJsonByGson(Object pojo){
+		gsonBuilder.setPrettyPrinting();
 		gson = gsonBuilder.create();
 		return gson.toJson(pojo);
 	}

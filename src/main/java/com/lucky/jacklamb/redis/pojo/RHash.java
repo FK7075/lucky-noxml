@@ -1,8 +1,5 @@
 package com.lucky.jacklamb.redis.pojo;
 
-import com.lucky.jacklamb.redis.JedisFactory;
-import com.lucky.jacklamb.rest.LSON;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
@@ -17,19 +14,27 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @date 2020/8/29 2:58 下午
  */
-public class RHash<Field,Pojo> implements RedisKey {
+public class RHash<Field,Pojo> extends RedisKey {
 
-    private static LSON lson=new LSON();
-    private Jedis jedis;
-    private Type fieldType;
-    private Type pojoType;
-    private String key;
+    public RHash(String key) {
+        super(key);
+    }
 
-    public RHash(String key){
-        jedis= JedisFactory.getJedis();
-        fieldType= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    public RHash(String key, int dbNubmer) {
+        super(key, dbNubmer);
+    }
+
+    public RHash(String key, int dbNubmer, int seconds) {
+        super(key, dbNubmer, seconds);
+    }
+
+    public RHash(int seconds, String key) {
+        super(seconds, key);
+    }
+
+
+    public void setPojoType(){
         pojoType= ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-        this.key = "RHash<"+fieldType.getTypeName()+","+pojoType.getTypeName()+">-["+key+"]";
     }
 
     /**
@@ -52,18 +57,9 @@ public class RHash<Field,Pojo> implements RedisKey {
         return jedis.hincrByFloat(key,lson.toJsonByGson(field),increment);
     }
 
-    /**
-     * 获取RedisKey
-     * @return
-     */
-    @Override
-    public String getKey() {
-        return key;
-    }
-
     @Override
     public void setKey(String newKey) {
-        this.key = "RHash<"+fieldType.getTypeName()+","+pojoType.getTypeName()+">-["+newKey+"]";
+        this.key = "RHash<"+ type.getTypeName()+","+pojoType.getTypeName()+">-["+newKey+"]";
     }
 
     /**
@@ -114,7 +110,7 @@ public class RHash<Field,Pojo> implements RedisKey {
         Set<Field> keySet= new HashSet<>();
         Set<String> strKeys = jedis.hkeys(key);
         for (String strKey : strKeys) {
-            keySet.add((Field) lson.fromJson(fieldType,strKey));
+            keySet.add((Field) lson.fromJson(type,strKey));
         }
         return keySet;
     }
@@ -184,7 +180,7 @@ public class RHash<Field,Pojo> implements RedisKey {
         Map<Field,Pojo> kvMap=new HashMap<>();
         Map<String, String> kvStrMap = jedis.hgetAll(key);
         for(Map.Entry<String,String> entry:kvStrMap.entrySet()){
-            kvMap.put((Field) lson.fromJson(fieldType,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue()));
+            kvMap.put((Field) lson.fromJson(type,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue()));
         }
         return kvMap;
     }
@@ -209,11 +205,14 @@ public class RHash<Field,Pojo> implements RedisKey {
         List<Map.Entry<String, String>> result = hscan.getResult();
         List<Map.Entry<Field, Pojo>> results = new ArrayList<Map.Entry<Field, Pojo>>();
         for (Map.Entry<String, String> entry : result) {
-            results.add(new AbstractMap.SimpleEntry<Field, Pojo>((Field) lson.fromJson(fieldType,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue())));
+            results.add(new AbstractMap.SimpleEntry<Field, Pojo>((Field) lson.fromJson(type,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue())));
         }
         return new ScanResult<Map.Entry<Field,Pojo>>(cursor,results);
     }
 
+    public void clear(){
+        jedis.del(key);
+    }
     /**
      * 关闭Redis连接
      */

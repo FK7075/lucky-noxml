@@ -33,7 +33,7 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 		Class<?> aClass = createTest.getClass();
 
 		//当前测试类如果存在事务注解@Transaction则执行事务代理
-		if(AopProxyFactory.isTransaction(aClass)||AopProxyFactory.isCacheable(aClass)){
+		if(AopProxyFactory.isTransaction(aClass)){
 			createTest= PointRunFactory.createProxyFactory().getProxy(createTest.getClass());
 		}
 		ApplicationBeans applicationBeans=ApplicationBeans.createApplicationBeans();

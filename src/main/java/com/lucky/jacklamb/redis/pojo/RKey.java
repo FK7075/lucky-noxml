@@ -257,8 +257,7 @@ public class RKey {
      * @return
      */
     public String rename(RedisKey redisKey,String newKey){
-        redisKey.setKey(newKey);
-        return jedis.rename(redisKey.getKey(),newKey);
+        return redisKey.rename(newKey);
     }
 
     /**
@@ -287,13 +286,8 @@ public class RKey {
      * @param newKey
      * @return
      */
-    public boolean renamenx(RedisKey redisKey,String newKey){
-        if(!exists(newKey)){
-            redisKey.setKey(newKey);
-            jedis.renamenx(redisKey.getKey(),newKey);
-            return true;
-        }
-        return false;
+    public Long renamenx(RedisKey redisKey,String newKey){
+        return redisKey.renamenx(newKey);
     }
 
     /**
@@ -313,6 +307,22 @@ public class RKey {
      */
     public String type(String redisKey){
         return jedis.type(redisKey);
+    }
+
+    /**
+     * 删除所有的Key
+     * @return
+     */
+    public String flushAll(){
+        return jedis.flushAll();
+    }
+
+    /**
+     * 删除当前DB内所有的key
+     * @return
+     */
+    public String flushDB(){
+        return jedis.flushDB();
     }
 
     /**
