@@ -20,6 +20,7 @@ public class ShardedRedisUtils {
     private static RedisConfig redisConfig=null;
 
     static {
+        log.info("Redis Start initialization......");
         redisConfig = RedisConfig.getRedisConfig();
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(redisConfig.getMaxTotal());

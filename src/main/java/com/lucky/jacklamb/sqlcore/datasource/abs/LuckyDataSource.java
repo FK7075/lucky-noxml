@@ -36,6 +36,8 @@ public abstract class LuckyDataSource implements DataSource{
 
     private Boolean log;
     private Boolean cache;
+    private String cacheType;
+    private String cacheExpiredTime;
     private Integer cacheCapacity;
     private Boolean formatSqlLog;
     private List<Class<?>> createTable;
@@ -47,6 +49,8 @@ public abstract class LuckyDataSource implements DataSource{
         poolType=Pool.HIKARICP;
         dbname="defaultDB";
         cache=true;
+        cacheType="Java";
+        cacheExpiredTime="0";
         log=false;
         formatSqlLog=false;
         cacheCapacity=50;
@@ -58,6 +62,22 @@ public abstract class LuckyDataSource implements DataSource{
 
     public void setPoolType(Pool poolType) {
         this.poolType = poolType;
+    }
+
+    public String getCacheType() {
+        return cacheType;
+    }
+
+    public void setCacheType(String cacheType) {
+        this.cacheType = cacheType;
+    }
+
+    public String getCacheExpiredTime() {
+        return cacheExpiredTime;
+    }
+
+    public void setCacheExpiredTime(String cacheExpiredTime) {
+        this.cacheExpiredTime = cacheExpiredTime;
     }
 
     public String getDbname() {

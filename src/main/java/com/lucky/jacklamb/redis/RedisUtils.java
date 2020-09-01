@@ -21,6 +21,7 @@ public class RedisUtils {
     private static RedisConfig redisConfig=null;
 
     static {
+        log.info("Redus Start initialization......");
         redisConfig = RedisConfig.getRedisConfig();
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(redisConfig.getMaxTotal());

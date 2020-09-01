@@ -1,6 +1,5 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.cache;
 
-import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.redis.pojo.RHash;
 
 import java.util.List;
@@ -14,6 +13,10 @@ import java.util.Map;
 public class RedisCache implements Cache<String,List<Map<String,Object>>>{
 
     private RHash<String,List<Map<String, Object>>> rHash;
+
+    public RedisCache(String dbname,int expiredTime){
+        rHash=new RHash<String,List<Map<String, Object>>>(expiredTime,dbname){};
+    }
 
     public RedisCache(String dbname){
         rHash=new RHash<String,List<Map<String, Object>>>(dbname){};

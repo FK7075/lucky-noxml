@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core;
 
+import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.Cache;
+import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.CacheFactory;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
@@ -24,7 +26,7 @@ public class SqlOperation {
 
 	private Connection conn;
 	private String dbname;
-	public static Map<String, LRUCache<String,List<Map<String,Object>>>> lruCache=new HashMap<>();
+	public static Map<String, Cache<String,List<Map<String,Object>>>> lruCache=new HashMap<>();
 	private boolean isCache;
 
 	public SqlOperation(Connection conn, String dbname) {
@@ -33,7 +35,7 @@ public class SqlOperation {
 		isCache= ReaderInI.getDataSource(dbname).getCache();
 		//如果用户开启了缓存配置，则初始化一个LRU缓存
 		if(isCache&&!lruCache.containsKey(dbname)){
-			LRUCache<String,List<Map<String,Object>>> dbCache=new LRUCache<>(ReaderInI.getDataSource(dbname).getCacheCapacity());
+			Cache<String,List<Map<String,Object>>> dbCache= CacheFactory.getCache(dbname);
 			lruCache.put(dbname,dbCache);
 		}
 	}
