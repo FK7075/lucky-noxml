@@ -41,6 +41,7 @@ public class RList<Pojo> extends RedisKey{
     @Override
     public void setKey(String newKey) {
         this.key = "RList<"+type.getTypeName()+">-["+key+"]";
+        key=key.replaceAll(" ","");
     }
 
     /**

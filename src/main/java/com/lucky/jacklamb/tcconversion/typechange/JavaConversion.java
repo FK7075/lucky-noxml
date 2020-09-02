@@ -27,32 +27,53 @@ public class JavaConversion {
 		if(isCalculate) {
 			data=ExpressionEngine.calculate(expression);
 		}
-		if("String".equalsIgnoreCase(strtype))
+		if("String".equalsIgnoreCase(strtype)) {
 			return data;
-		if("int".equals(strtype)||"Integer".equals(strtype))
-			return Integer.parseInt(data);
-		if("double".equalsIgnoreCase(strtype))
+		}
+		if("int".equals(strtype)||"Integer".equals(strtype)) {
+			if(data.contains(".")){
+				return (int)Double.parseDouble(data);
+			}else{
+				return Integer.parseInt(data);
+			}
+		}
+		if("double".equalsIgnoreCase(strtype)) {
 			return Double.parseDouble(data);
-		if("boolean".equalsIgnoreCase(strtype))
+		}
+		if("boolean".equalsIgnoreCase(strtype)) {
 			return Boolean.parseBoolean(data);
-		if("long".equalsIgnoreCase(strtype))
-			return Long.parseLong(data);
-		if("float".equalsIgnoreCase(strtype))
+		}
+		if("long".equalsIgnoreCase(strtype)) {
+			if(data.contains(".")){
+				return (long)Double.parseDouble(data);
+			}else{
+				return Long.parseLong(data);
+			}
+		}
+		if("float".equalsIgnoreCase(strtype)) {
 			return Float.parseFloat(data);
-		if("byte".equalsIgnoreCase(strtype))
+		}
+		if("byte".equalsIgnoreCase(strtype)) {
 			return Byte.parseByte(data);
-		if("short".equalsIgnoreCase(strtype))
+		}
+		if("short".equalsIgnoreCase(strtype)) {
 			return Short.parseShort(data);
-		if("char".equalsIgnoreCase(strtype))
+		}
+		if("char".equalsIgnoreCase(strtype)) {
 			return data.charAt(0);
-		if("java.util.Date".equalsIgnoreCase(strtype))
+		}
+		if("java.util.Date".equalsIgnoreCase(strtype)) {
 			return LuckyUtils.getDate(data);
-		if("java.sqlActuator.Date".equalsIgnoreCase(strtype))
+		}
+		if("java.sqlActuator.Date".equalsIgnoreCase(strtype)) {
 			return LuckyUtils.getSqlDate(data);
-		if("Time".equalsIgnoreCase(strtype))
+		}
+		if("Time".equalsIgnoreCase(strtype)) {
 			return LuckyUtils.getSqlTime(data);
-		if("Timestamp".equalsIgnoreCase(strtype))
+		}
+		if("Timestamp".equalsIgnoreCase(strtype)) {
 			return Timestamp.valueOf(data);
+		}
 		return strtype;
 		
 	}
@@ -65,24 +86,34 @@ public class JavaConversion {
 
 	public static Object[] strArrToBasicArr(String[] arrdata, Object type) {
 		String strtype;
-		if(type instanceof Class)
+		if(type instanceof Class) {
 			strtype=((Class<?>)type).getSimpleName();
-		else
+		} else {
 			strtype=(String) type;
-		if (arrdata == null)
+		}
+		if (arrdata == null) {
 			return null;
+		}
 		switch (strtype) {
 		case "int": {
 			Integer[] ints = new Integer[arrdata.length];
 			for (int i = 0; i < arrdata.length; i++) {
-				ints[i] = Integer.parseInt(arrdata[i]);
+				if(arrdata[i].contains(".")){
+					ints[i]= (int)Double.parseDouble(arrdata[i]);
+				}else{
+					ints[i] = Integer.parseInt(arrdata[i]);
+				}
 			}
 			return ints;
 		}
 		case "Integer": {
 			Integer[] Ints = new Integer[arrdata.length];
 			for (int i = 0; i < arrdata.length; i++) {
-				Ints[i] = Integer.parseInt(arrdata[i]);
+				if(arrdata[i].contains(".")){
+					Ints[i]= (int) Double.parseDouble(arrdata[i]);
+				}else{
+					Ints[i] = Integer.parseInt(arrdata[i]);
+				}
 			}
 			return Ints;
 		}
@@ -104,14 +135,22 @@ public class JavaConversion {
 		case "long": {
 			Long[] Longs = new Long[arrdata.length];
 			for (int i = 0; i < arrdata.length; i++) {
-				Longs[i] = Long.parseLong(arrdata[i]);
+				if(arrdata[i].contains(".")){
+					Longs[i]= (long) Double.parseDouble(arrdata[i]);
+				}else{
+					Longs[i] = Long.parseLong(arrdata[i]);
+				}
 			}
 			return Longs;
 		}
 		case "Long": {
 			Long[] Longs = new Long[arrdata.length];
 			for (int i = 0; i < arrdata.length; i++) {
-				Longs[i] = Long.parseLong(arrdata[i]);
+				if(arrdata[i].contains(".")){
+					Longs[i]= (long) Double.parseDouble(arrdata[i]);
+				}else{
+					Longs[i] = Long.parseLong(arrdata[i]);
+				}
 			}
 			return Longs;
 		}

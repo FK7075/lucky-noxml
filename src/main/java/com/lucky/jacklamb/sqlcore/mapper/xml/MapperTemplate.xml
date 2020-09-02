@@ -12,7 +12,7 @@
     <!-- < &lt; > &gt; -->
     <MapperInterface class="com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing">
         <Method name="gtg">
-            DELETE FROM table WHETE id >=@id AND name='付款'
+            DELETE FROM table WHETE id &gt;=@id AND name='付款'
         </Method>
     </MapperInterface>
 

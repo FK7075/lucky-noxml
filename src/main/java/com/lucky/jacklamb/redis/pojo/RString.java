@@ -25,6 +25,7 @@ public class RString<Pojo> extends RedisKey{
     @Override
     public void setKey(String newKey) {
         this.key = "RString<"+type.getTypeName()+">-["+newKey+"]";
+        key=key.replaceAll(" ","");
     }
 
     public void set(Pojo pojo, SetParams setParams){

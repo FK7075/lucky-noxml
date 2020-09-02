@@ -40,6 +40,7 @@ public class ZSet<Pojo> extends RedisKey{
     @Override
     public void setKey(String newKey) {
         this.key = "ZSet<"+type.getTypeName()+">:("+newKey+")";
+        key=key.replaceAll(" ","");
     }
 
     /**

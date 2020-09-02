@@ -21,7 +21,7 @@ public class RedisUtils {
     private static RedisConfig redisConfig=null;
 
     static {
-        log.info("Redus Start initialization......");
+        log.info("Redis Start Initialization...");
         redisConfig = RedisConfig.getRedisConfig();
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(redisConfig.getMaxTotal());
@@ -29,14 +29,12 @@ public class RedisUtils {
         config.setMaxWaitMillis(redisConfig.getMaxWaitMillis());
         config.setTestOnBorrow(redisConfig.isTestOnBorrow());
         config.setTestOnReturn(redisConfig.isTestOnReturn());
-        // 集群
-        JedisShardInfo jedisShardInfo1 = new JedisShardInfo(redisConfig.getHost(), redisConfig.getPort());
         if(redisConfig.getPassword()!=null){
-            jedisShardInfo1.setPassword(redisConfig.getPassword());
+            jsp = new JedisPool(config, redisConfig.getHost(), redisConfig.getPort(),redisConfig.getTimeout(),redisConfig.getPassword());
+        }else{
+            jsp = new JedisPool(config, redisConfig.getHost(), redisConfig.getPort(),redisConfig.getTimeout());
         }
-        List<JedisShardInfo> list = new LinkedList<>();
-        list.add(jedisShardInfo1);
-        jsp = new JedisPool(config, redisConfig.getHost(), redisConfig.getPort());
+
     }
 
     public static Jedis getJedis() {
@@ -46,6 +44,6 @@ public class RedisUtils {
     }
 
     public static void init(){
-        log.info("Redis initialized successfully.");
+        log.info("Redis Initialized Successfully.");
     }
 }

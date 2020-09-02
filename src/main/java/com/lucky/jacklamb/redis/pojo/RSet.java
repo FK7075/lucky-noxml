@@ -42,6 +42,7 @@ public class RSet<Pojo> extends RedisKey{
     @Override
     public void setKey(String newKey) {
         this.key = "RSet<"+type.getTypeName()+">-["+newKey+"]";
+        key=key.replaceAll(" ","");
     }
 
     /**

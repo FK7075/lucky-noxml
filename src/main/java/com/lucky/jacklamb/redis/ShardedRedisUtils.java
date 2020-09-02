@@ -20,7 +20,7 @@ public class ShardedRedisUtils {
     private static RedisConfig redisConfig=null;
 
     static {
-        log.info("Redis Start initialization......");
+        log.info("Redis Start Initialization...");
         redisConfig = RedisConfig.getRedisConfig();
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(redisConfig.getMaxTotal());
@@ -43,6 +43,6 @@ public class ShardedRedisUtils {
     }
 
     public static void init(){
-        log.info("Redis initialized successfully.");
+        log.info("Redis Initialized Successfully.");
     }
 }

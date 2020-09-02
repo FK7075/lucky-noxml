@@ -60,6 +60,7 @@ public class RHash<Field,Pojo> extends RedisKey {
     @Override
     public void setKey(String newKey) {
         this.key = "RHash<"+ type.getTypeName()+","+pojoType.getTypeName()+">-["+newKey+"]";
+        key=key.replaceAll(" ","");
     }
 
     /**

@@ -2,6 +2,7 @@ package com.lucky.jacklamb.utils.base;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -302,6 +303,30 @@ public abstract class LuckyUtils {
 	 */
 	public static boolean isJavaClass(Class<?> clzz) {
 		return clzz!=null&&clzz.getClassLoader()==null;
+	}
+
+	/**
+	 * 小数转百分数
+	 * @param d 待转化的小数
+	 * @param IntegerDigits 小数点前保留几位
+	 * @param FractionDigits 小数点后保留几位
+	 * @return
+	 */
+	public String getPercentFormat(double d, int IntegerDigits, int FractionDigits) {
+		NumberFormat nf = java.text.NumberFormat.getPercentInstance();
+		nf.setMaximumIntegerDigits(IntegerDigits);//小数点前保留几位
+		nf.setMinimumFractionDigits(FractionDigits);// 小数点后保留几位
+		String str = nf.format(d);
+		return str;
+	}
+
+	/**
+	 * 小数转百分数
+	 * @param d 待转化的小数 99.333%
+	 * @return
+	 */
+	public String getPercentFormat(double d){
+		return getPercentFormat(d,2,3);
 	}
 
 	/**

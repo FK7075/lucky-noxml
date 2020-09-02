@@ -136,6 +136,9 @@ public class BatchInsert {
         String insertSql2 = bi.getInsertSql();
         System.out.println(insertSql2);
         System.out.println(Arrays.toString(bi.getInsertObject()));
+        for (Object o : bi.insertObject) {
+            System.out.println(o==null);
+        }
         System.out.println(bi.OrcaleInsetSql());
     }
 
