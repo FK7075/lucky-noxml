@@ -2,8 +2,12 @@ package com.lucky.jacklamb.start;
 
 import java.io.File;
 import java.util.Comparator;
+import java.util.Map;
 
 import com.lucky.jacklamb.servlet.ServerStartRun;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
@@ -15,6 +19,9 @@ import org.apache.tomcat.websocket.server.WsSci;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
+
+import javax.sql.DataSource;
+
 import static com.lucky.jacklamb.start.RunParam.*;
 
 public class LuckyApplication {
@@ -42,7 +49,7 @@ public class LuckyApplication {
         }
         doShutDownWork();
         AppConfig.applicationClass = applicationClass;
-        new Thread(()->run(),"main-lucky").start();
+        new Thread(()->run(),"lucky").start();
     }
 
     private static void run() {
@@ -97,6 +104,7 @@ public class LuckyApplication {
                     log.info("@CloseRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
                     a.runAdd();
                 });
+                LuckyDataSource.close();
             }
         });
 

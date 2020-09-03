@@ -54,12 +54,12 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			ctx.addListener(l);
 			log.info("@Listener \"[class="+l+"]\"");
 		}
-		log.info("tomcat sessionTimeOut \"" +serverCfg.getSessionTimeout()+"min\"");
-		log.info("tomcat shutdown-Port \"" +serverCfg.getClosePort()+"\"");
-		log.info("tomcat shutdown-Command \"" +serverCfg.getShutdown()+"\"");
-		log.info("tomcat baseDir \"" +serverCfg.getBaseDir()+"\"");
-		log.info("tomcat docBase \"" +serverCfg.getDocBase()+"\"");
-		log.info("tomcat contextPath : \"" +serverCfg.getContextPath()+"\"");
+		log.info("Tomcat SessionTimeOut \"" +serverCfg.getSessionTimeout()+"min\"");
+		log.info("Tomcat Shutdown-Port \"" +serverCfg.getClosePort()+"\"");
+		log.info("Tomcat Shutdown-Command \"" +serverCfg.getShutdown()+"\"");
+		log.info("Tomcat BaseDir \"" +serverCfg.getBaseDir()+"\"");
+		log.info("Tomcat DocBase \"" +serverCfg.getDocBase()+"\"");
+		log.info("Tomcat ContextPath : \"" +serverCfg.getContextPath()+"\"");
 	}
 
 }

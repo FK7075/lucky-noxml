@@ -240,8 +240,8 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?e");
-        params.add(param);
+        sql.append(columns).append(" LIKE ?");
+        params.add("%"+param);
         return this;
     }
 
@@ -249,8 +249,8 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?s");
-        params.add(param);
+        sql.append(columns).append(" LIKE ?");
+        params.add(param+"%");
         return this;
     }
 
@@ -258,13 +258,13 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?c");
-        params.add(param);
+        sql.append(columns).append(" LIKE ?");
+        params.add("%"+param+"%");
         return this;
     }
 
     public Translator notLike(String columns,Object param){
-        sql.append(columns).append("NOT LIKE ?c");
+        sql.append(columns).append("NOT LIKE ?");
         params.add(param);
         return this;
     }

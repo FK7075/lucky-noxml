@@ -12,6 +12,7 @@ import com.lucky.jacklamb.servlet.ResponseControl;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.servlet.mapping.AnnotationOperation;
 import com.lucky.jacklamb.servlet.mapping.UrlParsMap;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
@@ -85,6 +86,7 @@ public abstract class BaseServlet extends HttpServlet {
             log.info("@CloseRun ==> Running \"{priority=[" + a.getPriority() + "], id=" + a.getComponentName() + ", Method=" + a.getControllerMethod() + "\"}");
             a.runAdd();
         });
+        LuckyDataSource.close();
     }
 
     @Override

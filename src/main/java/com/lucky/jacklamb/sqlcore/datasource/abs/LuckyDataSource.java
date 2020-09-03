@@ -3,6 +3,8 @@ package com.lucky.jacklamb.sqlcore.datasource.abs;
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
@@ -22,7 +24,7 @@ public abstract class LuckyDataSource implements DataSource{
     /**
      * 转换后的各个数据源的JDBC数据源
      */
-    protected static Map<String, DataSource> dbMap;
+    public static Map<String, DataSource> dbMap;
 
     //数据库连接池的类型
     private Pool poolType;
@@ -194,8 +196,9 @@ public abstract class LuckyDataSource implements DataSource{
     }
 
     public void init(){
-        if(dbMap==null)
+        if(dbMap==null) {
             LuckyDataSource2TripartiteDataSource();
+        }
     }
 
     /**
@@ -281,5 +284,24 @@ public abstract class LuckyDataSource implements DataSource{
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return getTripartiteDataSource().getParentLogger();
+    }
+
+    /**
+     * 关闭连接池
+     */
+    public static void close(){
+        for(Map.Entry<String,DataSource> entry: dbMap.entrySet()){
+            DataSource dataSource = entry.getValue();
+            if(dataSource instanceof HikariDataSource){
+                HikariDataSource hds= (HikariDataSource) dataSource;
+                hds.close();
+                continue;
+            }
+            if(dataSource instanceof ComboPooledDataSource){
+                ComboPooledDataSource cds=(ComboPooledDataSource)dataSource;
+                cds.close();
+                continue;
+            }
+        }
     }
 }

@@ -312,7 +312,7 @@ public abstract class LuckyUtils {
 	 * @param FractionDigits 小数点后保留几位
 	 * @return
 	 */
-	public String getPercentFormat(double d, int IntegerDigits, int FractionDigits) {
+	public static String getPercentFormat(double d, int IntegerDigits, int FractionDigits) {
 		NumberFormat nf = java.text.NumberFormat.getPercentInstance();
 		nf.setMaximumIntegerDigits(IntegerDigits);//小数点前保留几位
 		nf.setMinimumFractionDigits(FractionDigits);// 小数点后保留几位
@@ -325,8 +325,8 @@ public abstract class LuckyUtils {
 	 * @param d 待转化的小数 99.333%
 	 * @return
 	 */
-	public String getPercentFormat(double d){
-		return getPercentFormat(d,2,3);
+	public static String getPercentFormat(double d){
+		return getPercentFormat(d,3,3);
 	}
 
 	/**

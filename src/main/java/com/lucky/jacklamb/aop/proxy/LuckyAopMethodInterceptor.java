@@ -11,6 +11,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +46,10 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 
 	@Override
 	public Object intercept(Object target, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+//		如果是final方法则执行原方法
+//		if(Modifier.isFinal(method.getModifiers())){
+//			return methodProxy.invokeSuper(target,params);
+//		}
 		final List<AopPoint> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
 
