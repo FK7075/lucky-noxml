@@ -19,10 +19,10 @@ import java.util.Properties;
  */
 public class JavaEmailSendTest {
 
-    private static final String FROM = "1814375626@qq.com";
+    private static final String FROM = "XXX";
     private static final String TO = "fk-7075@qq.com";
     private static final String SMTP = "smtp.qq.com";
-    private static final String SQM = "amzhoyvcmcxkcagg";
+    private static final String SQM = "XXX";
     private static final File FJ=new File("D:\\IDEA\\JackLamb\\test-two\\src\\main\\resources\\appconfig.ini");
 
     public static void main(String[] args) throws GeneralSecurityException, MessagingException {

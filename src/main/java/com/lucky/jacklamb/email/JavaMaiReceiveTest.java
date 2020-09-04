@@ -16,9 +16,9 @@ import java.util.Properties;
  */
 public class JavaMaiReceiveTest {
 
-    private static final String EMAIL = "1814375626@qq.com";
+    private static final String EMAIL = "XXX";
     private static final String POP = "pop.qq.com";
-    private static final String SQM = "amzhoyvcmcxkcagg";
+    private static final String SQM = "XXX";
 
     public static void main(String[] args) throws Exception {
         //创建Session对象
