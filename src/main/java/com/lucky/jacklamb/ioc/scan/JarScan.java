@@ -158,5 +158,5 @@ public class JarScan extends Scan {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }
