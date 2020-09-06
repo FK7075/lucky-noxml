@@ -20,7 +20,7 @@ import java.util.Properties;
 public class JavaEmailSendTest {
 
     private static final String FROM = "1814375626@qq.com";
-    private static final String TO = "fk-7075@qq.com";
+    private static final String TO = "1395581098@qq.com";
     private static final String SMTP = "smtp.qq.com";
     private static final String SQM = "jfiigoshisyfbijb";
     private static final File FJ=new File("/Users/fukang/IDEA-WORK/lucky-noxml/src/main/resources/lucky-config/static/favicon.ico");
@@ -55,7 +55,7 @@ public class JavaEmailSendTest {
         BodyPart dataPart=new MimeBodyPart();
         DataSource source=new FileDataSource(FJ);
         dataPart.setDataHandler(new DataHandler(source));
-        dataPart.setFileName("appconfig.ini");
+        dataPart.setFileName("appconfig.ico");
         multipart.addBodyPart(dataPart);
         // 设置消息体
         message.setContent(multipart);
