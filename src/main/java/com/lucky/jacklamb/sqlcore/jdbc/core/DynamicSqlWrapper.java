@@ -15,6 +15,6 @@ public interface DynamicSqlWrapper {
      * 产生一个动态的SQl片段
      * @param sp 规则定义器,定义生成动态SQL片段的规则
      */
-    public void dySql(SplicingRules sp);
+    void dySql(SplicingRules sp);
 
 }

@@ -102,12 +102,19 @@ public abstract class PojoManage {
 			return "";
 		}else if(field.isAnnotationPresent(Column.class)) {
 			Column coumn=field.getAnnotation(Column.class);
+			if(UNIVERSAL.equals(coumn.dbname())){
+				if("".equals(coumn.value())) {
+					return field.getName();
+				}
+				return coumn.value();
+			}
 			if(dbname.equals(coumn.dbname())){
 				if("".equals(coumn.value())) {
 					return field.getName();
 				}
 				return coumn.value();
 			}
+
 			return field.getName();
 		}else if(field.isAnnotationPresent(Id.class)) {
 			Id id=field.getAnnotation(Id.class);

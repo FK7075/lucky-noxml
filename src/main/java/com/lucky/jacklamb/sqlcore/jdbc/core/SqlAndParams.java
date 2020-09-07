@@ -153,16 +153,8 @@ public class SqlAndParams {
         if (precompileSql.contains(In) || precompileSql.contains(START) ||
                 precompileSql.contains(END) || precompileSql.contains(CONTAIN) ||
                 precompileSql.contains(DYSQL)) {
-            Map<String, Object> DY_DATA = new HashMap<>();
-            if (method != null) {
-                DY_DATA = MethodUtils.getMethodParamsNV(method, sourceParams);
-            } else {
-                for (int i = 0, j = sourceParams.length; i < j; i++) {
-                    DY_DATA.put(i + "", sourceParams[i]);
-                }
-            }
             Map<Integer, Integer> indexMap = getIndexMap();
-            dealithW_D(DY_DATA);
+            dealithW_D();
             indexMap = getIndexMap();
             dealithW_s(indexMap);
             dealithW_e(indexMap);
@@ -215,7 +207,7 @@ public class SqlAndParams {
     /*
         解析动态sql(?D)
      */
-    public void dealithW_D(Map<String, Object> DY_DATA) {
+    public void dealithW_D() {
         while (true) {
             if (!precompileSql.contains("?D")) {
                 break;
@@ -232,7 +224,6 @@ public class SqlAndParams {
                 throw new RuntimeException("SQL操作符 \"?D\" 对应的参数类型必须为" + DynamicSqlWrapper.class + "！错误的类型:" + params[idx].getClass(), e);
             }
             SplicingRules sp = new SplicingRules();
-            sp.setData(DY_DATA);
             dySqlWar.dySql(sp);
             precompileSql = precompileSql.replaceFirst("\\?D", sp.getpSql());
             int dySize = sp.getParams().size();

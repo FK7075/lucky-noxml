@@ -18,12 +18,6 @@ public class SplicingRules {
 
     private List<Object> params;
 
-    private Map<String,Object> data;
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
-
     private String addPrefix;
     private String addSuffix;
     private String removePrefix;
@@ -132,9 +126,6 @@ public class SplicingRules {
         Stream.of(params).forEach(this.params::add);
     }
 
-    public Object $(String name){
-        return data.get(name);
-    }
 }
 
 
