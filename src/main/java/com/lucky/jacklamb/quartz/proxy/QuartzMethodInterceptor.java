@@ -45,7 +45,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
             String jobRunBeanId="".equals(quartzJob.id())
                     ?targetObj.getClass().getSuperclass().getName()+"."+method.getName():quartzJob.id();
-            if(!ApplicationBeans.createApplicationBeans().isIocBean(jobRunBeanId))
+            jobRunBeanId+="["+jobName+"]";
                 ApplicationBeans.createApplicationBeans().addComponentBean(jobRunBeanId,targetJobRun);
             JobDetail jobDetail = JobBuilder.newJob(jobClass)
                     .withIdentity(jobName, LUCKY_JOB_GROUP)
@@ -59,8 +59,9 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
                 scheduler.pauseJob(specialJobMap.get(method));
                 scheduler.deleteJob(specialJobMap.get(method));
             }
-            if(quartzJob.onlyFirst()||quartzJob.onlyLast())
+            if(quartzJob.onlyFirst()||quartzJob.onlyLast()) {
                 specialJobMap.put(method,jobDetail.getKey());
+            }
             scheduler.start();
             return null;
         }
@@ -73,14 +74,16 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         String cron = job.cron();
         String dyCron=job.dyCron();
         if(!"".equals(dyCron)){
-            if(!paramKV.containsKey(dyCron))
+            if(!paramKV.containsKey(dyCron)) {
                 throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyCron参数：'(String)"+dyCron+"' ");
+            }
             cron=(String)paramKV.get(dyCron);
         }
         //Cron表达式构建Trigger
         if(!"".equals(cron)){
-            if(!CronExpression.isValidExpression(cron))
+            if(!CronExpression.isValidExpression(cron)) {
                 throw new CronExpressionException(method,cron);
+            }
             Trigger trigger = triggerBuilder.startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(cron))
                     .build();
@@ -89,24 +92,27 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
         long fixedDelay = job.fixedDelay();
         String dyDelay=job.dyDelay();
         if(!"".equals(dyDelay)){
-            if(!paramKV.containsKey(dyDelay))
+            if(!paramKV.containsKey(dyDelay)) {
                 throw new RuntimeException("定时任务 '"+method+" '缺少必要的参数：'(Long)"+dyDelay+"' ");
+            }
             fixedDelay=(long)paramKV.get(dyDelay);
         }
 
         int count = job.count();
         String dyCount=job.dyCount();
         if(!"".equals(dyCount)){
-            if(!paramKV.containsKey(dyCount))
+            if(!paramKV.containsKey(dyCount)) {
                 throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyCount参数：'(Long)"+dyCount+"' ");
+            }
             count=(int)paramKV.get(dyCount);
         }
 
         long interval = job.interval();
         String dyInterval=job.dyInterval();
         if(!"".equals(dyInterval)){
-            if(!paramKV.containsKey(dyInterval))
+            if(!paramKV.containsKey(dyInterval)) {
                 throw new RuntimeException("定时任务 '"+method+" '缺少必要的dyInterval参数：'(Long)"+dyInterval+"' ");
+            }
             interval=(long)paramKV.get(dyInterval);
         }
 
