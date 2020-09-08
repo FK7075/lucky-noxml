@@ -184,6 +184,12 @@ public class LEmail {
         email.send();
     }
 
+    /**
+     * 发送一封HTML格式的邮件
+     * @param subject 主题
+     * @param htmlMsg Html内容
+     * @throws EmailException
+     */
     public void sendHtmlEmail(String subject,HtmlMsg htmlMsg) throws EmailException {
         sendHtmlEmail(subject,htmlMsg,"Your email client does not support HTML messages");
     }
@@ -207,6 +213,8 @@ public class LEmail {
         // send the email
         email.send();
     }
+
+
 
 
 }

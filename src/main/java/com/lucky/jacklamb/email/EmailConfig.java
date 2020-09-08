@@ -15,19 +15,38 @@ import java.util.Map;
  */
 public class EmailConfig {
 
-    private static EmailConfig emailCfg=null;
+    private static EmailConfig emailCfg = null;
 
-    private  String smtpHost;
+    private String smtpHost;
+    private int smtpPort = 25;
+    private String popHost;
+    private int popPort=110;
     private String email;
-    private  String username;
-    private  String password;
-    private int smtpPort=25;
-    private  Boolean smtpAuth;
-    private  Boolean smtpStarttlsEnable;
-    private  Boolean smtpStarttlsRequired;
+    private String username;
+    private String password;
+    private Boolean smtpAuth;
+    private Boolean smtpStarttlsEnable;
+    private Boolean smtpStarttlsRequired;
 
 
-    private EmailConfig(){};
+    private EmailConfig() {
+    }
+
+    public String getPopHost() {
+        return popHost;
+    }
+
+    public void setPopHost(String popHost) {
+        this.popHost = popHost;
+    }
+
+    public int getPopPort() {
+        return popPort;
+    }
+
+    public void setPopPort(int popPort) {
+        this.popPort = popPort;
+    }
 
     public String getEmail() {
         return email;
@@ -96,7 +115,7 @@ public class EmailConfig {
     private static void init() {
         Map<String, String> email = new IniFilePars().getSectionMap("Email");
         Field[] allFields = ClassUtils.getAllFields(EmailConfig.class);
-        emailCfg=new EmailConfig();
+        emailCfg = new EmailConfig();
         for (Field field : allFields) {
             if (email.containsKey(field.getName())) {
                 FieldUtils.setValue(emailCfg, field, JavaConversion.strToBasic(email.get(field.getName()), field.getType()));
@@ -104,9 +123,9 @@ public class EmailConfig {
         }
     }
 
-    public static EmailConfig getEmailConfig(){
-        if(emailCfg==null){
-           init();
+    public static EmailConfig getEmailConfig() {
+        if (emailCfg == null) {
+            init();
         }
         return emailCfg;
     }
