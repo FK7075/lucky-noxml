@@ -18,6 +18,7 @@ public class EmailConfig {
     private static EmailConfig emailCfg=null;
 
     private  String smtpHost;
+    private String email;
     private  String username;
     private  String password;
     private int smtpPort=25;
@@ -27,6 +28,14 @@ public class EmailConfig {
 
 
     private EmailConfig(){};
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public int getSmtpPort() {
         return smtpPort;

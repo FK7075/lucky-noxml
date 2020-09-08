@@ -383,6 +383,9 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		}else{
 			sql.append(" WHERE ").append(tr.getSql());
 		}
+		if(sql.toString().toUpperCase().trim().endsWith("WHERE")){
+			return updateBySql(sql.substring(0,sql.lastIndexOf("WHERE")),tr.getParams().toArray());
+		}
 		params.addAll(tr.getParams());
 		return updateBySql(sql.toString(),params.toArray());
 	}
@@ -394,6 +397,9 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		}else{
 			sql.append(" WHERE ").append(tr.getSql());
 		}
+		if(sql.toString().toUpperCase().trim().endsWith("WHERE")){
+			return updateBySql(sql.substring(0,sql.lastIndexOf("WHERE")),tr.getParams().toArray());
+		}
 		return updateBySql(sql.toString(),tr.getParams().toArray());
 	}
 
@@ -403,6 +409,9 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 			sql.append(tr.getSql());
 		}else{
 			sql.append(" WHERE ").append(tr.getSql());
+		}
+		if(sql.toString().toUpperCase().trim().endsWith("WHERE")){
+			return getList(tr.getPackClass(),sql.substring(0,sql.lastIndexOf("WHERE")),tr.getParams().toArray());
 		}
 		return getList(tr.getPackClass(),sql.toString(),tr.getParams().toArray());
 	}

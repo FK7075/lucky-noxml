@@ -11,6 +11,6 @@ import org.apache.commons.mail.HtmlEmail;
 @FunctionalInterface
 public interface HtmlMsg {
 
-    String getHtmlMsg(HtmlEmail email) throws EmailException;
+    void setHtmlMsg(HtmlEmail email,HtmlTemp htmlTemp) throws EmailException;
 
 }

@@ -58,7 +58,7 @@ public class SqlOperation {
 			clearCache();
 			return result;
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(sql,obj,e);
+			throw new LuckySqlOperationException(dbname,sql,obj,e);
 		} finally {
 			LuckyDataSource.release(null,ps,null);
 		}
@@ -90,7 +90,7 @@ public class SqlOperation {
 				return  result;
 			}
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(sql,obj,e);
+			throw new LuckySqlOperationException(dbname,sql,obj,e);
 		}finally {
 			LuckyDataSource.release(null,ps,null);
 		}
@@ -139,7 +139,7 @@ public class SqlOperation {
 			new SqlLog(dbname).isShowLog(sql, obj);
 			return resultSet;
 		} catch (SQLException e) {
-			throw new LuckySqlOperationException(sql,obj,e);
+			throw new LuckySqlOperationException(dbname,sql,obj,e);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class SqlOperation {
 			}
 			return queryResult;
 		}catch (SQLException e){
-			throw new LuckySqlOperationException(sql,obj,e);
+			throw new LuckySqlOperationException(dbname,sql,obj,e);
 		}finally {
 			LuckyDataSource.release(rs,ps,null);
 		}

@@ -59,8 +59,8 @@ public class ConversionMethodInterceptor extends Conversion implements MethodInt
         String methodName=method.getName();
         if("toEntity".equals(methodName)){
             return change(method,params[0],luckyConversionClasses,false,entityClass);
-        }else if("toDto".equals(methodName)){
-            return change(method,params[0],luckyConversionClasses,true,dtoClass);
+        }else if("toDto".equals(methodName)) {
+            return change(method, params[0], luckyConversionClasses, true, dtoClass);
         }else {
             return methodProxy.invokeSuper(object,params);
         }

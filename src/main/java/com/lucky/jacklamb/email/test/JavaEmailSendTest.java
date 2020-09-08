@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.email;
+package com.lucky.jacklamb.email.test;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
