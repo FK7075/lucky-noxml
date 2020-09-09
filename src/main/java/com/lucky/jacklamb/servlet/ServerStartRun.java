@@ -50,16 +50,10 @@ public class ServerStartRun {
     }
 
     public void runAdd(){
-        try{
-            Object[] runParams = MethodUtils.getRunParam(controllerMethod, params);
-            Object runResult = controllerMethod.invoke(controllerObject, runParams);
-            if (controllerMethod.getReturnType() != void.class) {
-                componentIOC.addAppMap(componentName,runResult);
-            }
-        }catch (InvocationTargetException e){
-            throw new RuntimeException(e);
-        }catch (IllegalAccessException e){
-            throw new RuntimeException(e);
+        Object[] runParams = MethodUtils.getRunParam(controllerMethod, params);
+        Object runResult=MethodUtils.invoke(controllerObject,controllerMethod,runParams);
+        if (controllerMethod.getReturnType() != void.class) {
+            componentIOC.addAppMap(componentName,runResult);
         }
     }
 

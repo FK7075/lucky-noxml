@@ -209,16 +209,7 @@ public class UrlParsMap {
 	 * @param model controller方法
 	 */
 	public void autowReqAdnResp(Object obj, Model model) {
-		try {
-			ApplicationBeans.iocContainers.autowReqAdnResp(obj, model);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		ApplicationBeans.iocContainers.autowReqAdnResp(obj, model);
 	}
 
 }

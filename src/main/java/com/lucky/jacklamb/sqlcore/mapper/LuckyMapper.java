@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * 单表操作的Mapper接口模板，可以用来简化Mapper接口开发
- *
- * @param <T> 表对应的实体类
+ * @param <Entity> 表对应的实体类
  * @author fk-7075
  */
-public interface LuckyMapper<T> {
+public interface LuckyMapper<Entity> {
+
 
     /**
      * 根据ID得到一条记录
@@ -22,7 +22,7 @@ public interface LuckyMapper<T> {
      * @return T
      */
     @Select(byid = true)
-    public T selectById(Object id);
+    public Entity selectById(Object id);
 
     /**
      * 根据ID删除一条记录
@@ -40,7 +40,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Delete
-    public int delete(T pojo);
+    public int delete(Entity pojo);
 
     /**
      * 查询操作
@@ -49,7 +49,7 @@ public interface LuckyMapper<T> {
      * @return 对应类型的查询结果
      */
     @Select
-    public T select(T pojo);
+    public Entity select(Entity pojo);
 
     /**
      * 查询操作
@@ -58,14 +58,14 @@ public interface LuckyMapper<T> {
      * @return 对应类型集合的查询结果
      */
     @Select
-    public List<T> selectList(T pojo);
+    public List<Entity> selectList(Entity pojo);
 
     /**
      * 查询Class对应表的所有数据
      *
      * @return
      */
-    public List<T> selectList();
+    public List<Entity> selectList();
 
     /**
      * 更新操作
@@ -74,7 +74,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Update
-    public int update(T pojo);
+    public int update(Entity pojo);
 
     /**
      * 添加操作，并自动获取自增ID
@@ -83,7 +83,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Insert(setautoId = true)
-    public int insertAutoId(T pojo);
+    public int insertAutoId(Entity pojo);
 
     /**
      * 添加操作
@@ -92,7 +92,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Insert
-    public int insert(T pojo);
+    public int insert(Entity pojo);
 
     /**
      * 批量添加操作
@@ -101,7 +101,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Insert(batch = true)
-    public int batchInsert(Collection<T> pojos);
+    public int batchInsert(Collection<Entity> pojos);
 
     /**
      * 批量更新
@@ -110,7 +110,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Update(batch = true)
-    public int batchUpdate(Collection<T> pojos);
+    public int batchUpdate(Collection<Entity> pojos);
 
     /**
      * 批量删除
@@ -119,7 +119,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Delete(batch = true)
-    public int batchDelete(Collection<T> pojos);
+    public int batchDelete(Collection<Entity> pojos);
 
     /**
      * 分页操作
@@ -130,7 +130,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Query(limit = true)
-    public List<T> selectLimit(T pojo, int page, int rows);
+    public List<Entity> selectLimit(Entity pojo, int page, int rows);
 
     /**
      * QueryBuilder查询模式
@@ -139,7 +139,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Query(queryBuilder = true)
-    public List<T> query(QueryBuilder queryBuilder);
+    public List<Entity> query(QueryBuilder queryBuilder);
 
     /**
      * Count操作
@@ -148,7 +148,7 @@ public interface LuckyMapper<T> {
      * @return
      */
     @Count
-    public int count(T pojo);
+    public int count(Entity pojo);
 
     /**
      * 总数统计
@@ -176,7 +176,7 @@ public interface LuckyMapper<T> {
      * @param ids
      * @return
      */
-    public List<T> selectByIdIn(List<?> ids);
+    public List<Entity> selectByIdIn(List<?> ids);
 
     /**
      * Translator方式的查询,返回集合

@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * mvc的核心中转类
+ * mvc的核心中转类[数据中心]
  *
  * @author fk-7075
  */
@@ -600,10 +600,8 @@ public class Model {
     public void forward(String address) {
         try {
             req.getRequestDispatcher(address).forward(req, resp);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ServletException |IOException e) {
+            throw new RuntimeException("转发失败，请检查转发地址！["+address+"]...",e);
         }
     }
 
@@ -617,7 +615,7 @@ public class Model {
         try {
             resp.sendRedirect(address);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("重定向失败，请检查重定向地址！["+address+"]...",e);
         }
     }
 

@@ -7,6 +7,7 @@ import com.lucky.jacklamb.exception.IOCException;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
@@ -220,21 +221,21 @@ public final class IOCContainers {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public void autowReqAdnResp(Object object,Model model) throws IllegalArgumentException, IllegalAccessException {
+	public void autowReqAdnResp(Object object,Model model){
 		Class<?> controllerClass=object.getClass();
 		Field[] fields= ClassUtils.getAllFields(controllerClass);
 		for(Field field:fields) {
 			field.setAccessible(true);
 			if(Model.class.isAssignableFrom(field.getType())) {
-				field.set(object, model);
+				FieldUtils.setValue(object,field,model);
 			}else if(HttpSession.class.isAssignableFrom(field.getType())) {
-				field.set(object, model.getSession());
+				FieldUtils.setValue(object,field,model.getSession());
 			}else if(ServletRequest.class.isAssignableFrom(field.getType())) {
-				field.set(object, model.getRequest());
+				FieldUtils.setValue(object,field,model.getRequest());
 			}else if(ServletResponse.class.isAssignableFrom(field.getType())) {
-				field.set(object, model.getResponse());
+				FieldUtils.setValue(object,field,model.getResponse());
 			}else if(ServletContext.class.isAssignableFrom(field.getType())) {
-				field.set(object, model.getServletContext());
+				FieldUtils.setValue(object,field,model.getServletContext());
 			}else {
 				continue;
 			}

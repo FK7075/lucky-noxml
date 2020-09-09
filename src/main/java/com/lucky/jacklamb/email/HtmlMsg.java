@@ -4,6 +4,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 /**
+ *
  * @author fk7075
  * @version 1.0
  * @date 2020/9/7 17:29
@@ -11,6 +12,6 @@ import org.apache.commons.mail.HtmlEmail;
 @FunctionalInterface
 public interface HtmlMsg {
 
-    void setHtmlMsg(HtmlEmail email,HtmlTemp htmlTemp) throws EmailException;
+    void setHtmlMsg(HtmlTemp htmlTemp) throws Exception;
 
 }

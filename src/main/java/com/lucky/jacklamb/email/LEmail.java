@@ -1,14 +1,17 @@
 package com.lucky.jacklamb.email;
 
 import org.apache.commons.mail.*;
+import org.apache.commons.mail.util.MimeMessageParser;
 
+import javax.activation.DataSource;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fk7075
@@ -98,7 +101,7 @@ public class LEmail {
      * @throws EmailException
      */
     public void sendSimpleEmail(String subject, String message) throws EmailException {
-        org.apache.commons.mail.Email email = new SimpleEmail();
+        SimpleEmail email = new SimpleEmail();
         init(email,subject);
         email.setMsg(message);
         email.send();
@@ -174,11 +177,11 @@ public class LEmail {
      * @param alternativeMessage Html内容无法显示时替代的文本内容
      * @throws EmailException
      */
-    public void sendHtmlEmail(String subject,HtmlMsg htmlMsg,String alternativeMessage) throws EmailException {
+    public void sendHtmlEmail(String subject,HtmlMsg htmlMsg,String alternativeMessage) throws Exception {
         HtmlEmail email = new HtmlEmail();
         init(email,subject);
-        HtmlTemp htmlTemp=new HtmlTemp();
-        htmlMsg.setHtmlMsg(email,htmlTemp);
+        HtmlTemp htmlTemp=new HtmlTemp(email);
+        htmlMsg.setHtmlMsg(htmlTemp);
         email.setHtmlMsg(htmlTemp.getHtml());
         email.setTextMsg(alternativeMessage);
         email.send();
@@ -190,31 +193,90 @@ public class LEmail {
      * @param htmlMsg Html内容
      * @throws EmailException
      */
-    public void sendHtmlEmail(String subject,HtmlMsg htmlMsg) throws EmailException {
+    public void sendHtmlEmail(String subject,HtmlMsg htmlMsg) throws Exception {
         sendHtmlEmail(subject,htmlMsg,"Your email client does not support HTML messages");
     }
 
-    private void sendHtmlEmail1(String subject, String message) throws EmailException, MalformedURLException {
-
-        // Create the email message
-        HtmlEmail email = new HtmlEmail();
-        init(email,subject);
-
-        // embed the image and get the content id
-        URL url = new URL("http://www.apache.org/images/asf_logo_wide.gif");
-        String cid = email.embed(url, "Apache logo");
-
-        // set the html message
-        email.setHtmlMsg("<html>The apache logo - <img src=\"cid:"+cid+"\"></html>");
-
-        // set the alternative message
-        email.setTextMsg(message);
-
-        // send the email
-        email.send();
+    private Folder getReceiveFolder() throws Exception {
+        //创建Session对象
+        Properties prop=System.getProperties();
+        Session session=Session.getDefaultInstance(prop);
+        Store store=session.getStore("pop3");
+        store.connect(emailConfig.getPopHost(),emailConfig.getEmail(),emailConfig.getPassword());
+        Folder folder = store.getFolder("INBOX");
+        return folder;
     }
 
+    public int inboxSize() throws Exception {
+        Folder folder = getReceiveFolder();
+        folder.open(Folder.READ_ONLY);
+        return folder.getMessageCount();
+    }
 
+    public int newMsgSize() throws Exception {
+        Folder folder = getReceiveFolder();
+        folder.open(Folder.READ_ONLY);
+        return folder.getNewMessageCount();
+    }
 
+    public int delMsgSize() throws Exception {
+        Folder folder = getReceiveFolder();
+        folder.open(Folder.READ_ONLY);
+        return folder.getDeletedMessageCount();
+    }
+
+    /**
+     * 接收部分邮件
+     * @param start
+     * @param end
+     * @return
+     * @throws Exception
+     */
+    public List<EmailContent> receiveEmailReadOnly(int start,int end) throws Exception{
+        List<EmailContent> contents=new ArrayList<>();
+        Folder folder =getReceiveFolder();
+        folder.open(Folder.READ_ONLY);
+        int messageCount = folder.getMessageCount();
+        Message[] messages = folder.getMessages(start,end);
+        for (Message message : messages) {
+            contents.add(msgToEmailContent(message));
+        }
+        return contents;
+    }
+
+    /**
+     * 接收所有邮件
+     * @return
+     * @throws Exception
+     */
+    public List<EmailContent> receiveAllEmailReadOnly() throws Exception {
+        List<EmailContent> contents=new ArrayList<>();
+        Folder folder =getReceiveFolder();
+        folder.open(Folder.READ_ONLY);
+        int messageCount = folder.getMessageCount();
+        return receiveEmailReadOnly(1,messageCount);
+    }
+
+    private EmailContent msgToEmailContent(Message msg) throws Exception {
+        MimeMessageParser parser=new MimeMessageParser((MimeMessage) msg);
+        EmailContent emailContent=new EmailContent();
+        emailContent.setSubject(parser.getSubject());
+        emailContent.setFrom(parser.getFrom());
+        emailContent.setSendDate(msg.getSentDate());
+        emailContent.setType(msg.getContentType());
+        emailContent.setTo(parser.getTo());
+        emailContent.setCc(parser.getCc());
+        emailContent.setBcc(parser.getBcc());
+        if(parser.parse().hasPlainContent()){//文本内容
+            emailContent.addTxtContent(parser.parse().getPlainContent());
+        }
+        if(parser.parse().hasHtmlContent()){//HTML内容
+            emailContent.addHtmlContent(parser.parse().getHtmlContent());
+        }
+        if(parser.parse().hasAttachments()){//多文件
+            emailContent.setFileContent(parser.parse().getAttachmentList());
+        }
+        return emailContent;
+    }
 
 }
