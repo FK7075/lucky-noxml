@@ -46,7 +46,8 @@ public abstract class BaseServlet extends HttpServlet {
         });
     }
 
-    public void jobRun(){
+    public void
+    jobRun(){
         Map<String, Object> appMap = ApplicationBeans.iocContainers.getAppIOC().getAppMap();
         List<MRun> mRuns=new ArrayList<>();
         for(Map.Entry<String,Object> entry:appMap.entrySet()){

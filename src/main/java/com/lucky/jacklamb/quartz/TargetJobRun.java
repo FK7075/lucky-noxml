@@ -1,16 +1,24 @@
 package com.lucky.jacklamb.quartz;
 
+import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
+import com.lucky.jacklamb.quartz.job.LuckySchedulerListener;
 import net.sf.cglib.proxy.MethodProxy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TargetJobRun{
 
+    private static final Logger log = LogManager.getLogger(TargetJobRun.class);
+
     private Object job;
+
+    public boolean isFirst=true;
 
     private MethodProxy jobMethodProxy;
 
     private Object[] jobParams;
 
-    public TargetJobRun(Object job, MethodProxy jobMethodProxy, Object[] jobParams) {
+    public TargetJobRun(Object job,MethodProxy jobMethodProxy, Object[] jobParams) {
         this.job = job;
         this.jobMethodProxy = jobMethodProxy;
         this.jobParams = jobParams;

@@ -9,7 +9,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
- 
+
+/**
+ * INI文件解析器
+ */
 public class INIConfig {
 	
 	private  IniFilePars iniFilePars;

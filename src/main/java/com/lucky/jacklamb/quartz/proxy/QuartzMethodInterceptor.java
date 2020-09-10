@@ -1,10 +1,11 @@
 package com.lucky.jacklamb.quartz.proxy;
 
-import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.quartz.TargetJobRun;
 import com.lucky.jacklamb.quartz.ann.Job;
 import com.lucky.jacklamb.quartz.exception.CronExpressionException;
+import com.lucky.jacklamb.quartz.job.JobMap;
 import com.lucky.jacklamb.quartz.job.LuckyJob;
+import com.lucky.jacklamb.quartz.job.LuckySchedulerListener;
 import com.lucky.jacklamb.quartz.job.SerialJob;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -42,18 +43,18 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             Class<? extends org.quartz.Job> jobClass=quartzJob.parallel()?LuckyJob.class: SerialJob.class;
 
             //封装任务逻辑
-            TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
             String jobRunBeanId="".equals(quartzJob.id())
                     ?targetObj.getClass().getSuperclass().getName()+"."+method.getName():quartzJob.id();
             jobRunBeanId+="["+jobName+"]";
-                ApplicationBeans.createApplicationBeans().addComponentBean(jobRunBeanId,targetJobRun);
+            TargetJobRun targetJobRun=new TargetJobRun(targetObj,methodProxy,params);
+            JobMap.add(jobRunBeanId,targetJobRun);
             JobDetail jobDetail = JobBuilder.newJob(jobClass)
-                    .withIdentity(jobName, LUCKY_JOB_GROUP)
+                    .withIdentity(jobRunBeanId, LUCKY_JOB_GROUP)
                     .build();
             //将任务逻辑的IocId put到job上下文中
             jobDetail.getJobDataMap().put(LUCKY_JOB_KEY,jobRunBeanId);
             Map<String, Object> paramKV = MethodUtils.getClassMethodParamsNV(method, params);
-            Trigger trigger =getTrigger(paramKV,method,quartzJob,jobName);
+            Trigger trigger =getTrigger(paramKV,method,quartzJob,jobRunBeanId);
             scheduler.scheduleJob(jobDetail,trigger);
             if(quartzJob.onlyLast()&&specialJobMap.containsKey(method)){
                 scheduler.pauseJob(specialJobMap.get(method));
@@ -62,6 +63,7 @@ public class QuartzMethodInterceptor implements MethodInterceptor {
             if(quartzJob.onlyFirst()||quartzJob.onlyLast()) {
                 specialJobMap.put(method,jobDetail.getKey());
             }
+            scheduler.getListenerManager().addSchedulerListener(new LuckySchedulerListener());
             scheduler.start();
             return null;
         }
