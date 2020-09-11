@@ -33,7 +33,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 		ServletRegistration.Dynamic servlet;
 		FilterRegistration.Dynamic filter;
 		String[] mapping;
-		for(ServletMapping sm:serverCfg.getServletlist()) {
+		for(ServletMapping sm:serverCfg.getServletList()) {
 			servlet=ctx.addServlet(sm.getServletName(), sm.getServlet());
 			servlet.setLoadOnStartup(sm.getLoadOnStartup());
 			mapping=new String[sm.getRequestMapping().size()];
@@ -42,7 +42,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			log.info("@Servlet \"[name="+sm.getServletName()+" mapping="+Arrays.toString(mapping)+" class="+sm.getServlet()+"]\"");
 		}
 		
-		for(FilterMapping fm:serverCfg.getFilterlist()) {
+		for(FilterMapping fm:serverCfg.getFilterList()) {
 			filter=ctx.addFilter(fm.getFilterName(), fm.getFilter());
 			mapping=new String[fm.getRequestMapping().size()];
 			mapping=fm.getRequestMapping().toArray(mapping);

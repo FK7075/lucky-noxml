@@ -24,9 +24,9 @@ public class ServerConfig implements LuckyConfig  {
 	private static final String f= "/";
 
 	public ServerConfig() {
-		servletlist=new ArrayList<>();
+		servletList =new ArrayList<>();
 		listeners=new HashSet<>();
-		filterlist=new ArrayList<>();
+		filterList =new ArrayList<>();
 	}
 	
 	private static ServerConfig serverConfig;
@@ -55,9 +55,9 @@ public class ServerConfig implements LuckyConfig  {
 
 	private String requestTargetAllow;
 	
-	private List<ServletMapping> servletlist;
+	private List<ServletMapping> servletList;
 	
-	private List<FilterMapping> filterlist;
+	private List<FilterMapping> filterList;
 	
 	private Set<EventListener> listeners;
 
@@ -132,7 +132,9 @@ public class ServerConfig implements LuckyConfig  {
 		}else if(baseDir.startsWith("${java.io.tmpdir}")){
 			baseDir=baseDir.substring(17);
 			baseDir=baseDir.startsWith("/")?baseDir.substring(1):baseDir;
-			this.baseDir=System.getProperty("java.io.tmpdir")+baseDir;
+			String s = System.getProperty("java.io.tmpdir");
+			s=s.endsWith(File.separator)?s:s+File.separator;
+			this.baseDir=s+baseDir;
 		}else{
 			this.baseDir=baseDir;
 		}
@@ -213,8 +215,8 @@ public class ServerConfig implements LuckyConfig  {
 		this.webapp = webapp;
 	}
 	
-	public List<ServletMapping> getServletlist() {
-		return servletlist;
+	public List<ServletMapping> getServletList() {
+		return servletList;
 	}
 	
 	
@@ -236,7 +238,7 @@ public class ServerConfig implements LuckyConfig  {
 			maps=new HashSet<>(Arrays.asList(mappings));
 		}
 		ServletMapping servletMapping=new ServletMapping(maps,servletName,servlet);
-		servletlist.add(servletMapping);
+		servletList.add(servletMapping);
 	}
 
 	public void addServlet(HttpServlet servlet,int loadOnStartup,String...mappings) {
@@ -249,11 +251,11 @@ public class ServerConfig implements LuckyConfig  {
 			maps=new HashSet<>(Arrays.asList(mappings));
 		}
 		ServletMapping servletMapping=new ServletMapping(maps,servletName,servlet,loadOnStartup);
-		servletlist.add(servletMapping);
+		servletList.add(servletMapping);
 	}
 
-	public List<FilterMapping> getFilterlist() {
-		return filterlist;
+	public List<FilterMapping> getFilterList() {
+		return filterList;
 	}
 
 	public void addFilter(Filter filter,String...mappings) {
@@ -266,7 +268,7 @@ public class ServerConfig implements LuckyConfig  {
 			maps=new HashSet<>(Arrays.asList(mappings));
 		}
 		FilterMapping filterMapping=new FilterMapping(maps,filterName,filter);
-		filterlist.add(filterMapping);
+		filterList.add(filterMapping);
 	}
 	
 	public static ServerConfig defaultServerConfig() {
@@ -301,7 +303,7 @@ public class ServerConfig implements LuckyConfig  {
 			annServlet=servlet.getClass().getAnnotation(LuckyServlet.class);
 			smapping=new HashSet<>(Arrays.asList(annServlet.value()));
 			servletMap=new ServletMapping(smapping,LuckyUtils.TableToClass1(servlet.getClass().getSimpleName()),servlet,annServlet.loadOnStartup());
-			servletlist.add(servletMap);
+			servletList.add(servletMap);
 		}
 	}
 	
@@ -319,7 +321,7 @@ public class ServerConfig implements LuckyConfig  {
 			annFilter=filter.getClass().getAnnotation(LuckyFilter.class);
 			fmapping=new HashSet<>(Arrays.asList(annFilter.value()));
 			filterMap=new FilterMapping(fmapping,LuckyUtils.TableToClass1(filter.getClass().getSimpleName()),filter);
-			filterlist.add(filterMap);
+			filterList.add(filterMap);
 		}
 	}
 	
@@ -337,5 +339,9 @@ public class ServerConfig implements LuckyConfig  {
 		filterInit();
 	}
 
+	public static void main(String[] args) {
+		System.out.println(System.getProperty("java.io.tmpdir"));
+
+	}
 }
 	

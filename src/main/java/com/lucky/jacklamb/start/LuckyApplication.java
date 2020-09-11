@@ -58,9 +58,8 @@ public class LuckyApplication {
         Tomcat tomcat = new Tomcat();
         String runPort = System.getProperty(SERVER_PORT);
         if(runPort!=null)
-            tomcat.setPort(Integer.parseInt(runPort));
-        else
-            tomcat.setPort(serverCfg.getPort());
+            serverCfg.setPort(Integer.parseInt(runPort));
+        tomcat.setPort(serverCfg.getPort());
         tomcat.setBaseDir(serverCfg.getBaseDir());
         tomcat.getHost().setAutoDeploy(serverCfg.isAutoDeploy());
         if (serverCfg.getClosePort() != null)

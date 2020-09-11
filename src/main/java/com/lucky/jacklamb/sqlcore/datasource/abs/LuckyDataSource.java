@@ -290,17 +290,19 @@ public abstract class LuckyDataSource implements DataSource{
      * 关闭连接池
      */
     public static void close(){
-        for(Map.Entry<String,DataSource> entry: dbMap.entrySet()){
-            DataSource dataSource = entry.getValue();
-            if(dataSource instanceof HikariDataSource){
-                HikariDataSource hds= (HikariDataSource) dataSource;
-                hds.close();
-                continue;
-            }
-            if(dataSource instanceof ComboPooledDataSource){
-                ComboPooledDataSource cds=(ComboPooledDataSource)dataSource;
-                cds.close();
-                continue;
+        if(dbMap!=null){
+            for(Map.Entry<String,DataSource> entry: dbMap.entrySet()){
+                DataSource dataSource = entry.getValue();
+                if(dataSource instanceof HikariDataSource){
+                    HikariDataSource hds= (HikariDataSource) dataSource;
+                    hds.close();
+                    continue;
+                }
+                if(dataSource instanceof ComboPooledDataSource){
+                    ComboPooledDataSource cds=(ComboPooledDataSource)dataSource;
+                    cds.close();
+                    continue;
+                }
             }
         }
     }
