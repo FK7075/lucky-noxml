@@ -57,15 +57,18 @@ public class LuckyApplication {
         ServerConfig serverCfg = AppConfig.getAppConfig().getServerConfig();
         Tomcat tomcat = new Tomcat();
         String runPort = System.getProperty(SERVER_PORT);
-        if(runPort!=null)
+        if(runPort!=null) {
             serverCfg.setPort(Integer.parseInt(runPort));
+        }
         tomcat.setPort(serverCfg.getPort());
         tomcat.setBaseDir(serverCfg.getBaseDir());
         tomcat.getHost().setAutoDeploy(serverCfg.isAutoDeploy());
-        if (serverCfg.getClosePort() != null)
+        if (serverCfg.getClosePort() != null) {
             tomcat.getServer().setPort(serverCfg.getClosePort());
-        if (serverCfg.getShutdown() != null)
+        }
+        if (serverCfg.getShutdown() != null) {
             tomcat.getServer().setShutdown(serverCfg.getShutdown());
+        }
         StandardContext context = new StandardContext();
         context.setSessionTimeout(serverCfg.getSessionTimeout());
         context.setPath(serverCfg.getContextPath());
@@ -73,8 +76,9 @@ public class LuckyApplication {
         String docBase = serverCfg.getDocBase();
         if(docBase!=null){
             File docFile=new File(docBase);
-            if(!docFile.exists())
+            if(!docFile.exists()) {
                 docFile.mkdirs();
+            }
             context.setDocBase(docBase);
         }
         context.setSessionCookieName("JackLamb.Lucky.Tomcat");
@@ -82,8 +86,9 @@ public class LuckyApplication {
         context.addLifecycleListener(new Tomcat.FixContextListener());
         context.addServletContainerInitializer(new LuckyServletContainerInitializer(), null);
         context.addServletContainerInitializer(new WsSci(), ApplicationBeans.createApplicationBeans().getWebSocketSet());
-        if (serverCfg.getRequestTargetAllow() != null)
+        if (serverCfg.getRequestTargetAllow() != null) {
             System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", serverCfg.getRequestTargetAllow());
+        }
         tomcat.getHost().addChild(context);
         try {
             tomcat.getConnector();
@@ -97,16 +102,14 @@ public class LuckyApplication {
 
 
     private static void doShutDownWork() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
-                        .stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a)->{
-                    log.info("@CloseRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
-                    a.runAdd();
-                });
-                LuckyDataSource.close();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ApplicationBeans.iocContainers.getControllerIOC().getServerCloseRuns()
+                    .stream().sorted(Comparator.comparing(ServerStartRun::getPriority)).forEach((a)->{
+                log.info("@CloseRun ==> Running \"{priority=["+a.getPriority()+"], id="+a.getComponentName()+", Method="+a.getControllerMethod()+"\"}");
+                a.runAdd();
+            });
+            LuckyDataSource.close();
+        }));
 
     }
 

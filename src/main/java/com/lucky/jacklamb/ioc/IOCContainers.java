@@ -259,7 +259,7 @@ public final class IOCContainers {
 		return new HashSet<Class<?>>(ScanFactory.createScan().getComponentClass("websocket"));
 	}
 
-    public static void injection(Object component) throws IllegalAccessException {
+    public static void injection(Object component){
         ApplicationBeans beans=ApplicationBeans.createApplicationBeans();
         Autowired auto;
         Value value;
@@ -274,25 +274,27 @@ public final class IOCContainers {
                 auto=field.getAnnotation(Autowired.class);
                 String auval = auto.value();
                 if("".equals(auval)) {
-                    field.set(component, beans.getBean(fieldClass));//类型扫描
+					//类型扫描
+                	FieldUtils.setValue(component,field,beans.getBean(fieldClass));
                 }else if(auval.contains("${")&&auval.contains("}")){
                     String key=auval.substring(2,auval.length()-1);
                     if(key.startsWith("S:")){
-                        field.set(component,ini.getObject(fieldClass,key.substring(2)));
+                    	FieldUtils.setValue(component,field,ini.getObject(fieldClass,key.substring(2)));
                     }else{
-                        field.set(component, $Expression.translation(auval,fieldClass));
+						FieldUtils.setValue(component,field, $Expression.translation(auval,fieldClass));
                     }
                 }else{
-                    field.set(component, beans.getBean(auto.value()));//id注入
+					//id注入
+					FieldUtils.setValue(component,field, beans.getBean(auto.value()));
                 }
             }else if(field.isAnnotationPresent(Value.class)) {
                 value=field.getAnnotation(Value.class);
                 String[] val = value.value();
                 if(val.length==0) {//类型扫描
-                    field.set(component, beans.getBean(fieldClass));
+					FieldUtils.setValue(component,field,beans.getBean(fieldClass));
                 }else {
                     if(fieldClass.isArray()) {//基本类型的数组类型
-                        field.set(component,JavaConversion.strArrToBasicArr(val, fieldClass));
+						FieldUtils.setValue(component,field,JavaConversion.strArrToBasicArr(val, fieldClass));
                     }else if(List.class.isAssignableFrom(fieldClass)) {//List类型
                         List<Object> list=new ArrayList<>();
                         String fx= FieldUtils.getStrGenericType(field)[0];
@@ -305,7 +307,7 @@ public final class IOCContainers {
                                 list.add(JavaConversion.strToBasic(z, fx));
                             }
                         }
-                        field.set(component, list);
+						FieldUtils.setValue(component,field,list);
                     }else if(Set.class.isAssignableFrom(fieldClass)) {//Set类型
                         Set<Object> set=new HashSet<>();
                         String fx=FieldUtils.getStrGenericType(field)[0];
@@ -318,7 +320,7 @@ public final class IOCContainers {
                                 set.add(JavaConversion.strToBasic(z, fx));
                             }
                         }
-                        field.set(component, set);
+						FieldUtils.setValue(component,field,set);
                     }else if(Map.class.isAssignableFrom(fieldClass)) {//Map类型
                         Map<Object,Object> map=new HashMap<>();
                         String[] fx=FieldUtils.getStrGenericType(field);
@@ -345,9 +347,9 @@ public final class IOCContainers {
                                 map.put(JavaConversion.strToBasic(kv[0], fx[0]), JavaConversion.strToBasic(kv[1], fx[1]));
                             }
                         }
-                        field.set(component, map);
+						FieldUtils.setValue(component,field, map);
                     }else {//自定义的基本类型
-                        field.set(component, JavaConversion.strToBasic(val[0], fieldClass.getSimpleName()));
+						FieldUtils.setValue(component,field, JavaConversion.strToBasic(val[0], fieldClass.getSimpleName()));
                     }
                 }
             }else if(field.isAnnotationPresent(SSH.class)&& SSHClient.class.isAssignableFrom(field.getType())){

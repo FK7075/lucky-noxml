@@ -2,6 +2,7 @@ package com.lucky.jacklamb.aop.core;
 
 import com.lucky.jacklamb.aop.proxy.LuckyAopMethodInterceptor;
 import com.lucky.jacklamb.cglib.CglibProxy;
+import com.lucky.jacklamb.utils.websocket.BaseWebSocket;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class PointRunFactory {
 	 * @param pointRuns 增强Points(可变参形式)
 	 * @return
 	 */
-	public Object getProxy(Class<?> targetClass,PointRun...pointRuns) {
+	public Object getProxy(Class<?> targetClass, PointRun...pointRuns) {
 		return CglibProxy.getCglibProxyObject(targetClass,new LuckyAopMethodInterceptor(pointRuns));
 	}
 	
