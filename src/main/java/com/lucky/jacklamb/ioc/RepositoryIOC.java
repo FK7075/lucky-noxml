@@ -124,14 +124,11 @@ public class RepositoryIOC extends ComponentFactory {
 	}
 
 	/**
-	 * 加载Repository组件
-	 *
+	 * 加载Repository组件和Mapper组件
 	 * @param repositoryClass
 	 * @return
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
 	 */
-	public void initRepositoryIOC(List<Class<?>> repositoryClass) throws SecurityException, IllegalArgumentException {
+	public void initRepositoryIOC(List<Class<?>> repositoryClass){
 		boolean first = true;
 		String beanID;
 		for (Class<?> repository : repositoryClass) {

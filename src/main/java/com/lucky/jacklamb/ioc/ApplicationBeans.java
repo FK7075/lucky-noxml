@@ -198,10 +198,12 @@ public class ApplicationBeans {
 	 */
 	public Object getBean(Class<?> clzz) {
 		List<Object> beans = getBeans(clzz);
-		if(beans.isEmpty())
+		if(beans.isEmpty()) {
 			throw new NotFindBeanException("在IOC容器中找不到类型为--"+clzz+"--的Bean...");
-		if(beans.size()==1)
+		}
+		if(beans.size()==1) {
 			return beans.get(0);
+		}
 		throw new NotFindBeanException("在IOC容器中类型为-"+clzz+"-的bean不是唯一的!  请使用@Value或者@Autowired的value属性指定bean的ID！");
 	}
 	
@@ -216,27 +218,35 @@ public class ApplicationBeans {
 		List<Object> repositoryObj=getBeanByClass(iocContainers.getRepositoryIOC().getRepositoryMap(),clzz);
 		List<Object> mapperObj=getBeanByClass(iocContainers.getRepositoryIOC().getMapperMap(),clzz);
 		List<Object> componentObj=getBeanByClass(iocContainers.getAppIOC().getAppMap(),clzz);
-		if(!controllerObj.isEmpty())
+		if(!controllerObj.isEmpty()) {
 			return controllerObj;
-		else if(!serviceObj.isEmpty())
+		} else if(!serviceObj.isEmpty()) {
 			return serviceObj;
-		else if(!repositoryObj.isEmpty())
+		} else if(!repositoryObj.isEmpty()) {
 			return repositoryObj;
-		else if(!mapperObj.isEmpty())
+		} else if(!mapperObj.isEmpty()) {
 			return mapperObj;
-		else if(!componentObj.isEmpty())
+		} else if(!componentObj.isEmpty()) {
 			return componentObj;
-		else
+		} else {
 			return new ArrayList<>();
+		}
 	}
-	
+
+	/**
+	 *
+	 * @param map
+	 * @param clzz
+	 * @return
+	 */
 	private List<Object> getBeanByClass(Map<String,Object> map,Class<?> clzz) {
 		List<Object> sameClassObjects=new ArrayList<>();
 		for(Entry<String,Object> entry:map.entrySet()) {
 			Object obj=entry.getValue();
 			Class<?> mapClass=obj.getClass();
-			if(clzz.isAssignableFrom(mapClass))
+			if(clzz.isAssignableFrom(mapClass)) {
 				sameClassObjects.add(obj);
+			}
 		}
 		return sameClassObjects;
 	}
@@ -250,8 +260,9 @@ public class ApplicationBeans {
 		for(Entry<String,Object> entry:getComponentBeans().entrySet()) {
 			Object obj=entry.getValue();
 			Class<?> mapClass=obj.getClass();
-			if(LuckyDataSource.class.isAssignableFrom(mapClass))
+			if(LuckyDataSource.class.isAssignableFrom(mapClass)) {
 				list.add((LuckyDataSource)entry.getValue());
+			}
 		}
 		return list;
 	}
@@ -276,6 +287,10 @@ public class ApplicationBeans {
 		iocContainers.addComponent(Id, component);
 	}
 
+	/**
+	 * 移除一个Component组件
+	 * @param Id 组件ID
+	 */
 	public void removeComponentBean(String Id){
 		iocContainers.removeComponent(Id);
 	}
@@ -295,20 +310,25 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public Object getBean(String beanId) {
-		if(iocContainers.getControllerIOC().containId(beanId))
+		if(iocContainers.getControllerIOC().containId(beanId)) {
 			return iocContainers.getControllerIOC().getControllerBean(beanId);
-		else if(iocContainers.getServiceIOC().containId(beanId))
+		} else if(iocContainers.getServiceIOC().containId(beanId)) {
 			return iocContainers.getServiceIOC().getServiceBean(beanId);
-		else if(iocContainers.getRepositoryIOC().containId(beanId))
+		} else if(iocContainers.getRepositoryIOC().containId(beanId)) {
 			return iocContainers.getRepositoryIOC().getMaRepBean(beanId);
-		else if(iocContainers.getAppIOC().containId(beanId))
+		} else if(iocContainers.getAppIOC().containId(beanId)) {
 			return iocContainers.getAppIOC().getComponentBean(beanId);
-		else if(iocContainers.getAspectIOC().containId(beanId))
+		} else if(iocContainers.getAspectIOC().containId(beanId)) {
 			return iocContainers.getAspectIOC().getAspectBean(beanId);
-		else
+		} else {
 			throw new NotFindBeanException("在IOC容器中找不到ID为--"+beanId+"--的Bean...");
+		}
 	}
-	
+
+	/**
+	 * 得到所有WebSocket组件的Class
+	 * @return
+	 */
 	public Set<Class<?>> getWebSocketSet() {
 		if(webSocketSet==null) {
 			webSocketSet = iocContainers.getWebSocketSet();

@@ -91,11 +91,8 @@ public class AspectAOP {
 	 * 
 	 * @param AspectClass
 	 * @return
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
 	 */
-	public void initAspectIOC(List<Class<?>> AspectClass)
-			throws SecurityException,IllegalArgumentException{
+	public void initAspectIOC(List<Class<?>> AspectClass){
 		Aspect agann;
 		Before before;
 		After after;

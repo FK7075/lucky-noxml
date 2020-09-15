@@ -3,11 +3,9 @@ package com.lucky.jacklamb.ioc;
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.SSH;
 import com.lucky.jacklamb.annotation.ioc.Value;
-import com.lucky.jacklamb.exception.IOCException;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.file.ini.INIConfig;
-import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
@@ -22,7 +20,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -96,6 +93,7 @@ public final class IOCContainers {
 	
 	
 	/**
+	 *  初始化IOC容器
 	 *  1.加载配置->2.得到所有增强->3.IOC+AOP->4.DI
 	 */
 	public void init() {
@@ -118,14 +116,10 @@ public final class IOCContainers {
 	 * 控制反转
 	 */
 	public void inversionOfControlAndAop() {
-		try {
-			initComponentIOC();
-			initRepositoryIOC();
-			initServiceIOC();
-			initControllerIOC();
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-			throw new IOCException(e);
-		}
+		initComponentIOC();
+		initRepositoryIOC();
+		initServiceIOC();
+		initControllerIOC();
 	}
 	
 	/**
@@ -154,14 +148,8 @@ public final class IOCContainers {
 	
 	/**
 	 * 初始化Component组件
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
 	 */
-	public void initComponentIOC() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public void initComponentIOC(){
 		appIOC=new ComponentIOC();
 		appIOC.addAppMap("LUCKY-COMPONENT-IOC",appIOC);
 		appIOC.initComponentIOC(ScanFactory.createScan().getComponentClass("component"));
@@ -169,31 +157,18 @@ public final class IOCContainers {
 	
 	/**
 	 * 初始化Controller组件
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
-	public void initControllerIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public void initControllerIOC(){
 		controllerIOC=new ControllerIOC();
 		controllerIOC.addControllerMap("LUCKY-CONTROLLER-IOC",controllerIOC);
 		controllerIOC.initControllerIOC(ScanFactory.createScan().getComponentClass("controller"));
 		controllerIOC.methodHanderSetting();
-		
 	}
 	
 	/**
 	 * 初始化Service组件
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
-	public void initServiceIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public void initServiceIOC(){
 		serviceIOC=new ServiceIOC();
 		serviceIOC.addServiceMap("LUCKY-SERVICE-IOC",serviceIOC);
 		serviceIOC.initServiceIOC(ScanFactory.createScan().getComponentClass("service"));
@@ -201,14 +176,8 @@ public final class IOCContainers {
 	
 	/**
 	 * 初始化Repository组件
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
-	public void initRepositoryIOC() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public void initRepositoryIOC(){
 		repositoryIOC=new RepositoryIOC();
 		repositoryIOC.addRepositoryMap("LUCKY-REPOSITORY-IOC",repositoryIOC);
 		repositoryIOC.initRepositoryIOC(ScanFactory.createScan().getComponentClass("repository"));
@@ -218,14 +187,11 @@ public final class IOCContainers {
 	 * 每次处理请求时为Controller注入Model、Request、Response和Session、Aplication对象属性
 	 * @param object
 	 * @param model
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
 	 */
 	public void autowReqAdnResp(Object object,Model model){
 		Class<?> controllerClass=object.getClass();
 		Field[] fields= ClassUtils.getAllFields(controllerClass);
 		for(Field field:fields) {
-			field.setAccessible(true);
 			if(Model.class.isAssignableFrom(field.getType())) {
 				FieldUtils.setValue(object,field,model);
 			}else if(HttpSession.class.isAssignableFrom(field.getType())) {
@@ -259,6 +225,10 @@ public final class IOCContainers {
 		return new HashSet<Class<?>>(ScanFactory.createScan().getComponentClass("websocket"));
 	}
 
+	/**
+	 * 依赖注入，为一个对象注入IOC容器中的属性
+	 * @param component 某一个对象
+	 */
     public static void injection(Object component){
         ApplicationBeans beans=ApplicationBeans.createApplicationBeans();
         Autowired auto;

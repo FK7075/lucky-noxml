@@ -31,6 +31,8 @@ import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.quartz.proxy.QuartzProxy;
 import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -95,17 +97,9 @@ public class ComponentIOC extends ComponentFactory {
 
 	/**
 	 * 加载Component组件
-	 * 
 	 * @param componentClass
-	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws SecurityException 
 	 */
-	public void initComponentIOC(List<Class<?>> componentClass)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
+	public void initComponentIOC(List<Class<?>> componentClass){
 		String beanID;
 		for (Class<?> component : componentClass) {
 			if (component.isAnnotationPresent(Component.class)) {
@@ -132,7 +126,7 @@ public class ComponentIOC extends ComponentFactory {
 				continue;
 			}else if (component.isAnnotationPresent(Configuration.class)) {
 				Configuration cfg=component.getAnnotation(Configuration.class);
-				Object obj = component.newInstance();
+				Object obj= ClassUtils.newObject(component);
 				if(!"".equals(cfg.section())){
 					obj=new INIConfig(cfg.ini()).getObject(component,cfg.section());
 					beanID="".equals(cfg.value())?LuckyUtils.TableToClass1(component.getSimpleName()):cfg.value();
@@ -142,7 +136,7 @@ public class ComponentIOC extends ComponentFactory {
 				Method[] methods=component.getDeclaredMethods();
 				for(Method met:methods) {
 					if(met.isAnnotationPresent(Bean.class)) {
-						Object invoke = met.invoke(obj);
+						Object invoke= MethodUtils.invoke(obj,met);
 						Bean bean=met.getAnnotation(Bean.class);
 						IocCode iocCode=bean.iocCode();
 						if(iocCode==IocCode.COMPONENT){

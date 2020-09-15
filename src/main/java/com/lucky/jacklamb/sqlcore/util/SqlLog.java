@@ -32,31 +32,35 @@ public class SqlLog {
 	
 	
 	public void isShowLog(String sql, Object[] obj) {
-		if(log)
+		if(log) {
 			log(sql,obj);
+		}
 	}
 	
 	public void isShowLog(String sql,Object obj[][]) {
-		if(log)
+		if(log) {
 			logBatch(sql,obj);
+		}
 	}
 
 	public void isShowLog(String[] sqls){
-		if(log)
+		if(log) {
 			logBatch(sqls);
+		}
 	}
 	
 	private void log(String sql, Object[] obj) {
-		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ");
-		sb.append(jdbcUrl).append("\n").append("SQL        : ").append(formatSql(sql));
-		if (obj == null)
-			sb.append("\nParameters : { }");
-		else {
-			sb.append("\nParameters : { ");
+		StringBuilder sb=new StringBuilder("\nTime        : ").append(LuckyUtils.time()).append("\nDatabase    : ");
+		sb.append(jdbcUrl).append("\n").append("SQL         : ").append(formatSql(sql));
+		if (obj == null||obj.length==0) {
+			sb.append("\nParameters  : { }");
+		} else {
+			sb.append("\nParameters  : { ");
 			for (Object o : obj) {
 				sb.append("(").append((o!=null?o.getClass().getSimpleName():"NULL")).append(")").append(o).append("   ");
 			}
 			sb.append("}");
+			sb.append("\nCompleteSQL : ").append(CreateSql.getCompleteSql(sql,obj));
 		}
 		loger.println(sb.toString());
 	}
@@ -68,9 +72,9 @@ public class SqlLog {
 	private void logBatch(String sql,Object obj[][]) {
 		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ");
 		sb.append(jdbcUrl).append("\n").append("SQL        : ").append(formatSql(sql));
-		if(obj==null||obj.length==0)
+		if(obj==null||obj.length==0) {
 			sb.append("\nParameters : { }");
-		else {
+		} else {
 			for(int i=0;i<obj.length;i++) {
 				sb.append("\nParameters : { ");
 				for(Object o:obj[i]) {
@@ -94,8 +98,9 @@ public class SqlLog {
 	}
 	
 	private String formatSql(String sql) {
-		if(dataSource.getFormatSqlLog())
+		if(dataSource.getFormatSqlLog()) {
 			return "\n"+sqlFormatUtil.format(sql);
+		}
 		return sql;
 		
 	}

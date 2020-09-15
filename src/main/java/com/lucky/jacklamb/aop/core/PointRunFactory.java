@@ -2,7 +2,6 @@ package com.lucky.jacklamb.aop.core;
 
 import com.lucky.jacklamb.aop.proxy.LuckyAopMethodInterceptor;
 import com.lucky.jacklamb.cglib.CglibProxy;
-import com.lucky.jacklamb.utils.websocket.BaseWebSocket;
 
 import java.util.List;
 

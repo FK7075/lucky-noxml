@@ -256,6 +256,12 @@ public abstract class PojoManage {
 			}
 		}else if(pojoClass.isAnnotationPresent(Table.class)){
 			Table table=pojoClass.getAnnotation(Table.class);
+			if(UNIVERSAL.equals(table.dbname())){
+				if("".equals(table.value())) {
+					return pojoClass.getSimpleName().toLowerCase();
+				}
+				return table.value();
+			}
 			if(dbname.equals(table.dbname())){
 				if("".equals(table.value())){
 					return pojoClass.getSimpleName().toLowerCase();

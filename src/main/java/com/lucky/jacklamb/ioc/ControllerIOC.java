@@ -128,11 +128,8 @@ public class ControllerIOC extends ComponentFactory{
 	 * 
 	 * @param controllerClass
 	 * @return
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException 
 	 */
-	public void initControllerIOC(List<Class<?>> controllerClass) 
-			throws SecurityException,  IllegalArgumentException{
+	public void initControllerIOC(List<Class<?>> controllerClass) {
 		String beanID;
 		for (Class<?> controller : controllerClass) {
 			if (controller.isAnnotationPresent(Controller.class)) {
