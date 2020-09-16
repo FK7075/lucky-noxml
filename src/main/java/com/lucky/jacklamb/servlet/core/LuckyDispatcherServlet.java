@@ -6,7 +6,7 @@ import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
-import com.lucky.jacklamb.servlet.exceptionhandler.LuckyExceptionDispose;
+import com.lucky.jacklamb.servlet.exceptionhandler.DispatchServletExceptionInterceptor;
 import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -111,13 +111,18 @@ public class LuckyDispatcherServlet extends BaseServlet {
                 }
             }
         } catch (Throwable e) {
-            LuckyExceptionDispose luckyExceptionDispose = new LuckyExceptionDispose();
-            luckyExceptionDispose.initialize(model, controllerObj, method, args);
-            luckyExceptionDispose.exceptionHand();
+            /*
+                全局异常处理
+                1.创建DispatchServlet异常拦截器
+                2.初始化DispatchServlet异常拦截器,(属性初始化+异常处理器的注册)
+                3.获取当前异常，并执行统一异常处理
+             */
+            DispatchServletExceptionInterceptor exceptionInterceptor = new DispatchServletExceptionInterceptor();
+            exceptionInterceptor.initialize(model, controllerObj, method, args);
             if (e instanceof InvocationTargetException) {
-                luckyExceptionDispose.exceptionRole(e.getCause());
+                exceptionInterceptor.unifiedExceptionHandler(e.getCause());
             } else {
-                luckyExceptionDispose.exceptionRole(e);
+                exceptionInterceptor.unifiedExceptionHandler(e);
             }
         } finally {
             urlParsMap.closeLuckyWebContext();

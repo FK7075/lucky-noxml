@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.servlet.exceptionhandler;
+package com.lucky.jacklamb.ioc.scan;
 
 /**
  * @author fk7075

@@ -17,14 +17,14 @@ import javax.websocket.server.ServerEndpointConfig;
 
 public class LuckyServerApplicationConfig implements ServerApplicationConfig {
 
-	private static final Logger log= LogManager.getLogger(LuckyServerApplicationConfig.class);
+	private static final Logger log= LogManager.getLogger("c.l.j.start.LuckyServerApplicationConfig");
 
 	
 	@Override
 	public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> scan) {
 		for(Class<?> clzz:scan) {
 			if(clzz.isAnnotationPresent(ServerEndpoint.class)) {
-				log.info("@WebSocket \"[mapping="+clzz.getAnnotation(ServerEndpoint.class).value()+" class="+clzz+"]\"");
+				log.info("@WebSocket \"{mapping: ["+clzz.getAnnotation(ServerEndpoint.class).value()+"] class="+clzz+"}\"");
 			}
 		}
 		return scan;
@@ -35,10 +35,12 @@ public class LuckyServerApplicationConfig implements ServerApplicationConfig {
 		Set<ServerEndpointConfig> serverEndpointConfigs=new HashSet<>();
 		for (Class<? extends Endpoint> aClass : scan) {
 			ServerEndpointConfig serverEndpointConfig;
+			String path=null;
 			if(aClass.isAnnotationPresent(LEndpoint.class)){
 				LEndpoint lep=aClass.getAnnotation(LEndpoint.class);
+				path=lep.value();
 				serverEndpointConfig = ServerEndpointConfig.Builder
-						.create(aClass, lep.value())
+						.create(aClass,path)
 						.configurator(ClassUtils.newObject(lep.configurator()))
 						.decoders(Arrays.asList(lep.decoders()))
 						.encoders(Arrays.asList(lep.encoders()))
@@ -46,10 +48,12 @@ public class LuckyServerApplicationConfig implements ServerApplicationConfig {
 						.build();
 
 			}else{
+				path=LuckyUtils.TableToClass1(aClass.getSimpleName());
 				serverEndpointConfig = ServerEndpointConfig.Builder
-						.create(aClass, LuckyUtils.TableToClass1(aClass.getSimpleName()))
+						.create(aClass, path)
 						.build();
 			}
+			log.info("@WebSocket \"{mapping: ["+path+"] class="+aClass+"}\"");
 			serverEndpointConfigs.add(serverEndpointConfig);
 		}
 		return serverEndpointConfigs;

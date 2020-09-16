@@ -247,8 +247,9 @@ public class Model {
     public String getCookieContent(String name, String encoding) throws UnsupportedEncodingException {
         String info = null;
         Cookie[] cookies = req.getCookies();
-        if (cookies == null)
+        if (cookies == null) {
             return null;
+        }
         for (Cookie cookie : cookies) {
             if (name.equals(cookie.getName())) {
                 info = cookie.getValue();
@@ -268,8 +269,9 @@ public class Model {
     public String getCookieContent(String name) throws UnsupportedEncodingException {
         String info = null;
         Cookie[] cookies = req.getCookies();
-        if (cookies == null)
+        if (cookies == null) {
             return null;
+        }
         for (Cookie cookie : cookies) {
             if (name.equals(cookie.getName())) {
                 info = cookie.getValue();
@@ -353,21 +355,19 @@ public class Model {
     /**
      * 使用response对象的Writer方法将对象模型写出为JSON格式数据
      *
-     * @param pojo(数组，对象，Collection,Map)
-     * @throws IOException
+     * @param pojo (数组，对象，Collection,Map)
      */
     public void writerJson(Object pojo) {
         LSON lson = new LSON();
         log.debug(lson.toJsonByGson(pojo));
         resp.setContentType("application/json");
-        writer(lson.toFormatJsonByGson(pojo));
+        writer(lson.toJsonByGson(pojo));
     }
 
     /**
      * 使用response对象的Writer方法将对象模型写出为XML格式数据
      *
      * @param pojo (数组，对象，Collection,Map)
-     * @throws IOException
      */
     public void writerXml(Object pojo) {
         LXML lxml = new LXML();
@@ -381,12 +381,12 @@ public class Model {
      * 使用response对象的Writer方法写出数据
      *
      * @param info
-     * @throws IOException
      */
     public void writer(Object info) {
         try {
-            if (outputStream == null)
+            if (outputStream == null) {
                 outputStream = resp.getOutputStream();
+            }
             outputStream.write(info.toString().getBytes("UTF-8"));
         } catch (IOException e) {
             error(e,Code.ERROR);
@@ -441,8 +441,9 @@ public class Model {
      * @return
      */
     public boolean delRealFile(String file) {
-        if (file == null || file == "" || file == "/")
+        if (file == null || file == "" || file == "/") {
             return false;
+        }
         File delFile = getRealFile(file);
         if (delFile != null && delFile.exists()) {
             delFile.delete();
@@ -635,7 +636,7 @@ public class Model {
         }
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = req.getRemoteAddr();
-            if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+            if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
                 // 根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {

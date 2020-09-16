@@ -4,7 +4,6 @@ import com.lucky.jacklamb.annotation.ioc.Configuration;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
 import com.lucky.jacklamb.rest.LSON;
-import com.lucky.jacklamb.servlet.exceptionhandler.JarScanException;
 import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

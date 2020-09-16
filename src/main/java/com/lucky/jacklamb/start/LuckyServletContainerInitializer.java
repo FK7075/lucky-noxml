@@ -21,7 +21,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 	
 	public final ServerConfig serverCfg=AppConfig.getAppConfig().getServerConfig();
 
-	private static final Logger log= LogManager.getLogger(LuckyServletContainerInitializer.class);
+	private static final Logger log= LogManager.getLogger("c.l.j.s.LuckyServletContainerInitializer");
 	
 	public LuckyServletContainerInitializer() {
 		serverCfg.init();
