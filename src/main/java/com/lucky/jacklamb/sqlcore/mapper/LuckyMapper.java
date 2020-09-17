@@ -133,6 +133,14 @@ public interface LuckyMapper<Entity> {
     public List<Entity> selectLimit(Entity pojo, int page, int rows);
 
     /**
+     * 基于全表的分页查询
+     * @param page 页码
+     * @param rows 每页显示的条数
+     * @return
+     */
+    public List<Entity> limit(int page,int rows);
+
+    /**
      * QueryBuilder查询模式
      *
      * @param queryBuilder QueryBuilder对象

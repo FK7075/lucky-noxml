@@ -2,14 +2,12 @@ package com.lucky.jacklamb.sqlcore.jdbc.core;
 
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.Cache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.CacheFactory;
-import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckySqlOperationException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.conversion.JDBCConversion;
 import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.util.SqlLog;
-import com.lucky.jacklamb.utils.regula.Regular;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class SqlOperation {
 
 	private Connection conn;
 	private String dbname;
-	public static Map<String, Cache<String,List<Map<String,Object>>>> lruCache=new HashMap<>();
+	public static Map<String, Cache<String,List<Map<String,Object>>>> resultCache =new HashMap<>();
 	private boolean isCache;
 
 	public SqlOperation(Connection conn, String dbname) {
@@ -34,9 +32,9 @@ public class SqlOperation {
 		this.dbname = dbname;
 		isCache= ReaderInI.getDataSource(dbname).getCache();
 		//如果用户开启了缓存配置，则初始化一个LRU缓存
-		if(isCache&&!lruCache.containsKey(dbname)){
+		if(isCache&&!resultCache.containsKey(dbname)){
 			Cache<String,List<Map<String,Object>>> dbCache= CacheFactory.getCache(dbname);
-			lruCache.put(dbname,dbCache);
+			resultCache.put(dbname,dbCache);
 		}
 	}
 
@@ -160,17 +158,19 @@ public class SqlOperation {
 
 	public void clearCache(){
 		if(isCache) {
-			lruCache.get(dbname).clear();
+			resultCache.get(dbname).clear();
 		}
 	}
 
 	public List<Map<String,Object>> getCacheQueryResult(String sql, Object...obj){
 		String completeSql=CreateSql.getCompleteSql(sql,obj);
-		if(lruCache.get(dbname).containsKey(completeSql)){
-			return lruCache.get(dbname).get(completeSql);
+		if(resultCache.get(dbname).containsKey(completeSql)){
+			return resultCache.get(dbname).get(completeSql);
 		}else{
 			List<Map<String, Object>> queryResult = getQueryResult(sql, obj);
-			lruCache.get(dbname).put(completeSql,queryResult);
+			if(!queryResult.isEmpty()){
+				resultCache.get(dbname).put(completeSql,queryResult);
+			}
 			return queryResult;
 		}
 	}

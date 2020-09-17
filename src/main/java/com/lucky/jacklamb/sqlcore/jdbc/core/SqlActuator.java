@@ -92,6 +92,6 @@ public abstract class SqlActuator {
      * 清空缓存
      */
     public void clear(){
-        SqlOperation.lruCache.get(dbname).clear();
+        SqlOperation.resultCache.get(dbname).clear();
     }
 }

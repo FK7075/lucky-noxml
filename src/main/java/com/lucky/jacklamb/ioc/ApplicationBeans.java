@@ -1,26 +1,20 @@
 package com.lucky.jacklamb.ioc;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.websocket.server.ServerApplicationConfig;
-
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.base.JackLamb;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.websocket.server.ServerApplicationConfig;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ApplicationBeans {
 	
@@ -33,6 +27,7 @@ public class ApplicationBeans {
 	private static Set<Class<?>> webSocketSet;
 	
 	static {
+		JackLamb.welcome();
 		try {
 			Properties p=new Properties();
 			p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j2.xml"),"UTF-8")));
@@ -44,7 +39,7 @@ public class ApplicationBeans {
 		log= LogManager.getLogger(ApplicationBeans.class);
 		iocContainers=new IOCContainers();
 		iocContainers.init();
-		JackLamb.welcome();
+
 
 	}
 	

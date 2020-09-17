@@ -15,6 +15,7 @@ import com.lucky.jacklamb.sqlcore.mapper.jpa.IllegalJPAExpressionException;
 import com.lucky.jacklamb.sqlcore.mapper.jpa.JpaSample;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -531,10 +532,12 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         }
         if (isExtendLM && "deleteByIdIn".equals(method.getName()) && params.length == 1) {
             return (Object) sqlCore.deleteByIdIn(LuckyMapperGeneric, (List<?>) params[0]);
-
         }
         if (isExtendLM && "selectByIdIn".equals(method.getName()) && params.length == 1) {
             return sqlCore.getByIdIn(LuckyMapperGeneric, (List<?>) params[0]);
+        }
+        if(isExtendLM && "limit".equals(method.getName())&& params.length==2){
+            return sqlCore.getPageList(ClassUtils.newObject(LuckyMapperGeneric),(int)params[0],(int)params[1]);
         }
 
         //用户自定义Mapper接口方法的代理

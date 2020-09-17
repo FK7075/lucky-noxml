@@ -194,7 +194,7 @@ public class LEmail {
      * @throws EmailException
      */
     public void sendHtmlEmail(String subject,HtmlMsg htmlMsg) throws Exception {
-        sendHtmlEmail(subject,htmlMsg,"Your email client does not support HTML messages");
+        sendHtmlEmail(subject,htmlMsg,"You have a new unread message...");
     }
 
     private Folder getReceiveFolder() throws Exception {

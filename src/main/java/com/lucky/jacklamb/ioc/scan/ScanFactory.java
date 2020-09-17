@@ -9,7 +9,8 @@ public class ScanFactory {
 	private static PackageScan pack;
 	
 	private static JarScan jar;
-	
+
+
 	public static Scan createScan(){
 		if(PackageScan.class.getClassLoader().getResource("")==null) {
 			if(jar==null) {
