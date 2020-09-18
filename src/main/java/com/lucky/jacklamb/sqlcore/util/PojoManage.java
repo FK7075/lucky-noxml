@@ -118,6 +118,12 @@ public abstract class PojoManage {
 			return field.getName();
 		}else if(field.isAnnotationPresent(Id.class)) {
 			Id id=field.getAnnotation(Id.class);
+			if(UNIVERSAL.equals(id.dbname())){
+				if("".equals(id.value())) {
+					return field.getName();
+				}
+				return id.value();
+			}
 			if(dbname.equals(id.dbname())){
 				if("".equals(id.value())) {
 					return field.getName();
@@ -127,6 +133,12 @@ public abstract class PojoManage {
 			return field.getName();
 		}else if(field.isAnnotationPresent(Key.class)) {
 			Key key=field.getAnnotation(Key.class);
+			if(UNIVERSAL.equals(key.dbname())){
+				if("".equals(key.value())) {
+					return field.getName();
+				}
+				return key.value();
+			}
 			if(dbname.equals(key.dbname())){
 				if("".equals(key.value())) {
 					return field.getName();
@@ -161,12 +173,18 @@ public abstract class PojoManage {
 			return true;
 		}else if(field.isAnnotationPresent(Column.class)) {
 			Column column = field.getAnnotation(Column.class);
-			if(dbname.endsWith(column.dbname())){
+			if(UNIVERSAL.equals(column.dbname())){
+				return column.allownull();
+			}
+			if(dbname.equals(column.dbname())){
 				return column.allownull();
 			}
 			return true;
 		}else if(field.isAnnotationPresent(Key.class)) {
 			Key key = field.getAnnotation(Key.class);
+			if(UNIVERSAL.equals(key.dbname())){
+				return key.allownull();
+			}
 			if(dbname.equals(key.dbname())){
 				return key.allownull();
 			}
@@ -202,18 +220,27 @@ public abstract class PojoManage {
 			return 100;
 		}else if(field.isAnnotationPresent(Id.class)) {
 			Id id = field.getAnnotation(Id.class);
+			if(UNIVERSAL.equals(id.dbname())){
+				return id.length();
+			}
 			if(dbname.equals(id.dbname())){
 				return id.length();
 			}
 			return 100;
 		}else if(field.isAnnotationPresent(Key.class)) {
 			Key key = field.getAnnotation(Key.class);
+			if(UNIVERSAL.equals(key.dbname())){
+				return key.length();
+			}
 			if(dbname.equals(key.dbname())){
 				return key.length();
 			}
 			return 100;
 		}else if(field.isAnnotationPresent(Column.class)) {
 			Column column = field.getAnnotation(Column.class);
+			if(UNIVERSAL.equals(column.dbname())){
+				return column.length();
+			}
 			if(dbname.equals(column.dbname())){
 				return column.length();
 			}
@@ -288,6 +315,9 @@ public abstract class PojoManage {
 			return false;
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
+			if(UNIVERSAL.equals(table.dbname())){
+				return table.cascadeDelete();
+			}
 			if(dbname.equals(table.dbname())){
 				return table.cascadeDelete();
 			}
@@ -310,6 +340,9 @@ public abstract class PojoManage {
 			return false;
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
+			if(UNIVERSAL.equals(table.dbname())){
+				return table.cascadeUpdate();
+			}
 			if(dbname.equals(table.dbname())){
 				return table.cascadeUpdate();
 			}
@@ -336,6 +369,12 @@ public abstract class PojoManage {
 			return idField.getName();
 		}else{
 			Id id = idField.getAnnotation(Id.class);
+			if(UNIVERSAL.equals(id.dbname())){
+				if("".equals(id.value())) {
+					return idField.getName();
+				}
+				return id.value();
+			}
 			if(dbname.equals(id.dbname())){
 				if("".equals(id.value())){
 					return idField.getName();
@@ -423,6 +462,9 @@ public abstract class PojoManage {
 			return PrimaryType.DEFAULT;
 		}else if(idF.isAnnotationPresent(Id.class)){
 			Id id=idF.getAnnotation(Id.class);
+			if(UNIVERSAL.equals(id.dbname())) {
+				return id.type();
+			}
 			if(dbname.equals(id.dbname())){
 				return id.type();
 			}

@@ -137,8 +137,9 @@ public class SSHClient {
      */
     public long scpTo(String source, String destination) {
         FileInputStream fileInputStream = null;
+        ChannelExec channel=null;
         try {
-            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel = (ChannelExec) session.openChannel("exec");
             OutputStream out = channel.getOutputStream();
             InputStream in = channel.getInputStream();
             boolean ptimestamp = false;
@@ -205,6 +206,7 @@ public class SSHClient {
         } catch(Exception e) {
             log.error("scp to error, ", e);
         } finally {
+            channel.disconnect();
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
@@ -217,16 +219,40 @@ public class SSHClient {
     }
 
     /**
+     * 将文件夹上传到远程服务器
+     * @param folder
+     * @param destination
+     * @throws JSchException
+     */
+    public void scpFolderTo(String folder,String destination) throws JSchException {
+        folder=folder.endsWith(File.separator)?folder:folder+File.separator;
+        destination=destination.endsWith("/")?destination:destination+"/";
+        File file=new File(folder);
+        if(!file.exists())
+            throw new RuntimeException("文件夹"+folder+"不存在...");
+        String serverFolder=destination+file.getName();
+        sendCmd("mkdir "+serverFolder);
+        File[] files = file.listFiles();
+        for (File f : files) {
+            if(f.isDirectory()){
+                scpFolderTo(folder+f.getName(),serverFolder);
+            }else{
+                scpTo(f.getAbsolutePath(),serverFolder);
+            }
+        }
+    }
+
+    /**
      * 从远程服务器下载文件
-     * @param source 服务器文件的绝对路径
-     * @param destination 本地保存的目录路径
+     * @param serverFilePath 服务器文件的绝对路径
+     * @param locationFilePath 本地保存的目录路径
      * @return
      */
-    public long scpFrom(String source, String destination) {
+    public long scpFrom(String serverFilePath, String locationFilePath) {
         FileOutputStream fileOutputStream = null;
         try {
             ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand("scp -f " + source);
+            channel.setCommand("scp -f " + serverFilePath);
             OutputStream out = channel.getOutputStream();
             InputStream in = channel.getInputStream();
             channel.connect();
@@ -265,10 +291,10 @@ public class SSHClient {
             out.write(buf, 0, 1);
             out.flush();
             // read a content of lfile
-            if (Files.isDirectory(Paths.get(destination))) {
-                fileOutputStream = new FileOutputStream(destination + File.separator +file);
+            if (Files.isDirectory(Paths.get(locationFilePath))) {
+                fileOutputStream = new FileOutputStream(locationFilePath + File.separator +file);
             } else {
-                fileOutputStream = new FileOutputStream(destination);
+                fileOutputStream = new FileOutputStream(locationFilePath);
             }
             long sum = 0;
             while (true) {
