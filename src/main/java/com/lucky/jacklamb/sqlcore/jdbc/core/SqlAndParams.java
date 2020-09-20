@@ -39,8 +39,6 @@ public class SqlAndParams {
     public SqlAndParams() {
     }
 
-    ;
-
     public SqlAndParams(String haveNumSql, Object[] params) {
         init(null, haveNumSql, params);
     }
@@ -70,7 +68,7 @@ public class SqlAndParams {
         this.params = new Object[placeholder.size()];
         if (method == null) {
             if (!Regular.getArrayByExpression(haveNumSql, $SQL).isEmpty()) {
-                throw new LuckySqlGrammarMistakesException("当前DB方法不是Mapper接口方法，所以不支持\"@name\"格式的预编译SQL!");
+                throw new LuckySqlGrammarMistakesException("当前DB方法不是Mapper接口方法，所以不支持\"@:name\"格式的预编译SQL!");
             }
             for (int i = 0, j = placeholder.size(); i < j; i++) {
                 if (Regular.check(placeholder.get(i), NUMSQL)) {
@@ -99,9 +97,9 @@ public class SqlAndParams {
                     }
                     this.params[i] = params[pindex - 1];
                 } else if (Regular.check(placeholder.get(i), $SQL)) {
-                    String pname = placeholder.get(i).substring(1);
+                    String pname = placeholder.get(i).substring(2);
                     if (!methodParamsNV.containsKey(pname)) {
-                        throw new LuckySqlGrammarMistakesException("方法参数列表中不存在的SQL参数\"@" + pname + "\",错误位置:" + method);
+                        throw new LuckySqlGrammarMistakesException("方法参数列表中不存在的SQL参数\"@:" + pname + "\",错误位置:" + method);
                     }
                     this.params[i] = methodParamsNV.get(pname);
                 } else if (Regular.check(placeholder.get(i), SQL_DY_NUN)) {

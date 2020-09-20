@@ -89,21 +89,24 @@ public class Mapping {
     public static String getParamName(Parameter param, String paramName) {
         if (param.isAnnotationPresent(RequestParam.class)) {
             RequestParam rp = param.getAnnotation(RequestParam.class);
-            if("".equals(rp.value()))
-                return paramName;
+            if("".equals(rp.value())) {
+                return paramName==null?param.getName():paramName;
+            }
             return rp.value();
         }else if(param.isAnnotationPresent(RestParam.class)){
             RestParam rp = param.getAnnotation(RestParam.class);
-            if("".equals(rp.value()))
-                return paramName;
+            if("".equals(rp.value())) {
+                return paramName==null?param.getName():paramName;
+            }
             return rp.value();
         } else if(param.isAnnotationPresent(Param.class)){
             Param rp = param.getAnnotation(Param.class);
-            if("".equals(rp.value()))
-                return paramName;
+            if("".equals(rp.value())) {
+                return paramName==null?param.getName():paramName;
+            }
             return rp.value();
         }else {
-            return paramName;
+            return paramName==null?param.getName():paramName;
         }
     }
 

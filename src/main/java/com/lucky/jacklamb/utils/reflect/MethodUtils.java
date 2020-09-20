@@ -141,7 +141,7 @@ public abstract class MethodUtils {
         Map<String,Object> paramMap=new HashMap<>();
         List<String> interParams = ASMUtil.getInterfaceMethodParamNames(method);
         Parameter[] parameters = method.getParameters();
-        for (int i = 0; i < parameters.length; i++) {
+        for (int i = 0; i < interParams.size(); i++) {
             paramMap.put(Mapping.getParamName(parameters[i],interParams.get(i)),params[i]);
         }
         return paramMap;

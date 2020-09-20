@@ -15,6 +15,7 @@ import java.io.PrintStream;
 public class SqlLog {
 	
 	private boolean log;
+	private boolean showCompleteSQL;
 	private LuckyDataSource dataSource;
 	private String jdbcUrl;
 	private SqlFormatUtil sqlFormatUtil;
@@ -23,6 +24,7 @@ public class SqlLog {
 	public SqlLog(String dbname) {
 		dataSource= ReaderInI.getDataSource(dbname);
 		log=dataSource.getLog();
+		showCompleteSQL=dataSource.getShowCompleteSQL();
 		sqlFormatUtil=new SqlFormatUtil();
 		jdbcUrl=dataSource.getJdbcUrl();
 		if(jdbcUrl.contains("?")) {
@@ -60,7 +62,9 @@ public class SqlLog {
 				sb.append("(").append((o!=null?o.getClass().getSimpleName():"NULL")).append(")").append(o).append("   ");
 			}
 			sb.append("}");
-			sb.append("\nCompleteSQL : ").append(CreateSql.getCompleteSql(sql,obj));
+			if(showCompleteSQL){
+				sb.append("\nCompleteSQL : ").append(CreateSql.getCompleteSql(sql,obj));
+			}
 		}
 		loger.println(sb.toString());
 	}

@@ -47,8 +47,8 @@ public class BatchInsert {
 
     public String createInsertSql(Class<?> clzz, int size) {
         Field[] fields = ClassUtils.getAllFields(clzz);
-        StringBuffer prefix = new StringBuffer("INSERT INTO " + PojoManage.getTable(clzz,dbname));
-        StringBuffer suffix = new StringBuffer(" VALUES ");
+        StringBuilder prefix = new StringBuilder("INSERT INTO " + PojoManage.getTable(clzz,dbname));
+        StringBuilder suffix = new StringBuilder(" VALUES ");
         boolean isFirst = true;
         List<Field> list;
         if (PojoManage.getIdType(clzz,dbname) == PrimaryType.AUTO_INT) {
@@ -60,7 +60,7 @@ public class BatchInsert {
             list = Stream.of(fields).filter(field -> FieldUtils.isJDKType(field)
                     && !FieldUtils.isParentClass(field,Collection.class)).collect(Collectors.toList());
         }
-        StringBuffer fk = new StringBuffer("");
+        StringBuilder fk = new StringBuilder("");
         for (int i = 0, j = list.size(); i < j; i++) {
             if (PojoManage.isNoColumn(list.get(i),dbname)) {
                 continue;
@@ -74,16 +74,31 @@ public class BatchInsert {
                 fk.append("?,");
             }
         }
-        fk = new StringBuffer(fk.substring(0, fk.length() - 1)).append(")");
-        prefix = new StringBuffer(prefix.substring(0, prefix.length() - 1)).append(")");
-        for (int j = 0; j < size; j++) {
-            if (j == size - 1) {
-                suffix.append(fk);
-            } else {
-                suffix.append(fk).append(",");
-            }
+        fk = new StringBuilder(fk.substring(0, fk.length() - 1)).append(")");
+        prefix = new StringBuilder(prefix.substring(0, prefix.length() - 1)).append(")");
+        String suf=copyRepeatStr(fk.append(","),size);
+        return prefix.append(suffix.append(suf.substring(0,suf.length()-1))).toString();
+    }
+
+    private String copyRepeatStr(StringBuilder str,int frequency){
+        if(frequency==0)
+            return " ";
+        StringBuilder sb=new StringBuilder();
+        StringBuilder mid=new StringBuilder();
+        int base = (int) Math.floor(Math.sqrt(frequency));
+        for (int i=0;i<base;i++){
+            mid.append(str);
         }
-        return prefix.append(suffix).toString();
+        int residue=frequency%base;
+        int result=frequency/base;
+        for(int i=0;i<result;i++){
+            sb.append(mid);
+        }
+
+        for(int i=0;i<residue;i++){
+            sb.append(str);
+        }
+        return sb.toString();
     }
 
     private <T> Object[] createInsertObject(Collection<T> collection) {

@@ -37,6 +37,7 @@ public abstract class LuckyDataSource implements DataSource{
     private String driverClass;
 
     private Boolean log;
+    private Boolean showCompleteSQL;
     private Boolean cache;
     private String cacheType;
     private String cacheExpiredTime;
@@ -54,8 +55,17 @@ public abstract class LuckyDataSource implements DataSource{
         cacheType="Java";
         cacheExpiredTime="0";
         log=false;
+        showCompleteSQL=false;
         formatSqlLog=false;
         cacheCapacity=50;
+    }
+
+    public Boolean getShowCompleteSQL() {
+        return showCompleteSQL;
+    }
+
+    public void setShowCompleteSQL(Boolean showCompleteSQL) {
+        this.showCompleteSQL = showCompleteSQL;
     }
 
     public Pool getPoolType() {
