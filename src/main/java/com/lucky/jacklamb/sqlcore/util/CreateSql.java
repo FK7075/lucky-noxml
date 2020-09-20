@@ -42,11 +42,15 @@ public class CreateSql {
 			return precompileSql;
 		String type,sqlParam;
 		for (Object param : params) {
-			type=param.getClass().getSimpleName();
-			if(typeList.contains(type)){
-				sqlParam=param.toString();
+			if(param==null){
+				sqlParam="NULL";
 			}else{
-				sqlParam="'"+param.toString()+"'";
+				type=param.getClass().getSimpleName();
+				if(typeList.contains(type)){
+					sqlParam=param.toString();
+				}else{
+					sqlParam="'"+param.toString()+"'";
+				}
 			}
 			precompileSql=precompileSql.replaceFirst("\\?",sqlParam.replaceAll("\\$","LUCKY_JACK_LUCY_LUCKY_OK"));
 		}

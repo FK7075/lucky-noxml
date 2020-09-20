@@ -341,7 +341,7 @@ public abstract class LuckyController {
 	}
 
 	/**
-	 * 生成图片验证码,使用默认的key(当前类的全路劲)存储到SESSION域
+	 * 生成图片验证码,使用默认的key(当前类的全路径)存储到SESSION域
 	 * @throws IOException
 	 */
 	protected void generateVerificationCode() throws IOException {
