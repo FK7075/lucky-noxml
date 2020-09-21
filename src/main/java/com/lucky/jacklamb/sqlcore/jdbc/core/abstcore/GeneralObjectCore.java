@@ -1,5 +1,10 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
@@ -92,11 +97,15 @@ public interface GeneralObjectCore {
      * @return
      */
     default <T> int count(Class<T> t) {
-        try {
-            return count(t.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("创建对象错误！Class:" + t);
+        T object = ClassUtils.newObject(t);
+        final Field[] allFields = ClassUtils.getAllFields(t);
+        for (Field field : allFields) {
+            int modifiers = field.getModifiers();
+            if(!Modifier.isFinal(modifiers)&&!Modifier.isStatic(modifiers)){
+                FieldUtils.setValue(object,field,null);
+            }
         }
+        return count(object);
     }
 
 
