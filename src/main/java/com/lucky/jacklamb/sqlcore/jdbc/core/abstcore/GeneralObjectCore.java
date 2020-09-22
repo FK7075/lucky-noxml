@@ -96,17 +96,7 @@ public interface GeneralObjectCore {
      * @param t
      * @return
      */
-    default <T> int count(Class<T> t) {
-        T object = ClassUtils.newObject(t);
-        final Field[] allFields = ClassUtils.getAllFields(t);
-        for (Field field : allFields) {
-            int modifiers = field.getModifiers();
-            if(!Modifier.isFinal(modifiers)&&!Modifier.isStatic(modifiers)){
-                FieldUtils.setValue(object,field,null);
-            }
-        }
-        return count(object);
-    }
+    <T> int count(Class<T> t);
 
 
     /**
