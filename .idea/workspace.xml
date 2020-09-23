@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bc68d6f7-8b1b-4cf8-acc1-e24064153cf9" name="Default Changelist" comment="2020-9-23 项目重构，加入一个脚手架项目">
-      <change beforePath="$PROJECT_DIR$/lucky-noxml/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lucky-noxml/README_BACKUP.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_BACKUP.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lucky-noxml/static/image/Logo.png" beforeDir="false" />
-    </list>
+    <list default="true" id="bc68d6f7-8b1b-4cf8-acc1-e24064153cf9" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/lucky-noxml/target/" />
     <ignored path="$PROJECT_DIR$/lucky-build/target/" />
@@ -59,7 +55,20 @@
             <path>
               <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
               <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -100,12 +109,20 @@
       <option name="presentableId" value="Default" />
       <updated>1600858058401</updated>
       <workItem from="1600858062012" duration="384000" />
-      <workItem from="1600858483474" duration="791000" />
+      <workItem from="1600858483474" duration="1190000" />
     </task>
+    <task id="LOCAL-00001" summary="2020-9-23 项目重构，加入一个脚手架项目">
+      <created>1600859414067</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1600859414067</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1175000" />
+    <option name="totallyTimeSpent" value="1574000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-2" width="1936" height="1056" extended-state="6" />
@@ -140,6 +157,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2020-9-23 项目重构，加入一个脚手架项目" />
+    <option name="LAST_COMMIT_MESSAGE" value="2020-9-23 项目重构，加入一个脚手架项目" />
   </component>
   <component name="masterDetails">
     <states>
