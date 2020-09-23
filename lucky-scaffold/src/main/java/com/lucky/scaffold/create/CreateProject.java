@@ -1,9 +1,9 @@
-package com.lucky.build.create;
+package com.lucky.scaffold.create;
 
-import com.lucky.build.file.FileCopy;
-import com.lucky.build.project.ProjectInFo;
+import com.lucky.scaffold.file.FileCopy;
+import com.lucky.scaffold.project.ProjectInFo;
 import org.apache.commons.io.IOUtils;
-import static com.lucky.build.project.Constant.*;
+import static com.lucky.scaffold.project.Constant.*;
 
 import java.io.*;
 

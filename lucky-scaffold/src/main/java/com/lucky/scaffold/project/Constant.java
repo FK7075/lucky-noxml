@@ -1,4 +1,4 @@
-package com.lucky.build.project;
+package com.lucky.scaffold.project;
 
 /**
  * @author fk7075

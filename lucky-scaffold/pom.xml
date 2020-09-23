@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.lucky.build</groupId>
-  <artifactId>lucky-build</artifactId>
+  <artifactId>lucky-scaffold</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>lucky-build</name>
+  <name>lucky-scaffold</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -42,7 +42,7 @@
 
   <!--打包插件，将java项目打包为可运行的jar包(jar包中包含第三方包)-->
   <build>
-    <finalName>lucky-build</finalName> <!-- 指定package生成的文件名为 -->
+    <finalName>lucky-scaffold</finalName> <!-- 指定package生成的文件名为 -->
     <plugins>
 
       <!-- 编译插件 -->

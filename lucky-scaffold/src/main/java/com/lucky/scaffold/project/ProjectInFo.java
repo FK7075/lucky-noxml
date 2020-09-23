@@ -1,12 +1,9 @@
-package com.lucky.build.project;
+package com.lucky.scaffold.project;
 
 import lombok.Data;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 /**

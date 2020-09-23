@@ -1,4 +1,4 @@
-package com.lucky.build.file;
+package com.lucky.scaffold.file;
 
 import java.io.*;
 

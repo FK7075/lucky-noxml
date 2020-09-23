@@ -1,4 +1,4 @@
-package com.lucky.build;
+package com.lucky.scaffold;
 
 import static org.junit.Assert.assertTrue;
 
