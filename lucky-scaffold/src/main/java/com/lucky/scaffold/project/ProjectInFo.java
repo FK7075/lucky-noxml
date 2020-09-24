@@ -296,7 +296,7 @@ public class ProjectInFo {
     private static final String OS=System.getProperty("os.name").toLowerCase();
 
     public static boolean checkPathValid(String path){
-        if (OS.contains(OSType.LINUX.name().toLowerCase())||OS.contains("MACOS")) {
+        if (OS.contains(OSType.LINUX.name().toLowerCase())||OS.contains(OSType.MAC.name().toLowerCase())) {
             return checkPatternMatch(linux_path_pattern,path);
         }
         if (OS.contains(OSType.WINDOWS.name().toLowerCase())){

@@ -8,5 +8,5 @@ package com.lucky.scaffold.project;
 public enum OSType {
     LINUX,
     WINDOWS,
-    OTHERS;
+    MAC;
 }
