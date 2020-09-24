@@ -1,10 +1,541 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bc68d6f7-8b1b-4cf8-acc1-e24064153cf9" name="Default Changelist" comment="" />
+    <list default="true" id="bc68d6f7-8b1b-4cf8-acc1-e24064153cf9" name="Default Changelist" comment="2020-9-23 项目重构，加入一个脚手架项目">
+      <change afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/OSType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/appconfig-help.ini" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/test-template.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-noxml/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/After.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/AopParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/Around.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/Aspect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/Before.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/Cacheable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/aop/Transaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Autowired.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Bean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/CallController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Component.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Configuration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Repository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/SSH.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Scope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Service.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/ioc/Value.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/CallApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/CallBody.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/CallResult.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/Check.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/CloseRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/ControllerExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/CrossOrigin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/DeleteMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/Download.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/ExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/FileDownload.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/FileUpload.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/GetMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/InitRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/LEndpoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/LuckyServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/MD5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/PostMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/PutMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/RequestBody.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/RequestMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/RequestParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/ResponseBody.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/RestParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/SendRed.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/mvc/Upload.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Columns.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Id.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Ids.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Key.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Keys.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/NoColumn.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/NoColumns.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/NoPackage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/NoPackages.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Table.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/Tables.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/jpa/JoinTable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/jpa/ManyToMany.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/jpa/ManyToOne.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/jpa/OneToMany.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/jpa/OneToOne.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/AutoId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Change.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Count.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Delete.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Insert.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Like.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Mapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Page.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Param.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Query.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/QueryTr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/ResultType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Select.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/Update.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/annotation/orm/mapper/X.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/AopChain.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/AopPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/AopProxyFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/PointRun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/PointRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/core/PointRunFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/CacheExpandPoint$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/CacheExpandPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/LazyLoaderExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/LogExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/PermissionExpand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/expandpoint/TransactionPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/proxy/LuckyAopMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/proxy/TargetMethodSignature.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/test/CTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/aop/test/ITest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/ASMUtil$1$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/ASMUtil$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/ASMUtil$2$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/ASMUtil$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/ASMUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/CglibProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/cglib/JDKProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/EntityAndDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/LuckyConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/annotation/Conversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/annotation/Mapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/annotation/Mappings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/annotation/NoConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/proxy/Conversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/proxy/ConversionMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/proxy/ConversionProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/conversion/proxy/EDProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/Attachment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/EmailConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/EmailContent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/HtmlMsg.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/HtmlTemp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/LEmail.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/Resource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/test/JavaEmailSendTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/email/test/JavaMaiReceiveTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Code.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/HttpRequestState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/JOIN.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Location.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Logo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/PrimaryType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/RequestMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Rest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Scan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/Sort.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/jpa/CascadeType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/enums/scope.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/AutoPackageException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/CreateBeanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/FileSizeCrossingException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/FileTypeIllegalException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/HttpClientRequestException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/IOCException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/IllegaAopparametersException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/IllegalExpressionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/IllegalParameterException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/InjectionPropertiesException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/JsonFormatException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NoDataSourceException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotAddIOCComponent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFindBeanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFindBeanPropertyException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFindDocBaseFolderException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFindFlieException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFindRequestException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFoundCallUrlException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotFoundMappingAnnotationException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotMappingMethodException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/NotSupportDataBasesException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/PointRunException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/RequestFileSizeCrossingException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/TransactionPerformException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/exception/TypeConversionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/expression/$Expression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/expression/ExpressionEngine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/expression/MyTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/CompressType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/MultipartFile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/ZipUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/ini/INIConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/ini/IniFilePars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/file/utils/FileUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/HttpClientCall.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/callcontroller/Api.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/callcontroller/CallControllerMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/callcontroller/CallControllerProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/exception/JsonConversionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/luckyclient/LuckyClientControllerProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/luckyclient/LuckyClientMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/registry/RegistrationController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/registry/ServiceCenter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/registry/ServiceInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/httpclient/service/LuckyClientController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ApplicationBeans.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/AspectAOP.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ComponentFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ComponentIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ControllerAndMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ControllerAndMethodMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ControllerIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/IOCContainers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/Injection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/RepositoryIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/ServiceIOC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/URLAndRequestMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/AppConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/ApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/LuckyConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/ScanConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/ServerConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/ServiceConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/config/WebConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/enums/IocCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/JarScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/JarScanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/LuckyClassLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/PackageScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/Scan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/ScanFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ioc/scan/URClassLoaderJarScan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/junit/LuckyJUnit4ClassRunner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/junit/LuckyRunner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/md5/MD5Utils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/TargetJobRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/ann/Job.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/ann/QuartzJobs.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/constant/Constant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/exception/CronExpressionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/job/JobMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/job/LuckyJob.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/job/LuckySchedulerListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/job/SerialJob.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/proxy/QuartzMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/proxy/QuartzProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/test/JobTestMain.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/quartz/test/MyJob.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/ClassControl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/InitializePoJo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/ObjectAlias.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/ObjectToJoinSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/PackBoxToPojo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/PageCount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/PageLimit.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/PageList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/Paging.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/PojoAndField.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/QFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/QueryBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/SortSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/SqlAndObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/SqlFragProce.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/query/translator/Translator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/JedisFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/RedisCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/RedisConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/RedisUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/ShardedRedisUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/Constant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RHash.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RList$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RString.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/RedisKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/redis/pojo/ZSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/Attr.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/AttrUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/BB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/FormatUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/LSON.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/LXML.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/TT.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/rest/XStreamAllowType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/LuckyWebContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/ResponseControl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/ServerStartRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/core/BaseServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/core/ExceptionMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/core/LuckyDispatcherServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/core/MRun.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/core/Model.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/exceptionhandler/DispatchServletExceptionInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/exceptionhandler/ExceptionMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/exceptionhandler/LuckyExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/AnnotationOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/Mapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/MappingDetails.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/UploadCopy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/UrlParsMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/param/ApacheFileParamPars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/param/ParamPars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/param/PartFileParamPars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/mapping/param/PojoParamPars.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/staticsource/StaticResourceManage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/staticsource/StaticResourceManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/ImagAndString.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/LuckyController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/LuckyJumpFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/SensitiveCharactersFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/SensitiveCharactersFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/servlet/utils/VerificationCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/Cache.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/CacheFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/LRUCache.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/LuckyCache.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/RedisCache$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/RedisCache$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/cache/RedisCache.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/AccessSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/DB2Core.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/MySqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/MySqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/OracleCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/OracleSqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/PostgreSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/PostgreSqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/SqlServerCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/dynamiccoreImpl/SybaseCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/exception/LuckySqlGrammarMistakesException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/exception/LuckySqlOperationException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/exception/LuckyTransactionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/GeneralObjectCoreBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/fixedcoreImpl/StatementCoreImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/transaction/JDBCTransaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/abstractionlayer/transaction/Transaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/activerecord/BaseEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/ReaderInI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/SectionKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/abs/LuckyDataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/c3p0/C3p0DataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/enums/Pool.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/datasource/hikaricp/HikariCPDataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/exception/CreateMapperException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/exception/DatabaseTypeUnableIdentifyException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/exception/NotFindSqlConfigFileException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/exception/NotFoundInterfacesGenericException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/exception/PoolTypeUnableToIdentifyException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/SqlCoreFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/conversion/JDBCConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/DefaultSqlActuator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/DynamicSqlWrapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/SplicingRules.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/SqlActuator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/SqlAndParams.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/SqlOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/TransactionSqlActuator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/GeneralObjectCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/ObjectCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/SqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/SqlGroup.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/StatementCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/jdbc/core/abstcore/UniqueSqlCore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/LuckyMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/LuckyMapperMethodInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/LuckyMapperProxy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/SqlAndArray.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/exception/XMLParsingException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/jpa/IllegalJPAExpressionException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/jpa/JpaSample$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/jpa/JpaSample.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/jpa/SortByLengthComparator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/mapper/xml/MapperXMLParsing.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/BatchInsert.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/Book.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/CreateSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/FieldAndValue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/GeneralSqlGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/PojoManage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/PrecompileSqlAndObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/SqlFormatUtil$FormatProcess.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/SqlFormatUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/sqlcore/util/SqlLog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ssh/Remote.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ssh/RemoteEditing.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ssh/SSHClient$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/ssh/SSHClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/FilterMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/LuckyApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/LuckyServerApplicationConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/LuckyServletContainerInitializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/LuckyShutdown.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/LuckyTomcatLog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/RunParam.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/start/ServletMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/createtable/CreateTable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/createtable/CreateTableSql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/createtable/DeleteKeySql.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/GetJavaSrc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/JavaFieldGetSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/PackBoxSrc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableNum.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableStructure.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/TableToJava.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/reverse/Tables.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/AccessJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/DB2JavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/JDBChangeFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/JavaConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/MySqlJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/OracleJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/PostgreJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/SqlServerJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/SyBaseJavaChange.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/tcconversion/typechange/TypeConversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/base/BeanUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/base/IpUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/base/JackLamb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/base/LuckyUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/base64/Base64Utils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/reflect/ClassUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/reflect/FieldUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/reflect/MethodUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/regula/Regular.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/lucky/jacklamb/utils/websocket/WsServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/com/zaxxer/hikari/HikariDataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/log4j.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/log4j2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/500.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/ContentType.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/HikaroCP-DriverClassName.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/error.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/jpa-coding.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/config/jpa-decoding.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/C3p0.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/HikariCP.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/appconfig.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/jap-find.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/maven.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/help/start.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/jar/maven.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/anne.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/ants.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/book.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/buddha.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/computer.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/danger-signals.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/dragon.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/grass-mud-horse.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/judy.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/keyboard.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/lucky.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/mouselet.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/logo/single-wang.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/check0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/favicon1.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/logout.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/service.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/lucky-config/static/shutdown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/catalina/core/StandardEngine$AccessLogListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/catalina/core/StandardEngine$NoopAccessLog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/catalina/core/StandardEngine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/catalina/core/StandardService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/coyote/AbstractProtocol$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/coyote/AbstractProtocol$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/coyote/AbstractProtocol$ConnectionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/coyote/AbstractProtocol$RecycledProcessors.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/coyote/AbstractProtocol.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/tomcat/util/http/parser/HttpParser$DomainParseState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/tomcat/util/http/parser/HttpParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/classes/org/apache/tomcat/util/net/NioSelectorPool.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/HikariCP-3.4.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/HikariCP-java7-2.4.13.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/activation-1.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/annotations-api-6.0.53.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/asm-8.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/c3p0-0.9.5.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/cglib-nodep-2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-cli-1.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-codec-1.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-email-1.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-fileupload-1.3.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-io-2.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-logging-1.1.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/commons-pool2-2.6.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/dom4j-1.6.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/ecj-3.18.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/gson-2.8.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/hamcrest-core-1.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/httpclient-4.3.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/httpcore-4.3.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/httpmime-4.3.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/javax.mail-1.5.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/jedis-3.1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/jsch-0.1.54.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/junit-4.13.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/log4j-1.2.17.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/log4j-api-2.13.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/log4j-core-2.13.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/mchange-commons-java-0.2.19.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/quartz-2.3.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/quartz-jobs-2.3.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/slf4j-api-1.7.25.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/slf4j-log4j12-1.7.25.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-annotations-api-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-dbcp-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-embed-core-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-embed-el-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-embed-jasper-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-embed-websocket-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/tomcat-juli-9.0.36.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/xml-apis-1.0.b2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/xmlpull-1.1.3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/xpp3_min-1.1.4c.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lib/xstream-1.4.11.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lucky-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lucky-sources.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/lucky.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-noxml/target/test-classes/com/lucky/jacklamb/AppTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-scaffold/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/file/FileCopy.java" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/file/FileCopy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/classes/com/lucky/build/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/classes/com/lucky/build/create/CreateProject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/classes/com/lucky/build/file/FileCopy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/classes/com/lucky/build/project/Constant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/classes/com/lucky/build/project/ProjectInFo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lib/commons-io-2.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lib/hamcrest-core-1.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lib/junit-4.11.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lib/lombok-1.18.12.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lucky-build-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/lucky-build.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/target/test-classes/com/lucky/build/AppTest.class" beforeDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/lucky-noxml/target/" />
     <ignored path="$PROJECT_DIR$/lucky-build/target/" />
+    <ignored path="$PROJECT_DIR$/lucky-scaffold/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,11 +543,135 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1856">
+              <caret line="63" column="7" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1197">
+              <caret line="93" column="64" selection-start-line="93" selection-start-column="64" selection-end-line="93" selection-end-column="64" />
+            </state>
+          </provider>
+          <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/appconfig-help.ini">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/test-template.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="64">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lucky-noxml/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="525">
+              <caret line="194" selection-start-line="194" selection-end-line="194" />
+            </state>
+          </provider>
+          <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="344">
+              <caret line="53" column="44" selection-start-line="53" selection-start-column="44" selection-end-line="53" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="32">
+              <caret line="12" column="30" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="30" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/resources/lucky-config/logo/lucky.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret selection-end-line="6" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/java/com/lucky/jacklamb/utils/base/JackLamb.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="32">
+              <caret line="34" selection-start-line="34" selection-end-line="63" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/java/com/lucky/jacklamb/file/utils/FileUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="604">
+              <caret line="417" selection-start-line="417" selection-end-line="431" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>@def</find>
+      <find>@Run</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/file/FileCopy.java" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/OSType.java" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JavkLamb.java" />
+        <option value="$PROJECT_DIR$/lucky-noxml/src/main/resources/lucky-config/logo/lucky.txt" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/pom.xml" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/test-template.java" />
+        <option value="$PROJECT_DIR$/lucky-noxml/pom.xml" />
+      </list>
+    </option>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -29,8 +684,28 @@
     <option name="importingSettings">
       <MavenImportingSettings>
         <option name="importAutomatically" value="true" />
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
       </MavenImportingSettings>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1912" />
@@ -43,7 +718,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -63,28 +737,27 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lucky-build/pom.xml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15273775" />
     <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GitHub-Project\Lucky\lucky-scaffold\src\main\resources\temp" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -98,6 +771,40 @@
       </list>
     </option>
   </component>
+  <component name="RunManager" selected="Application.CreateProject">
+    <configuration name="CreateProject" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.scaffold.create.CreateProject" />
+      <module name="scaffold" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.scaffold.create.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProjectInFo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lucky.scaffold.project.ProjectInFo" />
+      <module name="scaffold" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lucky.scaffold.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.CreateProject" />
+        <item itemvalue="Application.ProjectInFo" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -109,7 +816,9 @@
       <option name="presentableId" value="Default" />
       <updated>1600858058401</updated>
       <workItem from="1600858062012" duration="384000" />
-      <workItem from="1600858483474" duration="1190000" />
+      <workItem from="1600858483474" duration="2539000" />
+      <workItem from="1600861039545" duration="7000" />
+      <workItem from="1600861055845" duration="19819000" />
     </task>
     <task id="LOCAL-00001" summary="2020-9-23 项目重构，加入一个脚手架项目">
       <created>1600859414067</created>
@@ -118,38 +827,47 @@
       <option name="project" value="LOCAL" />
       <updated>1600859414067</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="2020-9-23 项目重构，加入一个脚手架项目">
+      <created>1600860323622</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1600860323622</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1574000" />
+    <option name="totallyTimeSpent" value="22749000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-2" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25266525" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25746268" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Statistic" order="10" />
+      <window_info anchor="bottom" id="Messages" order="0" weight="0.329718" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.27874187" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.3991323" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Statistic" order="13" weight="0.329718" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.32995737" />
       <window_info anchor="right" id="Word Book" order="5" side_tool="true" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Database" order="7" />
@@ -161,6 +879,114 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2020-9-23 项目重构，加入一个脚手架项目" />
     <option name="LAST_COMMIT_MESSAGE" value="2020-9-23 项目重构，加入一个脚手架项目" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/java/com/lucky/jacklamb/utils/regula/Regular.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="89" selection-start-line="89" selection-end-line="90" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/file/FileCopy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="178" column="33" selection-start-line="178" selection-start-column="23" selection-end-line="178" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-120">
+          <caret line="1338" column="19" selection-start-line="1338" selection-start-column="19" selection-end-line="1338" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/OSType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/java/com/lucky/jacklamb/file/utils/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="604">
+          <caret line="417" selection-start-line="417" selection-end-line="431" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/resources/lucky-config/logo/lucky.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="6" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-noxml/src/main/java/com/lucky/jacklamb/utils/base/JackLamb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="34" selection-start-line="34" selection-end-line="63" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="12" column="30" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1197">
+          <caret line="93" column="64" selection-start-line="93" selection-start-column="64" selection-end-line="93" selection-end-column="64" />
+        </state>
+      </provider>
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/main-template.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="12" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/appconfig-help.ini">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1856">
+          <caret line="63" column="7" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="53" column="44" selection-start-line="53" selection-start-column="44" selection-end-line="53" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/test-template.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-noxml/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="194" selection-start-line="194" selection-end-line="194" />
+        </state>
+      </provider>
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
@@ -211,12 +1037,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>scaffold</last-edited>
+          <last-edited>lucky-build</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

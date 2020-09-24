@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/lucky-noxml/lucky.iml" filepath="$PROJECT_DIR$/lucky-noxml/lucky.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lucky-build/scaffold.iml" filepath="$PROJECT_DIR$/lucky-build/scaffold.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lucky-scaffold/scaffold.iml" filepath="$PROJECT_DIR$/lucky-scaffold/scaffold.iml" />
     </modules>
   </component>
 </project>
