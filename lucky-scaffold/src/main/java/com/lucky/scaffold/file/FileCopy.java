@@ -171,4 +171,21 @@ public abstract class FileCopy {
         }
     }
 
+
+    /**
+     * 删除文件夹以及文件夹中所有的文件
+     * @param folder
+     */
+    public static void deleteFile(File folder){
+        File[] files = folder.listFiles();
+        for (File f : files) {
+            if(f.isFile()){
+                f.delete();
+            }else{
+                deleteFile(f);
+            }
+        }
+        folder.delete();
+    }
+
 }

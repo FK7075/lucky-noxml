@@ -91,7 +91,7 @@
           <archive>
             <manifest>
               <!-- 主函数所在类 -->
-              <mainClass>com.lucky.build.create.CreateProject</mainClass>
+              <mainClass>com.lucky.scaffold.create.CreateProject</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
