@@ -1,2 +1,0 @@
-@echo off
-start cmd /c "title clues && java  -Dfile.encoding=utf-8  -jar clue-0.0.1-SNAPSHOT.jar"

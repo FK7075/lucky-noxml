@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bc68d6f7-8b1b-4cf8-acc1-e24064153cf9" name="Default Changelist" comment="2020-9-23 项目重构，加入一个脚手架项目">
-      <change beforePath="$PROJECT_DIR$/lucky-noxml/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-noxml/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" beforeDir="false" afterPath="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/lucky-noxml/target/" />
@@ -52,7 +52,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lucky-noxml/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="461">
@@ -71,11 +71,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="12" column="30" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="30" />
+            <state relative-caret-position="288">
+              <caret line="20" column="104" selection-start-line="20" selection-start-column="104" selection-end-line="20" selection-end-column="104" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -136,12 +136,12 @@
         <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/OSType.java" />
         <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JavkLamb.java" />
         <option value="$PROJECT_DIR$/lucky-noxml/src/main/resources/lucky-config/logo/lucky.txt" />
-        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" />
         <option value="$PROJECT_DIR$/lucky-scaffold/pom.xml" />
         <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/create/CreateProject.java" />
         <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/ProjectInFo.java" />
         <option value="$PROJECT_DIR$/lucky-scaffold/src/main/resources/temp/test-template.java" />
         <option value="$PROJECT_DIR$/lucky-noxml/pom.xml" />
+        <option value="$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java" />
       </list>
     </option>
   </component>
@@ -162,17 +162,7 @@
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
-      <expand>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Lucky" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
-        </path>
-      </expand>
+      <expand />
       <select />
     </treeState>
   </component>
@@ -208,6 +198,45 @@
               <item name="lucky-noxml" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lucky" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lucky-scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="scaffold" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -290,7 +319,7 @@
       <workItem from="1600858062012" duration="384000" />
       <workItem from="1600858483474" duration="2539000" />
       <workItem from="1600861039545" duration="7000" />
-      <workItem from="1600861055845" duration="20499000" />
+      <workItem from="1600861055845" duration="23032000" />
     </task>
     <task id="LOCAL-00001" summary="2020-9-23 项目重构，加入一个脚手架项目">
       <created>1600859414067</created>
@@ -317,11 +346,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23429000" />
+    <option name="totallyTimeSpent" value="25962000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-2" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25746268" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -331,7 +359,7 @@
       <window_info anchor="bottom" id="Messages" order="0" weight="0.329718" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.27874187" />
+      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49946696" visible="true" weight="0.27874187" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -340,13 +368,13 @@
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" />
-      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.50053304" side_tool="true" weight="0.27874187" />
       <window_info anchor="bottom" id="Statistic" order="13" weight="0.329718" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven" order="4" weight="0.32995737" />
+      <window_info anchor="right" id="Maven" order="4" visible="true" weight="0.32995737" />
       <window_info anchor="right" id="Word Book" order="5" side_tool="true" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Database" order="7" />
@@ -410,16 +438,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="12" column="30" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lucky-scaffold/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1197">
@@ -466,6 +484,16 @@
         </state>
       </provider>
       <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lucky-scaffold/src/main/java/com/lucky/scaffold/project/JackLamb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="20" column="104" selection-start-line="20" selection-start-column="104" selection-end-line="20" selection-end-column="104" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">
