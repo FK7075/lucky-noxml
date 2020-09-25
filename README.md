@@ -14,7 +14,7 @@
 
 ​	**1.1 脚手架的获取方式**
 
-​		a.[百度网盘下载](https://pan.baidu.com/s/11eLDRjoYjw3grZ2ImljZjg)   提取码：5sp8
+​		a.[百度网盘下载](https://pan.baidu.com/s/1ReCI4BWtPqfs0A9A3l24wg)   提取码：lucy
 
 ​		b.[GitHub下载](https://github.com/FK7075/lucky-noxml/)    Code -->Download ZIP
 
