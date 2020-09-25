@@ -18,7 +18,7 @@ import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class RepositoryIOC extends ComponentFactory {
+public class RepositoryIOC {
 
 	private static final Logger log= LogManager.getLogger(RepositoryIOC.class);
 

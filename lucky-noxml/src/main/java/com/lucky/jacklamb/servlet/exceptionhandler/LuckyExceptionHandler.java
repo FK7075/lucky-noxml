@@ -121,7 +121,7 @@ public abstract class LuckyExceptionHandler {
                 params[i] = model.getSession();
             } else if (ServletContext.class.isAssignableFrom(type)) {
                 params[i] = model.getServletContext();
-            } else if (Object[].class.isAssignableFrom(type)) {
+            } else if (Object[].class==type) {
                 params[i] = this.params;
             } else if (Object.class.isAssignableFrom(type)) {
                 params[i] = controllerObj;

@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class ControllerIOC extends ComponentFactory{
+public class ControllerIOC {
 
 	private static final Logger log= LogManager.getLogger(ControllerIOC.class);
 

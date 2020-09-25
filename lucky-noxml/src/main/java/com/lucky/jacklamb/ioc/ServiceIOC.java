@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceIOC extends ComponentFactory{
+public class ServiceIOC{
 
 	private static final Logger log= LogManager.getLogger(ServiceIOC.class);
 

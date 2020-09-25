@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.lucky.jacklamb.annotation.aop.After;
+import com.lucky.jacklamb.annotation.aop.Around;
 import com.lucky.jacklamb.annotation.aop.Aspect;
 import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.aop.core.AopPoint;
@@ -96,6 +97,7 @@ public class AspectAOP {
 		Aspect agann;
 		Before before;
 		After after;
+		Around around;
 		PointRun pointRun;
 		Constructor<?> constructor;
 		for (Class<?> aspect : AspectClass) {
@@ -138,8 +140,17 @@ public class AspectAOP {
 							addAspectMap(Aspectid, pointRun);
 							log.info("@Aspect \"[location=After id=" + Aspectid + " class=" + pointRun
 									+ "]\"");
-						} else {
-							continue;
+						} else if(method.isAnnotationPresent(Around.class)) {
+							around = method.getAnnotation(Around.class);
+							if ("".equals(around.value())) {
+								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
+							} else {
+								Aspectid = name + ("." + around.value());
+							}
+							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
+							addAspectMap(Aspectid, pointRun);
+							log.info("@Aspect \"[location=Around id=" + Aspectid + " class=" + pointRun
+									+ "]\"");
 						}
 					}
 				}

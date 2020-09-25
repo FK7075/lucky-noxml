@@ -238,7 +238,6 @@ public final class IOCContainers {
         Class<?> componentClass=component.getClass();
         Field[] fields= ClassUtils.getAllFields(componentClass);
         for(Field field:fields) {
-            field.setAccessible(true);
             Class<?> fieldClass=field.getType();
             if(field.isAnnotationPresent(Autowired.class)) {
                 auto=field.getAnnotation(Autowired.class);

@@ -9,6 +9,7 @@ import com.lucky.jacklamb.enums.Location;
 import com.lucky.jacklamb.exception.IllegaAopparametersException;
 import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.ioc.IOCContainers;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
@@ -71,6 +72,12 @@ public class PointRun {
 			this.point.setPriority(after.priority());
 			this.pointCutClass = after.pointCutClass();
 			this.pointCutMethod = after.pointCutMethod();
+		}else if(method.isAnnotationPresent(Around.class)){
+			Around around=method.getAnnotation(Around.class);
+			this.point=conversion(expand,method,Location.AROUND);
+			this.point.setPriority(around.priority());
+			this.pointCutClass = around.pointCutClass();
+			this.pointCutMethod = around.pointCutMethod();
 		}
 	}
 
@@ -107,7 +114,7 @@ public class PointRun {
 		try {
 			return standardStart(method);
 		}catch(StringIndexOutOfBoundsException e) {
-			throw new RuntimeException("切入点配置错误，错误位置："+method+" ->@Before/@After/@Around(pointcat=>err)", e);
+			throw new RuntimeException("切入点配置错误，错误位置："+method+" ->@Before/@After/@Around(pointCutClass=>err)", e);
 		}
 	}
 	
@@ -122,18 +129,21 @@ public class PointRun {
 		String[] pointcutStr=pointCutMethod.split(",");
 		if(Arrays.asList(pointcutStr).contains("public")) {
 			//是否配置了public,如果配置了public，则所有非public都将不会执行该增强
-			if(!Modifier.isPublic(method.getModifiers()))
+			if(!Modifier.isPublic(method.getModifiers())) {
 				return false;
+			}
 		}
 		for(String str:pointcutStr) {
 			if("*".equals(str)) {
 				return true;
 			}else if(str.contains("(")&&str.endsWith(")")){
-				if(standardMethod(methodName,parameters,str))
+				if(standardMethod(methodName,parameters,str)) {
 					return true;
+				}
 			}else {
-				if(standardName(methodName,str))
+				if(standardName(methodName,str)) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -170,8 +180,9 @@ public class PointRun {
 		boolean pass=true;
 		String[] methodParamStr=pointcut.substring(indexOf+1, pointcut.length()-1).split(" ");
 		if(pointcut.startsWith("!")) {
-			if(methodParamStr.length!=parameters.length)
+			if(methodParamStr.length!=parameters.length) {
 				return true;
+			}
 			methodNameStr=pointcut.substring(1, indexOf);
 			for(int i=0;i<methodParamStr.length;i++) {
 				if(!(methodParamStr[i].equals(parameters[i].getType().getSimpleName()))) {
@@ -181,8 +192,9 @@ public class PointRun {
 			}
 			return !(standardName(mothodName,methodNameStr)&&pass);
 		}else {//没有  ！
-			if(methodParamStr.length!=parameters.length)
+			if(methodParamStr.length!=parameters.length) {
 				return false;
+			}
 			methodNameStr=pointcut.substring(0, indexOf);
 			for(int i=0;i<methodParamStr.length;i++) {
 				if(!(methodParamStr[i].equals(parameters[i].getType().getSimpleName()))) {
@@ -206,75 +218,90 @@ public class PointRun {
 			
 			@Override
 			public Object proceed(AopChain chain) throws Throwable {
+				IOCContainers.injection(expand);
 				if(location==Location.BEFORE) {
-					perform(expand,expandMethod);
+					perform(expand,expandMethod,chain);
 					return chain.proceed();
 				}else if(location==Location.AFTER) {
 					Object result=chain.proceed();
-					perform(expand,expandMethod);
+					perform(expand,expandMethod,chain);
 					return result;
+				}else if(location==Location.AROUND){
+					perform(expand,expandMethod,chain);
 				}
 				return null;
 			}
 			
 			
 			//执行增强方法
-			private Object perform(Object expand, Method expandMethod) {
-				try {
-					expandMethod.setAccessible(true);
-					return expandMethod.invoke(expand, setParams(expandMethod));
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException("IllegalAccessException", e);
-				} catch (IllegalArgumentException e) {
-					throw new RuntimeException("参数类型不匹配!在增强方法中配置了无法从目标方法参数列表获取的参数，错误位置："+expandMethod+ e);
-				} catch (InvocationTargetException e) {
-					throw new RuntimeException("InvocationTargetException", e);
-				}
+			private Object perform(Object expand, Method expandMethod,AopChain chain) {
+				return MethodUtils.invoke(expand,expandMethod,setParams(expandMethod,chain));
 			}
 			
 			//设置增强方法的执行参数-@AopParam配置
-			private Object[] setParams(Method expandMethod) {
+			private Object[] setParams(Method expandMethod,AopChain chain) {
 				int index;
 				String aopParamValue,indexStr;
 				Parameter[] parameters = expandMethod.getParameters();
 				Object[] expandParams=new Object[parameters.length];
 				TargetMethodSignature targetMethodSignature = tlTargetMethodSignature.get();
-				for(int i=0;i<parameters.length;i++) {
-					if(TargetMethodSignature.class.isAssignableFrom(parameters[i].getType())) {
-						expandParams[i]=targetMethodSignature;
-						continue;
-					}
-					if(!parameters[i].isAnnotationPresent(AopParam.class))
-						throw new IllegaAopparametersException("无法识别的AOP参数，前置增强或后置增强中存在无法识别的参数，错误原因：没有使用@AopParam注解标注参数！错误位置："+expandMethod);
-					aopParamValue=parameters[i].getAnnotation(AopParam.class).value();
-					if(aopParamValue.startsWith("ref:")) {//取IOC容器中的值
-						if("ref:".equals(aopParamValue.trim())) 
-							expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(parameters[i].getType());
-						else 
-							expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(aopParamValue.substring(4));
-						
-					}else if(aopParamValue.startsWith("ind:")) {//目标方法中的参数列表值中指定位置的参数值
-						indexStr=aopParamValue.substring(4).trim();
-						try {
-							index=Integer.parseInt(indexStr);
-						}catch(NumberFormatException e) {
-							throw new RuntimeException("错误的表达式，参数表达式中的索引不合法，索引只能为整数！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+				if(expandMethod.isAnnotationPresent(Around.class)){
+					int cursor=0;
+					for(int i=0;i<parameters.length;i++) {
+						if(AopChain.class.isAssignableFrom(parameters[i].getType())){
+							expandParams[i]=chain;
+							cursor++;
 						}
-						if(!targetMethodSignature.containsIndex(index))
-							throw new RuntimeException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
-						expandParams[i]=targetMethodSignature.getParamByIndex(index);	
-					}else if(aopParamValue.equals("[params]")){//整个参数列表
-						expandParams[i]=targetMethodSignature.getParams();
-					}else if(aopParamValue.equals("[method]")) {//Method对象
-						expandParams[i]=targetMethodSignature.getCurrMethod();
-					}else if(aopParamValue.equals("[target]")) {//目标类的Class
-						expandParams[i]=targetMethodSignature.getTargetClass();
-					} else if(aopParamValue.equals("[targetMethodSignature]")){
-						expandParams[i]=targetMethodSignature;
-					}else {//根据参数名得到具体参数
-						if(!targetMethodSignature.containsParamName(aopParamValue))
-							throw new RuntimeException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
-						expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);
+					}
+					if(cursor==0){
+						throw new AopParamsConfigurationException("环绕增强方法中必须要带有一个\"com.lucky.jacklamb.aop.core.AopChain\"类型的参数，并返回Object类型结果，该方法中没有AopChain参数，错误位置："+method);
+					}
+					if(cursor>1){
+						throw new AopParamsConfigurationException("环绕增强方法中有且只能有一个\"com.lucky.jacklamb.aop.core.AopChain\"类型的参数，并返回Object类型结果，该方法中包含"+cursor+"个AopChain参数，错误位置："+method);
+					}
+				}
+				for(int i=0;i<parameters.length;i++) {
+					if(parameters[i].isAnnotationPresent(AopParam.class)){
+						aopParamValue=parameters[i].getAnnotation(AopParam.class).value();
+						if(aopParamValue.startsWith("ref:")) {//取IOC容器中的值
+							if("ref:".equals(aopParamValue.trim())) {
+								expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(parameters[i].getType());
+							} else {
+								expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(aopParamValue.substring(4));
+							}
+
+						}else if(aopParamValue.startsWith("ind:")) {//目标方法中的参数列表值中指定位置的参数值
+							indexStr=aopParamValue.substring(4).trim();
+							try {
+								index=Integer.parseInt(indexStr);
+							}catch(NumberFormatException e) {
+								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引不合法，索引只能为整数！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+							}
+							if(!targetMethodSignature.containsIndex(index)) {
+								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+							}
+							expandParams[i]=targetMethodSignature.getParamByIndex(index);
+						}else if(aopParamValue.equals("[params]")){//整个参数列表
+							expandParams[i]=targetMethodSignature.getParams();
+						}else if(aopParamValue.equals("[method]")) {//Method对象
+							expandParams[i]=targetMethodSignature.getCurrMethod();
+						}else if(aopParamValue.equals("[target]")) {//目标类的Class
+							expandParams[i]=targetMethodSignature.getTargetClass();
+						} else if(aopParamValue.equals("[targetMethodSignature]")){
+							expandParams[i]=targetMethodSignature;
+						}else {//根据参数名得到具体参数
+							if(!targetMethodSignature.containsParamName(aopParamValue)) {
+								throw new AopParamsConfigurationException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+							}
+							expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);
+						}
+					}else{
+						Class<?> paramClass = parameters[i].getType();
+						if(TargetMethodSignature.class.isAssignableFrom(paramClass)) {
+							expandParams[i]=targetMethodSignature;
+						}else if(ApplicationBeans.createApplicationBeans().getBeans(paramClass).size()==1){
+							expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(paramClass);
+						}
 					}
 				}
 				return expandParams;

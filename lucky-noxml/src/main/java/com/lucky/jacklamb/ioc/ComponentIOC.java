@@ -42,7 +42,7 @@ import org.apache.logging.log4j.Logger;
  * @author DELL
  *
  */
-public class ComponentIOC extends ComponentFactory {
+public class ComponentIOC{
 
 	private static final Logger log= LogManager.getLogger(ComponentIOC.class);
 

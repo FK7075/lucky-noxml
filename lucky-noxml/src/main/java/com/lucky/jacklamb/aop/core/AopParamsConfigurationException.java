@@ -1,0 +1,20 @@
+package com.lucky.jacklamb.aop.core;
+
+import com.lucky.jacklamb.ioc.ComponentIOC;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * @author fk7075
+ * @version 1.0
+ * @date 2020/9/25 15:33
+ */
+public class AopParamsConfigurationException extends RuntimeException {
+
+    private static final Logger log= LogManager.getLogger(AopParamsConfigurationException.class);
+
+    public AopParamsConfigurationException(String msg){
+        super(msg);
+        log.error(msg,this);
+    }
+}

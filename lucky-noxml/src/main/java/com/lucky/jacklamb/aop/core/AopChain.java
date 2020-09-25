@@ -2,6 +2,7 @@ package com.lucky.jacklamb.aop.core;
 
 import java.util.List;
 
+import com.lucky.jacklamb.ioc.IOCContainers;
 import net.sf.cglib.proxy.MethodProxy;
 
 public class AopChain {
@@ -39,30 +40,21 @@ public class AopChain {
 		this.target = target;
 	}
 
-
-
 	public Object[] getParams() {
 		return params;
 	}
-
-
 
 	public void setParams(Object[] params) {
 		this.params = params;
 	}
 
-
-
 	public MethodProxy getMethodProxy() {
 		return methodProxy;
 	}
 
-
-
 	public void setMethodProxy(MethodProxy methodProxy) {
 		this.methodProxy = methodProxy;
 	}
-
 
 	public Object proceed() throws Throwable {
 		Object result;
@@ -70,6 +62,7 @@ public class AopChain {
 			result=methodProxy.invokeSuper(target, params);
 		}else {
 			AopPoint point=points.get(index);
+			IOCContainers.injection(point);
 			result=point.proceed(this);
 		}
 		return result;

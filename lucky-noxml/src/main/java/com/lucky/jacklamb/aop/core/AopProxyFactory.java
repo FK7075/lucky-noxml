@@ -1,9 +1,6 @@
 package com.lucky.jacklamb.aop.core;
 
-import com.lucky.jacklamb.annotation.aop.After;
-import com.lucky.jacklamb.annotation.aop.Before;
-import com.lucky.jacklamb.annotation.aop.Cacheable;
-import com.lucky.jacklamb.annotation.aop.Transaction;
+import com.lucky.jacklamb.annotation.aop.*;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
@@ -22,14 +19,12 @@ import java.util.Map;
  */
 public class AopProxyFactory {
 	
-	public static List<PointRun> createPointRuns(Class<?> AspectClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+	public static List<PointRun> createPointRuns(Class<?> AspectClass) {
 		List<PointRun> pointRuns=new ArrayList<>();
-		Constructor<?> constructor = AspectClass.getConstructor();
-		constructor.setAccessible(true);
-		Object Aspect=constructor.newInstance();
+		Object Aspect=ClassUtils.newObject(AspectClass);
 		Method[] AspectMethods=AspectClass.getDeclaredMethods();
 		for(Method method:AspectMethods) {
-			if(method.isAnnotationPresent(Before.class)||method.isAnnotationPresent(After.class))
+			if(method.isAnnotationPresent(Before.class)||method.isAnnotationPresent(After.class)||method.isAnnotationPresent(Around.class))
 				pointRuns.add(new PointRun(Aspect,method));
 		}
 		return pointRuns;

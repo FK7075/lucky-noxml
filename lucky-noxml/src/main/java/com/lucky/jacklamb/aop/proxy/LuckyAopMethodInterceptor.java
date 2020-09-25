@@ -46,6 +46,11 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 
 	@Override
 	public Object intercept(Object target, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+		String methodName=method.getName();
+		//toString和hashCode方法不执行代理
+		if("toString".equals(methodName)||"hashCode".equals(methodName)){
+			return methodProxy.invokeSuper(target,params);
+		}
 //		如果是final方法则执行原方法
 //		if(Modifier.isFinal(method.getModifiers())){
 //			return methodProxy.invokeSuper(target,params);

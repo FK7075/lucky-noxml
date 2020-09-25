@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.enums;
 
+import com.lucky.jacklamb.annotation.aop.Around;
+
 public enum Location {
 	
 	/**
@@ -13,5 +15,10 @@ public enum Location {
 	/**
 	 * 后置增强
 	 */
-	AFTER;
+	AFTER,
+
+	/**
+	 * 环绕增强
+	 */
+	AROUND
 }

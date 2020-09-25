@@ -47,11 +47,11 @@ public class ProjectInFo {
         operating.push("a");
         operating.push("g");
         prompt=new HashMap<>();
-        prompt.put("g","请输入 groupId                  => : ");
-        prompt.put("a","请输入 artifactId               => : ");
-        prompt.put("v","请输入 version                  => : ");
-        prompt.put("m","请输入 MavenRepository          => : ");
-        prompt.put("p","请输入生成项目的父级目录        => : ");
+        prompt.put("g","请输入 groupId                  _>: ");
+        prompt.put("a","请输入 artifactId               _> : ");
+        prompt.put("v","请输入 version                  _> : ");
+        prompt.put("m","请输入 MavenRepository          _> : ");
+        prompt.put("p","请输入生成项目的父级目录        _> : ");
         prompt.put("o","所有必要配置已配置完成，请输入任意非命令字符结束输入 _>:");
     }
 
@@ -95,8 +95,8 @@ public class ProjectInFo {
         JackLamb.welcome();
         System.out.println("欢迎使用Lucky脚手架，请依照指引完成生成Lucky项目的必要配置！");
         ProjectInFo pif=new ProjectInFo();
+        Scanner sc = new Scanner(System.in);
         while (!operating.isEmpty()){
-            Scanner sc = new Scanner(System.in);
             String currOP=operating.pop();
             switch (currOP){
                 case "g":{
