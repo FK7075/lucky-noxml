@@ -227,7 +227,7 @@ public class PointRun {
 					perform(expand,expandMethod,chain);
 					return result;
 				}else if(location==Location.AROUND){
-					perform(expand,expandMethod,chain);
+					return perform(expand,expandMethod,chain);
 				}
 				return null;
 			}
