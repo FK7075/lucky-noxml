@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 声明一个代理对象
+ * 声明一个代理对象, 该对象将会被当作一种增强
  * @author fk-7075
  *
  */

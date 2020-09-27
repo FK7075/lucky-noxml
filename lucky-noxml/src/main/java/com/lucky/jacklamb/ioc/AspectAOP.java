@@ -127,7 +127,7 @@ public class AspectAOP {
 							}
 							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
-							log.info("@Aspect \"[location=Before id=" + Aspectid + " class=" + pointRun
+							log.info("@Aspect \"[location=Before id=" + Aspectid + " priority="+before.priority() +" class=" + pointRun
 									+ "]\"");
 						} else if (method.isAnnotationPresent(After.class)) {
 							after = method.getAnnotation(After.class);
@@ -138,7 +138,7 @@ public class AspectAOP {
 							}
 							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
-							log.info("@Aspect \"[location=After id=" + Aspectid + " class=" + pointRun
+							log.info("@Aspect \"[location=After id=" + Aspectid + " priority="+after.priority() +" class=" + pointRun
 									+ "]\"");
 						} else if(method.isAnnotationPresent(Around.class)) {
 							around = method.getAnnotation(Around.class);
@@ -149,7 +149,7 @@ public class AspectAOP {
 							}
 							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
-							log.info("@Aspect \"[location=Around id=" + Aspectid + " class=" + pointRun
+							log.info("@Aspect \"[location=Around id=" + Aspectid + " priority="+around.priority() +" class=" + pointRun
 									+ "]\"");
 						}
 					}

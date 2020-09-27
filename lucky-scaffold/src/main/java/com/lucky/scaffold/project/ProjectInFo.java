@@ -47,7 +47,7 @@ public class ProjectInFo {
         operating.push("a");
         operating.push("g");
         prompt=new HashMap<>();
-        prompt.put("g","请输入 groupId                  _>: ");
+        prompt.put("g","请输入 groupId                  _> : ");
         prompt.put("a","请输入 artifactId               _> : ");
         prompt.put("v","请输入 version                  _> : ");
         prompt.put("m","请输入 MavenRepository          _> : ");

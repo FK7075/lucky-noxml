@@ -11,7 +11,7 @@ import com.lucky.jacklamb.junit.LuckyRunner;
 public class @:MainNameTest {
 
     @Test
-    public static void main( String[] args ) {
+    public void luckyTest() {
         System.out.print("This is Lucky Test...");
     }
 

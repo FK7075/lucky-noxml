@@ -11,10 +11,12 @@ import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.IOCContainers;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Map;
 
 public class PointRun {
 	
@@ -281,14 +283,6 @@ public class PointRun {
 								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
 							}
 							expandParams[i]=targetMethodSignature.getParamByIndex(index);
-						}else if(aopParamValue.equals("[params]")){//整个参数列表
-							expandParams[i]=targetMethodSignature.getParams();
-						}else if(aopParamValue.equals("[method]")) {//Method对象
-							expandParams[i]=targetMethodSignature.getCurrMethod();
-						}else if(aopParamValue.equals("[target]")) {//目标类的Class
-							expandParams[i]=targetMethodSignature.getTargetClass();
-						} else if(aopParamValue.equals("[targetMethodSignature]")){
-							expandParams[i]=targetMethodSignature;
 						}else {//根据参数名得到具体参数
 							if(!targetMethodSignature.containsParamName(aopParamValue)) {
 								throw new AopParamsConfigurationException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
@@ -299,8 +293,24 @@ public class PointRun {
 						Class<?> paramClass = parameters[i].getType();
 						if(TargetMethodSignature.class.isAssignableFrom(paramClass)) {
 							expandParams[i]=targetMethodSignature;
+						}else if(Class.class.isAssignableFrom(paramClass)){
+							expandParams[i]=targetMethodSignature.getTargetClass();
+						}else if(Method.class.isAssignableFrom(paramClass)){
+							expandParams[i]=targetMethodSignature.getCurrMethod();
 						}else if(ApplicationBeans.createApplicationBeans().getBeans(paramClass).size()==1){
 							expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(paramClass);
+						}else if(Object[].class==paramClass){
+							expandParams[i]=targetMethodSignature.getParams();
+						}else if(Parameter[].class==paramClass){
+							expandParams[i]=targetMethodSignature.getParameters();
+						}else if(Map.class.isAssignableFrom(paramClass)){
+							Class<?>[] genericType = ClassUtils.getGenericType(parameters[i].getParameterizedType());
+							if(genericType[0]==Integer.class&&genericType[1]==Object.class){
+								expandParams[i]=targetMethodSignature.getIndexMap();
+							}
+							if(genericType[0]==String.class&&genericType[1]==Object.class){
+								expandParams[i]=targetMethodSignature.getNameMap();
+							}
 						}
 					}
 				}
