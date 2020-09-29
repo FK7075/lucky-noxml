@@ -15,10 +15,6 @@ import java.io.*;
 public class CreateProject {
 
     private static final ProjectInFo project=ProjectInFo.getFinalProjectInFo(ProjectInFo.inputProjectInfo());
-    private static final String JAVA="/src/main/java/";
-    private static final String RESOURCES="/src/main/resources/";
-    private static final String TEST_JAVA="/src/test/java/";
-    private static final String TEST_RESOURCES="/src/test/resources/";
     private static final InputStream POM_TEMP=CreateProject.class.getResourceAsStream("/temp/pom-template.xml");
     private static final InputStream IML_TEMP=CreateProject.class.getResourceAsStream("/temp/idea-template.iml");
     private static final InputStream MAIN_TEMP=CreateProject.class.getResourceAsStream("/temp/main-template.java");

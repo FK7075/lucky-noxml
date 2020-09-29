@@ -19,9 +19,12 @@ public class Constant {
     public static final String MAIN_CLASS="@:MainClass";
     /** 启动类类名 */
     public static final String MAIN_NAME="@:MainName";
-
     public static final String $="@L@";
-
     public static final String PACKAGE="@:Package";
+    public static final String JAVA="/src/main/java/";
+    public static final String TOOL="/src/main/tool/scaffold/";
+    public static final String RESOURCES="/src/main/resources/";
+    public static final String TEST_JAVA="/src/test/java/";
+    public static final String TEST_RESOURCES="/src/test/resources/";
 
 }

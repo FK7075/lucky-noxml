@@ -1,2 +1,2 @@
-java -jar lucky-scaffold-interactive.jar
+java -jar lucky-scaffold-jar-with-dependencies.jar
 pause

@@ -19,8 +19,6 @@ public class ProjectInFo {
 
     private static final String dir = System.getProperty("user.dir");
 
-    private static final String PATH="@\"^[a-zA-Z]:(((\\\\(?! )[^/:*?<>\\\"\"|\\\\]+)+\\\\?)|(\\\\)?)\\s*$\"";
-
     private static Stack<String> operating;
 
     private static Map<String,String> prompt;
@@ -28,6 +26,8 @@ public class ProjectInFo {
     private String groupId;
 
     private String mavenRepository;
+
+    private String scaffold;
 
     private String projectPath=dir;
 
@@ -59,7 +59,12 @@ public class ProjectInFo {
 
     private static Properties readCfg() throws IOException {
         String cfgPath=dir.endsWith(File.separator)?dir+"build.properties":dir+File.separator+"build.properties";
-        BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(cfgPath),"UTF-8"));
+        BufferedReader br=null;
+        if(new File(cfgPath).exists()){
+            br=new BufferedReader(new InputStreamReader(new FileInputStream(cfgPath),"UTF-8"));
+        }else{
+            br=new BufferedReader(new InputStreamReader(ProjectInFo.class.getResourceAsStream("/build.properties"),"UTF-8"));
+        }
         Properties properties=new Properties();
         properties.load(br);
         return properties;
@@ -103,7 +108,12 @@ public class ProjectInFo {
                     System.out.print(prompt.get(currOP));
                     String in = sc.nextLine();
                     if(addOP(in,currOP,pif)){
-                        pif.setGroupId(in);
+                        if(isPackage(in)){
+                            pif.setGroupId(in);
+                        }else{
+                            System.out.println("不合法的groupId："+in);
+                            operating.push("g");
+                        }
                     }
                     break;
                 }
@@ -111,7 +121,12 @@ public class ProjectInFo {
                     System.out.print(prompt.get(currOP));
                     String in = sc.nextLine();
                     if(addOP(in,currOP,pif)){
-                        pif.setArtifactId(in);
+                        if(isValidFileName(in)){
+                            pif.setArtifactId(in);
+                        }else{
+                            System.out.println("不合法的artifactId："+in);
+                            operating.push("a");
+                        }
                     }
                     break;
                 }
@@ -308,9 +323,30 @@ public class ProjectInFo {
         return pattern.matcher(target).matches();
     }
 
+    private static final Pattern JAVA_PACKAGE=Pattern.compile("[a-zA-Z]+[0-9a-zA-Z_]*(\\.[a-zA-Z]+[0-9a-zA-Z_]*)*");
+
+    public static boolean isPackage(String packageStr){
+        return JAVA_PACKAGE.matcher(packageStr).matches();
+    }
+
+
+    public static boolean isValidFileName(String fileName) {
+        if (fileName == null || fileName.length() > 255||fileName.startsWith(" ")) {
+            return false;
+        } else{
+            String[] d={"?","*",":","\"","<",">","\\","/","|"};
+            for (String s : d) {
+                if(fileName.contains(s)){
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println(getFinalProjectInFo(inputProjectInfo()));
-//        System.out.println(checkPathValid("D:\\fefwfe\\dwqdq\\qwdq"));
+//        System.out.println(getFinalProjectInFo(inputProjectInfo()));
+        System.out.println(isPackage("com.vfv.w7ewr.ku"));
     }
 
 
