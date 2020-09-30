@@ -1,5 +1,9 @@
 package com.lucky.jacklamb.servlet;
 
+import com.lucky.jacklamb.enums.RequestMethod;
+import com.lucky.jacklamb.servlet.core.Model;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +33,25 @@ public class LuckyWebContext {
 	private HttpServletResponse response=null;
 	private ServletContext application=null;
 	private HttpSession session=null;
-	
+	private RequestMethod requestMethod=null;
+	private ServletConfig servletConfig=null;
+
+	public RequestMethod getRequestMethod() {
+		return requestMethod;
+	}
+
+	public void setRequestMethod(RequestMethod requestMethod) {
+		this.requestMethod = requestMethod;
+	}
+
+	public ServletConfig getServletConfig() {
+		return servletConfig;
+	}
+
+	public void setServletConfig(ServletConfig servletConfig) {
+		this.servletConfig = servletConfig;
+	}
+
 	public ServletContext getApplication() {
 		return application;
 	}

@@ -193,6 +193,8 @@ public class UrlParsMap {
 		luckyWebContext.setResponse(model.getResponse());
 		luckyWebContext.setSession(model.getSession());
 		luckyWebContext.setApplication(model.getServletContext());
+		luckyWebContext.setRequestMethod(model.getRequestMethod());
+		luckyWebContext.setServletConfig(model.getServletConfig());
 		LuckyWebContext.setContext(luckyWebContext);
 	}
 

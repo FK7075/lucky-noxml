@@ -17,4 +17,9 @@ public class AopParamsConfigurationException extends RuntimeException {
         super(msg);
         log.error(msg,this);
     }
+
+    public AopParamsConfigurationException(String msg,Throwable e){
+        super(msg,e);
+        log.error(msg,this);
+    }
 }

@@ -10,10 +10,12 @@ import com.lucky.jacklamb.exception.IllegaAopparametersException;
 import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.IOCContainers;
+import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Map;
@@ -25,9 +27,15 @@ public class PointRun {
 	private String pointCutClass;
 	
 	private String pointCutMethod;
+
+	private Class<? extends Annotation>[] pointCutAnnotation;
 	
 	public Method method;
-	
+
+	public Method getMethod() {
+		return method;
+	}
+
 	/**
 	 * 使用一个Point对象构造PointRun
 	 * @param point
@@ -39,6 +47,7 @@ public class PointRun {
 		this.point.setPriority(exp.priority());
 		this.pointCutClass = exp.pointCutClass();
 		this.pointCutMethod = exp.pointCutMethod();
+		this.pointCutAnnotation=exp.pointCutAnnotation();
 	}
 	
 	/**
@@ -52,6 +61,7 @@ public class PointRun {
 		this.point.setPriority(exp.priority());
 		this.pointCutClass = exp.pointCutClass();
 		this.pointCutMethod = exp.pointCutMethod();
+		this.pointCutAnnotation=exp.pointCutAnnotation();
 
 	}
 
@@ -68,35 +78,46 @@ public class PointRun {
 			this.point.setPriority(before.priority());
 			this.pointCutClass = before.pointCutClass();
 			this.pointCutMethod = before.pointCutMethod();
+			this.pointCutAnnotation=before.pointCutAnnotation();
 		}else if(method.isAnnotationPresent(After.class)) {
 			After after=method.getAnnotation(After.class);
 			this.point=conversion(expand,method,Location.AFTER);
 			this.point.setPriority(after.priority());
 			this.pointCutClass = after.pointCutClass();
 			this.pointCutMethod = after.pointCutMethod();
+			this.pointCutAnnotation=after.pointCutAnnotation();
 		}else if(method.isAnnotationPresent(Around.class)){
 			Around around=method.getAnnotation(Around.class);
 			this.point=conversion(expand,method,Location.AROUND);
 			this.point.setPriority(around.priority());
 			this.pointCutClass = around.pointCutClass();
 			this.pointCutMethod = around.pointCutMethod();
+			this.pointCutAnnotation=around.pointCutAnnotation();
 		}
 	}
 
-	public String getMateClass() {
+	public String getPointCutClass() {
 		return pointCutClass;
 	}
 
-	public void setMateClass(String mateClass) {
+	public void setPointCutClass(String mateClass) {
 		this.pointCutClass = mateClass;
 	}
 
-	public String getMateMethod() {
+	public String getPointCutMethod() {
 		return pointCutMethod;
 	}
 
-	public void setMateMethod(String mateMethod) {
+	public void setPointCutMethod(String mateMethod) {
 		this.pointCutMethod = mateMethod;
+	}
+
+	public Class<? extends Annotation>[] getPointCutAnnotation() {
+		return pointCutAnnotation;
+	}
+
+	public void setPointCutAnnotation(Class<? extends Annotation>[] pointCutAnnotation) {
+		this.pointCutAnnotation = pointCutAnnotation;
 	}
 
 	public AopPoint getPoint() {
@@ -113,11 +134,7 @@ public class PointRun {
 	 * @return
 	 */
 	public boolean standard(Method method) {
-		try {
-			return standardStart(method);
-		}catch(StringIndexOutOfBoundsException e) {
-			throw new RuntimeException("切入点配置错误，错误位置："+method+" ->@Before/@After/@Around(pointCutClass=>err)", e);
-		}
+		return standardStart(method);
 	}
 	
 	/**
@@ -128,24 +145,60 @@ public class PointRun {
 	private boolean standardStart(Method method) {
 		String methodName=method.getName();
 		Parameter[] parameters = method.getParameters();
-		String[] pointcutStr=pointCutMethod.split(",");
-		if(Arrays.asList(pointcutStr).contains("public")) {
-			//是否配置了public,如果配置了public，则所有非public都将不会执行该增强
-			if(!Modifier.isPublic(method.getModifiers())) {
-				return false;
-			}
+		String[] pointCutMethodArray=pointCutMethod.split(",");
+		//注解验证,如果存在注解配置，则pointCutMethod配置将失效
+		if(pointCutAnnotation.length!=0){
+			return standardAnnotation(method);
 		}
-		for(String str:pointcutStr) {
-			if("*".equals(str)) {
+
+
+		for(String methodCut:pointCutMethodArray) {
+			methodCut=methodCut.trim();
+
+			//访问修饰符验证
+			if("public".equals(methodCut)){
+				//是否配置了public,如果配置了public，则所有非public都将不会执行该增强
+				if(!Modifier.isPublic(method.getModifiers())) {
+					return false;
+				}
+			}
+			if("private".equals(methodCut)){
+				//如果配置了private，则所有非private都将不会执行该增强
+				if(!Modifier.isPrivate(method.getModifiers())) {
+					return false;
+				}
+			}
+			if("protected".equals(methodCut)){
+				//如果配置了protected，则所有非protected都将不会执行该增强
+				if(!Modifier.isProtected(method.getModifiers())) {
+					return false;
+				}
+			}
+			//方法名验证以及方法名+参数类型简写验证
+			if("*".equals(methodCut)) {
 				return true;
-			}else if(str.contains("(")&&str.endsWith(")")){
-				if(standardMethod(methodName,parameters,str)) {
+			}else if(methodCut.contains("(")&&methodCut.endsWith(")")){
+				if(standardMethod(methodName,parameters,methodCut)) {
 					return true;
 				}
 			}else {
-				if(standardName(methodName,str)) {
+				if(standardName(methodName,methodCut)) {
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 注解验证
+	 * @param method
+	 * @return
+	 */
+	private boolean standardAnnotation(Method method){
+		for (Class<? extends Annotation> aClass : pointCutAnnotation) {
+			if(method.isAnnotationPresent(aClass)){
+				return true;
 			}
 		}
 		return false;
@@ -301,6 +354,13 @@ public class PointRun {
 							expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(paramClass);
 						}else if(Object[].class==paramClass){
 							expandParams[i]=targetMethodSignature.getParams();
+						}else if(Model.class.isAssignableFrom(paramClass)){
+							try{
+								expandParams[i]=new Model();
+							}catch (NullPointerException e){
+								throw new AopParamsConfigurationException("错误的Aop参数配置！检测到当前的运行环境为【非Web环境】,所以无法构造com.lucky.jacklamb.servlet.core.Model对象的实例，错误位置："+method,e);
+							}
+
 						}else if(Parameter[].class==paramClass){
 							expandParams[i]=targetMethodSignature.getParameters();
 						}else if(Map.class.isAssignableFrom(paramClass)){

@@ -58,7 +58,7 @@ public abstract class LuckyJumpFilter implements Filter {
 		response.setCharacterEncoding("utf8");
 		response.setHeader("Content-Type", "text/html;charset=utf-8");
 		uri = request.getRequestURI();
-		model = new Model(request, response);
+		model = new Model();
 		session=model.getSession();
 		filterChain = chain;
 		filter();

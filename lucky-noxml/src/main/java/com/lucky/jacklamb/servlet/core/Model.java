@@ -7,6 +7,7 @@ import com.lucky.jacklamb.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
+import com.lucky.jacklamb.servlet.LuckyWebContext;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.JackLamb;
 import org.apache.commons.io.IOUtils;
@@ -117,6 +118,19 @@ public class Model {
         this.parameterMap = getRequestParameterMap();
         this.multipartFileMap = new HashMap<>();
         restMap = new HashMap<>();
+        baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
+    }
+
+    public Model(){
+        LuckyWebContext currentContext = LuckyWebContext.getCurrentContext();
+        req = currentContext.getRequest();
+        resp = currentContext.getResponse();
+        servletConfig=currentContext.getServletConfig();
+        requestMethod=currentContext.getRequestMethod();
+        this.parameterMap = getRequestParameterMap();
+        this.multipartFileMap = new HashMap<>();
+        restMap = new HashMap<>();
+        this.uploadFileMap = new HashMap<>();
         baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
