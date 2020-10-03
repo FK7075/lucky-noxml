@@ -1,0 +1,9 @@
+{
+  "direct": [
+    "com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint",
+    "com.lucky.jacklamb.aop.expandpoint.TransactionPoint"
+  ],
+  "judgment": [
+
+  ]
+}

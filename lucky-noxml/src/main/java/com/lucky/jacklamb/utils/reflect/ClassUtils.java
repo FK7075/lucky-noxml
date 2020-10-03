@@ -102,4 +102,13 @@ public abstract class ClassUtils {
     public static boolean isBasic(Class<?> clzz){
         return clzz.getClassLoader()==null;
     }
+
+    public static Class<?> getClass(String className){
+        try {
+            Class<?> aClass = Class.forName(className);
+            return aClass;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
+import com.lucky.jacklamb.file.Resources;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.base.JackLamb;
@@ -30,7 +31,7 @@ public class ApplicationBeans {
 		JackLamb.welcome();
 		try {
 			Properties p=new Properties();
-			p.load(new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/log4j2.xml"),"UTF-8")));
+			p.load(new BufferedReader(new InputStreamReader(Resources.getInputStream("/log4j2.xml"),"UTF-8")));
 			PropertyConfigurator.configure(p);
 		} catch (Exception e) {
 			e.printStackTrace();

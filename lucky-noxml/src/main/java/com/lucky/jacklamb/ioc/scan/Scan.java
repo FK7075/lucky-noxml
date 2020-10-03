@@ -1,34 +1,33 @@
  package com.lucky.jacklamb.ioc.scan;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Stream;
+ import com.lucky.jacklamb.annotation.aop.Aspect;
+ import com.lucky.jacklamb.annotation.ioc.*;
+ import com.lucky.jacklamb.annotation.mvc.*;
+ import com.lucky.jacklamb.annotation.orm.Table;
+ import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
+ import com.lucky.jacklamb.aop.core.AopPoint;
+ import com.lucky.jacklamb.conversion.annotation.Conversion;
+ import com.lucky.jacklamb.httpclient.registry.RegistrationController;
+ import com.lucky.jacklamb.httpclient.service.LuckyClientController;
+ import com.lucky.jacklamb.ioc.config.AppConfig;
+ import com.lucky.jacklamb.ioc.config.ApplicationConfig;
+ import com.lucky.jacklamb.ioc.config.LuckyConfig;
+ import com.lucky.jacklamb.ioc.config.ScanConfig;
+ import com.lucky.jacklamb.ioc.enums.IocCode;
+ import com.lucky.jacklamb.quartz.ann.QuartzJobs;
+ import com.lucky.jacklamb.rest.LSON;
+ import com.lucky.jacklamb.rest.XStreamAllowType;
+ import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
 
-import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.ioc.*;
-import com.lucky.jacklamb.annotation.mvc.*;
-import com.lucky.jacklamb.annotation.orm.Table;
-import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
-import com.lucky.jacklamb.aop.core.AopPoint;
-import com.lucky.jacklamb.conversion.annotation.Conversion;
-import com.lucky.jacklamb.httpclient.registry.RegistrationController;
-import com.lucky.jacklamb.httpclient.service.LuckyClientController;
-import com.lucky.jacklamb.ioc.config.ApplicationConfig;
-import com.lucky.jacklamb.ioc.config.AppConfig;
-import com.lucky.jacklamb.ioc.config.LuckyConfig;
-import com.lucky.jacklamb.ioc.config.ScanConfig;
-import com.lucky.jacklamb.ioc.enums.IocCode;
-import com.lucky.jacklamb.quartz.ann.QuartzJobs;
-import com.lucky.jacklamb.rest.LSON;
-import com.lucky.jacklamb.rest.XStreamAllowType;
-import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpoint;
+ import javax.websocket.Endpoint;
+ import javax.websocket.server.ServerApplicationConfig;
+ import javax.websocket.server.ServerEndpoint;
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Method;
+ import java.util.*;
+ import java.util.stream.Stream;
 
  /**
  * 包扫描的基类
@@ -38,6 +37,7 @@ import javax.websocket.server.ServerEndpoint;
 public abstract class Scan {
 
 	 private static final Logger log= LogManager.getLogger(Scan.class);
+//	 private static final InternalComponents internalComponents=InternalComponents.getInternalComponents();
 
 	 protected LSON lson;
 	
@@ -122,6 +122,7 @@ public abstract class Scan {
 		}else {
 			suffixScan();
 		}
+//		aspectClass.addAll(internalComponents.getDirectClass());
 		componentClassMap.put("controller", controllerClass);
 		componentClassMap.put("service", serviceClass);
 		componentClassMap.put("repository", repositoryClass);
