@@ -6,18 +6,16 @@ import com.lucky.jacklamb.annotation.aop.Around;
 import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.enums.Location;
-import com.lucky.jacklamb.exception.IllegaAopparametersException;
-import com.lucky.jacklamb.exception.PointRunException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.IOCContainers;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
-import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.Map;
 
 public class PointRun {
@@ -371,6 +369,11 @@ public class PointRun {
 							if(genericType[0]==String.class&&genericType[1]==Object.class){
 								expandParams[i]=targetMethodSignature.getNameMap();
 							}
+						}else if(Annotation.class.isAssignableFrom(paramClass)){
+							Class<? extends Annotation> ann= (Class<? extends Annotation>) paramClass;
+							if(targetMethodSignature.getCurrMethod().isAnnotationPresent(ann)){
+								expandParams[i]=targetMethodSignature.getCurrMethod().getAnnotation(ann);
+							}
 						}
 					}
 				}
@@ -379,5 +382,6 @@ public class PointRun {
 		};
 		return cpoint;
 	}
+
 	
 }
