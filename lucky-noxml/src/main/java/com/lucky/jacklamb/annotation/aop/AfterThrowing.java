@@ -28,8 +28,7 @@ public @interface AfterThrowing {
 	 * <p>
 	 *  path:表示增强某个路径下的所有IOC组件，eg:pointCutClass="path:com.lucky.*" OR pointCutClass="path:com.lucky.User"</p>
 	 * <p>
-	 *  ann: 表示增强被某一个注解标注的所有IOC组件 eg:pointCutClass="ann:com.lucky.MyAnnotation,org.lucky.HelloAnnotation"
-	 * </p>
+	 *  ann: 表示增强被某一个注解标注的所有IOC组件 eg:pointCutClass="ann:com.lucky.MyAnnotation,org.lucky.HelloAnnotation"</p>
 	 * @return
 	 */
 	String pointCutClass() default "ioc:service";
@@ -37,10 +36,10 @@ public @interface AfterThrowing {
 	/**
 	 * 配置切点(Method)， 增强方法执行的范围，用来定位需要代理的真实类的一些具体方法<br>
 	 * 多个值使用","分隔,支持"*"、"!"<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * 方法名定位：需要增强的方法名，eg:pointCutMethod="method1,method2"<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * 方法名+参数类型定位：需要增强的方法名+参数列表，eg:pointCutMethod="method1(String,int),method2(User,Double)"<br>
+	 * <p>
+	 *   方法名定位：需要增强的方法名，eg:pointCutMethod="method1,method2"</p>
+	 * <p>
+	 *    方法名+参数类型定位：需要增强的方法名+参数列表，eg:pointCutMethod="method1(String,int),method2(User,Double)"</p>
 	 * @return
 	 */
 	String pointCutMethod() default "public,*";

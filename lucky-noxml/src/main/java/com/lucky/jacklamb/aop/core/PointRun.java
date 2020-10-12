@@ -348,8 +348,8 @@ public class PointRun {
 					}
 				}
 				for(int i=0;i<parameters.length;i++) {
-					if(parameters[i].isAnnotationPresent(AopParam.class)){
-						aopParamValue=parameters[i].getAnnotation(AopParam.class).value();
+					if(parameters[i].isAnnotationPresent(Param.class)){
+						aopParamValue=parameters[i].getAnnotation(Param.class).value();
 						if(aopParamValue.startsWith("ref:")) {//取IOC容器中的值
 							if("ref:".equals(aopParamValue.trim())) {
 								expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(parameters[i].getType());
@@ -361,10 +361,10 @@ public class PointRun {
 							try {
 								index=Integer.parseInt(indexStr);
 							}catch(NumberFormatException e) {
-								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引不合法，索引只能为整数！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引不合法，索引只能为整数！错误位置："+expandMethod+"@Param("+aopParamValue+")=>err");
 							}
 							if(!targetMethodSignature.containsIndex(index)) {
-								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+								throw new AopParamsConfigurationException("错误的表达式，参数表达式中的索引超出参数列表索引范围！错误位置："+expandMethod+"@Param("+aopParamValue+")=>err");
 							}
 							expandParams[i]=targetMethodSignature.getParamByIndex(index);
 						}else {//根据参数名得到具体参数

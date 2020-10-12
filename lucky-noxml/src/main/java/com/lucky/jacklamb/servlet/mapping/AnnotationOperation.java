@@ -105,7 +105,7 @@ public class AnnotationOperation {
                     if(in.available()/1024>webCfg.getMultipartMaxFileSize()) {
                         throw new FileSizeCrossingException("单个文件超过最大上传限制："+webCfg.getMultipartMaxFileSize()+"kb");
                     }
-                    MultipartFile mfp = new MultipartFile(in, model.getRealPath("/"), filename);
+                    MultipartFile mfp = new MultipartFile(in,model,filename);
                     multipartFiles[fileIndex] = mfp;
                     fileIndex++;
                 } else {

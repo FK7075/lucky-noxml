@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.file;
 
 import com.lucky.jacklamb.file.utils.FileUtils;
+import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 
 import java.io.*;
@@ -11,21 +12,21 @@ public class MultipartFile {
 	private InputStream originalFileInputStream;//用户上传的文件对应的输入流
 	private String uploadFileName;//文件上传到服务器后的文件名
 	private String fileType;//文件类型
-	private String projectPath;//项目的路径
 	private String originalFileName;//原始的文件名
-	
+	private Model model;
+
 	/**
-	 * 
+	 *
 	 * @param originalFileInputStream
-	 * @param projectPath
+	 * @param model
 	 * @param filename
 	 */
-	public MultipartFile(InputStream originalFileInputStream,String projectPath,String filename) {
+	public MultipartFile(InputStream originalFileInputStream,Model model,String filename) {
 		this.originalFileInputStream=originalFileInputStream;
 		this.originalFileName=filename;
 		this.fileType=filename.substring(filename.lastIndexOf("."));;
 		this.uploadFileName=originalFileName.replaceAll(fileType,"")+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() +getFileType();
-		this.projectPath=projectPath;
+		this.model=model;
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class MultipartFile {
 	 * @throws IOException
 	 */
 	public void copyToDocBaseFolder(String docRelativePath) throws IOException {
-		File file=new File(projectPath+"/"+docRelativePath);
+		File file=new File(model.getRealPath("/")+"/"+docRelativePath);
 		copyToFolder(file);
 	}
 	

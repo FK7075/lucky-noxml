@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.aop.expandpoint;
 
+import com.lucky.jacklamb.annotation.aop.AfterReturning;
 import com.lucky.jacklamb.annotation.aop.Around;
 import com.lucky.jacklamb.annotation.aop.OperateLog;
 import com.lucky.jacklamb.aop.core.AopChain;
@@ -17,17 +18,11 @@ public abstract class ControllerLogPoint {
 
     private static final Logger logger= LogManager.getLogger(ControllerLogPoint.class);
 
-    @Around(pointCutClass = "ioc:controller",pointCutAnnotation = OperateLog.class,priority = -1)
+    @AfterReturning(pointCutClass = "ioc:controller",pointCutAnnotation = OperateLog.class,priority = -1)
     public Object proceed(AopChain chain, TargetMethodSignature ts,Model model) throws Throwable {
-        try{
-            Object result = chain.proceed();
-            insert(ts,model,result);
-            return result;
-        }catch (Throwable e){
-            logger.error("LogPointException",e);
-            throw new RuntimeException(e);
-        }
-
+        Object result = chain.proceed();
+        insert(ts,model,result);
+        return result;
     }
 
     /**
