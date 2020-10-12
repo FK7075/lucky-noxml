@@ -1,9 +1,6 @@
 package com.lucky.jacklamb.aop.core;
 
-import com.lucky.jacklamb.annotation.aop.After;
-import com.lucky.jacklamb.annotation.aop.AopParam;
-import com.lucky.jacklamb.annotation.aop.Around;
-import com.lucky.jacklamb.annotation.aop.Before;
+import com.lucky.jacklamb.annotation.aop.*;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.enums.Location;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -91,6 +88,20 @@ public class PointRun {
 			this.pointCutClass = around.pointCutClass();
 			this.pointCutMethod = around.pointCutMethod();
 			this.pointCutAnnotation=around.pointCutAnnotation();
+		}else if(method.isAnnotationPresent(AfterReturning.class)){
+			AfterReturning afterReturning=method.getAnnotation(AfterReturning.class);
+			this.point=conversion(expand,method,Location.AFTER_RETURNING);
+			this.point.setPriority(afterReturning.priority());
+			this.pointCutClass = afterReturning.pointCutClass();
+			this.pointCutMethod = afterReturning.pointCutMethod();
+			this.pointCutAnnotation=afterReturning.pointCutAnnotation();
+		}else if(method.isAnnotationPresent(AfterThrowing.class)){
+			AfterThrowing afterThrowing=method.getAnnotation(AfterThrowing.class);
+			this.point=conversion(expand,method,Location.AFTER_THROWING);
+			this.point.setPriority(afterThrowing.priority());
+			this.pointCutClass = afterThrowing.pointCutClass();
+			this.pointCutMethod = afterThrowing.pointCutMethod();
+			this.pointCutAnnotation=afterThrowing.pointCutAnnotation();
 		}
 	}
 
@@ -266,33 +277,56 @@ public class PointRun {
 	 * @param location 增强位置
 	 * @return
 	 */
-	private AopPoint conversion(Object expand, Method expandMethod, Location location) {
+	private AopPoint conversion(Object expand, Method expandMethod, final Location location) {
 		AopPoint cpoint=new AopPoint() {
 			
 			@Override
 			public Object proceed(AopChain chain) throws Throwable {
 				IOCContainers.injection(expand);
 				if(location==Location.BEFORE) {
-					perform(expand,expandMethod,chain);
+					perform(expand,expandMethod,chain,null,null);
 					return chain.proceed();
 				}else if(location==Location.AFTER) {
-					Object result=chain.proceed();
-					perform(expand,expandMethod,chain);
-					return result;
+					Object result=null;
+					try {
+						result=chain.proceed();
+						return result;
+					}catch (Throwable e){
+						throw e;
+					}finally {
+						perform(expand,expandMethod,chain,null,result);
+					}
 				}else if(location==Location.AROUND){
-					return perform(expand,expandMethod,chain);
+					return perform(expand,expandMethod,chain,null,null);
+				}else if(location==Location.AFTER_RETURNING){
+					Object result=null;
+					try {
+						result=chain.proceed();
+						perform(expand,expandMethod,chain,null,result);
+						return result;
+					}catch (Throwable e){
+						throw e;
+					}
+				}else if(location==Location.AFTER_THROWING){
+					Object result=null;
+					try {
+						result=chain.proceed();
+						return result;
+					}catch (Throwable e){
+						perform(expand,expandMethod,chain,e,null);
+					}
+
 				}
 				return null;
 			}
-			
-			
+
 			//执行增强方法
-			private Object perform(Object expand, Method expandMethod,AopChain chain) {
-				return MethodUtils.invoke(expand,expandMethod,setParams(expandMethod,chain));
+			private Object perform(Object expand, Method expandMethod,AopChain chain,Throwable e,Object r) {
+				return MethodUtils.invoke(expand,expandMethod,setParams(expandMethod,chain,e,r));
 			}
 			
 			//设置增强方法的执行参数-@AopParam配置
-			private Object[] setParams(Method expandMethod,AopChain chain) {
+			private Object[] setParams(Method expandMethod,AopChain chain,Throwable ex,Object result) {
 				int index;
 				String aopParamValue,indexStr;
 				Parameter[] parameters = expandMethod.getParameters();
@@ -322,7 +356,6 @@ public class PointRun {
 							} else {
 								expandParams[i]=ApplicationBeans.createApplicationBeans().getBean(aopParamValue.substring(4));
 							}
-
 						}else if(aopParamValue.startsWith("ind:")) {//目标方法中的参数列表值中指定位置的参数值
 							indexStr=aopParamValue.substring(4).trim();
 							try {
@@ -335,6 +368,10 @@ public class PointRun {
 							}
 							expandParams[i]=targetMethodSignature.getParamByIndex(index);
 						}else {//根据参数名得到具体参数
+							if("RETURNING".equals(aopParamValue)){
+								expandParams[i]=result;
+								continue;
+							}
 							if(!targetMethodSignature.containsParamName(aopParamValue)) {
 								throw new AopParamsConfigurationException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
 							}
@@ -374,6 +411,10 @@ public class PointRun {
 							if(targetMethodSignature.getCurrMethod().isAnnotationPresent(ann)){
 								expandParams[i]=targetMethodSignature.getCurrMethod().getAnnotation(ann);
 							}
+						}else if(Throwable.class.isAssignableFrom(paramClass)){
+							expandParams[i]=ex;
+						}else{
+							expandParams[i]=null;
 						}
 					}
 				}

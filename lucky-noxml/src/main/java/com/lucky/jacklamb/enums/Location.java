@@ -20,5 +20,15 @@ public enum Location {
 	/**
 	 * 环绕增强
 	 */
-	AROUND
+	AROUND,
+
+	/**
+	 * 正常执行时执行
+	 */
+	AFTER_RETURNING,
+
+	/**
+	 * 出现异常时执行
+	 */
+	AFTER_THROWING
 }

@@ -24,19 +24,9 @@ public @interface AopParam {
 	 * &nbsp;&nbsp;&nbsp;&nbsp;
 	 * ind:表示将真实方法作为增强方法的参数，eg:params={"ind:index"},表示将真实方法参数列表中的第index个设置为增强方法的参数<br>
 	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * name:表示将真实方法作为增强方法的参数，eg:params={"name:lucky"},表示将真实方法参数列表中的lucky参数设置为增强方法的参数<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * 无前缀:设置Java基本类型的值<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * [method]:表示将真实方法对应的Method对象设置为增强方法的参数，此位置的参数类型必须为Method<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * [params]:表示将真实方法的参数列表作为增强对象的参数，此位置的参数类型必须为Object[]<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * [target]:表示将真实类的Class作为参数，此位置的参数类型必须为Class<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;
-	 * [targetMethodSignature] ：包含当前方法的所有信息
+	 * 无前缀:表示将真实方法的参数作为增强方法的参数，eg:params={"lucky"},表示将真实方法参数列表中的lucky参数设置为增强方法的参数<br>
 	 * @return
 	 */
-	String value();
+	String value() default "RETURNING";
 
 }

@@ -7,10 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.lucky.jacklamb.annotation.aop.After;
-import com.lucky.jacklamb.annotation.aop.Around;
-import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.aop.Before;
+import com.lucky.jacklamb.annotation.aop.*;
 import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
@@ -94,16 +91,12 @@ public class AspectAOP {
 	 * @return
 	 */
 	public void initAspectIOC(List<Class<?>> AspectClass){
-		Aspect agann;
-		Before before;
-		After after;
-		Around around;
 		PointRun pointRun;
 		Constructor<?> constructor;
 		for (Class<?> aspect : AspectClass) {
 			if (aspect.isAnnotationPresent(Aspect.class)) {
 				String name;
-				agann = aspect.getAnnotation(Aspect.class);
+				Aspect agann = aspect.getAnnotation(Aspect.class);
 				if ("".equals(agann.value())) {
 					name = LuckyUtils.TableToClass1(aspect.getSimpleName());
 				} else {
@@ -119,7 +112,7 @@ public class AspectAOP {
 					for (Method method : enhanceMethods) {
 						String Aspectid;
 						if (method.isAnnotationPresent(Before.class)) {
-							before = method.getAnnotation(Before.class);
+							Before before = method.getAnnotation(Before.class);
 							if ("".equals(before.value())) {
 								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
 							} else {
@@ -130,7 +123,7 @@ public class AspectAOP {
 							log.info("@Aspect \"[location=Before id=" + Aspectid + " priority="+before.priority() +" class=" + pointRun
 									+ "]\"");
 						} else if (method.isAnnotationPresent(After.class)) {
-							after = method.getAnnotation(After.class);
+							After after = method.getAnnotation(After.class);
 							if ("".equals(after.value())) {
 								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
 							} else {
@@ -141,7 +134,7 @@ public class AspectAOP {
 							log.info("@Aspect \"[location=After id=" + Aspectid + " priority="+after.priority() +" class=" + pointRun
 									+ "]\"");
 						} else if(method.isAnnotationPresent(Around.class)) {
-							around = method.getAnnotation(Around.class);
+							Around around = method.getAnnotation(Around.class);
 							if ("".equals(around.value())) {
 								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
 							} else {
@@ -150,6 +143,28 @@ public class AspectAOP {
 							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
 							addAspectMap(Aspectid, pointRun);
 							log.info("@Aspect \"[location=Around id=" + Aspectid + " priority="+around.priority() +" class=" + pointRun
+									+ "]\"");
+						} else if(method.isAnnotationPresent(AfterReturning.class)) {
+							AfterReturning afterReturning = method.getAnnotation(AfterReturning.class);
+							if ("".equals(afterReturning.value())) {
+								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
+							} else {
+								Aspectid = name + ("." + afterReturning.value());
+							}
+							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
+							addAspectMap(Aspectid, pointRun);
+							log.info("@Aspect \"[location=AfterReturning id=" + Aspectid + " priority="+afterReturning.priority() +" class=" + pointRun
+									+ "]\"");
+						}else if(method.isAnnotationPresent(AfterThrowing.class)) {
+							AfterThrowing afterThrowing = method.getAnnotation(AfterThrowing.class);
+							if ("".equals(afterThrowing.value())) {
+								Aspectid = name + ("." + LuckyUtils.TableToClass1(method.getName()));
+							} else {
+								Aspectid = name + ("." + afterThrowing.value());
+							}
+							pointRun = new PointRun(ClassUtils.newObject(aspect), method);
+							addAspectMap(Aspectid, pointRun);
+							log.info("@Aspect \"[location=AfterThrowing id=" + Aspectid + " priority="+afterThrowing.priority() +" class=" + pointRun
 									+ "]\"");
 						}
 					}

@@ -35,28 +35,39 @@ public class CacheExpandPoint extends AopPoint {
 				Object hget = rHash.hget(key);
 				rHash.close();
 				return hget;
-
 			}else{
-				result=chain.proceed();
-				rHash.hset(key, result);
-				rHash.close();
-				return result;
+				try {
+					result=chain.proceed();
+					rHash.hset(key, result);
+					return result;
+				}catch (Throwable e){
+					throw e;
+				}finally {
+					rHash.close();
+				}
 			}
 		}else{
 			if(beans.containsComponent(mapid)) {
 				cacheMap=(LRUCache<String, Object>) beans.getComponentBean(mapid);
 			}
 			if(cacheMap==null) {//容器中还不存在该缓存容器
-				result=chain.proceed();
-				cacheMap=new LRUCache<>(100);
-				cacheMap.put(key,result);
-				beans.addComponentBean(mapid, cacheMap);
-				return result;
-
+				try {
+					result=chain.proceed();
+					cacheMap=new LRUCache<>(100);
+					cacheMap.put(key,result);
+					beans.addComponentBean(mapid, cacheMap);
+					return result;
+				}catch (Throwable e){
+					throw e;
+				}
 			}else if(cacheMap!=null&&!cacheMap.containsKey(key)) {//容器中存在该缓存容器,但是缓存容器中不存在key
-				result=chain.proceed();
-				cacheMap.put(key, result);
-				return result;
+				try {
+					result=chain.proceed();
+					cacheMap.put(key, result);
+					return result;
+				}catch (Throwable e){
+					throw  e;
+				}
 			}else {//容器中存在该缓存容器,但是缓存容器中存在key
 				return cacheMap.get(key);
 			}
