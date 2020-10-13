@@ -108,4 +108,9 @@ public class MultipartFile {
 		return originalFileInputStream;
 	}
 
+	/** 获得文件对应的byte数组 */
+	public byte[] getByte() throws IOException {
+		return FileUtils.copyToByteArray(originalFileInputStream);
+	}
+
 }
