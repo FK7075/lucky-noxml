@@ -13,20 +13,17 @@ public class MultipartFile {
 	private String uploadFileName;//文件上传到服务器后的文件名
 	private String fileType;//文件类型
 	private String originalFileName;//原始的文件名
-	private Model model;
 
 	/**
 	 *
 	 * @param originalFileInputStream
-	 * @param model
 	 * @param filename
 	 */
-	public MultipartFile(InputStream originalFileInputStream,Model model,String filename) {
+	public MultipartFile(InputStream originalFileInputStream,String filename) {
 		this.originalFileInputStream=originalFileInputStream;
 		this.originalFileName=filename;
 		this.fileType=filename.substring(filename.lastIndexOf("."));;
 		this.uploadFileName=originalFileName.replaceAll(fileType,"")+"_"+new Date().getTime()+"_"+ LuckyUtils.getRandomNumber() +getFileType();
-		this.model=model;
 	}
 
 	/**
@@ -67,7 +64,7 @@ public class MultipartFile {
 	 * @throws IOException
 	 */
 	public void copyToDocBaseFolder(String docRelativePath) throws IOException {
-		File file=new File(model.getRealPath("/")+"/"+docRelativePath);
+		File file=new File(new Model().getRealPath("/")+"/"+docRelativePath);
 		copyToFolder(file);
 	}
 	

@@ -99,7 +99,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		StringBuilder countSql=new StringBuilder("SELECT COUNT(")
 				.append(PojoManage.getIdString(clzz,dbname))
 				.append(") FROM ").append(PojoManage.getTable(clzz,dbname));
-		return updateBySql(countSql.toString());
+		return getObject(int.class,countSql.toString());
 	}
 	
 	
