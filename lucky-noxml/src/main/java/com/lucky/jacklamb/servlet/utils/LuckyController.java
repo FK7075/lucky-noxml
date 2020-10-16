@@ -2,8 +2,8 @@ package com.lucky.jacklamb.servlet.utils;
 
 import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.annotation.ioc.Autowired;
-import com.lucky.jacklamb.file.ZipUtils;
-import com.lucky.jacklamb.file.utils.FileUtils;
+import com.lucky.jacklamb.utils.file.ZipUtils;
+import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.ioc.ComponentIOC;
 import com.lucky.jacklamb.ioc.RepositoryIOC;
 import com.lucky.jacklamb.ioc.ServiceIOC;

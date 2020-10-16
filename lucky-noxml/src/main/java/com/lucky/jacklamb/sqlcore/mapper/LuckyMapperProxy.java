@@ -1,13 +1,9 @@
 package com.lucky.jacklamb.sqlcore.mapper;
 
-import com.lucky.jacklamb.annotation.orm.mapper.*;
 import com.lucky.jacklamb.cglib.CglibProxy;
-import com.lucky.jacklamb.exception.NotFindFlieException;
-import com.lucky.jacklamb.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.sqlcore.exception.NotFindSqlConfigFileException;
 import com.lucky.jacklamb.sqlcore.exception.NotFoundInterfacesGenericException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

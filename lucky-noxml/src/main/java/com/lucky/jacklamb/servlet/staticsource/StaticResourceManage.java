@@ -2,7 +2,7 @@ package com.lucky.jacklamb.servlet.staticsource;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.file.utils.FileUtils;
+import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;

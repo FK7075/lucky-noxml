@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.regula.Regular;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,13 +54,7 @@ import java.util.stream.Collectors;
  */
 public class JpaSample {
 
-
-    private final String[] PREFIX = {
-                                     "findAllBy", "readAllBy", "getAllBy",
-                                     "findBy", "readBy", "getBy",
-                                     "findAll","readAll","getAll",
-                                     "find","read","get"
-                                    };
+    private final String FIND_BY="^((find|get|read)([\\s\\S]*)By)([\\s\\S]*)$";
 
     private final String REG = "\\@\\d\\d";
 
@@ -113,7 +108,7 @@ public class JpaSample {
 
     public JpaSample(Class<?> pojoClass,String dbname) {
         this.pojoClass=pojoClass;
-        selectSql = new StringBuilder("SELECT * FROM ").append(PojoManage.getTable(pojoClass,dbname));
+        selectSql = new StringBuilder("SELECT @:ResultColumn FROM ").append(PojoManage.getTable(pojoClass,dbname));
         fieldColumnMap = new HashMap<>();
         Field[] fields = ClassUtils.getAllFields(pojoClass);
         for (Field field : fields) {
@@ -121,6 +116,35 @@ public class JpaSample {
         }
         lengthSortField = new ArrayList<>(fieldColumnMap.keySet());
         Collections.sort(lengthSortField, new SortByLengthComparator());
+    }
+
+    /**
+     * 获取findBy表达式中的返回列
+     * @param jpaSample
+     * @return
+     */
+    public String getSelectResultColumn(String jpaSample){
+        jpaSample=jpaSample.substring(0,jpaSample.indexOf("By"));
+        if(jpaSample.startsWith("find")||jpaSample.startsWith("read")){
+            jpaSample= jpaSample.substring(4);
+        }else{
+            jpaSample= jpaSample.substring(3);
+        }
+        if("".equals(jpaSample)||"All".equals(jpaSample)){
+            return "*";
+        }
+        StringBuilder result=new StringBuilder();
+        for (String field : lengthSortField) {
+            if(jpaSample.contains(field)){
+                result.append(fieldColumnMap.get(field)).append(",");
+                jpaSample=jpaSample.replaceAll(field,"");
+            }
+        }
+        if(!"".equals(jpaSample)){
+            throw new RuntimeException("不符合JPA规范的查询方法命名[无法识别的\"结果列(ResultColumn)\"]：" + jpaSample);
+        }
+        String resultStr=result.toString();
+        return resultStr.endsWith(",")?resultStr.substring(0,resultStr.length()-1):resultStr;
     }
 
     /**
@@ -140,8 +164,12 @@ public class JpaSample {
                 2.2. varList       : NameStartingWithAndAgeAndPriceBetween+[StartingWithAnd,And,Between] -> Name=Age=Price= ->[Name,Age,Price]
             三.[@21@01,@01,@05] + [Name,Age,Price] -> [Name,@21@01,Age,@01,Price,@05] -> ...WHERE name LIKE ?s AND age AND price BETWEEN ? AND ?
          */
+        if(!Regular.check(jpaSample,FIND_BY)){
+            throw new IllegalJPAExpressionException("不符合JPA规范的查询方法命名：" + jpaSample);
+        }
         String jpaCopy=jpaSample;
-        jpaSample = removePrefix(jpaSample);
+        //去掉findBy前缀
+        jpaSample = jpaSample.substring(jpaSample.indexOf("By")+2);
         String copy=jpaSample;
 
         for (String field : lengthSortField) {
@@ -167,7 +195,7 @@ public class JpaSample {
         List<String> varOpeSortList = getVarOpeSortList(varList, opeList, jpaSample);
         try {
             joint(varOpeSortList);
-            return selectSql.toString();
+            return selectSql.toString().replaceAll("@:ResultColumn",getSelectResultColumn(jpaCopy));
         } catch (SQLException e) {
             throw new RuntimeException("错误的Mapper方法[不符合Jpa规范]==>"+jpaCopy,e);
         }
@@ -247,15 +275,6 @@ public class JpaSample {
                 }
             }
         }
-    }
-
-    public String removePrefix(String jpaSample) throws IllegalJPAExpressionException {
-        for (String prefix : PREFIX) {
-            if (jpaSample.startsWith(prefix)) {
-                return jpaSample.substring(prefix.length());
-            }
-        }
-        throw new IllegalJPAExpressionException("不符合JPA规范的查询方法命名：" + jpaSample);
     }
 }
 

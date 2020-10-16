@@ -9,7 +9,7 @@ import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
-import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.exception.JsonConversionException;
 import com.lucky.jacklamb.ioc.config.AppConfig;

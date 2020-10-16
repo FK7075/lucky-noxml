@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.file.utils;
+package com.lucky.jacklamb.utils.file;
 
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.servlet.core.Model;

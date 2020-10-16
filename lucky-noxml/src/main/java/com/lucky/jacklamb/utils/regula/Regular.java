@@ -26,7 +26,7 @@ public abstract class Regular {
     public static final String SQL_DY_NUN="\\?(c|e|C|D)\\d+";
 
     /**
-     * eg -> @name @age
+     * eg -> @:name @:age
      */
     public static final String $SQL="\\@:[_a-zA-Z][_a-zA-Z0-9]*";
 
@@ -134,5 +134,11 @@ public abstract class Regular {
         System.out.println(SQL);
         System.out.println(getArrayByExpression(SQL, "\\?"));
         System.out.println(check("@er53", $SQL));
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        String FIND_BY="^((find|get|read)([\\s\\S]*)By)([\\s\\S]*)$";
+        String jpa="getNameBydf";
+        System.out.println(check(jpa,FIND_BY));
+        System.out.println(jpa.substring(jpa.indexOf("By")+2));
+
     }
 }

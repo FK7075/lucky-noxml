@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.ioc.config;
 
-import com.lucky.jacklamb.file.ini.IniFilePars;
+import com.lucky.jacklamb.utils.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 

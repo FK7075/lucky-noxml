@@ -2,7 +2,7 @@ package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.file.Resources;
+import com.lucky.jacklamb.utils.file.Resources;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.base.JackLamb;

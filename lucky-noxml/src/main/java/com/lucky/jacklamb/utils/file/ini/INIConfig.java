@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.file.ini;
+package com.lucky.jacklamb.utils.file.ini;
 
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;

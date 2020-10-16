@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.file.ini;
+package com.lucky.jacklamb.utils.file.ini;
 
 import java.io.*;
 import java.util.Arrays;
@@ -72,8 +72,9 @@ public class IniFilePars {
 				}
 			}
 			iniName="appconfig.ini";
-			if(iniMap.isEmpty())
+			if(iniMap.isEmpty()) {
 				pars();
+			}
 		}catch(ArrayIndexOutOfBoundsException | UnsupportedEncodingException e) {
 			throw new RuntimeException(iniName+"配置文件内容格式不正确",e);
 		} catch (FileNotFoundException e) {
@@ -86,16 +87,18 @@ public class IniFilePars {
 		iniInputStream=IniFilePars.class.getClassLoader().getResourceAsStream(iniFilePath);
 		iniName=iniFilePath;
 		try {
-			if(iniMap.isEmpty())
+			if(iniMap.isEmpty()) {
 				pars();
+			}
 		}catch(ArrayIndexOutOfBoundsException | UnsupportedEncodingException e) {
 			throw new RuntimeException(iniName+"配置文件内容格式不正确",e);
 		}
 	}
 	
 	public static IniFilePars getIniFilePars() {
-		if(iniFilePars==null)
+		if(iniFilePars==null) {
 			iniFilePars=new IniFilePars();
+		}
 		return iniFilePars;
 	}
 	
@@ -120,8 +123,9 @@ public class IniFilePars {
 						continue;
 					}else if(currLine.startsWith("[")&&currLine.endsWith("]")) {
 						currSection=currLine.substring(1,currLine.length()-1);
-						if(iniMap.containsKey(currSection))
+						if(iniMap.containsKey(currSection)) {
 							throw new RuntimeException(iniName+"配置文件内容格式不正确,存在两个相同的Section:["+currSection+"]");
+						}
 						iniMap.put(currSection,new HashMap<>());
 						continue;
 					}else if(!currLine.endsWith("\\")&&!isNewline) {//不是以"\"结尾，而且之前也不存在以"\"结尾的行
@@ -145,18 +149,20 @@ public class IniFilePars {
 					}else if(currLine.endsWith("\\")&&isNewline) {//是以"\"结尾，而且存在以"\"结尾的行
 						currLine=currLine.replaceAll("\\t", " ");
 						int index=firstNoSpaceIndex(currLine);
-						if(index==0||index==1)
+						if(index==0||index==1) {
 							newLineValue.append(currLine.substring(0, currLine.length()-1));
-						else
+						} else {
 							newLineValue.append(currLine.substring(index-1, currLine.length()-1));
+						}
 					}else if(!currLine.endsWith("\\")&&isNewline) {//不是以"\"结尾，而且存在以"\"结尾的行
 						kvMap=iniMap.get(currSection);
 						currLine=currLine.replaceAll("\\t", " ");
 						int index=firstNoSpaceIndex(currLine);
-						if(index==0||index==1)
+						if(index==0||index==1) {
 							newLineValue.append(currLine);
-						else
+						} else {
 							newLineValue.append(currLine.substring(index-1, currLine.length()));
+						}
 						kvMap.put(newLineKey, newLineValue.toString());
 						iniMap.put(currSection, kvMap);
 						isNewline=false;
@@ -193,24 +199,27 @@ public class IniFilePars {
 	}
 	
 	public Map<String,String> getSectionMap(String section){
-		if(iniMap.containsKey(section))
+		if(iniMap.containsKey(section)) {
 			return iniMap.get(section);
+		}
 		return null;
 	}
 	
 	public String getValue(String section,String key) {
 		Map<String, String> sectionMap = getSectionMap(section);
 		if(sectionMap!=null) {
-			if(sectionMap.containsKey(key))
+			if(sectionMap.containsKey(key)) {
 				return sectionMap.get(key);
+			}
 			return null;
 		}
 		return null;
 	}
 	
 	public void modifyAllocation(ScanConfig scan, WebConfig web, ServerConfig server, ServiceConfig service) {
-		if(iniMap.isEmpty())
+		if(iniMap.isEmpty()) {
 			return;
+		}
 		if(iniMap.containsKey("Redis")){
 			JedisFactory.initJedisPool();
 		}
@@ -294,10 +303,12 @@ public class IniFilePars {
 	
 	private void addPrefixAndSuffix(WebConfig web,Map<String, String> sectionMap) {
 		String p="",s="";
-		if(sectionMap.containsKey("prefix"))
+		if(sectionMap.containsKey("prefix")) {
 			p=$Expression.translation(sectionMap.get("prefix"));
-		if(sectionMap.containsKey("suffix"))
+		}
+		if(sectionMap.containsKey("suffix")) {
 			s=$Expression.translation(sectionMap.get("suffix"));
+		}
 		web.setHanderPrefixAndSuffix(p, s);
 	}
 	
@@ -358,8 +369,9 @@ public class IniFilePars {
 	private void addFilter(ServerConfig server,Map<String, String> sectionMap) {
 		Set<String> filterNames = sectionMap.keySet();
 		for(String filterName:filterNames) {
-			if(!this.isHasKey(SECTION_FILTER_MAPPING, filterName))
+			if(!this.isHasKey(SECTION_FILTER_MAPPING, filterName)) {
 				throw new RuntimeException("appconfig.ini配置文件中有Filter没有配置请求映射：[Filter]->"+filterName+"="+sectionMap.get(filterName));
+			}
 			try {
 				server.addFilter((Filter)Class.forName(sectionMap.get(filterName)).newInstance(), this.getValue(SECTION_FILTER_MAPPING, filterName).split(","));
 			} catch (InstantiationException e) {
@@ -378,8 +390,9 @@ public class IniFilePars {
 		Set<String> servletNames = sectionMap.keySet();
 		Map<String, String> loadOnStartUpMap = this.getSectionMap(SECTION_SERVLET_LOADONSTARTUP);
 		for(String servletName:servletNames) {
-			if(!this.isHasKey(SECTION_SERVLET_MAPPING, servletName))
+			if(!this.isHasKey(SECTION_SERVLET_MAPPING, servletName)) {
 				throw new RuntimeException("appconfig.ini配置文件中有Servlet没有配置请求映射：[Servlet]->"+servletName+"="+sectionMap.get(servletName));
+			}
 			try {
 				if(loadOnStartUpMap!=null){
 					Integer loadOnStartUp=loadOnStartUpMap.containsKey(servletName)?Integer.parseInt(loadOnStartUpMap.get(servletName)):-1;

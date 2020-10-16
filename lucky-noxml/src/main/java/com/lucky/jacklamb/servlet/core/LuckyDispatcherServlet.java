@@ -3,7 +3,7 @@ package com.lucky.jacklamb.servlet.core;
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
-import com.lucky.jacklamb.file.utils.FileUtils;
+import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.servlet.exceptionhandler.DispatchServletExceptionInterceptor;

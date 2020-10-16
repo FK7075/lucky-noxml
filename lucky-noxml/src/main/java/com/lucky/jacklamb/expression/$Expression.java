@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.expression;
 
-import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.utils.file.ini.INIConfig;
 import com.lucky.jacklamb.utils.regula.Regular;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 

@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc.scan;
 
 import com.google.gson.Gson;
-import com.lucky.jacklamb.file.Resources;
+import com.lucky.jacklamb.utils.file.Resources;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 
 import java.util.List;

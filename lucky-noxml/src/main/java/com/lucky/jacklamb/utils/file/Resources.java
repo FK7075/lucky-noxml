@@ -1,7 +1,6 @@
-package com.lucky.jacklamb.file;
+package com.lucky.jacklamb.utils.file;
 
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.rest.LSON;
 
 import java.io.*;

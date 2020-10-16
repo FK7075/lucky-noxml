@@ -7,7 +7,7 @@ import com.lucky.jacklamb.annotation.mvc.FileUpload;
 import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotMappingMethodException;
-import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.exception.JsonConversionException;
 import com.lucky.jacklamb.rest.LSON;

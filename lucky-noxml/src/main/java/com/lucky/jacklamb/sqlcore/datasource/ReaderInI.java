@@ -4,7 +4,7 @@ import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.exception.NoDataSourceException;
 import com.lucky.jacklamb.exception.NotFindBeanPropertyException;
-import com.lucky.jacklamb.file.ini.IniFilePars;
+import com.lucky.jacklamb.utils.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.sqlcore.datasource.enums.Pool;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
@@ -12,7 +12,6 @@ import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -3,7 +3,7 @@ package com.lucky.jacklamb.ioc.scan;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.utils.file.ini.INIConfig;
 
 /**
  * 当ClassLoader为URLClassLoader时的包扫描

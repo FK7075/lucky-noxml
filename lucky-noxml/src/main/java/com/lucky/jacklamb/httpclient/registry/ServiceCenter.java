@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.httpclient.registry;
 
 import com.lucky.jacklamb.expression.$Expression;
-import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.start.LuckyShutdown;

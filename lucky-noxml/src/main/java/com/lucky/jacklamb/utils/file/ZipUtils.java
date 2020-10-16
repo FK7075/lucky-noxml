@@ -1,4 +1,4 @@
-package com.lucky.jacklamb.file;
+package com.lucky.jacklamb.utils.file;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.*;
 
-import static com.lucky.jacklamb.file.utils.FileUtils.BUFFER_SIZE;
+import static com.lucky.jacklamb.utils.file.FileUtils.BUFFER_SIZE;
 
 /**
  * 压缩类型枚举

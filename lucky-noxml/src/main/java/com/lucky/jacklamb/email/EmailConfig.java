@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.email;
 
-import com.lucky.jacklamb.file.ini.IniFilePars;
+import com.lucky.jacklamb.utils.file.ini.IniFilePars;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;

@@ -1,6 +1,6 @@
 package com.lucky.jacklamb.ioc.scan;
 
-import com.lucky.jacklamb.file.utils.FileUtils;
+import com.lucky.jacklamb.utils.file.FileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

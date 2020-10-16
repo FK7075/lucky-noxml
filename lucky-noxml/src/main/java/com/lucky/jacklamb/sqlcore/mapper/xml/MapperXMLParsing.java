@@ -100,7 +100,9 @@ public class MapperXMLParsing {
     }
 
     public static void main(String[] args) throws IOException {
-        MapperXMLParsing xml=new MapperXMLParsing("/Users/fukang/IDEA-WORK/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/mapper/xml/MapperTemplate.xml");
+        String xmlPathForWindows="D:\\GitHub-Project\\Lucky\\lucky-noxml\\src\\main\\java\\com\\lucky\\jacklamb\\sqlcore\\mapper\\xml\\MapperTemplate.xml";
+        String xmlPathForMac="/Users/fukang/IDEA-WORK/lucky-noxml/src/main/java/com/lucky/jacklamb/sqlcore/mapper/xml/MapperTemplate.xml";
+        MapperXMLParsing xml=new MapperXMLParsing(xmlPathForWindows);
         System.out.println(xml.getMapperSql(LuckyMapper.class));
         System.out.println(xml.getMapperSql(MapperXMLParsing.class));
     }

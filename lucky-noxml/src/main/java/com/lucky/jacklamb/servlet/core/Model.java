@@ -3,7 +3,7 @@ package com.lucky.jacklamb.servlet.core;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
-import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
@@ -23,9 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.net.InetAddress;
 import java.net.URLDecoder;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.Map.Entry;
 

@@ -1,6 +1,5 @@
-package com.lucky.jacklamb.file;
+package com.lucky.jacklamb.utils.file;
 
-import com.lucky.jacklamb.file.utils.FileUtils;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 

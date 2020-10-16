@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.HttpClientRequestException;
 import com.lucky.jacklamb.exception.NotFindRequestException;
-import com.lucky.jacklamb.file.MultipartFile;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import org.apache.http.HttpEntity;

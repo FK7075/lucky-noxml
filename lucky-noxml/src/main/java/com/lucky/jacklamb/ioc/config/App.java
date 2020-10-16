@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc.config;
 
 import com.lucky.jacklamb.expression.$Expression;
-import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.utils.file.ini.INIConfig;
 
 import java.util.HashMap;
 import java.util.Map;

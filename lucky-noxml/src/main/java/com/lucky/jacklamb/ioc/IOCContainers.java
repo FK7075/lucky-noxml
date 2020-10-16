@@ -5,7 +5,7 @@ import com.lucky.jacklamb.annotation.ioc.SSH;
 import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
-import com.lucky.jacklamb.file.ini.INIConfig;
+import com.lucky.jacklamb.utils.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
