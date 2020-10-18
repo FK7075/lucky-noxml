@@ -1,17 +1,14 @@
 package com.lucky.jacklamb.sqlcore.mapper.jpa;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.file.Resources;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -91,19 +88,11 @@ public class JpaSample {
     private Map<String, String> fieldColumnMap;
 
     static {
-        try (BufferedReader br_ope = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/lucky-config/config/jpa-coding.json"), "UTF-8"));
-             BufferedReader br_par = new BufferedReader(new InputStreamReader(JpaSample.class.getResourceAsStream("/lucky-config/config/jpa-decoding.json"), "UTF-8"));
-        ) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, String>>() {
-            }.getType();
-            operationMap = gson.fromJson(br_ope, type);
-            parsingMap = gson.fromJson(br_par, type);
-            lengthSortSqlOpe=new ArrayList<>(operationMap.keySet());
-            Collections.sort(lengthSortSqlOpe, new SortByLengthComparator());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        TypeToken type = new TypeToken<Map<String, String>>(){};
+        operationMap= (Map<String, String>) Resources.getObject(type,"/lucky-config/config/jpa-coding.json");
+        parsingMap=(Map<String, String>) Resources.getObject(type,"/lucky-config/config/jpa-decoding.json");
+        lengthSortSqlOpe=new ArrayList<>(operationMap.keySet());
+        Collections.sort(lengthSortSqlOpe, new SortByLengthComparator());
     }
 
     public JpaSample(Class<?> pojoClass,String dbname) {
