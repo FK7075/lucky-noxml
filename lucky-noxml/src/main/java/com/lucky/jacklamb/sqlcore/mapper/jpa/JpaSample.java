@@ -141,7 +141,7 @@ public class JpaSample {
             }
         }
         if(!"".equals(jpaSample)){
-            throw new RuntimeException("不符合JPA规范的查询方法命名[无法识别的\"结果列(ResultColumn)\"]：" + jpaSample);
+            throw new RuntimeException("不符合JPA规范的查询方法命名!无法识别的「\"结果列(ResultColumn)\"」： \"" + jpaSample+"\"");
         }
         String resultStr=result.toString();
         return resultStr.endsWith(",")?resultStr.substring(0,resultStr.length()-1):resultStr;

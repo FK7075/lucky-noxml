@@ -49,7 +49,7 @@ public @interface Before {
 	 * 配置切点(Annotation),只有当切面中的方法被pointCutAnnotation中配置的注解所标识才执行代理
 	 * @return
 	 */
-	Class<? extends Annotation>[] pointCutAnnotation() default {};
+	Class<? extends Annotation>[] pointCutMethodAnn() default {};
 
 	/**
 	 * 优先级，优先级高的增强将会被优先执行

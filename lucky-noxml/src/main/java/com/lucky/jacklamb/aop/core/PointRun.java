@@ -23,7 +23,7 @@ public class PointRun {
 	
 	private String pointCutMethod;
 
-	private Class<? extends Annotation>[] pointCutAnnotation;
+	private Class<? extends Annotation>[] pointCutMethodAnn;
 	
 	public Method method;
 
@@ -42,7 +42,7 @@ public class PointRun {
 		this.point.setPriority(exp.priority());
 		this.pointCutClass = exp.pointCutClass();
 		this.pointCutMethod = exp.pointCutMethod();
-		this.pointCutAnnotation=exp.pointCutAnnotation();
+		this.pointCutMethodAnn =exp.pointCutMethodAnn();
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class PointRun {
 		this.point.setPriority(exp.priority());
 		this.pointCutClass = exp.pointCutClass();
 		this.pointCutMethod = exp.pointCutMethod();
-		this.pointCutAnnotation=exp.pointCutAnnotation();
+		this.pointCutMethodAnn =exp.pointCutMethodAnn();
 
 	}
 
@@ -73,35 +73,35 @@ public class PointRun {
 			this.point.setPriority(before.priority());
 			this.pointCutClass = before.pointCutClass();
 			this.pointCutMethod = before.pointCutMethod();
-			this.pointCutAnnotation=before.pointCutAnnotation();
+			this.pointCutMethodAnn =before.pointCutMethodAnn();
 		}else if(method.isAnnotationPresent(After.class)) {
 			After after=method.getAnnotation(After.class);
 			this.point=conversion(expand,method,Location.AFTER);
 			this.point.setPriority(after.priority());
 			this.pointCutClass = after.pointCutClass();
 			this.pointCutMethod = after.pointCutMethod();
-			this.pointCutAnnotation=after.pointCutAnnotation();
+			this.pointCutMethodAnn =after.pointCutMethodAnn();
 		}else if(method.isAnnotationPresent(Around.class)){
 			Around around=method.getAnnotation(Around.class);
 			this.point=conversion(expand,method,Location.AROUND);
 			this.point.setPriority(around.priority());
 			this.pointCutClass = around.pointCutClass();
 			this.pointCutMethod = around.pointCutMethod();
-			this.pointCutAnnotation=around.pointCutAnnotation();
+			this.pointCutMethodAnn =around.pointCutMethodAnn();
 		}else if(method.isAnnotationPresent(AfterReturning.class)){
 			AfterReturning afterReturning=method.getAnnotation(AfterReturning.class);
 			this.point=conversion(expand,method,Location.AFTER_RETURNING);
 			this.point.setPriority(afterReturning.priority());
 			this.pointCutClass = afterReturning.pointCutClass();
 			this.pointCutMethod = afterReturning.pointCutMethod();
-			this.pointCutAnnotation=afterReturning.pointCutAnnotation();
+			this.pointCutMethodAnn =afterReturning.pointCutMethodAnn();
 		}else if(method.isAnnotationPresent(AfterThrowing.class)){
 			AfterThrowing afterThrowing=method.getAnnotation(AfterThrowing.class);
 			this.point=conversion(expand,method,Location.AFTER_THROWING);
 			this.point.setPriority(afterThrowing.priority());
 			this.pointCutClass = afterThrowing.pointCutClass();
 			this.pointCutMethod = afterThrowing.pointCutMethod();
-			this.pointCutAnnotation=afterThrowing.pointCutAnnotation();
+			this.pointCutMethodAnn =afterThrowing.pointCutMethodAnn();
 		}
 	}
 
@@ -121,12 +121,12 @@ public class PointRun {
 		this.pointCutMethod = mateMethod;
 	}
 
-	public Class<? extends Annotation>[] getPointCutAnnotation() {
-		return pointCutAnnotation;
+	public Class<? extends Annotation>[] getPointCutMethodAnn() {
+		return pointCutMethodAnn;
 	}
 
-	public void setPointCutAnnotation(Class<? extends Annotation>[] pointCutAnnotation) {
-		this.pointCutAnnotation = pointCutAnnotation;
+	public void setPointCutMethodAnn(Class<? extends Annotation>[] pointCutMethodAnn) {
+		this.pointCutMethodAnn = pointCutMethodAnn;
 	}
 
 	public AopPoint getPoint() {
@@ -156,7 +156,7 @@ public class PointRun {
 		Parameter[] parameters = method.getParameters();
 		String[] pointCutMethodArray=pointCutMethod.split(",");
 		//注解验证,如果存在注解配置，则pointCutMethod配置将失效
-		if(pointCutAnnotation.length!=0){
+		if(pointCutMethodAnn.length!=0){
 			return standardAnnotation(method);
 		}
 
@@ -205,7 +205,7 @@ public class PointRun {
 	 * @return
 	 */
 	private boolean standardAnnotation(Method method){
-		for (Class<? extends Annotation> aClass : pointCutAnnotation) {
+		for (Class<? extends Annotation> aClass : pointCutMethodAnn) {
 			if(method.isAnnotationPresent(aClass)){
 				return true;
 			}
@@ -284,9 +284,10 @@ public class PointRun {
 			public Object proceed(AopChain chain) throws Throwable {
 				IOCContainers.injection(expand);
 				if(location==Location.BEFORE) {
-					perform(expand,expandMethod,chain,null,null);
+					perform(expand,expandMethod,chain,null,null,-1);
 					return chain.proceed();
 				}else if(location==Location.AFTER) {
+					long start = System.currentTimeMillis();
 					Object result=null;
 					try {
 						result=chain.proceed();
@@ -294,26 +295,31 @@ public class PointRun {
 					}catch (Throwable e){
 						throw e;
 					}finally {
-						perform(expand,expandMethod,chain,null,result);
+						long end = System.currentTimeMillis();
+						perform(expand,expandMethod,chain,null,result,end-start);
 					}
 				}else if(location==Location.AROUND){
-					return perform(expand,expandMethod,chain,null,null);
+					return perform(expand,expandMethod,chain,null,null,-1);
 				}else if(location==Location.AFTER_RETURNING){
 					Object result=null;
 					try {
+						long start = System.currentTimeMillis();
 						result=chain.proceed();
-						perform(expand,expandMethod,chain,null,result);
+						long end = System.currentTimeMillis();
+						perform(expand,expandMethod,chain,null,result,end-start);
 						return result;
 					}catch (Throwable e){
 						throw e;
 					}
 				}else if(location==Location.AFTER_THROWING){
+					long start = System.currentTimeMillis();
 					Object result=null;
 					try {
 						result=chain.proceed();
 						return result;
 					}catch (Throwable e){
-						perform(expand,expandMethod,chain,e,null);
+						long end = System.currentTimeMillis();
+						perform(expand,expandMethod,chain,e,null,end-start);
 					}
 
 				}
@@ -321,12 +327,12 @@ public class PointRun {
 			}
 
 			//执行增强方法
-			private Object perform(Object expand, Method expandMethod,AopChain chain,Throwable e,Object r) {
-				return MethodUtils.invoke(expand,expandMethod,setParams(expandMethod,chain,e,r));
+			private Object perform(Object expand, Method expandMethod,AopChain chain,Throwable e,Object r,long t) {
+				return MethodUtils.invoke(expand,expandMethod,setParams(expandMethod,chain,e,r,t));
 			}
 			
 			//设置增强方法的执行参数-@AopParam配置
-			private Object[] setParams(Method expandMethod,AopChain chain,Throwable ex,Object result) {
+			private Object[] setParams(Method expandMethod,AopChain chain,Throwable ex,Object result,long runtime) {
 				int index;
 				String aopParamValue,indexStr;
 				Parameter[] parameters = expandMethod.getParameters();
@@ -348,6 +354,7 @@ public class PointRun {
 					}
 				}
 				for(int i=0;i<parameters.length;i++) {
+					Class<?> paramClass = parameters[i].getType();
 					if(parameters[i].isAnnotationPresent(Param.class)){
 						aopParamValue=parameters[i].getAnnotation(Param.class).value();
 						if(aopParamValue.startsWith("ref:")) {//取IOC容器中的值
@@ -368,8 +375,12 @@ public class PointRun {
 							}
 							expandParams[i]=targetMethodSignature.getParamByIndex(index);
 						}else {//根据参数名得到具体参数
-							if("RETURNING".equals(aopParamValue)){
+							if("return".equals(aopParamValue)){
 								expandParams[i]=result;
+								continue;
+							}
+							if("runtime".equals(aopParamValue)&&paramClass==long.class){
+								expandParams[i]=runtime;
 								continue;
 							}
 							if(!targetMethodSignature.containsParamName(aopParamValue)) {
@@ -378,7 +389,6 @@ public class PointRun {
 							expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);
 						}
 					}else{
-						Class<?> paramClass = parameters[i].getType();
 						if(TargetMethodSignature.class.isAssignableFrom(paramClass)) {
 							expandParams[i]=targetMethodSignature;
 						}else if(Class.class.isAssignableFrom(paramClass)){

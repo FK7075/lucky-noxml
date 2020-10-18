@@ -27,7 +27,9 @@ public @interface Param {
 	 * <p>
 	 *     无前缀:表示将真实方法的参数作为增强方法的参数，eg:params={"lucky"},表示将真实方法参数列表中的lucky参数设置为增强方法的参数<br></p>
 	 * <p>
-	 *     RETURNING:表示将真实方法的返回值设置为增强方法的参数</p>
+	 *     return:表示将真实方法的返回值设置为增强方法的参数</p>
+	 * <p>
+	 *     runtime:表示真实方法执行所用的时间</p>
 	 * @return
 	 */
 	String value() default "RETURNING";
