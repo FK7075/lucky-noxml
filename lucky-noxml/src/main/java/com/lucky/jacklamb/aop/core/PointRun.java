@@ -423,8 +423,6 @@ public class PointRun {
 							}
 						}else if(Throwable.class.isAssignableFrom(paramClass)){
 							expandParams[i]=ex;
-						}else{
-							expandParams[i]=null;
 						}
 					}
 				}
