@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.aop.proxy;
 
 import com.lucky.jacklamb.cglib.ASMUtil;
+import com.lucky.jacklamb.servlet.core.Model;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -154,6 +155,10 @@ public class TargetMethodSignature {
 		if(!containsParamName(paramName))
 			return null;
 		return nameMap.get(paramName);
+	}
+
+	public Model getModel(){
+		return new Model();
 	}
 	
 

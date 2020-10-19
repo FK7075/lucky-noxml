@@ -39,7 +39,10 @@ public class CreateProject {
         System.out.printf("开始创建Lucky项目==>[%s]...\n",project.getArtifactId());
         createFolder();
         createFile();
-        System.out.printf("项目创建完成！\n项目所在位置：%s\n项目名：%s",project.getProjectPath(),project.getArtifactId());
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("BUILD SUCCESS");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.printf("项目创建完成！\n项目所在位置：%s\n项  目  名  ：%s\n",project.getProjectPath(),project.getArtifactId());
     }
 
     /**
@@ -51,6 +54,17 @@ public class CreateProject {
             String dir=System.getProperty("user.dir");
             dir=dir.endsWith(File.separator)?dir+"lucky/com":dir+File.separator+"lucky/com";
             FileCopy.copyFolder(new File(dir),new File(project.getMavenRepository()));
+            System.out.printf("Lucky运行环境导入成功，位置：%s\n",project.getMavenRepository());
+            System.out.println("----------------------------------------------------------------------------------------------------");
+            System.out.println("Lucky依赖");
+            System.out.println("----------------------------------------------------------------------------------------------------");
+            System.out.printf("       <!-- Lucky运行环境 -->\n" +
+                    "        <dependency>\n" +
+                    "            <groupId>com.lucky.jacklamb</groupId>\n" +
+                    "            <artifactId>lucky</artifactId>\n" +
+                    "            <version>1.0.0</version>\n" +
+                    "        </dependency>\n");
+            System.out.println("----------------------------------------------------------------------------------------------------");
         }
     }
 
@@ -65,37 +79,38 @@ public class CreateProject {
                 .replaceAll(VERSION,project.getVersion())
                 .replaceAll(PROJECT_NAME,project.getProjectName())
                 .replaceAll($,"\\$")
+                .replaceAll(MAVEN_DEPENDENCY,ProjectInFo.addMavenDependencyString.toString())
                 .replaceAll(MAIN_CLASS,project.getMainClass());
         FileOutputStream pomFile=new FileOutputStream(projectPath+"/pom.xml");
         IOUtils.write(pom,pomFile,"UTF-8");
-        System.out.println("pom.xml文件成功写入...");
+        System.out.println("写入文件   [POM]      : pom.xml");
 
         String iml=IOUtils.toString(IML_TEMP,"UTF-8");
         FileOutputStream imlFile=new FileOutputStream(projectPath+"/"+project.getArtifactId()+".iml");
         IOUtils.write(iml,imlFile,"UTF-8");
-        System.out.println(project.getArtifactId()+".iml文件成功写入...");
+        System.out.println("写入文件   [IDEA]     : "+project.getArtifactId()+".iml");
 
         String main=IOUtils.toString(MAIN_TEMP,"UTF-8");
         main=main.replaceAll(PACKAGE,project.getGroupId())
                 .replaceAll(MAIN_NAME,project.getMainClassName());
         FileOutputStream mainFile=new FileOutputStream(projectPath+JAVA+groupId+"/"+project.getMainClassName()+".java");
         IOUtils.write(main,mainFile,"UTF-8");
-        System.out.println("启动类"+project.getMainClassName()+".java成功写入...");
+        System.out.println("写入文件   [启动类]   : "+project.getMainClassName()+".java");
 
         String test=IOUtils.toString(TEST_TEMP,"UTF-8");
         test=test.replaceAll(PACKAGE,project.getGroupId())
                 .replaceAll(MAIN_NAME,project.getMainClassName());
         FileOutputStream testFile=new FileOutputStream(projectPath+TEST_JAVA+groupId+"/"+project.getMainClassName()+"Test.java");
         IOUtils.write(test,testFile,"UTF-8");
-        System.out.println("测试类"+project.getMainClassName()+"Test.java成功写入...");
+        System.out.println("写入文件   [测试类]   : "+project.getMainClassName()+"Test.java");
 
         String help=IOUtils.toString(INI_HELP,"UTF-8");
         FileOutputStream helpFile=new FileOutputStream(projectPath+RESOURCES+"appconfig-help.ini");
         IOUtils.write(help,helpFile,"UTF-8");
-        System.out.println("模板配置文件appconfig-help.ini成功写入...");
+        System.out.println("写入文件   [帮助文档] : appconfig-help.ini");
 
         new File(projectPath+RESOURCES+"appconfig.ini").createNewFile();
-        System.out.println("配置文件appconfig.ini成功写入...");
+        System.out.println("写入文件   [配置文件] : appconfig.ini");
     }
 
     /**
@@ -103,12 +118,12 @@ public class CreateProject {
      */
     private static void createFolder() {
         new File(projectPath+RESOURCES).mkdirs();
-        System.out.println(RESOURCES+"文件夹创建完毕...");
+        System.out.println("创建文件夹 [PACKAGE]  : "+RESOURCES);
         new File(projectPath+TEST_RESOURCES).mkdirs();
-        System.out.println(TEST_RESOURCES+"文件夹创建完毕...");
+        System.out.println("创建文件夹 [PACKAGE]  : "+TEST_RESOURCES);
         new File(projectPath+JAVA+groupId).mkdirs();
-        System.out.println(JAVA+"文件夹创建完毕...");
+        System.out.println("创建文件夹 [PACKAGE]  : "+JAVA);
         new File(projectPath+TEST_JAVA+groupId).mkdirs();
-        System.out.println(TEST_JAVA+"文件夹创建完毕...");
+        System.out.println("创建文件夹 [PACKAGE]  : "+TEST_JAVA);
     }
 }

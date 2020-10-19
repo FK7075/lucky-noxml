@@ -31,6 +31,8 @@
             <artifactId>lucky</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+@:Dependency
     </dependencies>
 
     <!--打包插件，将java项目打包为可运行的jar包(jar包中包含第三方包)-->

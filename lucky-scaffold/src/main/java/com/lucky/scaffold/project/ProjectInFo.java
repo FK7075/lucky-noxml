@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -22,6 +23,12 @@ public class ProjectInFo {
     private static Stack<String> operating;
 
     private static Map<String,String> prompt;
+
+    private static Map<String,String> localMavenMavenDependency;
+
+    private static Set<String> addMavenDependencyName=new HashSet<>();
+
+    public static StringBuilder addMavenDependencyString=new StringBuilder("");
 
     private String groupId;
 
@@ -41,7 +48,13 @@ public class ProjectInFo {
 
     private String mainClass;
 
+
     static {
+        try {
+            localMavenMavenDependency=Constant.getMavenDependency();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         operating=new Stack<>();
         operating.push("o");
         operating.push("a");
@@ -51,7 +64,8 @@ public class ProjectInFo {
         prompt.put("a","请输入 artifactId               _> : ");
         prompt.put("v","请输入 version                  _> : ");
         prompt.put("m","请输入 MavenRepository          _> : ");
-        prompt.put("p","请输入生成项目的父级目录        _> : ");
+        prompt.put("p","请输入生成项目的父级目录           _> : ");
+        prompt.put("d",localMavenMavenDependency.keySet()+"\n在上表中选择您需要的Maven依赖      _> : ");
         prompt.put("o","所有必要配置已配置完成，请输入任意非命令字符结束输入 _>:");
     }
 
@@ -99,6 +113,7 @@ public class ProjectInFo {
     public static ProjectInFo inputProjectInfo(){
         JackLamb.welcome();
         System.out.println("欢迎使用Lucky脚手架，请依照指引完成生成Lucky项目的必要配置！");
+        help();
         ProjectInFo pif=new ProjectInFo();
         Scanner sc = new Scanner(System.in);
         while (!operating.isEmpty()){
@@ -111,7 +126,7 @@ public class ProjectInFo {
                         if(isPackage(in)){
                             pif.setGroupId(in);
                         }else{
-                            System.out.println("不合法的groupId："+in);
+                            System.out.println("[error] -- 不合法的groupId："+in);
                             operating.push("g");
                         }
                     }
@@ -124,7 +139,7 @@ public class ProjectInFo {
                         if(isValidFileName(in)){
                             pif.setArtifactId(in);
                         }else{
-                            System.out.println("不合法的artifactId："+in);
+                            System.out.println("[error] -- 不合法的artifactId："+in);
                             operating.push("a");
                         }
                     }
@@ -145,7 +160,7 @@ public class ProjectInFo {
                         if(checkPathValid(in)){
                             pif.setMavenRepository(in);
                         }else{
-                            System.out.println("不合法的文件路径："+in);
+                            System.out.println("[error] -- 不合法的文件路径："+in);
                             operating.push("m");
                         }
                     }
@@ -158,7 +173,7 @@ public class ProjectInFo {
                         if(checkPathValid(in)){
                             pif.setProjectPath(in);
                         }else{
-                            System.out.println("不合法的文件路径："+in);
+                            System.out.println("[error] -- 不合法的文件路径："+in);
                             operating.push("p");
                         }
                     }
@@ -170,10 +185,37 @@ public class ProjectInFo {
                     addOP(in,currOP,pif);
                     break;
                 }
+                case "d":{
+                    System.out.print(prompt.get(currOP));
+                    String in = sc.nextLine();
+                    if(addOP(in,currOP,pif)){
+                        in=in.replaceAll(" ","");
+                        String[] dArray=in.split(",");
+                        List<String> errD=new ArrayList<>();
+                        for (String d : dArray) {
+                            if(!localMavenMavenDependency.containsKey(d)){
+                                errD.add(d);
+                            }
+                        }
+                        if(errD.isEmpty()){
+                            for (String d : dArray) {
+                                if(!addMavenDependencyName.contains(d)){
+                                    addMavenDependencyString.append(localMavenMavenDependency.get(d));
+                                    addMavenDependencyName.add(d);
+                                }
+                            }
+                        }else{
+                            System.out.println("[error] -- 未收录的Maven依赖："+errD);
+                            operating.push("d");
+                        }
+                    }
+                    break;
+                }
             }
         }
         return pif;
     }
+
 
     public static boolean addOP(String in, String op, ProjectInFo currPif){
         switch (in){
@@ -221,6 +263,12 @@ public class ProjectInFo {
                 showCurrCfg(currPif);
                 return false;
             }
+            case "@d":{
+                operating.remove("d");
+                operating.push(op);
+                operating.push("d");
+                return false;
+            }
             default:return true;
         }
     }
@@ -229,27 +277,29 @@ public class ProjectInFo {
      * 查看帮助信息
      */
     private static void help(){
-        System.out.println("--------------------------------------------------\n帮助文档\n-------------------------------------------------- ");
+        System.out.println("----------------------------------------------------------------------------------------------------\n帮助文档\n---------------------------------------------------------------------------------------------------- ");
         System.out.println("@g   -> [必要] 重新输入groupId");
         System.out.println("@a   -> [必要] 重新输入artifactId");
         System.out.println("@v   -> [选择] 重新输入version（默认值：1.0-SNAPSHOT）");
         System.out.println("@m   -> [选择] 重新输入MavenRepository（默认值：NULL，当不为NULL时，脚手架程序会将Lucky库导入你所配置的本地Maven创库中）");
         System.out.println("@p   -> [选择] 重新输入生成项目的父级目录（默认值：脚手架程序所在目录）");
+        System.out.println("@d   -> [选择] 添加其他Maven依赖");
         System.out.println("@h   -> 查看帮助文档");
-        System.out.println("@cfg -> 查看当前配置信息\n--------------------------------------------------\n");
+        System.out.println("@cfg -> 查看当前配置信息\n----------------------------------------------------------------------------------------------------\n");
     }
 
     /**
      * 显示当前配置
      */
     private static void showCurrCfg(ProjectInFo currPif){
-        System.out.println("--------------------------------------------------\n当前配置\n-------------------------------------------------- ");
-        System.out.printf("MavenRepository -> %s\n",currPif.getMavenRepository());
-        System.out.printf("ProjectPath     -> %s\n",currPif.getProjectPath());
-        System.out.printf("groupId         -> %s\n",currPif.getGroupId());
-        System.out.printf("artifactId      -> %s\n",currPif.getArtifactId());
-        System.out.printf("version         -> %s\n",currPif.getVersion());
-        System.out.println("--------------------------------------------------\n");
+        System.out.println("----------------------------------------------------------------------------------------------------\n当前配置\n---------------------------------------------------------------------------------------------------- ");
+        System.out.printf("MavenRepository     -> %s\n",currPif.getMavenRepository());
+        System.out.printf("ProjectPath         -> %s\n",currPif.getProjectPath());
+        System.out.printf("groupId             -> %s\n",currPif.getGroupId());
+        System.out.printf("artifactId          -> %s\n",currPif.getArtifactId());
+        System.out.printf("version             -> %s\n",currPif.getVersion());
+        System.out.printf("MavenDependency     -> %s\n",currPif.addMavenDependencyName);
+        System.out.println("----------------------------------------------------------------------------------------------------\n");
     }
 
 

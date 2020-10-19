@@ -27,7 +27,9 @@ public class AopProxyFactory {
         Object Aspect = ClassUtils.newObject(AspectClass);
         Method[] AspectMethods = AspectClass.getDeclaredMethods();
         for (Method method : AspectMethods) {
-            if (method.isAnnotationPresent(Before.class) || method.isAnnotationPresent(After.class) || method.isAnnotationPresent(Around.class)) {
+            if (method.isAnnotationPresent(Before.class) || method.isAnnotationPresent(After.class)
+                || method.isAnnotationPresent(Around.class)|| method.isAnnotationPresent(AfterThrowing.class)
+                || method.isAnnotationPresent(AfterReturning.class)) {
                 pointRuns.add(new PointRun(Aspect, method));
             }
         }
@@ -44,11 +46,7 @@ public class AopProxyFactory {
      */
     public static Object Aspect(Map<String, PointRun> AspectMap, String iocCode, String beanid, Class<?> beanClass) {
         List<PointRun> findPointByBean = findPointbyBean(AspectMap, iocCode, beanid, beanClass);
-        if (!findPointByBean.isEmpty()) {
-            return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointByBean);
-        } else if (isCacheable(beanClass)) {
-            return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointByBean);
-        } else if (isTransaction(beanClass)) {
+        if (!findPointByBean.isEmpty()||isCacheable(beanClass)||isTransaction(beanClass)) {
             return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointByBean);
         } else {
             return ClassUtils.newObject(beanClass);
@@ -127,7 +125,7 @@ public class AopProxyFactory {
                     pointRuns.add(pointRun);
                 }
             } else {
-                throw new RuntimeException("无法识别的切面配置aspect,正确的aspect必须以[path:,ioc:,id:]中的一个为前缀！错误位置：" + pointRun.method + " ->@Before/@After/@Around(aspect=>err)");
+                throw new RuntimeException("无法识别的切面配置pointCutClass,正确的pointCutClass必须以[path:,ioc:,id:,ann:]中的一个为前缀！错误位置：" + pointRun.method + " ->@Before/@After/@Around/AfterThrowing/AfterReturning(pointCutClass=>err)");
             }
         }
         return pointRuns;

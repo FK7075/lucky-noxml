@@ -1,0 +1,11 @@
+{
+  "postgresql": "        <dependency>\n            <groupId>org.postgresql</groupId>\n            <artifactId>postgresql</artifactId>\n            <version>42.1.4</version>\n        </dependency>\n\n",
+  "mysql"     : "        <dependency>\n            <groupId>mysql</groupId>\n            <artifactId>mysql-connector-java</artifactId>\n            <version>8.0.21</version>\n        </dependency>\n\n",
+  "oracle"    : "        <dependency>\n            <groupId>com.oracle</groupId>\n            <artifactId>ojdbc6</artifactId>\n            <version>11.2.0.3</version>\n        </dependency>\n\n",
+  "lombok"    : "        <dependency>\n            <groupId>org.projectlombok</groupId>\n            <artifactId>lombok</artifactId>\n            <version>1.18.8</version>\n            <scope>provided</scope>\n        </dependency>\n\n",
+  "c3p0"      : "        <dependency>\n            <groupId>com.mchange</groupId>\n            <artifactId>c3p0</artifactId>\n            <version>0.9.5.5</version>\n        </dependency>\n\n",
+  "redis"     : "        <dependency>\n            <groupId>redis.clients</groupId>\n            <artifactId>jedis</artifactId>\n            <version>3.1.0</version>\n        </dependency>\n\n",
+  "ssh-client": "        <dependency>\n            <groupId>com.jcraft</groupId>\n            <artifactId>jsch</artifactId>\n            <version>0.1.54</version>\n        </dependency>\n\n",
+  "email"     : "        <dependency>\n            <groupId>org.apache.commons</groupId>\n            <artifactId>commons-email</artifactId>\n            <version>1.5</version>\n        </dependency>\n\n",
+  "hutool"    : "        <dependency>\n            <groupId>cn.hutool</groupId>\n            <artifactId>hutool-all</artifactId>\n            <version>5.4.2</version>\n        </dependency>\n\n"
+}

@@ -10,6 +10,6 @@ import com.lucky.jacklamb.enums.PrimaryType;
  */
 public class BaseLog {
 
-    @Id(type = PrimaryType.AUTO_INT,length = 32)
+    @Id(type = PrimaryType.AUTO_UUID,length = 32)
     private Integer id;
 }

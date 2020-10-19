@@ -2,9 +2,8 @@ package com.lucky.jacklamb.aop.expandpoint;
 
 import com.lucky.jacklamb.annotation.aop.AfterReturning;
 import com.lucky.jacklamb.annotation.aop.OperateLog;
-import com.lucky.jacklamb.aop.core.AopChain;
+import com.lucky.jacklamb.annotation.aop.Param;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
-import com.lucky.jacklamb.servlet.core.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,20 +14,17 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class ControllerLogPoint {
 
-    private static final Logger logger= LogManager.getLogger(ControllerLogPoint.class);
+    private static final Logger log= LogManager.getLogger(ControllerLogPoint.class);
 
     @AfterReturning(pointCutClass = "ioc:controller", pointCutMethodAnn = OperateLog.class,priority = -1)
-    public Object proceed(AopChain chain, TargetMethodSignature ts,Model model) throws Throwable {
-        Object result = chain.proceed();
-        insert(ts,model,result);
-        return result;
+    public void proceed(TargetMethodSignature ts, @Param Object result,@Param("runtime")long runtime,OperateLog logAnn){
+
+
     }
 
     /**
      * 用于将日志信息持久化
      * @param ts 方法的签名信息
-     * @param model 请求模型
-     * @param result 真实方法的执行结果
      */
-    protected abstract void insert(TargetMethodSignature ts,Model model,Object result);
+    protected abstract void insert(TargetMethodSignature ts);
 }
