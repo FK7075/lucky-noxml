@@ -105,6 +105,9 @@ public class Mapping {
                 return paramName==null?param.getName():paramName;
             }
             return rp.value();
+        }else if(param.isAnnotationPresent(com.lucky.jacklamb.annotation.aop.Param.class)){
+            com.lucky.jacklamb.annotation.aop.Param rp=param.getAnnotation(com.lucky.jacklamb.annotation.aop.Param.class);
+            return rp.value();
         }else {
             return paramName==null?param.getName():paramName;
         }

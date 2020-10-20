@@ -32,6 +32,6 @@ public @interface Param {
 	 *     runtime:表示真实方法执行所用的时间</p>
 	 * @return
 	 */
-	String value() default "RETURNING";
+	String value() default "return";
 
 }

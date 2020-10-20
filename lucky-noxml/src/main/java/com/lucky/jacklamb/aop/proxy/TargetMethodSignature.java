@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.aop.proxy;
 
-import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -49,13 +49,6 @@ public class TargetMethodSignature {
 	 * 参数列表的 Parameter[]
 	 */
 	private Parameter[] parameters;
-	
-	/**
-	 * 当前真实方法的参数名列表
-	 */
-	private String[] paramNames;
-	
-	
 	
 	/**
 	 * 得到当前真实类对应的Class
@@ -119,26 +112,28 @@ public class TargetMethodSignature {
 		this.targetClass=aspectObject.getClass().getSuperclass();
 		this.currMethod=currMethod;
 		this.params=params;
-		this.paramNames= ASMUtil.getMethodParamNames(currMethod);
 		indexMap=new HashMap<>();
 		for(int i=0;i<params.length;i++) {
 			indexMap.put(i+1, params[i]);
 		}
 		parameters = currMethod.getParameters();
 		nameMap=new HashMap<>();
-		for(int i=0;i<parameters.length;i++) {
-			nameMap.put(paramNames[i], params[i]);
-		}
+		nameMap=MethodUtils.getMethodParamsNV(currMethod,params);
 	}
-	
 
+
+	/**
+	 * 判断当前参数列表的index位置是否含有参数
+	 * @param index
+	 * @return
+	 */
 	public boolean containsIndex(int index) {
 		return indexMap.containsKey(index);
 	}
 	
 	/**
-	 * 得到参数列表中index位置的参数
-	 * @param index
+	 * 得到参数列表中index(初始位置为：1)位置的参数
+	 * @param index  位置
 	 * @return
 	 */
 	public Object getParamByIndex(int index){
@@ -146,17 +141,31 @@ public class TargetMethodSignature {
 			return null;
 		return indexMap.get(index);
 	}
-	
+
+	/**
+	 * 判断当前参数列表中是否含有该参数名的参数
+	 * @param paramName 参数名
+	 * @return
+	 */
 	public boolean containsParamName(String paramName) {
 		return nameMap.containsKey(paramName);
 	}
-	
+
+	/**
+	 * 得到参数列表中参数名为paramName的参数的参数值
+	 * @param paramName 参数名
+	 * @return
+	 */
 	public Object getParamByName(String paramName) {
 		if(!containsParamName(paramName))
 			return null;
 		return nameMap.get(paramName);
 	}
 
+	/**
+	 * 得到Model对象
+	 * @return
+	 */
 	public Model getModel(){
 		return new Model();
 	}

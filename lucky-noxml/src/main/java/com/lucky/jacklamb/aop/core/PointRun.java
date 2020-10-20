@@ -384,9 +384,10 @@ public class PointRun {
 								continue;
 							}
 							if(!targetMethodSignature.containsParamName(aopParamValue)) {
-								throw new AopParamsConfigurationException("错误的参数名配置，在目标方法中找不到参数名为\""+aopParamValue+"\"的参数，请检查配置信息!错误位置："+expandMethod+"@AopParam("+aopParamValue+")=>err");
+								expandParams[i]=null;
+							}else{
+								expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);
 							}
-							expandParams[i]=targetMethodSignature.getParamByName(aopParamValue);
 						}
 					}else{
 						if(TargetMethodSignature.class.isAssignableFrom(paramClass)) {
