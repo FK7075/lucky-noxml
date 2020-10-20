@@ -6,9 +6,9 @@
 
   <groupId>com.lucky.jacklamb</groupId>
   <artifactId>lucky</artifactId>
-  <version>1.0.0</version>
-
+  <version>1.0.1</version>
   <name>Lucky</name>
+  <description>Lucky是一个全场景轻量级的JavaEE框架</description>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
   <properties>
@@ -231,6 +231,26 @@
     </dependency>
   </dependencies>
 
+  <licenses>
+    <license>
+      <name>Mulan Permissive Software License，Version 1</name>
+      <url>http://license.coscl.org.cn/MulanPSL</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>fukang</name>
+      <email>1814375626@qq.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git@github.com:FK7075/lucky-noxml.git</connection>
+    <developerConnection>scm:git@github.com:FK7075/lucky-noxml.git</developerConnection>
+    <url>git@github.com:FK7075/lucky-noxml.git</url>
+  </scm>
+
   <!--打包插件，将java项目打包为可运行的jar包(jar包中包含第三方包)-->
   <build>
     <finalName>lucky</finalName> <!-- 指定package生成的文件名为 -->
@@ -307,4 +327,78 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <!-- Source -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+              <execution>
+                <id>ossrh</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- 测试覆盖度 -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>2.7</version>
+            <configuration>
+              <formats>
+                <format>html</format>
+                <format>xml</format>
+              </formats>
+              <check />
+            </configuration>
+          </plugin>
+          <!-- Gpg Signature -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>ossrh</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
