@@ -15,6 +15,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 
+/**
+ * 转换器，用于将AOP注解标注的Method转化为AopPoint
+ */
 public class PointRun {
 	
 	private AopPoint point;
