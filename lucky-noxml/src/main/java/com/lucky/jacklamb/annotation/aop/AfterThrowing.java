@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AfterThrowing {
-	
+
 	/**
 	 * 设置增强方法的唯一标记(默认值：方法名)
 	 * @return
@@ -32,7 +32,7 @@ public @interface AfterThrowing {
 	 * @return
 	 */
 	String pointCutClass() default "ioc:service";
-	
+
 	/**
 	 * 配置切点(Method)， 增强方法执行的范围，用来定位需要代理的真实类的一些具体方法<br>
 	 * 多个值使用","分隔,支持"*"、"!"<br>

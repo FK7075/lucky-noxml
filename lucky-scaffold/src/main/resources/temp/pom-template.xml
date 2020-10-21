@@ -27,7 +27,7 @@
 
         <!-- Lucky运行环境 -->
         <dependency>
-            <groupId>com.lucky.jacklamb</groupId>
+            <groupId>com.github.fk7075</groupId>
             <artifactId>lucky</artifactId>
             <version>1.0.0</version>
         </dependency>

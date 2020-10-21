@@ -14,7 +14,7 @@ public @interface Before {
 
 	/**
 	 * 设置增强方法的唯一标记(默认值：方法名)
-	 * @return
+	 * @return ID
 	 */
 	String value() default "";
 
@@ -30,7 +30,7 @@ public @interface Before {
 	 * <p>
 	 *  ann: 表示增强被某一个注解标注的所有IOC组件 eg:pointCutClass="ann:com.lucky.MyAnnotation,org.lucky.HelloAnnotation"
 	 * </p>
-	 * @return
+	 * @return pointCutClass
 	 */
 	String pointCutClass() default "ioc:service";
 
@@ -41,19 +41,19 @@ public @interface Before {
 	 *   方法名定位：需要增强的方法名，eg:pointCutMethod="method1,method2"</p>
 	 * <p>
 	 *    方法名+参数类型定位：需要增强的方法名+参数列表，eg:pointCutMethod="method1(String,int),method2(User,Double)"</p>
-	 * @return
+	 * @return pointCutMethod
 	 */
 	String pointCutMethod() default "public,*";
 
 	/**
 	 * 配置切点(Annotation),只有当切面中的方法被pointCutAnnotation中配置的注解所标识才执行代理
-	 * @return
+	 * @return pointCutMethodAnn
 	 */
 	Class<? extends Annotation>[] pointCutMethodAnn() default {};
 
 	/**
 	 * 优先级，优先级高的增强将会被优先执行
-	 * @return
+	 * @return priority
 	 */
 	double priority() default 5;
 }

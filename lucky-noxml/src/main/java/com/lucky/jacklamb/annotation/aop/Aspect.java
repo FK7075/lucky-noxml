@@ -18,7 +18,7 @@ public @interface Aspect {
 	
 	/**
 	 * 设置一个组件ID
-	 * @return
+	 * @return ID
 	 */
 	String value() default "";
 }

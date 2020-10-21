@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AfterReturning {
-	
+
 	/**
 	 * 设置增强方法的唯一标记(默认值：方法名)
 	 * @return

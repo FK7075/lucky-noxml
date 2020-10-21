@@ -14,8 +14,8 @@ import java.io.IOException;
 public class Transfer {
 
     private static final ProjectInFo project=ProjectInFo.getFinalProjectInFo(ProjectInFo.getProjectInFo());
-    private static final File locationLuckyMaven=new File(project.getMavenRepository()+"com/lucky/jacklamb/");
-    private static final File scaffoldLucky=new File(project.getScaffold()+"src/main/tool/scaffold/lucky/com/lucky/");
+    private static final File locationLuckyMaven=new File(project.getMavenRepository()+"com/github/fk7075/");
+    private static final File scaffoldLucky=new File(project.getScaffold()+"src/main/tool/scaffold/lucky/com/github/");
     private static final File scaffoldJar=new File(project.getScaffold()+"target/lucky-scaffold-jar-with-dependencies.jar");
     private static final File toolJar=new File(project.getScaffold()+"src/main/tool/scaffold/");
 

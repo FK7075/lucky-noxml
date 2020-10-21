@@ -13,10 +13,19 @@ import java.lang.annotation.*;
 @Documented
 public @interface OperateLog {
 
-    /**操作模块*/
+    /**
+     * 操作模块
+     * @return module
+     */
     String module() default "";
-    /**操作类型*/
+    /**
+     * 操作类型
+     * @return  type
+     */
     String type() default "";
-    /**操作说明*/
+    /**
+     * 操作说明
+     * @return desc
+     */
     String desc() default "";
 }

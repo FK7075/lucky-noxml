@@ -60,7 +60,7 @@ public class CreateProject {
             System.out.println("----------------------------------------------------------------------------------------------------");
             System.out.printf("       <!-- Lucky运行环境 -->\n" +
                     "        <dependency>\n" +
-                    "            <groupId>com.lucky.jacklamb</groupId>\n" +
+                    "            <groupId>com.github.fk7075</groupId>\n" +
                     "            <artifactId>lucky</artifactId>\n" +
                     "            <version>1.0.0</version>\n" +
                     "        </dependency>\n");

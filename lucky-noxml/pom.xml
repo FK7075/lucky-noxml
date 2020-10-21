@@ -314,7 +314,7 @@
         <executions>
           <execution>
             <configuration>
-              <encoding>${source.encoding}</encoding>
+              <additionalparam>-Xdoclint:none</additionalparam>
             </configuration>
             <id>attach-javadocs</id>
             <goals>

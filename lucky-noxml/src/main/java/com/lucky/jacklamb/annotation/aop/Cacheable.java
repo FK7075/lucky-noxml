@@ -18,19 +18,19 @@ public @interface Cacheable {
 	
 	/**
 	 * 缓存容器的名字
-	 * @return
+	 * @return 缓存名字
 	 */
 	String value();
 	
 	/**
 	 * 缓存对象在缓存容器中的key
-	 * @return
+	 * @return Key
 	 */
 	String key();
 	
 	/**
 	 * 条件，满足此条件则执行缓存
-	 * @return
+	 * @return condition
 	 */
 	String condition() default "";
 }

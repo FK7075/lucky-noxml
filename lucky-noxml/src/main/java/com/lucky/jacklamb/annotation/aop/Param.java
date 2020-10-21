@@ -8,8 +8,6 @@ import java.lang.annotation.Target;
 
 /**
  * 设置增强参数
- * @author fk-7075
- *
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
@@ -30,7 +28,7 @@ public @interface Param {
 	 *     return:表示将真实方法的返回值设置为增强方法的参数</p>
 	 * <p>
 	 *     runtime:表示真实方法执行所用的时间</p>
-	 * @return
+	 * @return value
 	 */
 	String value() default "return";
 
