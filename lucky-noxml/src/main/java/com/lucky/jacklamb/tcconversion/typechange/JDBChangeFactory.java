@@ -7,7 +7,7 @@ public class JDBChangeFactory {
 	
 	/**
 	 * 获取数据库的类型转换工具
-	 * @param jdbcDriver
+	 * @param dbname
 	 * @return
 	 */
 	public static TypeConversion jDBChangeFactory(String dbname) {

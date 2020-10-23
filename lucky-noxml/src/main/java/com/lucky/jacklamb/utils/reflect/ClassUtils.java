@@ -1,8 +1,13 @@
 package com.lucky.jacklamb.utils.reflect;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class ClassUtils {
+
 
     /**
      * 得到一个类以及所有父类(不包括Object)的所有属性(Field)
@@ -10,18 +15,29 @@ public abstract class ClassUtils {
      * @return
      */
     public static Field[] getAllFields(Class<?> clzz) {
-        if (clzz.getSuperclass() == Object.class)
+        if (clzz.getSuperclass() == Object.class) {
             return clzz.getDeclaredFields();
+        }
         Field[] clzzFields = clzz.getDeclaredFields();
         Field[] superFields = getAllFields(clzz.getSuperclass());
-        int clzzFieldLength = clzzFields.length;
-        int superClassFieldLength = superFields.length;
-        Field[] allFields = new Field[clzzFieldLength + superClassFieldLength];
-        for (int i = 0; i < clzzFieldLength; i++)
-            allFields[i] = clzzFields[i];
-        for (int i = 0; i < superClassFieldLength; i++)
-            allFields[clzzFieldLength + i] = superFields[i];
-        return allFields;
+        return delCoverFields(clzzFields,superFields);
+    }
+
+    private static Field[] delCoverFields(Field[] thisFields,Field[] superFields){
+        List<Field> delCvoerFields=new ArrayList<>();
+        Set<String> coverFieldNames=new HashSet<>();
+        for (Field thisField : thisFields) {
+            if(thisField.isAnnotationPresent(Cover.class)){
+                coverFieldNames.add(thisField.getName());
+            }
+            delCvoerFields.add(thisField);
+        }
+        for (Field superField : superFields) {
+            if(!coverFieldNames.contains(superField.getName())){
+                delCvoerFields.add(superField);
+            }
+        }
+        return delCvoerFields.toArray(new Field[delCvoerFields.size()]);
     }
 
     /**
@@ -30,18 +46,29 @@ public abstract class ClassUtils {
      * @return
      */
     public static Method[] getAllMethod(Class<?> clzz){
-        if (clzz.getSuperclass() == Object.class)
+        if (clzz.getSuperclass() == Object.class) {
             return clzz.getDeclaredMethods();
+        }
         Method[] clzzMethods = clzz.getDeclaredMethods();
         Method[] superMethods = getAllMethod(clzz.getSuperclass());
-        int clzzFieldLength = clzzMethods.length;
-        int superClassFieldLength = superMethods.length;
-        Method[] allMethods = new Method[clzzFieldLength + superClassFieldLength];
-        for (int i = 0; i < clzzFieldLength; i++)
-            allMethods[i] = clzzMethods[i];
-        for (int i = 0; i < superClassFieldLength; i++)
-            allMethods[clzzFieldLength + i] = superMethods[i];
-        return allMethods;
+        return delCoverMethods(clzzMethods,superMethods);
+    }
+
+    private static Method[] delCoverMethods(Method[] thisMethods,Method[] superMethods){
+        List<Method> delCoverMethods=new ArrayList<>();
+        Set<String> coverMethodNames=new HashSet<>();
+        for (Method thisMethod : thisMethods) {
+            if(thisMethod.isAnnotationPresent(Cover.class)){
+                coverMethodNames.add(thisMethod.getName());
+            }
+            delCoverMethods.add(thisMethod);
+        }
+        for (Method superMethod : superMethods) {
+            if(!coverMethodNames.contains(superMethod.getName())){
+                delCoverMethods.add(superMethod);
+            }
+        }
+        return delCoverMethods.toArray(new Method[delCoverMethods.size()]);
     }
 
     /**
@@ -91,8 +118,9 @@ public abstract class ClassUtils {
             ParameterizedType pt=(ParameterizedType) type;
             Type[] types=pt.getActualTypeArguments();
             Class<?>[] genericType=new Class<?>[types.length];
-            for(int i=0;i<types.length;i++)
+            for(int i=0;i<types.length;i++) {
                 genericType[i]=(Class<?>)types[i];
+            }
             return genericType;
         }else{
             return null;

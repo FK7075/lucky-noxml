@@ -1,18 +1,19 @@
 package com.lucky.jacklamb.sqlcore.abstractionlayer.dynamiccoreImpl;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-
 import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.sqlcore.createtable.CreateTableSqlGenerate;
+import com.lucky.jacklamb.sqlcore.createtable.MySqlCreateTableSqlGenerate;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.BatchInsert;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
-import com.lucky.jacklamb.tcconversion.createtable.CreateTable;
 import com.lucky.jacklamb.tcconversion.reverse.TableToJava;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public final class MySqlCore extends SqlCore {
@@ -23,6 +24,11 @@ public final class MySqlCore extends SqlCore {
 	public MySqlCore(String dbname) {
 		super(dbname);
 		tableToJava=new TableToJava(dbname);
+	}
+
+	@Override
+	public CreateTableSqlGenerate getCreateTableSqlGenerate() {
+		return new MySqlCreateTableSqlGenerate();
 	}
 
 	@Override
@@ -51,17 +57,6 @@ public final class MySqlCore extends SqlCore {
 		
 	}
 
-	@Override
-	public void createTable() {
-		CreateTable ct = new CreateTable(dbname);
-		ct.createTable();
-	}
-
-	@Override
-	public void createTable(Class<?> tableClass) {
-		CreateTable ct = new CreateTable(dbname);
-		ct.createTable(tableClass);
-	}
 
 	@Override
 	public <T> List<T> query(QueryBuilder queryBuilder, Class<T> resultClass, String... expression) {

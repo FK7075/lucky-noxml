@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.lucky.jacklamb.query.ObjectToJoinSql;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.sqlcore.createtable.CreateTableSqlGenerate;
+import com.lucky.jacklamb.sqlcore.createtable.PostgreSqlCreateTableSqlGenerate;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 import com.lucky.jacklamb.sqlcore.util.BatchInsert;
@@ -50,9 +52,8 @@ public final class PostgreSqlCore extends SqlCore {
 	}
 
 	@Override
-	public void createTable() {
-		// TODO Auto-generated method stub
-		
+	public CreateTableSqlGenerate getCreateTableSqlGenerate() {
+		return new PostgreSqlCreateTableSqlGenerate();
 	}
 
 

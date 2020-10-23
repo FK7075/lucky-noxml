@@ -41,7 +41,7 @@ public interface UniqueSqlCore {
 	 */
 	void createTable();
 
-	default void createTable(Class<?> tableClass){};
+	void createTable(Class<?>...tableClasses);
 	
 
 	/**

@@ -154,7 +154,6 @@
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
       <version>3.1.0</version>
-      <scope>provided</scope>
     </dependency>
 
       <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
@@ -184,7 +183,6 @@
       <groupId>com.jcraft</groupId>
       <artifactId>jsch</artifactId>
       <version>0.1.54</version>
-      <scope>provided</scope>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
@@ -219,7 +217,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-email</artifactId>
-      <scope>provided</scope>
       <version>1.5</version>
     </dependency>
 
@@ -306,24 +303,6 @@
         </executions>
       </plugin>
 
-      <!-- JavaDoc -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <executions>
-          <execution>
-            <configuration>
-              <additionalparam>-Xdoclint:none</additionalparam>
-            </configuration>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -361,17 +340,19 @@
       </distributionManagement>
       <build>
         <plugins>
-          <!-- Source -->
+          <!-- JavaDoc -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.2.1</version>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
             <executions>
               <execution>
-                <id>ossrh</id>
-                <phase>package</phase>
+                <configuration>
+                  <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+                <id>attach-javadocs</id>
                 <goals>
-                  <goal>jar-no-fork</goal>
+                  <goal>jar</goal>
                 </goals>
               </execution>
             </executions>

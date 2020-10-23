@@ -271,6 +271,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String getTable(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)) {
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -300,6 +301,23 @@ public abstract class PojoManage {
 			return pojoClass.getSimpleName().toLowerCase();
 		}
 	}
+
+	private static Class<?> getTableClass(Class<?> quasiTableClass){
+		Class<?> quasiClass = getQuasiTableClass(quasiTableClass);
+		return quasiClass==null?quasiTableClass:quasiClass;
+	}
+
+	private static Class<?> getQuasiTableClass(Class<?> quasiTableClass){
+		if(quasiTableClass==Object.class){
+			return null;
+		}
+		if(quasiTableClass.isAnnotationPresent(Table.class)
+				||quasiTableClass.isAnnotationPresent(Tables.class)){
+			return quasiTableClass;
+		}else{
+			return getQuasiTableClass(quasiTableClass.getSuperclass());
+		}
+	}
 	
 	/**
 	 * 得到该实体对应表的级联删除信息
@@ -307,6 +325,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static boolean cascadeDelete(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -332,6 +351,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static boolean cascadeUpdate(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -481,6 +501,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String primary(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -489,7 +510,7 @@ public abstract class PojoManage {
 			return "";
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			if(dbname.equals(table.dbname())){
+			if(!"".equals(table.primary())){
 				return table.primary();
 			}
 			return "";
@@ -504,6 +525,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String[] index(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -512,7 +534,7 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			if(dbname.equals(table.dbname())){
+			if(table.index().length!=0){
 				return table.index();
 			}
 			return new String[0];
@@ -527,6 +549,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String[] unique(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -535,7 +558,7 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			if(dbname.equals(table.dbname())){
+			if(table.unique().length!=0){
 				return table.unique();
 			}
 			return new String[0];
@@ -550,6 +573,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String[] fulltext(Class<?> pojoClass,String dbname) {
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Tables.class)){
 			Table table=getTable(pojoClass.getAnnotation(Tables.class),dbname);
 			if(table!=null){
@@ -558,7 +582,7 @@ public abstract class PojoManage {
 			return new String[0];
 		}else if(pojoClass.isAnnotationPresent(Table.class)) {
 			Table table=pojoClass.getAnnotation(Table.class);
-			if(dbname.equals(table.dbname())){
+			if(table.fulltext().length!=0){
 				return table.fulltext();
 			}
 			return new String[0];
@@ -573,6 +597,7 @@ public abstract class PojoManage {
 	 * @return
 	 */
 	public static String tableAlias(Class<?> pojoClass,String dbname){
+		pojoClass=getTableClass(pojoClass);
 		if(pojoClass.isAnnotationPresent(Table.class)){
 			String alias=pojoClass.getAnnotation(Table.class).alias();
 			if(!"".equals(alias)) {

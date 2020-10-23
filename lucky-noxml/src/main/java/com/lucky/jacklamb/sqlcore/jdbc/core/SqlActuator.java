@@ -5,6 +5,7 @@ import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -93,5 +94,13 @@ public abstract class SqlActuator {
      */
     public void clear(){
         SqlOperation.resultCache.get(dbname).clear();
+    }
+
+    /**
+     * 返回一个数据库连接
+     * @return
+     */
+    public Connection getConnection(){
+        return dataSource.getConnection();
     }
 }

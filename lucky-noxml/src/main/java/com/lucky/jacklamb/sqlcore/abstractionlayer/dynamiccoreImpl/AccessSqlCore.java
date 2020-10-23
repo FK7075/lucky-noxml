@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.sqlcore.createtable.CreateTableSqlGenerate;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlGroup;
 
@@ -43,9 +44,8 @@ public final class AccessSqlCore extends SqlCore {
 	}
 
 	@Override
-	public void createTable() {
-		// TODO Auto-generated method stub
-
+	public CreateTableSqlGenerate getCreateTableSqlGenerate() {
+		return null;
 	}
 
 	@Override

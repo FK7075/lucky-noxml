@@ -3,6 +3,7 @@ package com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl;
 import com.lucky.jacklamb.annotation.orm.Id;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.createtable.CreateTableSqlExecute;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.GeneralObjectCore;
@@ -33,6 +34,8 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		return dataSource;
 	}
 
+	protected CreateTableSqlExecute createTableSqlExecute;
+
 	protected String dbname;
 
 
@@ -40,6 +43,7 @@ public abstract class GeneralObjectCoreBase implements GeneralObjectCore, Unique
 		this.dbname=dbname;
 		gcg=new GeneralSqlGenerator(dbname);
 		this.dataSource= ReaderInI.getDataSource(dbname);
+		this.createTableSqlExecute=new CreateTableSqlExecute(dbname);
 	}
 
 

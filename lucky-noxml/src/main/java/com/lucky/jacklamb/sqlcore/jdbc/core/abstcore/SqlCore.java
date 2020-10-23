@@ -5,6 +5,7 @@ import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
+import com.lucky.jacklamb.sqlcore.createtable.CreateTableSqlGenerate;
 import com.lucky.jacklamb.sqlcore.exception.CreateMapperException;
 import com.lucky.jacklamb.sqlcore.mapper.LuckyMapperProxy;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
@@ -41,7 +42,23 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 		super(dbname);
 		mapperProxy = new LuckyMapperProxy(this);
 	}
-	
+
+	@Override
+	public void createTable() {
+		createTableSqlExecute.executeCreateTableSql(getCreateTableSqlGenerate());
+	}
+
+	@Override
+	public void createTable(Class<?>...tableClasses) {
+		createTableSqlExecute.executeCreateTableSql(getCreateTableSqlGenerate(),tableClasses);
+	}
+
+	/**
+	 * 获取建表Sql生成器
+	 * @return 生成建表语句的工具
+	 */
+	public abstract CreateTableSqlGenerate getCreateTableSqlGenerate();
+
 	/**
 	 * ID查询
 	 * @param pojoClass

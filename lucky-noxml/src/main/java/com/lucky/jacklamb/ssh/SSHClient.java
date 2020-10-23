@@ -124,6 +124,129 @@ public class SSHClient {
         return result;
     }
 
+    /**
+     * 在当前目录下使用"mkdir"命令创建文件夹
+     * @param folder 文件夹
+     * @throws JSchException
+     */
+    public void mkdir(String folder) throws JSchException {
+        sendCmd(String.format("mkdir %s",folder));
+    }
+
+    /**
+     * 在当前目录下使用"cat"命令查看文件内容
+     * @param file 文件名
+     * @return 文件内容
+     * @throws JSchException
+     */
+    public String cat(String file) throws JSchException {
+        return sendCmd(String.format("cat %s", file));
+    }
+
+    /**
+     * 在当前目录下使用"touch"命令新建文件
+     * @param file 文件名
+     * @throws JSchException
+     */
+    public void touch(String file) throws JSchException {
+        sendCmd(String.format("touch %s",file));
+    }
+
+    /**
+     * 在当前目录下使用"cp -a"命令复制文件或文件夹
+     * @param source 源文件
+     * @param target 目标文件夹
+     * @throws JSchException
+     */
+    public void copy(String source,String target) throws JSchException {
+        sendCmd(String.format("cp -a %s %s",source,target));
+    }
+
+    /**
+     * 在当前目录下使用"rm -rf"命令复制文件或文件夹
+     * @param file 文件或文件夹
+     * @throws JSchException
+     */
+    public void remove(String file) throws JSchException {
+        sendCmd(String.format("rm -rf %s",file));
+    }
+
+    /**
+     * 在当前目录下使用"mv"命令移动或者重命名文件或文件夹
+     * @param source 源文件
+     * @param target 目的地
+     * @throws JSchException
+     */
+    public void mv(String source,String target) throws JSchException {
+        sendCmd(String.format("mv %s %s",source,target));
+    }
+
+    /**
+     * 解压文件
+     * 1、*.tar              用 tar –xvf 解压
+     * 2、*.gz               用 gunzip 解压
+     * 3、*.tar.gz和*.tgz    用 tar –xzf 解压
+     * 4、*.bz2              用 bunzip2 解压
+     * 5、*.tar.bz2          用 tar –xjf 解压
+     * 6、*.Z                用 uncompress 解压
+     * 7、*.tar.Z            用 tar –xZf 解压
+     * 8、*.rar              用 unrar e解压
+     * 9、*.zip              用 unzip 解压
+     * @param zipFile 压缩文件
+     * @param unZipFile 解压后的位置
+     * @throws JSchException
+     */
+    public void unZip(String zipFile,String unZipFile) throws JSchException {
+        if(zipFile.endsWith(".tar.gz")||zipFile.endsWith(".tgz")){
+            sendCmd(String.format("tar -xzf %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".tar.bz2")){
+            sendCmd(String.format("uncompress %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".tar.Z")){
+            sendCmd(String.format("tar –xZf %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".Z")){
+            sendCmd(String.format("uncompress %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".rar")){
+            sendCmd(String.format("unrar e %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".zip")){
+            sendCmd(String.format("unzip %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".gz")){
+            sendCmd(String.format("gunzip %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".tar")){
+            sendCmd(String.format("tar –xvf %s %s",zipFile,unZipFile));
+        }else if(zipFile.endsWith(".bz2")){
+            sendCmd(String.format("bunzip2 %s %s",zipFile,unZipFile));
+        }else {
+            log.error("未知的文件类型:["+zipFile+"],无法解压！",new RuntimeException());
+        }
+    }
+
+    /**
+     * 解压文件到当前目录
+     * @param zipFile 压缩文件
+     * @throws JSchException
+     */
+    public void unZip(String zipFile) throws JSchException {
+        unZip(zipFile,"");
+    }
+
+    public void zip(String zipName,String folder) throws JSchException {
+        if(zipName.endsWith(".tar.gz")){
+            sendCmd(String.format("tar –czf %s %s",zipName,folder));
+        }else if(zipName.endsWith(".tar.bz2")){
+            sendCmd(String.format("tar –cjf %s %s",zipName,folder));
+        }else if(zipName.endsWith(".tar.Z")){
+            sendCmd(String.format("tar –cZf %s %s",zipName,folder));
+        }else if(zipName.endsWith(".rar")){
+            sendCmd(String.format("rar a %s %s",zipName,folder));
+        }else if(zipName.endsWith(".zip")){
+            sendCmd(String.format("zip %s %s",zipName,folder));
+        }else if(zipName.endsWith(".tar")){
+            sendCmd(String.format("tar –cvf %s %s",zipName,folder));
+        }else{
+            log.error("未知的文件类型:["+zipName+"],无法压缩！",new RuntimeException());
+        }
+    }
+
     public void logOut(){
         this.session.disconnect();
         System.out.println("Host("+remote.getHost()+") exits....");

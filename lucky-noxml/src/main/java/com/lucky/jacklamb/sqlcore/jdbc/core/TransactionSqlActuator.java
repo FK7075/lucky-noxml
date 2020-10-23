@@ -68,8 +68,11 @@ public class TransactionSqlActuator extends SqlActuator {
 
     @Override
     public int[] updateBatch(String... completeSqls) {
-        SqlOperation sqlOperation=new SqlOperation(tr.getConnection(),dbname);
-        int[] result = sqlOperation.setSqlBatch(completeSqls);
-        return result;
+        if(completeSqls.length!=0){
+            SqlOperation sqlOperation=new SqlOperation(tr.getConnection(),dbname);
+            int[] result = sqlOperation.setSqlBatch(completeSqls);
+            return result;
+        }
+        return new int[0];
     }
 }
