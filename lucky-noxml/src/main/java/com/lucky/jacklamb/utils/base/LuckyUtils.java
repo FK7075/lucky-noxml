@@ -5,10 +5,7 @@ import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;
@@ -336,6 +333,17 @@ public abstract class LuckyUtils {
 	public static int getRandomNumber(){
 		int number=(int)(Math.random()*10000);
 		return number;
+	}
+
+	/**
+	 * 字符串复制
+	 * @param str 待复制的字符串
+	 * @param copyNum 复制次数
+	 * @param joinChar 连接符
+	 * @return
+	 */
+	public static String strCopy(String str,int copyNum,String joinChar){
+		return String.join(joinChar, Collections.nCopies(copyNum, str));
 	}
 	
 }

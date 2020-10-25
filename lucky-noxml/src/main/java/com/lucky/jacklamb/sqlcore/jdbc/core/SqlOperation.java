@@ -9,6 +9,7 @@ import com.lucky.jacklamb.sqlcore.jdbc.conversion.JDBCConversion;
 import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.util.SqlLog;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +142,8 @@ public class SqlOperation {
 		}
 	}
 
+
+
 	/**
 	 *
 	 * @param c 包装类的Class对象
@@ -151,9 +154,16 @@ public class SqlOperation {
 	 */
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		if(isCache){
-			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c);
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,null,conn);
 		}
-		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c);
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,null,conn);
+	}
+
+	public <T> List<T> autoPackageToListFilterClass(Class<T> c, String sql, Class<?> filterClass, Object... obj) {
+		if(isCache){
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,filterClass,conn);
+		}
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,filterClass,conn);
 	}
 
 	public void clearCache(){

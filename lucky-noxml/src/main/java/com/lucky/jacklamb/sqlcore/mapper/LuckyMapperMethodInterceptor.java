@@ -551,17 +551,17 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
         if (method.isAnnotationPresent(Select.class)) {
             return select(method, params, sql_fp);
         } else if (method.isAnnotationPresent(Update.class)) {
-            return (Object) update(method, params, sql_fp);
+            return update(method, params, sql_fp);
         } else if (method.isAnnotationPresent(Delete.class)) {
-            return (Object) delete(method, params, sql_fp);
+            return delete(method, params, sql_fp);
         } else if (method.isAnnotationPresent(Insert.class)) {
-            return (Object) insert(method, params, sql_fp);
+            return insert(method, params, sql_fp);
         } else if (method.isAnnotationPresent(Query.class)) {
             return join(method, params);
         }  else if (method.isAnnotationPresent(QueryTr.class)) {
             return qtr(method, params);
         }else if (method.isAnnotationPresent(Count.class)) {
-            return (Object) sqlCore.count(params[0]);
+            return sqlCore.count(params[0]);
         } else {
             return notHave(method, params, sql_fp, LuckyMapperGeneric);
         }

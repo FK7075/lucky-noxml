@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.lucky.jacklamb.annotation.orm.*;
+import com.lucky.jacklamb.annotation.orm.jpa.ManyToMany;
+import com.lucky.jacklamb.annotation.orm.jpa.ManyToOne;
+import com.lucky.jacklamb.annotation.orm.jpa.OneToMany;
+import com.lucky.jacklamb.annotation.orm.jpa.OneToOne;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.exception.NotFindFlieException;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
@@ -695,7 +699,11 @@ public abstract class PojoManage {
 	}
 
 	public static boolean isNoColumn(Field field,String dbname){
-		if(field.isAnnotationPresent(NoColumn.class)){
+		if(field.isAnnotationPresent(NoColumn.class)
+				||field.isAnnotationPresent(ManyToOne.class)
+				||field.isAnnotationPresent(OneToMany.class)
+				||field.isAnnotationPresent(OneToOne.class)
+				||field.isAnnotationPresent(ManyToMany.class)){
 			return true;
 		}else if(field.isAnnotationPresent(NoColumns.class)){
 			return isNoColumn(field.getAnnotation(NoColumns.class),dbname);

@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.utils.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -138,5 +139,16 @@ public abstract class ClassUtils {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<Field> getFieldByAnnotation(Class<?> clzz, Class<? extends Annotation> annotation){
+        Field[] allFields = getAllFields(clzz);
+        List<Field> annFields=new ArrayList<>();
+        for (Field field : allFields) {
+            if(field.isAnnotationPresent(annotation)){
+                annFields.add(field);
+            }
+        }
+        return annFields;
     }
 }

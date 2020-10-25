@@ -12,5 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OneToMany {
 
+    String value() default "";
+
+    String joinColumn();
+
     CascadeType[] cascade() default {};
 }

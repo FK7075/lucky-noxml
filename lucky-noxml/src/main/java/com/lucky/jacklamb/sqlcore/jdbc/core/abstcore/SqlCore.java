@@ -114,8 +114,8 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	 */
 	public <T> int count(Class<T> clzz) {
 		StringBuilder countSql=new StringBuilder("SELECT COUNT(")
-				.append(PojoManage.getIdString(clzz,dbname))
-				.append(") FROM ").append(PojoManage.getTable(clzz,dbname));
+				.append("`").append(PojoManage.getIdString(clzz,dbname)).append("`")
+				.append(") FROM ").append("`").append(PojoManage.getTable(clzz,dbname)).append("`");
 		return getObject(int.class,countSql.toString());
 	}
 	
@@ -390,11 +390,11 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	public abstract SqlGroup getSqlGroup();
 
 	public int update(Object pojo, Translator tr){
-		StringBuilder sql=new StringBuilder("UPDATE ").append(PojoManage.getTable(pojo.getClass(),dbname)).append(" SET ");
+		StringBuilder sql=new StringBuilder("UPDATE ").append("`").append(PojoManage.getTable(pojo.getClass(),dbname)).append("`").append(" SET ");
 		List<Object> params=new ArrayList<>();
 		Field[] allFields = ClassUtils.getAllFields(pojo.getClass());
 		for (Field field : allFields) {
-			sql.append(PojoManage.getTableField(dbname,field)).append("=?,");
+			sql.append("`").append(PojoManage.getTableField(dbname,field)).append("`").append("=?,");
 			params.add(FieldUtils.getValue(pojo,field));
 		}
 		sql.substring(0,sql.length()-1);
@@ -411,7 +411,7 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 
 	public int delete(Class<?> pojoClass,Translator tr){
-		StringBuilder sql=new StringBuilder("DELETE FROM ").append(PojoManage.getTable(pojoClass,dbname));
+		StringBuilder sql=new StringBuilder("DELETE FROM ").append("`").append(PojoManage.getTable(pojoClass,dbname)).append("`");
 		if(tr.getSql().toString().toUpperCase().trim().startsWith("WHERE")){
 			sql.append(tr.getSql());
 		}else{

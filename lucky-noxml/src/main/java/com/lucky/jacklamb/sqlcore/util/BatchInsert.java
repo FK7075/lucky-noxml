@@ -47,7 +47,7 @@ public class BatchInsert {
 
     public String createInsertSql(Class<?> clzz, int size) {
         Field[] fields = ClassUtils.getAllFields(clzz);
-        StringBuilder prefix = new StringBuilder("INSERT INTO " + PojoManage.getTable(clzz,dbname));
+        StringBuilder prefix = new StringBuilder("INSERT INTO `" + PojoManage.getTable(clzz,dbname)+"`");
         StringBuilder suffix = new StringBuilder(" VALUES ");
         boolean isFirst = true;
         List<Field> list;
@@ -67,10 +67,10 @@ public class BatchInsert {
             }
             if (isFirst) {
                 isFirst = false;
-                prefix.append("(").append(PojoManage.getTableField(dbname,list.get(i))).append(",");
+                prefix.append("(").append("`").append(PojoManage.getTableField(dbname,list.get(i))).append("`").append(",");
                 fk.append("(?,");
             } else {
-                prefix.append(PojoManage.getTableField(dbname,list.get(i))).append(",");
+                prefix.append("`").append(PojoManage.getTableField(dbname,list.get(i))).append("`").append(",");
                 fk.append("?,");
             }
         }

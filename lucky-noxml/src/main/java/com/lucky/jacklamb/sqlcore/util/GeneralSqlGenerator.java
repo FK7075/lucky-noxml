@@ -28,9 +28,9 @@ public class GeneralSqlGenerator {
 	 */
 	public String getOneSql(Class<?> c) {
 		StringBuilder sql=new StringBuilder("SELECT ");
-		sql.append(new QFilter(c,dbname).lines()).append(" FROM ")
-		.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
-		.append(PojoManage.getIdString(c,dbname)).append(" =?");
+		sql.append(new QFilter(c,dbname).lines()).append(" FROM ").append("`")
+		.append(PojoManage.getTable(c,dbname)).append("`").append(" WHERE ").append("`")
+		.append(PojoManage.getIdString(c,dbname)).append("`").append(" =?");
 		return sql.toString();
 	}
 	
@@ -41,8 +41,8 @@ public class GeneralSqlGenerator {
 	 */
 	public String deleteOneSql(Class<?> c) {
 		StringBuilder sql=new StringBuilder("DELETE FROM ");
-		sql.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
-		.append(PojoManage.getIdString(c,dbname)).append(" =?");
+		sql.append("`").append(PojoManage.getTable(c,dbname)).append("`").append(" WHERE ").append("`")
+		.append(PojoManage.getIdString(c,dbname)).append("`").append(" =?");
 		return sql.toString();
 	}
 	
@@ -74,8 +74,8 @@ public class GeneralSqlGenerator {
 		}else{
 			sql=new StringBuilder("SELECT * FROM ");
 		}
-		sql.append(PojoManage.getTable(c,dbname)).append(" WHERE ")
-				.append(PojoManage.getIdString(c,dbname)).append(" IN ");
+		sql.append("`").append(PojoManage.getTable(c,dbname)).append("`").append(" WHERE ")
+				.append("`").append(PojoManage.getIdString(c,dbname)).append("`").append(" IN ");
 		for(int i=0;i<ids.length;i++) {
 			if(first) {
 				sql.append("(?");
@@ -95,7 +95,7 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleCount(Object pojo) {
 		StringBuilder sql=new StringBuilder("SELECT COUNT(");
-		sql.append(PojoManage.getIdString(pojo.getClass(),dbname)).append(")").append(" FROM ").append(PojoManage.getTable(pojo.getClass(),dbname));
+		sql.append("`").append(PojoManage.getIdString(pojo.getClass(),dbname)).append("`").append(")").append(" FROM ").append("`").append(PojoManage.getTable(pojo.getClass(),dbname)).append("`");
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -109,7 +109,7 @@ public class GeneralSqlGenerator {
 	public PrecompileSqlAndObject singleSelect(Object pojo) {
 		Class<?> objClass=pojo.getClass();
 		StringBuilder sql=new StringBuilder("SELECT ");
-		sql.append(new QFilter(objClass,dbname).lines()).append(" FROM ").append(PojoManage.getTable(objClass,dbname));
+		sql.append(new QFilter(objClass,dbname).lines()).append(" FROM ").append("`").append(PojoManage.getTable(objClass,dbname)).append("`");
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -122,7 +122,7 @@ public class GeneralSqlGenerator {
 	 */
 	public PrecompileSqlAndObject singleDelete(Object pojo) {
 		StringBuilder sql=new StringBuilder("DELETE FROM ");
-		sql.append(PojoManage.getTable(pojo.getClass(),dbname));
+		sql.append("`").append(PojoManage.getTable(pojo.getClass(),dbname)).append("`");
 		PrecompileSqlAndObject psaq=singleWhere(pojo);
 		psaq.setPrecompileSql(sql.append(psaq.getPrecompileSql()).toString());
 		return psaq;
@@ -138,16 +138,16 @@ public class GeneralSqlGenerator {
 		FieldAndValue fv=new FieldAndValue(pojo,dbname);
 		boolean first=true;
 		StringBuilder insertSql=new StringBuilder("INSERT INTO ");
-		insertSql.append(PojoManage.getTable(pojo.getClass(),dbname)).append("(");
+		insertSql.append("`").append(PojoManage.getTable(pojo.getClass(),dbname)).append("`").append("(");
 		StringBuilder valuesSql=new StringBuilder(" VALUES(");
 		Map<String, Object> fvMap = fv.getFieldNameAndValue();
 		for(Entry<String, Object> entry:fvMap.entrySet()) {
 			if(first) {
-				insertSql.append(entry.getKey());
+				insertSql.append("`").append(entry.getKey()).append("`");
 				valuesSql.append("?");
 				first=false;
 			}else {
-				insertSql.append(",").append(entry.getKey());
+				insertSql.append(",").append("`").append(entry.getKey()).append("`");
 				valuesSql.append(",?");
 			}
 			psaq.addObjects(entry.getValue());
@@ -166,19 +166,19 @@ public class GeneralSqlGenerator {
 		PrecompileSqlAndObject psao=new PrecompileSqlAndObject();
 		FieldAndValue fv=new FieldAndValue(pojo,dbname);
 		StringBuilder updateSql=new StringBuilder("UPDATE ");
-		updateSql.append(PojoManage.getTable(pojo.getClass(),dbname)).append(" SET ");
+		updateSql.append("`").append(PojoManage.getTable(pojo.getClass(),dbname)).append("`").append(" SET ");
 		StringBuilder whereSql=new StringBuilder();
 		Map<String, Object> fvMap = fv.getFieldNameAndValue();
 		if(conditions.length==0) {
 			boolean first=true;
-			whereSql.append(" WHERE ").append(PojoManage.getIdString(pojo.getClass(),dbname)).append("=?");
+			whereSql.append(" WHERE ").append("`").append(PojoManage.getIdString(pojo.getClass(),dbname)).append("`").append("=?");
 			for(Entry<String,Object> entry:fvMap.entrySet()) {
 				if(!fv.getIdField().equals(entry.getKey())) {
 					if(first) {
-						updateSql.append(entry.getKey()).append("=?");
+						updateSql.append("`").append(entry.getKey()).append("`").append("=?");
 						first=false;
 					}else {
-						updateSql.append(",").append(entry.getKey()).append("=?");
+						updateSql.append(",").append("`").append(entry.getKey()).append("`").append("=?");
 					}
 					psao.addObjects(entry.getValue());
 				}
@@ -193,18 +193,18 @@ public class GeneralSqlGenerator {
 				for(Entry<String,Object> entry:fvMap.entrySet()) {
 					if(Arrays.asList(conditions).contains(entry.getKey())) {//WHERE
 						if(wherefirst) {
-							whereSql.append(" WHERE ").append(entry.getKey()).append("=?");
+							whereSql.append(" WHERE ").append("`").append(entry.getKey()).append("`").append("=?");
 							wherefirst=false;
 						}else {
-							whereSql.append(" AND ").append(entry.getKey()).append("=?");
+							whereSql.append(" AND ").append("`").append(entry.getKey()).append("`").append("=?");
 						}
 						whereObject.add(entry.getValue());
 					}else {//SET
 						if(setfirst) {
-							updateSql.append(entry.getKey()).append("=?");
+							updateSql.append("`").append(entry.getKey()).append("`").append("=?");
 							setfirst=false;
 						}else {
-							updateSql.append(",").append(entry.getKey()).append("=?");
+							updateSql.append(",").append("`").append(entry.getKey()).append("`").append("=?");
 						}
 						psao.addObjects(entry.getValue());
 					}
@@ -230,10 +230,10 @@ public class GeneralSqlGenerator {
 		boolean first=true;
 		for(Entry<String, Object> entry:fv.getFieldNameAndValue().entrySet()) {
 			if(first) {
-				sql.append(" WHERE ").append(entry.getKey()).append("=?");
+				sql.append(" WHERE ").append("`").append(entry.getKey()).append("`").append("=?");
 				first=false;
 			}else {
-				sql.append(" AND ").append(entry.getKey()).append("=?");
+				sql.append(" AND ").append("`").append(entry.getKey()).append("`").append("=?");
 			}
 			psaq.addObjects(entry.getValue());
 		}

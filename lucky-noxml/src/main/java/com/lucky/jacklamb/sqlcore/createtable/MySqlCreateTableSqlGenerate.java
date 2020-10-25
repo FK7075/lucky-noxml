@@ -29,7 +29,7 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
     public String createTableSql(String dbname, Class<?> pojoClass) {
         TypeConversion jDChangeFactory = JDBChangeFactory.jDBChangeFactory(dbname);
         StringBuilder sql=new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-        sql.append(PojoManage.getTable(pojoClass,dbname)).append(" (");
+        sql.append("`").append(PojoManage.getTable(pojoClass,dbname)).append("`").append(" (");
         Field[] fields = ClassUtils.getAllFields(pojoClass);
         for (int i = 0; i < fields.length; i++) {
             if(PojoManage.isNoColumn(fields[i],dbname)){
@@ -38,27 +38,27 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
             String fieldType=fields[i].getType().getSimpleName();
             if (i < fields.length - 1) {
                 if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(pojoClass,dbname))) {
-                    sql.append(PojoManage.getIdString(pojoClass,dbname)).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
+                    sql.append("`").append(PojoManage.getIdString(pojoClass,dbname)).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
                             .append(" NOT NULL ").append(isAutoInt(pojoClass,dbname)).append(" PRIMARY KEY,");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
-                    sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
+                    sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
                             .append(allownull(fields[i],dbname)).append(",");
                 } else {
-                    sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname)).append(",");
+                    sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname)).append(",");
                 }
             } else {
                 if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(pojoClass,dbname))) {
-                    sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
+                    sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
                             .append(" NOT NULL AUTO_INCREMENT PRIMARY KEY");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
-                    sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
+                    sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
                             .append(allownull(fields[i],dbname));
                 } else {
-                    sql.append(PojoManage.getTableField(dbname,fields[i])).append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname));
+                    sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname));
                 }
             }
         }
@@ -87,7 +87,7 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
         String[] fulltextes = PojoManage.fulltext(pojoClass,dbname);
         String[] uniques = PojoManage.unique(pojoClass,dbname);
         if(!"".equals(primary)){
-            String p_key="ALTER TABLE "+table_name+" ADD PRIMARY KEY("+primary+")";
+            String p_key="ALTER TABLE `"+table_name+"` ADD PRIMARY KEY(`"+primary+"`)";
             indexlist.add(p_key);
         }
         addAll(indexlist,table_name,indexs,"INDEX");
@@ -175,11 +175,11 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
      * @param type
      */
     private void addAll(List<String> indexlist, String tablename, String[] indexs, String type) {
-        String key="ALTER TABLE "+tablename+" ADD ";
+        String key="ALTER TABLE `"+tablename+"` ADD ";
         for(String index:indexs) {
             String indexkey;
             if("INDEX".equals(type)) {
-                indexkey=key+type+" "+getRandomStr()+"(";
+                indexkey=key+type+" `"+getRandomStr()+"`(";
             } else {
                 indexkey=key+type+"(";
             }

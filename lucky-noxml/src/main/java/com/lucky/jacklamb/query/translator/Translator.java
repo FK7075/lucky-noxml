@@ -90,8 +90,8 @@ public class Translator {
         if(isNoPack){
             this.packClass=pojoClass;
         }
-        SELECT=SELECT.replaceAll("@:table",PojoManage.getTable(pojoClass,dbname));
-        UPDATE=UPDATE.replaceAll("@:table",PojoManage.getTable(pojoClass,dbname));
+        SELECT=SELECT.replaceAll("@:table","`"+PojoManage.getTable(pojoClass,dbname)+"`");
+        UPDATE=UPDATE.replaceAll("@:table","`"+PojoManage.getTable(pojoClass,dbname)+"`");
         return this;
     }
 
@@ -154,7 +154,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" =?");
+        sql.append("`").append(columns).append("`").append(" =?");
         params.add(param);
         return this;
     }
@@ -185,7 +185,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append( "<>? ");
+        sql.append("`").append(columns).append("`").append( "<>? ");
         params.add(param);
         return this;
     }
@@ -195,14 +195,14 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" >? ");
+        sql.append("`").append(columns).append("`").append(" >? ");
         params.add(param);
         return this;
     }
 
     /** 大于等于 >=*/
     public Translator ge(String columns,Object param){
-        sql.append(" ").append(columns).append(" >=? ");
+        sql.append(" ").append("`").append(columns).append("`").append(" >=? ");
         params.add(param);
         return this;
     }
@@ -212,7 +212,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" <? ");
+        sql.append("`").append(columns).append("`").append(" <? ");
         params.add(param);
         return this;
     }
@@ -222,7 +222,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" <=?");
+        sql.append("`").append(columns).append("`").append(" <=?");
         params.add(param);
         return this;
     }
@@ -231,7 +231,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?");
+        sql.append("`").append(columns).append("`").append(" LIKE ?");
         params.add(param);
         return this;
     }
@@ -240,7 +240,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?");
+        sql.append("`").append(columns).append("`").append(" LIKE ?");
         params.add("%"+param);
         return this;
     }
@@ -249,7 +249,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?");
+        sql.append("`").append(columns).append("`").append(" LIKE ?");
         params.add(param+"%");
         return this;
     }
@@ -258,13 +258,13 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" LIKE ?");
+        sql.append("`").append(columns).append("`").append(" LIKE ?");
         params.add("%"+param+"%");
         return this;
     }
 
     public Translator notLike(String columns,Object param){
-        sql.append(columns).append("NOT LIKE ?");
+        sql.append("`").append(columns).append("`").append("NOT LIKE ?");
         params.add(param);
         return this;
     }
@@ -273,7 +273,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" IN ?C");
+        sql.append("`").append(columns).append("`").append(" IN ?C");
         params.add(collection);
         return this;
     }
@@ -282,7 +282,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(column).append(String.format(" IN (%s)",inSQL).toString());
+        sql.append("`").append(column).append("`").append(String.format(" IN (%s)",inSQL).toString());
         this.params.addAll(Arrays.asList(params));
         return this;
     }
@@ -291,7 +291,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" NOT IN ?C");
+        sql.append("`").append(columns).append("`").append(" NOT IN ?C");
         params.add(collection);
         return this;
     }
@@ -300,7 +300,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(column).append(StringFormatter.format(" NOT IN (%s)",inSQL));
+        sql.append("`").append(column).append("`").append(StringFormatter.format(" NOT IN (%s)",inSQL));
         this.params.addAll(Arrays.asList(params));
         return this;
     }
@@ -309,7 +309,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" IS NULL");
+        sql.append("`").append(columns).append("`").append(" IS NULL");
         return this;
     }
 
@@ -317,12 +317,12 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(columns).append(" IS NOT NULL");
+        sql.append("`").append(columns).append("`").append(" IS NOT NULL");
         return this;
     }
 
     public Translator groupBy(String columns){
-        sql.append(" GROUP BY ").append(columns).append(" ");
+        sql.append(" GROUP BY ").append("`").append(columns).append("`").append(" ");
         return this;
     }
 
@@ -372,7 +372,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(column).append(" BETWEEN ? AND ?");
+        sql.append("`").append(column).append("`").append(" BETWEEN ? AND ?");
         params.add(val1);
         params.add(val2);
         return this;
@@ -382,7 +382,7 @@ public class Translator {
         if(isEndBrackets()) {
             add();
         }
-        sql.append(column).append(" NOT BETWEEN ? AND ?");
+        sql.append("`").append(column).append("`").append(" NOT BETWEEN ? AND ?");
         params.add(val1);
         params.add(val2);
         return this;

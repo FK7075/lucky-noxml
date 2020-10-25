@@ -1,0 +1,8 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sun Oct 25 23:43:40 CST 2020
+lucky-1.0.0.jar>central=
+lucky-1.0.0.pom>=
+lucky-1.0.0.pom>central=
+lucky-1.0.0-jar-with-dependencies.jar>=
+lucky-1.0.0-sources.jar>=
+lucky-1.0.0.jar>=
