@@ -1,10 +1,13 @@
 package com.lucky.jacklamb.sqlcore.createtable;
 
+import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.annotation.orm.jpa.ManyToOne;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.typechange.JDBChangeFactory;
 import com.lucky.jacklamb.tcconversion.typechange.TypeConversion;
+import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
 
@@ -35,9 +38,17 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
             if(PojoManage.isNoColumn(fields[i],dbname)){
                 continue;
             }
+            String id=null;
+            if(AnnotationUtils.isExist(fields[i],ManyToOne.class)){
+                ManyToOne manyToOne = AnnotationUtils.get(fields[i], ManyToOne.class);
+                fields[i]=PojoManage.getIdField(fields[i].getType());
+                Id idAnn = AnnotationUtils.get(fields[i], Id.class);
+                id=idAnn.value();
+                AnnotationUtils.set(idAnn,"value",manyToOne.column());
+            }
             String fieldType=fields[i].getType().getSimpleName();
             if (i < fields.length - 1) {
-                if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(pojoClass,dbname))) {
+                if (fields[i]==PojoManage.getIdField(pojoClass)) {
                     sql.append("`").append(PojoManage.getIdString(pojoClass,dbname)).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
                             .append(" NOT NULL ").append(isAutoInt(pojoClass,dbname)).append(" PRIMARY KEY,");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
@@ -49,7 +60,7 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
                     sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname)).append(",");
                 }
             } else {
-                if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(pojoClass,dbname))) {
+                if (fields[i]==PojoManage.getIdField(pojoClass)) {
                     sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
                             .append(" NOT NULL AUTO_INCREMENT PRIMARY KEY");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
@@ -60,6 +71,9 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
                 } else {
                     sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append(allownull(fields[i],dbname));
                 }
+            }
+            if(id!=null){
+                AnnotationUtils.set(AnnotationUtils.get(fields[i], Id.class),"value",id);
             }
         }
         if(sql.toString().trim().endsWith(",")){

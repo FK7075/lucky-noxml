@@ -150,6 +150,8 @@ public abstract class PojoManage {
 				return key.value();
 			}
 			return field.getName();
+		}else if(field.isAnnotationPresent(ManyToOne.class)){
+			return field.getAnnotation(ManyToOne.class).column();
 		}else if(field.isAnnotationPresent(NoColumn.class)){
 			return "";
 		}else{
@@ -700,7 +702,6 @@ public abstract class PojoManage {
 
 	public static boolean isNoColumn(Field field,String dbname){
 		if(field.isAnnotationPresent(NoColumn.class)
-				||field.isAnnotationPresent(ManyToOne.class)
 				||field.isAnnotationPresent(OneToMany.class)
 				||field.isAnnotationPresent(OneToOne.class)
 				||field.isAnnotationPresent(ManyToMany.class)){
@@ -717,6 +718,17 @@ public abstract class PojoManage {
 			return true;
 		}else if(field.isAnnotationPresent(NoPackages.class)){
 			return isNoPackage(field.getAnnotation(NoPackages.class),dbname);
+		}else{
+			return false;
+		}
+	}
+
+	public static boolean isJpaAnnField(Field field,String dbname){
+		if(field.isAnnotationPresent(ManyToOne.class)
+				||field.isAnnotationPresent(OneToMany.class)
+				||field.isAnnotationPresent(OneToOne.class)
+				||field.isAnnotationPresent(ManyToMany.class)){
+			return true;
 		}else{
 			return false;
 		}

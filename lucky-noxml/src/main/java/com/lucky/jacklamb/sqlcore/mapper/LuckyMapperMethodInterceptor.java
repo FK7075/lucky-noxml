@@ -1,9 +1,10 @@
 package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.annotation.orm.jpa.FullMapQuery;
+import com.lucky.jacklamb.annotation.orm.jpa.SimpleQuery;
 import com.lucky.jacklamb.annotation.orm.mapper.*;
 import com.lucky.jacklamb.conversion.proxy.Conversion;
-import com.lucky.jacklamb.enums.JOIN;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.enums.Sort;
 import com.lucky.jacklamb.query.QueryBuilder;
@@ -481,6 +482,7 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
             }
         } else if(luckyMapperGeneric!=null){
             JpaSample jpaSample = new JpaSample(luckyMapperGeneric,sqlCore.getDbName());
+            sqlCore.setFullMap(true);
             Class<?> returnType = method.getReturnType();
             if(List.class.isAssignableFrom(returnType)){
                 try {
@@ -508,8 +510,20 @@ public class LuckyMapperMethodInterceptor implements MethodInterceptor {
 
     @Override
     public Object intercept(Object object, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
-        log.debug("Run ==> " + object.getClass().getName() + "." + method.getName() + "\n params=" + Arrays.toString(params));
-
+        Class<?> aClass = object.getClass().getInterfaces()[0];
+        log.debug("Run ==> " +aClass.getName() + "." + method.getName() + "\n params=" + Arrays.toString(params));
+        if(aClass.isAnnotationPresent(FullMapQuery.class)){
+            sqlCore.setFullMap(true);
+            if(method.isAnnotationPresent(SimpleQuery.class)){
+                sqlCore.setFullMap(false);
+            }
+        }else{
+            if(method.isAnnotationPresent(FullMapQuery.class)){
+                sqlCore.setFullMap(true);
+            }else{
+                sqlCore.setFullMap(false);
+            }
+        }
 			/*
 			  用户自定义的Mapper如果继承了LuckyMapper<T>,代理selectById,deleteById,count,selectList,createTable,deleteByIdIn,selectByIdIn方法
 			 这些方法的执行依赖LuckyMapper接口的泛型类型，所以需要特殊处理

@@ -43,7 +43,7 @@ public abstract class LuckyUtils {
 	 * @return 查询结果集
 	 */
 	public static ResultSet getResultSet(String dbname,String sql,Object...obj) {
-		SqlOperation sqlop=new SqlOperation(ReaderInI.getDataSource(dbname).getConnection(),dbname);
+		SqlOperation sqlop=new SqlOperation(ReaderInI.getDataSource(dbname).getConnection(),dbname,false);
 		return sqlop.getResultSet(sql, obj);
 	}
 	/**

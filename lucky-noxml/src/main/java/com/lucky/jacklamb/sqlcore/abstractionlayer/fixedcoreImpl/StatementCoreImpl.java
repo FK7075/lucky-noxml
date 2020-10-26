@@ -18,6 +18,10 @@ public final class StatementCoreImpl implements StatementCore {
 
 	private SqlActuator sqlActuator;
 
+	public void setFullMap(boolean isFullMap){
+		sqlActuator.setFullMap(isFullMap);
+	}
+
 	public Transaction openTransaction(){
 		return sqlActuator.openTransaction();
 	}

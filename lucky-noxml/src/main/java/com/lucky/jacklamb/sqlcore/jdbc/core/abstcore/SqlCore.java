@@ -38,6 +38,10 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 
 	private LuckyMapperProxy mapperProxy;
 
+	public void setFullMap(boolean fullMap) {
+        statementCore.setFullMap(fullMap);
+	}
+
 	public SqlCore(String dbname) {
 		super(dbname);
 		mapperProxy = new LuckyMapperProxy(this);

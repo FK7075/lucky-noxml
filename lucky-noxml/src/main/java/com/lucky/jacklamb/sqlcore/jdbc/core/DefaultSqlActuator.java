@@ -29,7 +29,7 @@ public class DefaultSqlActuator extends SqlActuator {
     public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
         SqlAndParams sp = new SqlAndParams(sql, obj);
         Connection connection = dataSource.getConnection();
-        SqlOperation sqlOperation = new SqlOperation(connection, dataSource.getDbname());
+        SqlOperation sqlOperation = new SqlOperation(connection, dataSource.getDbname(),isFullMap);
         List<T> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
         LuckyDataSource.release(null, null, connection);
         return result;
@@ -39,7 +39,7 @@ public class DefaultSqlActuator extends SqlActuator {
     public int update(String sql, Object... obj) {
         SqlAndParams sp = new SqlAndParams(sql, obj);
         Connection connection = dataSource.getConnection();
-        SqlOperation sqlOperation = new SqlOperation(connection, dbname);
+        SqlOperation sqlOperation = new SqlOperation(connection, dbname,isFullMap);
         int result = sqlOperation.setSql(sp.precompileSql, sp.params);
         LuckyDataSource.release(null, null, connection);
         return result;
@@ -49,7 +49,7 @@ public class DefaultSqlActuator extends SqlActuator {
     public <T> List<T> autoPackageToListMethod(Class<T> c, Method method, String sql, Object[] obj) {
         SqlAndParams sp = new SqlAndParams(method, sql, obj);
         Connection connection = dataSource.getConnection();
-        SqlOperation sqlOperation = new SqlOperation(connection, dbname);
+        SqlOperation sqlOperation = new SqlOperation(connection, dbname,isFullMap);
         List<T> result = sqlOperation.autoPackageToList(c, sp.precompileSql, sp.params);
         LuckyDataSource.release(null, null, connection);
         return result;
@@ -59,7 +59,7 @@ public class DefaultSqlActuator extends SqlActuator {
     public int updateMethod(Method method, String sql, Object[] obj) {
         SqlAndParams sp = new SqlAndParams(method, sql, obj);
         Connection connection = dataSource.getConnection();
-        SqlOperation sqlOperation = new SqlOperation(connection, dbname);
+        SqlOperation sqlOperation = new SqlOperation(connection, dbname,isFullMap);
         int result = sqlOperation.setSql(sp.precompileSql, sp.params);
         LuckyDataSource.release(null, null, connection);
         return result;
@@ -68,7 +68,7 @@ public class DefaultSqlActuator extends SqlActuator {
     @Override
     public int[] updateBatch(String sql, Object[][] obj) {
         Connection connection = dataSource.getConnection();
-        SqlOperation sqlOperation = new SqlOperation(connection, dbname);
+        SqlOperation sqlOperation = new SqlOperation(connection, dbname,isFullMap);
         int[] result = sqlOperation.setSqlBatch(sql, obj);
         LuckyDataSource.release(null, null, connection);
         return result;
@@ -78,7 +78,7 @@ public class DefaultSqlActuator extends SqlActuator {
     public int[] updateBatch(String... completeSqls) {
         if (completeSqls.length != 0) {
             Connection connection = dataSource.getConnection();
-            SqlOperation sqlOperation = new SqlOperation(connection, dbname);
+            SqlOperation sqlOperation = new SqlOperation(connection, dbname,isFullMap);
             int[] result = sqlOperation.setSqlBatch(completeSqls);
             LuckyDataSource.release(null, null, connection);
             return result;

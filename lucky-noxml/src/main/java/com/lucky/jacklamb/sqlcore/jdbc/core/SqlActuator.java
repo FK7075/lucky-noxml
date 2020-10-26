@@ -17,6 +17,16 @@ public abstract class SqlActuator {
 
     protected String dbname;
 
+    protected boolean isFullMap;
+
+    public boolean isFullMap() {
+        return isFullMap;
+    }
+
+    public void setFullMap(boolean fullMap) {
+        isFullMap = fullMap;
+    }
+
     public SqlActuator(String dbname) {
         this.dbname=dbname;
         this.dataSource=ReaderInI.getDataSource(dbname);

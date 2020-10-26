@@ -27,10 +27,12 @@ public class SqlOperation {
 	private String dbname;
 	public static Map<String, Cache<String,List<Map<String,Object>>>> resultCache =new HashMap<>();
 	private boolean isCache;
+	private boolean isFullMap=false;
 
-	public SqlOperation(Connection conn, String dbname) {
+	public SqlOperation(Connection conn, String dbname,boolean isFullMap) {
 		this.conn = conn;
 		this.dbname = dbname;
+		this.isFullMap=isFullMap;
 		isCache= ReaderInI.getDataSource(dbname).getCache();
 		//如果用户开启了缓存配置，则初始化一个LRU缓存
 		if(isCache&&!resultCache.containsKey(dbname)){
@@ -154,16 +156,16 @@ public class SqlOperation {
 	 */
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		if(isCache){
-			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,null,conn);
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,isFullMap,null,conn);
 		}
-		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,null,conn);
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,isFullMap,null,conn);
 	}
 
 	public <T> List<T> autoPackageToListFilterClass(Class<T> c, String sql, Class<?> filterClass, Object... obj) {
 		if(isCache){
-			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,filterClass,conn);
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,isFullMap,filterClass,conn);
 		}
-		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,filterClass,conn);
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,isFullMap,filterClass,conn);
 	}
 
 	public void clearCache(){
