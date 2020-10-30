@@ -23,19 +23,12 @@ import java.util.*;
 public class ControllerIOC {
 
 	private static final Logger log= LogManager.getLogger(ControllerIOC.class);
-
 	private String IOC_CODE="controller";
-
 	private Map<String, Object> controllerMap;
-
 	private List<String> controllerIDS;
-	
 	private ControllerAndMethodMap handerMap;
-	
 	private Set<String> mappingSet;
-
 	private List<ServerStartRun> serverStartRuns;
-
 	private List<ServerStartRun> serverCloseRuns;
 
 	public List<ServerStartRun> getServerCloseRuns() {
@@ -129,7 +122,7 @@ public class ControllerIOC {
 	 * @param controllerClass
 	 * @return
 	 */
-	public void initControllerIOC(List<Class<?>> controllerClass) {
+	public void registered(List<Class<?>> controllerClass) {
 		String beanID;
 		for (Class<?> controller : controllerClass) {
 			if (controller.isAnnotationPresent(Controller.class)) {

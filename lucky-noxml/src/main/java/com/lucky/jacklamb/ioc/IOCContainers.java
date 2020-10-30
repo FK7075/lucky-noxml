@@ -5,13 +5,13 @@ import com.lucky.jacklamb.annotation.ioc.SSH;
 import com.lucky.jacklamb.annotation.ioc.Value;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
 import com.lucky.jacklamb.expression.$Expression;
-import com.lucky.jacklamb.utils.file.ini.INIConfig;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.ssh.Remote;
 import com.lucky.jacklamb.ssh.SSHClient;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
+import com.lucky.jacklamb.utils.file.ini.INIConfig;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
@@ -41,7 +41,17 @@ public final class IOCContainers {
 	private ComponentIOC appIOC;
 	
 	private ControllerIOC controllerIOC;
-	
+
+	private BeansIOC beansIOC;
+
+	public BeansIOC getBeansIOC() {
+		return beansIOC;
+	}
+
+	public void setBeansIOC(BeansIOC beansIOC) {
+		this.beansIOC = beansIOC;
+	}
+
 	public AspectAOP getAspectIOC() {
 		return AspectIOC;
 	}
@@ -75,7 +85,7 @@ public final class IOCContainers {
 	}
 	
 	public void addComponent(String key,Object value) {
-		this.appIOC.addAppMap(key, value);
+		this.appIOC.addBean(key, value);
 	}
 
 	public void removeComponent(String key){
@@ -106,6 +116,9 @@ public final class IOCContainers {
 		
 		//控制反转+动态代理(IOC+AOP)
 		inversionOfControlAndAop();
+
+		//@Bean 初始化由@Bean方法产出的IOC对象，并将他们放入IOC容器
+		initBeansIOC();
 		
 		//依赖注入(DI)
 		dependencyInjection();
@@ -121,15 +134,15 @@ public final class IOCContainers {
 		initServiceIOC();
 		initControllerIOC();
 	}
-	
+
 	/**
 	 * 依赖注入,执行代理
 	 */
 	public void dependencyInjection() {
 		try {
-			injection(appIOC.getAppMap());
+			injection(appIOC.getBeanMap());
 			injection(repositoryIOC.getRepositoryMap());
-			injection(serviceIOC.getServiceMap());
+			injection(serviceIOC.getBeanMap());
 			injection(controllerIOC.getControllerMap());
 		} catch (IllegalArgumentException e) {
 			throw new InjectionPropertiesException("属性注入异常，注入的属性与原属性类型不匹配....");
@@ -151,8 +164,8 @@ public final class IOCContainers {
 	 */
 	public void initComponentIOC(){
 		appIOC=new ComponentIOC();
-		appIOC.addAppMap("LUCKY-COMPONENT-IOC",appIOC);
-		appIOC.initComponentIOC(ScanFactory.createScan().getComponentClass("component"));
+		appIOC.addBean("LUCKY-COMPONENT-IOC",appIOC);
+		appIOC.registered(ScanFactory.createScan().getComponentClass("component"));
 	}
 	
 	/**
@@ -161,7 +174,7 @@ public final class IOCContainers {
 	public void initControllerIOC(){
 		controllerIOC=new ControllerIOC();
 		controllerIOC.addControllerMap("LUCKY-CONTROLLER-IOC",controllerIOC);
-		controllerIOC.initControllerIOC(ScanFactory.createScan().getComponentClass("controller"));
+		controllerIOC.registered(ScanFactory.createScan().getComponentClass("controller"));
 		controllerIOC.methodHanderSetting();
 	}
 	
@@ -170,8 +183,8 @@ public final class IOCContainers {
 	 */
 	public void initServiceIOC(){
 		serviceIOC=new ServiceIOC();
-		serviceIOC.addServiceMap("LUCKY-SERVICE-IOC",serviceIOC);
-		serviceIOC.initServiceIOC(ScanFactory.createScan().getComponentClass("service"));
+		serviceIOC.addBean("LUCKY-SERVICE-IOC",serviceIOC);
+		serviceIOC.registered(ScanFactory.createScan().getComponentClass("service"));
 	}
 	
 	/**
@@ -180,9 +193,16 @@ public final class IOCContainers {
 	public void initRepositoryIOC(){
 		repositoryIOC=new RepositoryIOC();
 		repositoryIOC.addRepositoryMap("LUCKY-REPOSITORY-IOC",repositoryIOC);
-		repositoryIOC.initRepositoryIOC(ScanFactory.createScan().getComponentClass("repository"));
+		repositoryIOC.registered(ScanFactory.createScan().getComponentClass("repository"));
 	}
-	
+
+	private void initBeansIOC() {
+		beansIOC=new BeansIOC();
+		beansIOC.addBean("LUCKY-BEANS-IOC",beansIOC);
+		beansIOC.registered(ScanFactory.createScan().getComponentClass("bean"));
+	}
+
+
 	/**
 	 * 每次处理请求时为Controller注入Model、Request、Response和Session、Aplication对象属性
 	 * @param object
@@ -265,31 +285,9 @@ public final class IOCContainers {
                     if(fieldClass.isArray()) {//基本类型的数组类型
 						FieldUtils.setValue(component,field,JavaConversion.strArrToBasicArr(val, fieldClass));
                     }else if(List.class.isAssignableFrom(fieldClass)) {//List类型
-                        List<Object> list=new ArrayList<>();
-                        String fx= FieldUtils.getStrGenericType(field)[0];
-                        if(fx.endsWith("$ref")) {
-                            for(String z:val) {
-                                list.add(beans.getBean(z));
-                            }
-                        }else {
-                            for(String z:val) {
-                                list.add(JavaConversion.strToBasic(z, fx));
-                            }
-                        }
-						FieldUtils.setValue(component,field,list);
+						FieldUtils.setValue(component,field,getList(beans,field,val));
                     }else if(Set.class.isAssignableFrom(fieldClass)) {//Set类型
-                        Set<Object> set=new HashSet<>();
-                        String fx=FieldUtils.getStrGenericType(field)[0];
-                        if(fx.endsWith("$ref")) {
-                            for(String z:val) {
-                                set.add(beans.getBean(z));
-                            }
-                        }else {
-                            for(String z:val) {
-                                set.add(JavaConversion.strToBasic(z, fx));
-                            }
-                        }
-						FieldUtils.setValue(component,field,set);
+						FieldUtils.setValue(component,field,new HashSet<>(getList(beans,field,val)));
                     }else if(Map.class.isAssignableFrom(fieldClass)) {//Map类型
                         Map<Object,Object> map=new HashMap<>();
                         String[] fx=FieldUtils.getStrGenericType(field);
@@ -329,6 +327,21 @@ public final class IOCContainers {
             }
         }
     }
+
+    private static List<Object> getList(ApplicationBeans beans,Field field,String[] val){
+		List<Object> list=new ArrayList<>();
+		String fx= FieldUtils.getStrGenericType(field)[0];
+		if(fx.endsWith("$ref")) {
+			for(String z:val) {
+				list.add(beans.getBean(z));
+			}
+		}else {
+			for(String z:val) {
+				list.add(JavaConversion.strToBasic(z, fx));
+			}
+		}
+		return list;
+	}
 }
 
 

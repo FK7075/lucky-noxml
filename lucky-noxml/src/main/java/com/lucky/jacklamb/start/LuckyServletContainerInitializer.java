@@ -14,6 +14,7 @@ import javax.servlet.ServletRegistration;
 
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
+import com.lucky.jacklamb.utils.base.Assert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,10 +56,16 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			log.info("@Listener \"[class="+l+"]\"");
 		}
 		log.info("Tomcat SessionTimeOut \"" +serverCfg.getSessionTimeout()+"min\"");
-		log.info("Tomcat Shutdown-Port \"" +serverCfg.getClosePort()+"\"");
-		log.info("Tomcat Shutdown-Command \"" +serverCfg.getShutdown()+"\"");
+		if(!Assert.isNull(serverCfg.getClosePort())){
+			log.info("Tomcat Shutdown-Port \"" +serverCfg.getClosePort()+"\"");
+		}
+		if(!Assert.isNull(serverCfg.getShutdown())){
+			log.info("Tomcat Shutdown-Command \"" +serverCfg.getShutdown()+"\"");
+		}
 		log.info("Tomcat BaseDir \"" +serverCfg.getBaseDir()+"\"");
-		log.info("Tomcat DocBase \"" +serverCfg.getDocBase()+"\"");
+		if(!Assert.isNull(serverCfg.getDocBase())){
+			log.info("Tomcat DocBase \"" +serverCfg.getDocBase()+"\"");
+		}
 		log.info("Tomcat ContextPath : \"" +serverCfg.getContextPath()+"\"");
 	}
 

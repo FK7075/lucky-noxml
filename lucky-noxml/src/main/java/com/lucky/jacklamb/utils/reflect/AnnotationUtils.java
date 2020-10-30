@@ -20,8 +20,45 @@ public abstract class AnnotationUtils {
     public static boolean isExist(Field field, Class<? extends Annotation> annotationClass){
         return field.isAnnotationPresent(annotationClass);
     }
+
     public static boolean isExist(Parameter parameter, Class<? extends Annotation> annotationClass){
         return parameter.isAnnotationPresent(annotationClass);
+    }
+
+    public static boolean isExistOrByArray(Class<?> aClass,Class<? extends Annotation>[] annotationClasses){
+        for (Class<? extends Annotation> ac : annotationClasses) {
+            if(isExist(aClass,ac)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isExistOrByArray(Method method,Class<? extends Annotation>[] annotationClasses){
+        for (Class<? extends Annotation> ac : annotationClasses) {
+            if(isExist(method,ac)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isExistOrByArray(Field field,Class<? extends Annotation>[] annotationClasses){
+        for (Class<? extends Annotation> ac : annotationClasses) {
+            if(isExist(field,ac)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isExistOrByArray(Parameter parameter,Class<? extends Annotation>[] annotationClasses){
+        for (Class<? extends Annotation> ac : annotationClasses) {
+            if(isExist(parameter,ac)){
+                return true;
+            }
+        }
+        return false;
     }
 
 

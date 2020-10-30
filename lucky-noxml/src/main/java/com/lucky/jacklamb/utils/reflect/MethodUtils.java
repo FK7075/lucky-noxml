@@ -217,5 +217,17 @@ public abstract class MethodUtils {
         }
     }
 
+    public static Method[] getMethods(Class<?> targetClass){
+        return targetClass.getMethods();
+    }
+
+    public static Method[] getDeclaredMethods(Class<?> targetClass){
+        return targetClass.getDeclaredMethods();
+    }
+
+    public static Parameter[] getParameter(Method method){
+       return method.getParameters();
+    }
+
 
 }

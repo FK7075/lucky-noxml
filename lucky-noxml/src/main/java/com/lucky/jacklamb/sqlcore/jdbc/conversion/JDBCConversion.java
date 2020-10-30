@@ -6,6 +6,7 @@ import com.lucky.jacklamb.annotation.orm.jpa.OneToMany;
 import com.lucky.jacklamb.annotation.orm.jpa.OneToOne;
 import com.lucky.jacklamb.query.QFilter;
 import com.lucky.jacklamb.sqlcore.jdbc.core.SqlOperation;
+import com.lucky.jacklamb.sqlcore.util.CreateSql;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public abstract class JDBCConversion {
 
 
-    public static <E> E conversion(String dbname,Map<String,Object> queryResult,Class<E> entityClass,Class<?> filterClass,boolean isFullMap,Connection...conn){
+    public static <E> E conversion(String dbname,Map<String,Object> queryResult,Class<E> entityClass,boolean isFullMap,Connection...conn){
         if(ClassUtils.isBasic(entityClass)){
             for(Map.Entry<String,Object> en:queryResult.entrySet()){
                 return (E) JavaConversion.strToBasic(en.getValue().toString(),entityClass);
@@ -38,21 +39,6 @@ public abstract class JDBCConversion {
         for (Field entityField : allFields) {
             if(PojoManage.isNoPackage(entityField,dbname)){
                 continue;
-            }
-            boolean isTreatment=false;
-            boolean isNotFilter=false;
-            if(isFullMap){
-                Class<?>[] genericType = FieldUtils.getGenericType(entityField);
-                if(filterClass==null){
-                    isNotFilter=true;
-                }else if(genericType==null&&filterClass!=entityField.getType()){
-                    isNotFilter=true;
-                }else if(genericType!=null&&genericType[0]!=filterClass){
-                    isNotFilter=true;
-                }
-                if(isNotFilter){
-                    isTreatment = specialTreatment(dbname, queryResult, entityClass, result, entityField,isFullMap,conn);
-                }
             }
             Class<?> fieldClass=entityField.getType();
             if(FieldUtils.isBasicSimpleType(entityField)){
@@ -68,25 +54,26 @@ public abstract class JDBCConversion {
                         FieldUtils.setValue(result,entityField,JavaConversion.strToBasic(fieldValue.toString(),fieldClass));
                     }
                 }
-            }else if(!isFullMap||(!isTreatment&&isNotFilter)){
-                if(PojoManage.isJpaAnnField(entityField,dbname)){
-                    continue;
+            }else{
+                if(isFullMap){
+                    specialTreatment(dbname, queryResult, entityClass, result, entityField,isFullMap,conn);
+                }else{
+                    if(PojoManage.isJpaAnnField(entityField,dbname)){
+                        continue;
+                    }
+                    //非全映射 或者 未处理且不是过滤属性
+                    Object fieldObject=conversion(dbname,queryResult,entityField.getType(),isFullMap,conn);
+                    FieldUtils.setValue(result,entityField,fieldObject);
                 }
-                //非全映射 或者 未处理且不是过滤属性
-                Object fieldObject=conversion(dbname,queryResult,entityField.getType(),filterClass,isFullMap,conn);
-                FieldUtils.setValue(result,entityField,fieldObject);
-            }else {
-                continue;
             }
-
         }
         return result;
     }
 
-    public static <E> List<E> conversion(String dbname, List<Map<String,Object>> queryResult, Class<E> entityClass,boolean isFullMap,Class<?> filterClass, Connection...conn){
+    public static <E> List<E> conversion(String dbname, List<Map<String,Object>> queryResult, Class<E> entityClass,boolean isFullMap,Connection...conn){
         List<E> result=new ArrayList<>();
         for (Map<String, Object> entry : queryResult) {
-            result.add(conversion(dbname,entry,entityClass,filterClass,isFullMap, conn));
+            result.add(conversion(dbname,entry,entityClass,isFullMap, conn));
         }
         return result;
     }
@@ -108,9 +95,8 @@ public abstract class JDBCConversion {
      * @param result 未完成的包装结果(该参数为entityClass对应类的对象)
      * @param field 当前要包装的特殊属性（被@OneToOne、@OneToMany、@ManyToOne、@ManyToMany标注的属性）
      * @param conn 数据库连接
-     * @return 是否已经处理
      */
-    private static boolean specialTreatment(String dbname,Map<String,Object> queryResult,Class<?> entityClass,Object result,Field field,boolean isFullMap,Connection...conn){
+    private static void specialTreatment(String dbname,Map<String,Object> queryResult,Class<?> entityClass,Object result,Field field,boolean isFullMap,Connection...conn){
 
         /*
             一对多属性的设置
@@ -130,13 +116,14 @@ public abstract class JDBCConversion {
                 String joinColumn=field.getAnnotation(OneToMany.class).joinColumn();
                 Class<?> fieldGenericType = FieldUtils.getGenericType(field)[0];
                 SqlOperation sqlOperation = new SqlOperation(conn[0],dbname,isFullMap);
-                List<?> list = sqlOperation.autoPackageToListFilterClass(fieldGenericType
-                        ,String.format(sqlTemp
-                                ,new QFilter(fieldGenericType,dbname).lines()
-                                ,PojoManage.getTable(fieldGenericType, dbname)
-                                ,joinColumn)
-                        ,entityClass
-                        ,queryResult.get(idField.toUpperCase()));
+                String sql=String.format(sqlTemp
+                        ,new QFilter(fieldGenericType,dbname).lines()
+                        ,PojoManage.getTable(fieldGenericType, dbname)
+                        ,joinColumn);
+                Object sqlValue=queryResult.get(idField.toUpperCase());
+                String completeSql=CreateSql.getCompleteSql(sql,sqlValue);
+                sqlOperation.setFullMap(false);
+                List<?> list = sqlOperation.autoPackageToList(fieldGenericType,sql,sqlValue);
                 if(list==null||list.isEmpty()){
                     if(List.class.isAssignableFrom(fieldClass)){
                         FieldUtils.setValue(result,field,list);
@@ -158,7 +145,7 @@ public abstract class JDBCConversion {
                     }
                 }
             }
-            return true;
+            return ;
         }
 
         /*
@@ -171,20 +158,20 @@ public abstract class JDBCConversion {
         if(field.isAnnotationPresent(ManyToOne.class)){
             String oneTableIdName=field.getAnnotation(ManyToOne.class).column();
             if(queryResult.containsKey(oneTableIdName.toUpperCase())){
+                String sql=String.format(sqlTemp
+                        ,new QFilter(fieldClass,dbname).lines()
+                        ,PojoManage.getTable(fieldClass,dbname)
+                        ,PojoManage.getIdString(fieldClass,dbname));
+                Object sqlValue=queryResult.get(oneTableIdName.toUpperCase());
+                String completeSql=CreateSql.getCompleteSql(sql,sqlValue);
                 SqlOperation sqlOperation = new SqlOperation(conn[0],dbname,isFullMap);
-                List<?> list = sqlOperation.autoPackageToList(
-                         fieldClass
-                        ,String.format(sqlTemp
-                                ,new QFilter(fieldClass,dbname).lines()
-                                ,PojoManage.getTable(fieldClass,dbname)
-                                ,PojoManage.getIdString(fieldClass,dbname))
-                        ,queryResult.get(oneTableIdName.toUpperCase()));
+                List<?> list = sqlOperation.autoPackageToList(fieldClass,sql,sqlValue);
                 if(list!=null&&!list.isEmpty()){
                     Object manyObj=list.get(0);
                     FieldUtils.setValue(result,field,manyObj);
                 }
             }
-            return true;
+            return;
         }
 
         /*
@@ -199,13 +186,13 @@ public abstract class JDBCConversion {
                 String toTableName=PojoManage.getTable(fieldClass,dbname);
                 String joinColumn=field.getAnnotation(OneToOne.class).joinColumn();
                 SqlOperation sqlOperation = new SqlOperation(conn[0],dbname,isFullMap);
-                List<?> list = sqlOperation.autoPackageToListFilterClass(
+                sqlOperation.setFullMap(false);
+                List<?> list = sqlOperation.autoPackageToList(
                           fieldClass
                         , String.format(sqlTemp
                                 , new QFilter(fieldClass,dbname).lines()
                                 , toTableName
                                 , joinColumn)
-                        ,entityClass
                         , queryResult.get(thisTableId.toUpperCase()));
                 if(list!=null&&!list.isEmpty()){
                     Object obj=list.get(0);
@@ -217,7 +204,7 @@ public abstract class JDBCConversion {
                     FieldUtils.setValue(result,field,obj);
                 }
             }
-            return true;
+            return ;
         }
 
         if(field.isAnnotationPresent(ManyToMany.class)){
@@ -239,14 +226,14 @@ public abstract class JDBCConversion {
                         .collect(Collectors.toList());
                 if(!toIds.isEmpty()){
                     String querySql="SELECT %s FROM `%s` WHERE `%s` IN (%s)";
-                    List<?> list = sqlOperation.autoPackageToListFilterClass(
+                    sqlOperation.setFullMap(false);
+                    List<?> list = sqlOperation.autoPackageToList(
                             fieldGenericType
                             , String.format(querySql
                                     , new QFilter(fieldGenericType,dbname).lines()
                                     , PojoManage.getTable(fieldGenericType, dbname)
                                     , PojoManage.getIdString(fieldGenericType, dbname)
                                     , LuckyUtils.strCopy("?", toIds.size(), ","))
-                            ,entityClass
                             , toIds.toArray());
                     if(list.isEmpty()){
                         if(List.class.isAssignableFrom(fieldClass)){
@@ -263,6 +250,7 @@ public abstract class JDBCConversion {
                                 String joinTableTo=manyTo.joinTable();
                                 String joinColumnToTo=manyTo.joinColumnTo();
                                 String joinColumnThisTo=manyTo.joinColumnThis();
+                                sqlOperation.setFullMap(true);
                                 List<?> toIdsTo = sqlOperation.autoPackageToList(
                                         String.class
                                         , String.format(sqlTemp
@@ -274,7 +262,8 @@ public abstract class JDBCConversion {
                                         .map(str -> JavaConversion.strToBasic(str, PojoManage.getIdField(entityClass).getType()))
                                         .collect(Collectors.toList());
                                 if(!toIdsTo.isEmpty()){
-                                    List<?> listTo = sqlOperation.autoPackageToListFilterClass(
+                                    sqlOperation.setFullMap(false);
+                                    List<?> listTo = sqlOperation.autoPackageToList(
                                             entityClass
                                             , String.format(querySql
                                                     , new QFilter(entityClass,dbname).lines()
@@ -299,9 +288,8 @@ public abstract class JDBCConversion {
                     }
                 }
             }
-            return true;
+            return ;
         }
-        return false;
     }
 
 }

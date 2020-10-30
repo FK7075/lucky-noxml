@@ -29,7 +29,11 @@ public class SqlOperation {
 	private boolean isCache;
 	private boolean isFullMap=false;
 
-	public SqlOperation(Connection conn, String dbname,boolean isFullMap) {
+	public void setFullMap(boolean fullMap) {
+		isFullMap = fullMap;
+	}
+
+	public SqlOperation(Connection conn, String dbname, boolean isFullMap) {
 		this.conn = conn;
 		this.dbname = dbname;
 		this.isFullMap=isFullMap;
@@ -156,16 +160,9 @@ public class SqlOperation {
 	 */
 	public <T> List<T> autoPackageToList(Class<T> c, String sql, Object... obj) {
 		if(isCache){
-			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,isFullMap,null,conn);
+			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,isFullMap,conn);
 		}
-		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,isFullMap,null,conn);
-	}
-
-	public <T> List<T> autoPackageToListFilterClass(Class<T> c, String sql, Class<?> filterClass, Object... obj) {
-		if(isCache){
-			return JDBCConversion.conversion(dbname,getCacheQueryResult(sql,obj),c,isFullMap,filterClass,conn);
-		}
-		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,isFullMap,filterClass,conn);
+		return JDBCConversion.conversion(dbname,getQueryResult(sql,obj),c,isFullMap,conn);
 	}
 
 	public void clearCache(){

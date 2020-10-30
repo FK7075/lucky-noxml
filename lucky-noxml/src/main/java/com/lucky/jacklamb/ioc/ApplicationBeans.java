@@ -2,10 +2,10 @@ package com.lucky.jacklamb.ioc;
 
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.utils.file.Resources;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
 import com.lucky.jacklamb.utils.base.JackLamb;
+import com.lucky.jacklamb.utils.file.Resources;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.logging.log4j.LogManager;
@@ -84,13 +84,28 @@ public class ApplicationBeans {
 	public Object getAspectBean(String id) {
 		return iocContainers.getAspectIOC().getAspectBean(id);
 	}
-	
+
 	/**
 	 * 得到所有Aspect组件
 	 * @return
 	 */
 	public Map<String,PointRun> getAspectBeans(){
 		return iocContainers.getAspectIOC().getAspectMap();
+	}
+
+	/**
+	 * 根据ID得到Bean组件
+	 * @param id
+	 * @return
+	 */
+	public Object getBeansBean(String id){return iocContainers.getBeansIOC().getBean(id);}
+
+	/**
+	 * 得到所有Aspect组件
+	 * @return
+	 */
+	public Map<String,Object> getBeansBeans(){
+		return iocContainers.getBeansIOC().getBeanMap();
 	}
 	
 	/**
@@ -99,7 +114,7 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public Object getServiceBean(String beanId) {
-		return iocContainers.getServiceIOC().getServiceBean(beanId);
+		return iocContainers.getServiceIOC().getBean(beanId);
 	}
 	
 	/**
@@ -107,7 +122,7 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public Map<String,Object> getServiceBeans(){
-		return iocContainers.getServiceIOC().getServiceMap();
+		return iocContainers.getServiceIOC().getBeanMap();
 	}
 	
 	/**
@@ -158,7 +173,7 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public Object getComponentBean(String componentId) {
-		return iocContainers.getAppIOC().getComponentBean(componentId);
+		return iocContainers.getAppIOC().getBean(componentId);
 	}
 	
 	/**
@@ -166,7 +181,7 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public Map<String,Object> getComponentBeans() {
-		return iocContainers.getAppIOC().getAppMap();
+		return iocContainers.getAppIOC().getBeanMap();
 	}
 
 	/**
@@ -210,10 +225,11 @@ public class ApplicationBeans {
 	 */
 	public List<Object> getBeans(Class<?> clzz) {
 		List<Object> controllerObj=getBeanByClass(iocContainers.getControllerIOC().getControllerMap(),clzz);
-		List<Object> serviceObj=getBeanByClass(iocContainers.getServiceIOC().getServiceMap(),clzz);
+		List<Object> serviceObj=getBeanByClass(iocContainers.getServiceIOC().getBeanMap(),clzz);
 		List<Object> repositoryObj=getBeanByClass(iocContainers.getRepositoryIOC().getRepositoryMap(),clzz);
 		List<Object> mapperObj=getBeanByClass(iocContainers.getRepositoryIOC().getMapperMap(),clzz);
-		List<Object> componentObj=getBeanByClass(iocContainers.getAppIOC().getAppMap(),clzz);
+		List<Object> componentObj=getBeanByClass(iocContainers.getAppIOC().getBeanMap(),clzz);
+		List<Object> beansObj=getBeanByClass(iocContainers.getBeansIOC().getBeanMap(),clzz);
 		if(!controllerObj.isEmpty()) {
 			return controllerObj;
 		} else if(!serviceObj.isEmpty()) {
@@ -224,6 +240,8 @@ public class ApplicationBeans {
 			return mapperObj;
 		} else if(!componentObj.isEmpty()) {
 			return componentObj;
+		}  else if(!beansObj.isEmpty()) {
+			return beansObj;
 		} else {
 			return new ArrayList<>();
 		}
@@ -269,9 +287,9 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public boolean contains(String beanId) {
-		return iocContainers.getControllerIOC().containId(beanId)||iocContainers.getServiceIOC().containId(beanId)
-				||iocContainers.getRepositoryIOC().containId(beanId)||iocContainers.getAppIOC().containId(beanId)
-				||iocContainers.getAspectIOC().containId(beanId);
+		return iocContainers.getControllerIOC().containId(beanId)||iocContainers.getServiceIOC().contain(beanId)
+				||iocContainers.getRepositoryIOC().containId(beanId)||iocContainers.getAppIOC().contain(beanId)
+				||iocContainers.getAspectIOC().containId(beanId)||iocContainers.getBeansIOC().contain(beanId);
 	}
 	
 	/**
@@ -297,7 +315,7 @@ public class ApplicationBeans {
 	 * @return
 	 */
 	public boolean containsComponent(String componentId) {
-		return iocContainers.getAppIOC().containId(componentId);
+		return iocContainers.getAppIOC().contain(componentId);
 	}
 
 	/**
@@ -308,14 +326,16 @@ public class ApplicationBeans {
 	public Object getBean(String beanId) {
 		if(iocContainers.getControllerIOC().containId(beanId)) {
 			return iocContainers.getControllerIOC().getControllerBean(beanId);
-		} else if(iocContainers.getServiceIOC().containId(beanId)) {
-			return iocContainers.getServiceIOC().getServiceBean(beanId);
+		} else if(iocContainers.getServiceIOC().contain(beanId)) {
+			return iocContainers.getServiceIOC().getBean(beanId);
 		} else if(iocContainers.getRepositoryIOC().containId(beanId)) {
 			return iocContainers.getRepositoryIOC().getMaRepBean(beanId);
-		} else if(iocContainers.getAppIOC().containId(beanId)) {
-			return iocContainers.getAppIOC().getComponentBean(beanId);
+		} else if(iocContainers.getAppIOC().contain(beanId)) {
+			return iocContainers.getAppIOC().getBean(beanId);
 		} else if(iocContainers.getAspectIOC().containId(beanId)) {
 			return iocContainers.getAspectIOC().getAspectBean(beanId);
+		}else if(iocContainers.getBeansIOC().contain(beanId)) {
+			return iocContainers.getBeansIOC().getBean(beanId);
 		} else {
 			throw new NotFindBeanException("在IOC容器中找不到ID为--"+beanId+"--的Bean...");
 		}

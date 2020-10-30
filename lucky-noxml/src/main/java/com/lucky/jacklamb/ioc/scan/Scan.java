@@ -75,6 +75,9 @@ public abstract class Scan {
 	 * WebSocket组件
 	 */
 	protected List<Class<?>> webSocketClass;
+
+	/** 配置类@Bean */
+	protected List<Class<?>> beanClass;
 	
 	/**
 	 * 配置类修改器
@@ -94,15 +97,16 @@ public abstract class Scan {
 	
 	public Scan() {
 		lson=new LSON();
-		componentClassMap=new HashMap<>();
-		controllerClass=new ArrayList<>();
-		serviceClass=new ArrayList<>();
-		repositoryClass=new ArrayList<>();
-		componentClass=new ArrayList<>();
-		aspectClass=new ArrayList<>();
-		webSocketClass=new ArrayList<>();
-		pojoClass=new ArrayList<>();
-		deserializationXStream=new ArrayList<>();
+		componentClassMap=new HashMap<>(16);
+		controllerClass=new ArrayList<>(16);
+		serviceClass=new ArrayList<>(16);
+		repositoryClass=new ArrayList<>(16);
+		componentClass=new ArrayList<>(16);
+		aspectClass=new ArrayList<>(16);
+		webSocketClass=new ArrayList<>(16);
+		pojoClass=new ArrayList<>(16);
+		deserializationXStream=new ArrayList<>(16);
+		beanClass=new ArrayList<>(16);
 	}
 
 	public List<Class<?>> getPojoClass() {
@@ -130,6 +134,7 @@ public abstract class Scan {
 		componentClassMap.put("aspect", aspectClass);
 		componentClassMap.put("websocket", webSocketClass);
 		componentClassMap.put("xStream",deserializationXStream);
+		componentClassMap.put("bean",beanClass);
 	}
 	
 	public List<Class<?>> getComponentClass(String iocCode){
@@ -149,6 +154,7 @@ public abstract class Scan {
 		log.info("ASPECT-PACK-SUFFIX     : "+scanConfig.getAspectPackSuffix());
 		log.info("WEBSOCKET-PACK-SUFFIX  : "+scanConfig.getWebSocketPackSuffix());
 		log.info("POJO-PACK-SUFFIX       : "+scanConfig.getPojoPackSuffix());
+		log.info("BEANS-PACK-SUFFIX      : "+scanConfig.getPojoPackSuffix());
 		controllerClass=loadComponent(scanConfig.getControllerPackSuffix());
 		serviceClass=loadComponent(scanConfig.getServicePackSuffix());
 		repositoryClass=loadComponent(scanConfig.getRepositoryPackSuffix());
@@ -156,6 +162,7 @@ public abstract class Scan {
 		aspectClass=loadComponent(scanConfig.getAspectPackSuffix());
 		webSocketClass=loadComponent(scanConfig.getWebSocketPackSuffix());
 		pojoClass=loadComponent(scanConfig.getPojoPackSuffix());
+		beanClass=loadComponent(scanConfig.getBeanPackSuffix());
 	}
 	
 	public ApplicationConfig getApplicationConfig() {
@@ -186,7 +193,6 @@ public abstract class Scan {
 		} else if(fileClass.isAnnotationPresent(Repository.class)||fileClass.isAnnotationPresent(Mapper.class)) {
 			repositoryClass.add(fileClass);
 		} else if(fileClass.isAnnotationPresent(Component.class)
-				||fileClass.isAnnotationPresent(Configuration.class)
 				||fileClass.isAnnotationPresent(ControllerExceptionHandler.class)
 				||fileClass.isAnnotationPresent(LuckyServlet.class)
 				||fileClass.isAnnotationPresent(LuckyFilter.class)
@@ -198,6 +204,8 @@ public abstract class Scan {
 			pojoClass.add(fileClass);
 		} else if(fileClass.isAnnotationPresent(Aspect.class)|| AopPoint.class.isAssignableFrom(fileClass)) {
 			aspectClass.add(fileClass);
+		}else if(fileClass.isAnnotationPresent(Configuration.class)){
+			beanClass.add(fileClass);
 		}else {
 			try {
 				if(fileClass.isAnnotationPresent(ServerEndpoint.class)|| ServerApplicationConfig.class.isAssignableFrom(fileClass)|| Endpoint.class.isAssignableFrom(fileClass)) {

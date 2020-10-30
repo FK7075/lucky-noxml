@@ -40,6 +40,14 @@ public abstract class BaseEntity<Entity> {
     }
 
     /**
+     * 设置本次查询为全映射模式的查询
+     * @param isFullMap 是否开启全映射模式
+     */
+    public void setFullMap(boolean isFullMap){
+        sqlCore.setFullMap(isFullMap);
+    }
+
+    /**
      * 设置数据源内核
      * @param dbName
      */

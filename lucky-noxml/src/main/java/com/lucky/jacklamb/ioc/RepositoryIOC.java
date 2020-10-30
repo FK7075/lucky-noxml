@@ -1,55 +1,50 @@
 package com.lucky.jacklamb.ioc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.lucky.jacklamb.annotation.ioc.Repository;
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.core.AopProxyFactory;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
-import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
+import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class RepositoryIOC {
 
 	private static final Logger log= LogManager.getLogger(RepositoryIOC.class);
-
 	private Map<String, Object> repositoryMap;
-
 	private List<String> repositoryIDS;
-
 	private Map<String, Object> mapperMap;
-
 	private String IOC_CODE="repository";
-
 	private Map<String,String> mapperTtypeMap;
-
 	private List<String> mapperIDS;
 
 
 	public RepositoryIOC() {
-		repositoryMap=new HashMap<>();
-		repositoryIDS=new ArrayList<>();
-		mapperMap=new HashMap<>();
-		mapperTtypeMap=new HashMap<>();
-		mapperIDS=new ArrayList<>();
+		repositoryMap=new HashMap<>(16);
+		repositoryIDS=new ArrayList<>(16);
+		mapperMap=new HashMap<>(16);
+		mapperTtypeMap=new HashMap<>(16);
+		mapperIDS=new ArrayList<>(16);
 	}
 
 	public Object getMaRepBean(String id) {
-		if (containIdByMapper(id))
+		if (containIdByMapper(id)) {
 			return mapperMap.get(id);
-		else if (containIdByRepository(id))
+		} else if (containIdByRepository(id)) {
 			return repositoryMap.get(id);
-		else
+		} else {
 			throw new NotFindBeanException("在Repository和Mapper(ioc)容器中找不到ID为 \"" + id + "\" 的Bean...");
+		}
 	}
 
 	public boolean containId(String id) {
@@ -73,8 +68,9 @@ public class RepositoryIOC {
 	}
 
 	public void addRepositoryMap(String daoId, Object daoObj) {
-		if(containId(daoId))
+		if(containId(daoId)) {
 			throw new NotAddIOCComponent("Repository(ioc)容器中已存在ID为 \""+daoId+" \"的组件，无法重复添加（您可能配置了同名的@Repository组件，这将会导致异常的发生！）......");
+		}
 		repositoryMap.put(daoId, daoObj);
 		addRepositoryIDS(daoId);
 	}
@@ -104,8 +100,9 @@ public class RepositoryIOC {
 	}
 
 	public void addMapperMap(String mapperID, Object mapperObj) {
-		if(containId(mapperID))
+		if(containId(mapperID)) {
 			throw new NotAddIOCComponent("Mapper(ioc)容器中已存在ID为 \""+mapperID+"\" 的组件，无法重复添加......");
+		}
 		mapperMap.put(mapperID, mapperObj);
 		addMapperIDS(mapperID);
 		mapperTtypeMap.put(mapperID, mapperObj.getClass().getName());
@@ -128,16 +125,17 @@ public class RepositoryIOC {
 	 * @param repositoryClass
 	 * @return
 	 */
-	public void initRepositoryIOC(List<Class<?>> repositoryClass){
+	public void registered(List<Class<?>> repositoryClass){
 		boolean first = true;
 		String beanID;
 		for (Class<?> repository : repositoryClass) {
 			if (repository.isAnnotationPresent(Repository.class)) {
 				Repository rep = repository.getAnnotation(Repository.class);
-				if (!"".equals(rep.value()))
+				if (!"".equals(rep.value())) {
 					beanID=rep.value();
-				else
+				} else {
 					beanID=LuckyUtils.TableToClass1(repository.getSimpleName());
+				}
 				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, repository);
 				addRepositoryMap(beanID, aspect);
 				log.info("@Repository \"[id="+beanID+" class="+aspect+"]\"");

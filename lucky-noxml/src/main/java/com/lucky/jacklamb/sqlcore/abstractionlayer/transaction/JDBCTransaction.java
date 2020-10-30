@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.abstractionlayer.transaction;
 
 import com.lucky.jacklamb.ioc.ControllerIOC;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.exception.LuckyTransactionException;
+import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,11 +69,6 @@ public class JDBCTransaction implements Transaction {
 
     @Override
     public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            log.error("关闭连接失败！",e);
-            throw new LuckyTransactionException("关闭连接失败！",e);
-        }
+        LuckyDataSource.release(null,null,connection);
     }
 }

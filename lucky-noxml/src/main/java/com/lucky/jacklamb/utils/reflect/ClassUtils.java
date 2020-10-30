@@ -145,10 +145,21 @@ public abstract class ClassUtils {
         Field[] allFields = getAllFields(clzz);
         List<Field> annFields=new ArrayList<>();
         for (Field field : allFields) {
-            if(field.isAnnotationPresent(annotation)){
+            if(AnnotationUtils.isExist(field,annotation)){
                 annFields.add(field);
             }
         }
         return annFields;
+    }
+
+    public static List<Method> getMethodByAnnotation(Class<?> clzz, Class<? extends Annotation> annotation){
+        Method[] allMethods = getAllMethod(clzz);
+        List<Method> annMethods=new ArrayList<>();
+        for (Method method : allMethods) {
+            if(AnnotationUtils.isExist(method,annotation)){
+                annMethods.add(method);
+            }
+        }
+        return annMethods;
     }
 }

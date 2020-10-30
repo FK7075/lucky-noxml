@@ -23,7 +23,7 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 		Class<?> aClass = createTest.getClass();
 
 		//当前测试类如果存在事务注解@Transaction则执行事务代理
-		if(AopProxyFactory.isTransaction(aClass)){
+		if(AopProxyFactory.isTransaction(aClass)||AopProxyFactory.isShiroAnnotation(aClass)){
 			createTest= PointRunFactory.createProxyFactory().getProxy(aClass);
 		}
 		IOCContainers.injection(createTest);

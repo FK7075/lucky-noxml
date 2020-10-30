@@ -146,15 +146,24 @@ public class DispatchServletExceptionInterceptor {
             if (methodED.root(ctrlName, cmethodName)) {
                 LuckyExceptionHandler dispose = methodED.getDispose();
                 dispose.init(model, controllerObj, currClass, currMethod, params);
-                dispose.dispose(e);
-                return;
+                if(dispose.dispose(e)){
+                    return;
+                }else{
+                    globalExceptionHandler(e);
+                    return;
+                }
+
             }
             //类其次
             if (methodED.root(ctrlName)) {
                 LuckyExceptionHandler dispose = methodED.getDispose();
                 dispose.init(model, controllerObj, currClass, currMethod, params);
-                dispose.dispose(e);
-                return;
+                if(dispose.dispose(e)){
+                    return;
+                }else{
+                    globalExceptionHandler(e);
+                    return;
+                }
             }
 
         }
@@ -168,6 +177,10 @@ public class DispatchServletExceptionInterceptor {
                 return currClass.getAnnotation(Controller.class).value();
             return LuckyUtils.TableToClass1(currClass.getSimpleName());
         } else {
+            String controllerClassName = LuckyUtils.TableToClass1(currClass.getSimpleName());
+            if(controllerClassName.contains("$$EnhancerByCGLIB$$")){
+                return LuckyUtils.TableToClass1(currClass.getSuperclass().getSimpleName());
+            }
             return LuckyUtils.TableToClass1(currClass.getSimpleName());
         }
     }

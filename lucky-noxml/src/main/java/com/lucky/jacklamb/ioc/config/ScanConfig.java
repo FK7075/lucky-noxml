@@ -63,6 +63,9 @@ public class ScanConfig implements LuckyConfig {
 	 */
 	private List<String> pojoPackSuffix;
 
+	/** 配置类（@Bean）所在包的后缀*/
+	private List<String> beanPackSuffix;
+
 	/**
 	 * 设置Lucky运行时的Logo
 	 */
@@ -98,13 +101,14 @@ public class ScanConfig implements LuckyConfig {
 	}
 
 	private ScanConfig() {
-		controllerPackSuffix = new ArrayList<>();
-		servicePackSuffix = new ArrayList<>();
-		repositoryPackSuffix = new ArrayList<>();
-		aspectPackSuffix = new ArrayList<>();
-		componentPackSuffix = new ArrayList<>();
-		pojoPackSuffix = new ArrayList<>();
-		webSocketPackSuffix = new ArrayList<>();
+		controllerPackSuffix = new ArrayList<>(16);
+		servicePackSuffix = new ArrayList<>(16);
+		repositoryPackSuffix = new ArrayList<>(16);
+		aspectPackSuffix = new ArrayList<>(16);
+		componentPackSuffix = new ArrayList<>(16);
+		pojoPackSuffix = new ArrayList<>(16);
+		webSocketPackSuffix = new ArrayList<>(16);
+		beanPackSuffix=new ArrayList<>(16);
 		app=new App();
 	}
 
@@ -197,6 +201,23 @@ public class ScanConfig implements LuckyConfig {
 
 	public void setControllerPackSuffix(List<String> controllerPackSuffix) {
 		this.controllerPackSuffix = controllerPackSuffix;
+	}
+
+	public List<String> getBeanPackSuffix() {
+		return beanPackSuffix;
+	}
+
+	public void setBeanPackSuffix(List<String> beanPackSuffix) {
+		this.beanPackSuffix = beanPackSuffix;
+	}
+
+	public void addBeanPackSuffix(String ...suffix){
+		this.beanPackSuffix.addAll(Arrays.asList(suffix));
+	}
+
+	public void emptyAddBeanPackSuffix(String ...suffix){
+		this.beanPackSuffix.clear();
+		this.beanPackSuffix.addAll(Arrays.asList(suffix));
 	}
 
 	public List<String> getServicePackSuffix() {
@@ -357,6 +378,7 @@ public class ScanConfig implements LuckyConfig {
 			scanfig.addAspectPackSuffix("aspect","aop");
 			scanfig.addPojoPackSuffix("pojo", "entity");
 			scanfig.setMapperXmlPath("mapper");
+			scanfig.addBeanPackSuffix("conf","beans","config");
 			scanfig.setScanMode(Scan.AUTO_SCAN);
 			scanfig.setLogo(Logo.LUCKY);
 		}

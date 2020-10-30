@@ -14,63 +14,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceIOC{
+/**
+ * 服务组件
+ */
+public class ServiceIOC implements IOC{
 
 	private static final Logger log= LogManager.getLogger(ServiceIOC.class);
-
 	private Map<String, Object> serviceMap;
-
 	private String IOC_CODE="service";
-
 	private List<String> serviceIDS;
 	
 	public ServiceIOC() {
-		serviceMap=new HashMap<>();
-		serviceIDS=new ArrayList<>();
+		serviceMap=new HashMap<>(16);
+		serviceIDS=new ArrayList<>(16);
 	}
 
-	public boolean containId(String id) {
+	@Override
+	public boolean contain(String id) {
 		return serviceIDS.contains(id);
 	}
 
-	public Object getServiceBean(String id) {
-		if (!containId(id))
+	@Override
+	public Object getBean(String id) {
+		if (!contain(id))
 			throw new NotFindBeanException("在Service(ioc)容器中找不到ID为--" + id + "--的Bean...");
 		return serviceMap.get(id);
 	}
 
-	public Map<String, Object> getServiceMap() {
+	@Override
+	public Map<String, Object> getBeanMap() {
 		return serviceMap;
 	}
 
-	public void setServiceMap(Map<String, Object> serviceMap) {
-		this.serviceMap = serviceMap;
-	}
-
-	public void addServiceMap(String id, Object object) {
-		if(containId(id))
+	@Override
+	public void addBean(String id, Object object) {
+		if(contain(id))
 			throw new NotAddIOCComponent("Service(ioc)容器中已存在ID为--"+id+"--的组件，无法重复添加（您可能配置了同名的@Service组件，这将会导致异常的发生！）......");
 		serviceMap.put(id, object);
 		addServiceIDS(id);
-	}
-
-	public List<String> getServiceIDS() {
-		return serviceIDS;
-	}
-
-	public void setServiceIDS(List<String> serviceIDS) {
-		this.serviceIDS = serviceIDS;
 	}
 
 	public void addServiceIDS(String id) {
 		serviceIDS.add(id);
 	}
 
-	/**
-	 * 加载Service组件到ServiceIOC容器
-	 * @param serviceClass
-	 */
-	public void initServiceIOC(List<Class<?>> serviceClass){
+	@Override
+	public void registered(List<Class<?>> serviceClass){
 		String beanID;
 		for (Class<?> service : serviceClass) {
 			if (service.isAnnotationPresent(Service.class)) {
@@ -80,7 +69,7 @@ public class ServiceIOC{
 				else
 					beanID=LuckyUtils.TableToClass1(service.getSimpleName());
 				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, service);
-				addServiceMap(beanID, aspect);
+				addBean(beanID, aspect);
 				log.info("@Service \"[id="+beanID+" class="+aspect+"]\"");
 			}
 		}

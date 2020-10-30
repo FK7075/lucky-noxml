@@ -199,7 +199,8 @@ public abstract class LuckyDataSource implements DataSource{
 
     public Connection getConnection(){
         try {
-            return getTripartiteDataSource().getConnection();
+            Connection connection = getTripartiteDataSource().getConnection();
+            return connection;
         } catch (SQLException throwables) {
             throw new NoDataSourceException(throwables);
         }
@@ -231,7 +232,8 @@ public abstract class LuckyDataSource implements DataSource{
     @Override
     public Connection getConnection(String username, String password){
         try {
-            return getTripartiteDataSource().getConnection(username, password);
+            Connection connection=getTripartiteDataSource().getConnection(username, password);
+            return connection;
         } catch (SQLException throwables) {
             throw new NoDataSourceException(throwables);
         }

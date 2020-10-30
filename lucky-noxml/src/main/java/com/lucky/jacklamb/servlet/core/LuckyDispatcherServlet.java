@@ -119,11 +119,15 @@ public class LuckyDispatcherServlet extends BaseServlet {
              */
             DispatchServletExceptionInterceptor exceptionInterceptor = new DispatchServletExceptionInterceptor();
             exceptionInterceptor.initialize(model, controllerObj, method, args);
-            if (e instanceof InvocationTargetException) {
-                exceptionInterceptor.unifiedExceptionHandler(e.getCause());
-            } else {
-                exceptionInterceptor.unifiedExceptionHandler(e);
+            while (true){
+                if(e instanceof InvocationTargetException ||
+                   e.getClass()==RuntimeException.class){
+                    e=e.getCause();
+                }else {
+                    break;
+                }
             }
+            exceptionInterceptor.unifiedExceptionHandler(e);
         } finally {
             urlParsMap.closeLuckyWebContext();
         }

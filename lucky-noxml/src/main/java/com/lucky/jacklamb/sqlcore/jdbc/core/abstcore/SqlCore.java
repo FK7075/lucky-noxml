@@ -1,5 +1,8 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
+import com.lucky.jacklamb.authority.shiro.entity.SysResource;
+import com.lucky.jacklamb.authority.shiro.entity.SysRole;
+import com.lucky.jacklamb.authority.shiro.entity.SysUser;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Translator;

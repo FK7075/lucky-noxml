@@ -1,14 +1,17 @@
 package com.lucky.jacklamb.sqlcore.createtable;
 
 import com.lucky.jacklamb.annotation.orm.Id;
+import com.lucky.jacklamb.annotation.orm.jpa.ManyToMany;
 import com.lucky.jacklamb.annotation.orm.jpa.ManyToOne;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.tcconversion.typechange.JDBChangeFactory;
 import com.lucky.jacklamb.tcconversion.typechange.TypeConversion;
 import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.lucky.jacklamb.utils.regula.Regular;
 
 import java.lang.reflect.Field;
@@ -35,6 +38,21 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
         sql.append("`").append(PojoManage.getTable(pojoClass,dbname)).append("`").append(" (");
         Field[] fields = ClassUtils.getAllFields(pojoClass);
         for (int i = 0; i < fields.length; i++) {
+            if(AnnotationUtils.isExist(fields[i], ManyToMany.class)){
+                ManyToMany manyToMany=AnnotationUtils.get(fields[i],ManyToMany.class);
+                Field thisIdField=PojoManage.getIdField(pojoClass);
+                Field toIdField=PojoManage.getIdField(FieldUtils.getGenericType(fields[i])[0]);
+                StringBuilder createJoinTableSql=new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+                createJoinTableSql.append("`").append(manyToMany.joinTable())
+                        .append("` (`id` int(11) NOT NULL AUTO_INCREMENT,")
+                        .append("`").append(manyToMany.joinColumnThis()).append("` ").append(jDChangeFactory.javaTypeToDb(thisIdField.getType().getSimpleName())).append("(").append(PojoManage.getLength(thisIdField,dbname)).append(") DEFAULT NULL,")
+                        .append("`").append(manyToMany.joinColumnTo()).append("` ").append(jDChangeFactory.javaTypeToDb(toIdField.getType().getSimpleName())).append("(").append(PojoManage.getLength(toIdField,dbname)).append(") DEFAULT NULL,")
+                        .append(" PRIMARY KEY (`id`),")
+                        .append(" UNIQUE KEY `lucky-unique-key` (`"+manyToMany.joinColumnThis()+"`,`"+manyToMany.joinColumnTo()+"`)")
+                        .append(" ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+                SqlCoreFactory.createSqlCore(dbname).updateBySql(createJoinTableSql.toString());
+                continue;
+            }
             if(PojoManage.isNoColumn(fields[i],dbname)){
                 continue;
             }
@@ -48,12 +66,13 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
             }
             String fieldType=fields[i].getType().getSimpleName();
             if (i < fields.length - 1) {
-                if (fields[i]==PojoManage.getIdField(pojoClass)) {
+                if (PojoManage.getTableField(dbname,fields[i]).equals(PojoManage.getIdString(pojoClass, dbname))) {
                     sql.append("`").append(PojoManage.getIdString(pojoClass,dbname)).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(")")
                             .append(" NOT NULL ").append(isAutoInt(pojoClass,dbname)).append(" PRIMARY KEY,");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
-                        || "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
+                        || "date".equals(jDChangeFactory.javaTypeToDb(fieldType))
+                        || "timestamp".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
                     sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
                             .append(allownull(fields[i],dbname)).append(",");
                 } else {
@@ -65,7 +84,8 @@ public class MySqlCreateTableSqlGenerate implements CreateTableSqlGenerate {
                             .append(" NOT NULL AUTO_INCREMENT PRIMARY KEY");
                 } else if (!("double".equals(jDChangeFactory.javaTypeToDb(fieldType))
                         || "datetime".equals(jDChangeFactory.javaTypeToDb(fieldType))
-                        || "date".equals(jDChangeFactory.javaTypeToDb(fieldType)))) {
+                        || "date".equals(jDChangeFactory.javaTypeToDb(fieldType))
+                        || "timestamp".equals(jDChangeFactory.javaTypeToDb(fieldType)))){
                     sql.append("`").append(PojoManage.getTableField(dbname,fields[i])).append("`").append(" ").append(jDChangeFactory.javaTypeToDb(fieldType)).append("(").append(PojoManage.getLength(fields[i],dbname)).append(") ")
                             .append(allownull(fields[i],dbname));
                 } else {

@@ -3,10 +3,12 @@ package com.lucky.jacklamb.aop.proxy;
 import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.annotation.aop.Transaction;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
+import com.lucky.jacklamb.aop.expandpoint.ShiroAccessControlPoint;
 import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.aop.core.AopChain;
 import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
+import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
@@ -58,18 +60,27 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 		final List<AopPoint> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
 
+		//被@RequiresPermissions、@RequiresRoles、@RequiresUser、@RequiresGuest、@RequiresAuthentication
+		//标注的方法或类执行权限代理
+		if(AnnotationUtils.isExistOrByArray(target.getClass().getSuperclass(), ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)||
+				AnnotationUtils.isExistOrByArray(method,ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)){
+			AopPoint shiroAccess = new ShiroAccessControlPoint();
+			shiroAccess.init(targetMethodSignature);
+			shiroAccess.setPriority(-1);
+			points.add(shiroAccess);
+		}
+
 		//被@Cacheable注解标注的方法优先执行缓存代理
-		if(method.isAnnotationPresent(Cacheable.class)) {
+		if(AnnotationUtils.isExist(method,Cacheable.class)) {
 			AopPoint cacheExpandPoint = new CacheExpandPoint();
 			cacheExpandPoint.init(targetMethodSignature);
 			cacheExpandPoint.setPriority(0);
 			points.add(cacheExpandPoint);
 		}
 
-
 		//被@Transaction注解标注的方法执行事务代理
-		if(target.getClass().getSuperclass().isAnnotationPresent(Transaction.class)||
-				method.isAnnotationPresent(Transaction.class)){
+		if(AnnotationUtils.isExist(target.getClass().getSuperclass(),Transaction.class)||
+				AnnotationUtils.isExist(method,Transaction.class)){
 			AopPoint transactionPoint = new TransactionPoint();
 			transactionPoint.init(targetMethodSignature);
 			transactionPoint.setPriority(1);
