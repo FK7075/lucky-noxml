@@ -2,6 +2,7 @@ package com.lucky.jacklamb.sqlcore.mapper;
 
 import com.lucky.jacklamb.annotation.orm.mapper.*;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Page;
 import com.lucky.jacklamb.query.translator.Translator;
 
 import java.util.Collection;
@@ -138,7 +139,7 @@ public interface LuckyMapper<Entity> {
      * @param rows 每页显示的条数
      * @return
      */
-    public List<Entity> limit(int page,int rows);
+    public Page<Entity> limit(int page, int rows);
 
     /**
      * QueryBuilder查询模式

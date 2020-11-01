@@ -87,12 +87,12 @@ public class QFilter {
 		StringBuilder sb=new StringBuilder();
 		if(addFields.isEmpty()) {
 			for(String col:allFields) {
-				sb.append("`").append(col).append("`").append(",");
+				sb.append(col).append(",");
 			}
 			return sb.substring(0, sb.length()-1);
 		}else {
 			for(String col: addFields) {
-				sb.append("`").append(col).append("`").append(",");
+				sb.append(col).append(",");
 			}
 			return sb.substring(0, sb.length()-1);
 		}

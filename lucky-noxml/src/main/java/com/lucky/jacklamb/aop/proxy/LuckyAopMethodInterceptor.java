@@ -1,19 +1,14 @@
 package com.lucky.jacklamb.aop.proxy;
 
-import com.lucky.jacklamb.annotation.aop.Cacheable;
-import com.lucky.jacklamb.annotation.aop.Transaction;
-import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
-import com.lucky.jacklamb.aop.expandpoint.ShiroAccessControlPoint;
-import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.aop.core.AopChain;
 import com.lucky.jacklamb.aop.core.AopPoint;
+import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
-import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
+import com.lucky.jacklamb.ioc.AspectAOP;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +20,7 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 	
 	private List<PointRun> pointRuns;//关于某一个类的所有增强的执行节点
 	private TargetMethodSignature targetMethodSignature;
+	private final static List<InjectionAopPoint> injectionAopPoints= AspectAOP.getIAPoint();
 	
 	/**
 	 * 回调函数构造器，得到一个真实对象的的所有执行方法(MethodRun)和环绕执行节点集合(PointRun)，
@@ -60,32 +56,13 @@ public class LuckyAopMethodInterceptor implements MethodInterceptor {
 		final List<AopPoint> points=new ArrayList<>();
 		targetMethodSignature=new TargetMethodSignature(target,method,params);
 
-		//被@RequiresPermissions、@RequiresRoles、@RequiresUser、@RequiresGuest、@RequiresAuthentication
-		//标注的方法或类执行权限代理
-		if(AnnotationUtils.isExistOrByArray(target.getClass().getSuperclass(), ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)||
-				AnnotationUtils.isExistOrByArray(method,ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)){
-			AopPoint shiroAccess = new ShiroAccessControlPoint();
-			shiroAccess.init(targetMethodSignature);
-			shiroAccess.setPriority(-1);
-			points.add(shiroAccess);
-		}
-
-		//被@Cacheable注解标注的方法优先执行缓存代理
-		if(AnnotationUtils.isExist(method,Cacheable.class)) {
-			AopPoint cacheExpandPoint = new CacheExpandPoint();
-			cacheExpandPoint.init(targetMethodSignature);
-			cacheExpandPoint.setPriority(0);
-			points.add(cacheExpandPoint);
-		}
-
-		//被@Transaction注解标注的方法执行事务代理
-		if(AnnotationUtils.isExist(target.getClass().getSuperclass(),Transaction.class)||
-				AnnotationUtils.isExist(method,Transaction.class)){
-			AopPoint transactionPoint = new TransactionPoint();
-			transactionPoint.init(targetMethodSignature);
-			transactionPoint.setPriority(1);
-			points.add(transactionPoint);
-		}
+		//得到所有注入式的环绕增强节点(IAOP)
+		injectionAopPoints.stream().forEach((iap)->{
+			if(iap.pointCutMethod(target.getClass().getSuperclass(),method)){
+				iap.init(targetMethodSignature);
+				points.add(iap);
+			}
+		});
 		//得到所有自定义的的环绕增强节点
 		pointRuns.stream().filter(a->a.standard(method)).forEach((a)->{
 			AopPoint p=a.getPoint();p.init(targetMethodSignature);points.add(p);});

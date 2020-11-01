@@ -2,11 +2,11 @@ package com.lucky.jacklamb.servlet.staticsource;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.file.FileUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -22,11 +22,8 @@ import java.util.Map;
 public class StaticResourceManage {
 
     private static Map<String,String> contentTypeMap;
-
     private static final String WebRoot=AppConfig.getAppConfig().getWebConfig().getWebRoot();
-
     private static String WEB_ROOT_PREFIX;
-
     private static String TARGET_WEB_ROOT;
 
     static{

@@ -1,15 +1,15 @@
 package com.lucky.jacklamb.servlet;
 
+import com.lucky.jacklamb.enums.Code;
+import com.lucky.jacklamb.enums.Rest;
+import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.thymeleaf.utils.ThymeleafConfig;
+import com.lucky.jacklamb.thymeleaf.utils.ThymeleafWrite;
+
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import javax.servlet.ServletException;
-
-import com.lucky.jacklamb.enums.Code;
-import com.lucky.jacklamb.enums.Rest;
-import com.lucky.jacklamb.ioc.ControllerAndMethod;
-import com.lucky.jacklamb.servlet.core.Model;
 
 /**
  * 处理响应相关的类
@@ -17,6 +17,8 @@ import com.lucky.jacklamb.servlet.core.Model;
  * @author fk-7075
  */
 public class ResponseControl {
+
+    private static final boolean isEnabled= ThymeleafConfig.getConf().isEnabled();
 
 
     /**
@@ -30,20 +32,24 @@ public class ResponseControl {
     private void toPage(Model model, String info, List<String> pre_suf) {
         String topage = "";
         if (info.contains("page:")) {//重定向到页面
-            info = info.replaceAll("page:", "");
+            info = info.replaceFirst("page:", "");
             topage = model.getRequest().getContextPath() + pre_suf.get(0) + info + pre_suf.get(1);
-            topage = topage.replaceAll(" ", "");
+            topage = topage.replaceFirst(" ", "");
             model.redirect(topage);
         } else if (info.contains("forward:")) {//转发到本Controller的某个方法
-            info = info.replaceAll("forward:", "");
+            info = info.replaceFirst("forward:", "");
             model.forward(info);
         } else if (info.contains("redirect:")) {//重定向到本Controller的某个方法
-            info = info.replaceAll("redirect:", "");
+            info = info.replaceFirst("redirect:", "");
             model.redirect(info);
         } else {//转发到页面
-            topage = pre_suf.get(0) + info + pre_suf.get(1);
-            topage = topage.replaceAll(" ", "");
-            model.forward(topage);
+            if(isEnabled){
+                ThymeleafWrite.write(model,info);
+            }else{
+                topage = pre_suf.get(0) + info + pre_suf.get(1);
+                topage = topage.replaceAll(" ", "");
+                model.forward(topage);
+            }
         }
     }
 
@@ -73,7 +79,7 @@ public class ResponseControl {
             }
             if (rest == Rest.NO) {
                 if (String.class.isAssignableFrom(obj.getClass())) {
-                    toPage(model, obj.toString(), pre_suf);
+                        toPage(model, obj.toString(), pre_suf);
                 } else {
                     RuntimeException e = new RuntimeException("返回值类型错误，无法完成转发和重定向操作!合法的返回值类型为String，错误位置：" + method);
                     model.error(e,Code.ERROR);

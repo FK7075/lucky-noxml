@@ -1,8 +1,6 @@
 package com.lucky.jacklamb.ioc;
 
-import com.lucky.jacklamb.annotation.ioc.Bean;
 import com.lucky.jacklamb.annotation.ioc.Component;
-import com.lucky.jacklamb.annotation.ioc.Configuration;
 import com.lucky.jacklamb.annotation.mvc.ControllerExceptionHandler;
 import com.lucky.jacklamb.annotation.mvc.LuckyFilter;
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
@@ -13,18 +11,12 @@ import com.lucky.jacklamb.conversion.annotation.Conversion;
 import com.lucky.jacklamb.conversion.proxy.ConversionProxy;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
-import com.lucky.jacklamb.ioc.config.*;
-import com.lucky.jacklamb.ioc.enums.IocCode;
 import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.quartz.proxy.QuartzProxy;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
-import com.lucky.jacklamb.utils.file.ini.INIConfig;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
-import com.lucky.jacklamb.utils.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +111,6 @@ public class ComponentIOC implements IOC{
 				beanID=LuckyUtils.TableToClass1(component.getSimpleName());
 				Object aspect = AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, component);
 				addBean(beanID,aspect);
-				log.info("@Web \"[id="+beanID+" ,class="+aspect+"]\"");
 				continue;
 			}else if(component.isAnnotationPresent(QuartzJobs.class)){
 				QuartzJobs quartzJobs =component.getAnnotation(QuartzJobs.class);

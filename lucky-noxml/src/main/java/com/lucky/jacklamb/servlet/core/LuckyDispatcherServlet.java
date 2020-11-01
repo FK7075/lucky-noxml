@@ -3,11 +3,12 @@ package com.lucky.jacklamb.servlet.core;
 import com.lucky.jacklamb.annotation.mvc.Download;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
-import com.lucky.jacklamb.utils.file.FileUtils;
-import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.ControllerAndMethod;
 import com.lucky.jacklamb.servlet.exceptionhandler.DispatchServletExceptionInterceptor;
 import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
+import com.lucky.jacklamb.utils.base.StaticFile;
+import com.lucky.jacklamb.utils.file.FileUtils;
+import com.lucky.jacklamb.utils.file.Resources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +21,7 @@ import java.lang.reflect.Method;
 
 @MultipartConfig
 public class LuckyDispatcherServlet extends BaseServlet {
+    private final static String ICO ="/favicon.ico";
 
     private static final Logger log = LogManager.getLogger(LuckyDispatcherServlet.class);
 
@@ -39,14 +41,14 @@ public class LuckyDispatcherServlet extends BaseServlet {
             String context = req.getContextPath();
             String path = uri.replace(context, "");
             String currIp = model.getIpAddr();
-            if ("/favicon.ico".equals(uri)) {
+            if (ICO.equals(uri)) {
                 resp.setContentType("image/x-icon");
-                InputStream favStream = ApplicationBeans.class.getResourceAsStream("/ico/favicon.ico");
+                InputStream favStream = Resources.getInputStream(StaticFile.USER_ICO_FILE);
                 if (favStream != null) {
-                    FileUtils.preview(model, favStream,"favicon.ico");
+                    FileUtils.preview(model, favStream, ICO);
                     return;
                 }
-                FileUtils.preview(model, ApplicationBeans.class.getResourceAsStream("/lucky-config/static/favicon.ico"), "favicon.ico");
+                FileUtils.preview(model, Resources.getInputStream(StaticFile.ICO_FILE), ICO);
                 return;
             }
             //全局资源的IP限制

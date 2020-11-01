@@ -68,7 +68,7 @@ public class ObjectToJoinSql{
 				Object fk= FieldUtils.getValue(obj[i],fields[j]);
 				if (fk != null) {
 					if (p == 0) {
-						sql.append(" WHERE " ).append(PojoManage.tableAlias(clzz,dbname))
+						sql.append(" WHERE ").append(PojoManage.tableAlias(clzz,dbname))
 								.append(".").append(PojoManage.getTableField(dbname,fields[j]))
 								.append("=?");
 						p++;

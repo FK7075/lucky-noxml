@@ -2,7 +2,7 @@ package com.lucky.jacklamb.aop.expandpoint;
 
 import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
 import com.lucky.jacklamb.aop.core.AopChain;
-import com.lucky.jacklamb.aop.core.AopPoint;
+import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.exception.TransactionPerformException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
@@ -10,6 +10,7 @@ import com.lucky.jacklamb.quartz.ann.QuartzJobs;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
+import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
  * @author fk7075
  * @version 1.0.0
  */
-public class TransactionPoint extends AopPoint {
+public class TransactionPoint extends InjectionAopPoint {
 
     /*
         事务机制原理
@@ -56,9 +57,13 @@ public class TransactionPoint extends AopPoint {
 
      */
 
+    public TransactionPoint(){
+        setPriority(1);
+    }
+
     private final ThreadLocal<Map<Field,Object>> thlSourceFieldKVMap=new ThreadLocal();
 
-    private static final Logger log= LogManager.getLogger(TransactionPoint.class);
+    private static final Logger log= LogManager.getLogger("c.l.j.aop.expandpoint.TransactionPoint");
 
     private static final Method[] objectMethod=Object.class.getDeclaredMethods();
 
@@ -222,5 +227,25 @@ public class TransactionPoint extends AopPoint {
         for(Map.Entry<Field,Object> entry:oldFieldMapperMap.entrySet()){
             FieldUtils.setValue(aspectObject,entry.getKey(),entry.getValue());
         }
+    }
+
+    @Override
+    public boolean pointCutMethod(Class<?> currClass, Method currMethod) {
+        return AnnotationUtils.isExist(currClass,com.lucky.jacklamb.annotation.aop.Transaction.class)||
+				AnnotationUtils.isExist(currMethod,com.lucky.jacklamb.annotation.aop.Transaction.class);
+    }
+
+    @Override
+    public boolean pointCutClass(Class<?> currClass) {
+        if (AnnotationUtils.isExist(currClass, com.lucky.jacklamb.annotation.aop.Transaction.class)) {
+            return true;
+        }
+        Method[] declaredMethods = currClass.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            if (AnnotationUtils.isExist(method, com.lucky.jacklamb.annotation.aop.Transaction.class)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

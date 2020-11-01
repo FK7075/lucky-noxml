@@ -1,11 +1,11 @@
 package com.lucky.jacklamb.enums;
 
-import com.lucky.jacklamb.ioc.ApplicationBeans;
+import com.lucky.jacklamb.utils.base.StaticFile;
+import com.lucky.jacklamb.utils.file.Resources;
 import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Reader;
 
 public enum Logo {
 	
@@ -79,7 +79,7 @@ public enum Logo {
 
 	public String getLogo() {
 		try{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationBeans.class.getResourceAsStream("/lucky-config/logo/" + fileName), "UTF-8"));
+			Reader reader = Resources.getReader(StaticFile.LOGO_FOLDER +fileName);
 			return IOUtils.toString(reader);
 		}catch (IOException e){
 			throw new RuntimeException(e);

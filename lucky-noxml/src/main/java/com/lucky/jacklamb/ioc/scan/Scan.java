@@ -6,9 +6,11 @@
  import com.lucky.jacklamb.annotation.orm.Table;
  import com.lucky.jacklamb.annotation.orm.mapper.Mapper;
  import com.lucky.jacklamb.aop.core.AopPoint;
+ import com.lucky.jacklamb.aop.core.InjectionAopPoint;
  import com.lucky.jacklamb.conversion.annotation.Conversion;
  import com.lucky.jacklamb.httpclient.registry.RegistrationController;
  import com.lucky.jacklamb.httpclient.service.LuckyClientController;
+ import com.lucky.jacklamb.ioc.AspectAOP;
  import com.lucky.jacklamb.ioc.config.AppConfig;
  import com.lucky.jacklamb.ioc.config.ApplicationConfig;
  import com.lucky.jacklamb.ioc.config.LuckyConfig;
@@ -18,6 +20,9 @@
  import com.lucky.jacklamb.rest.LSON;
  import com.lucky.jacklamb.rest.XStreamAllowType;
  import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
+ import com.lucky.jacklamb.utils.base.Assert;
+ import com.lucky.jacklamb.utils.base.LuckyUtils;
+ import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 
@@ -241,7 +246,14 @@ public abstract class Scan {
 						info = new StringBuilder();
 						info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
 						log.info(info.toString());
-					} else if (iocCode == IocCode.CONTROLLER) {
+					} else if(InjectionAopPoint.class.isAssignableFrom(returnType)){
+						InjectionAopPoint iap =(InjectionAopPoint) method.invoke(cfgObj);
+						boolean b = AspectAOP.addIAPoint(iap);
+						if(b){
+							log.info("@Bean$IAOP \"[ id=" + getBeanName(componentClass,method) + " priority="+iap.getPriority() +" class=" + returnType
+									+ "]\"");
+						}
+					}else if (iocCode == IocCode.CONTROLLER) {
 						config = method.invoke(cfgObj);
 						if (returnType == Class.class) {
 							Class ctrlClass = (Class) config;
@@ -333,6 +345,14 @@ public abstract class Scan {
 				}
 			}
 		}
+	}
+
+	private String getBeanName(Class<?> currClass,Method currMethod){
+		Bean beanAnn= AnnotationUtils.get(currMethod,Bean.class);
+		if(Assert.isBlank(beanAnn.value())){
+			return LuckyUtils.TableToClass1(currClass.getSimpleName())+"$"+currMethod.getName();
+		}
+		return beanAnn.value();
 	}
 	
 	/**

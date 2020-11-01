@@ -1,22 +1,23 @@
 package com.lucky.jacklamb.ioc;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.lucky.jacklamb.annotation.aop.*;
 import com.lucky.jacklamb.aop.core.AopPoint;
+import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
-import com.lucky.jacklamb.utils.reflect.ClassUtils;
+import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
+import com.lucky.jacklamb.aop.expandpoint.ShiroAccessControlPoint;
+import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * 代理对象集合
@@ -30,9 +31,20 @@ public class AspectAOP {
 
 	private static AspectAOP aspectAop;
 
+	private static Set<Class<?extends InjectionAopPoint>> injectionAopPointClass=new HashSet<>(10);
+
+	private static List<InjectionAopPoint> injectionAopPoints=new ArrayList<>(10);
+
 	private Map<String, PointRun> aspectMap;
 
 	private List<String> aspectIDS;
+
+	static {
+		addIAPoint(new TransactionPoint());
+		addIAPoint(new CacheExpandPoint());
+		addIAPoint(new ShiroAccessControlPoint());
+	}
+
 
 	private AspectAOP() {
 		aspectMap = new HashMap<>();
@@ -44,6 +56,29 @@ public class AspectAOP {
 		if (aspectAop == null)
 			aspectAop = new AspectAOP();
 		return aspectAop;
+	}
+
+	public static <T extends InjectionAopPoint> boolean addIAPoint(T iap){
+		if(!injectionAopPointClass.contains(iap.getClass())){
+			injectionAopPoints.add(iap);
+			injectionAopPointClass.add(iap.getClass());
+			return true;
+		}
+		return false;
+	}
+
+	public static List<InjectionAopPoint> getIAPoint(){
+		return injectionAopPoints;
+	}
+
+	public static boolean isAgent(Class<?> beanClass){
+		List<InjectionAopPoint> iaPoints = AspectAOP.getIAPoint();
+		for (InjectionAopPoint iaPoint : iaPoints) {
+			if(iaPoint.pointCutClass(beanClass)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean containId(String id) {

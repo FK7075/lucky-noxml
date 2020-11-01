@@ -2,19 +2,24 @@ package com.lucky.jacklamb.aop.expandpoint;
 
 import com.lucky.jacklamb.annotation.aop.Cacheable;
 import com.lucky.jacklamb.aop.core.AopChain;
-import com.lucky.jacklamb.aop.core.AopPoint;
+import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.expression.ExpressionEngine;
-import com.lucky.jacklamb.utils.file.ini.IniFilePars;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.redis.pojo.RHash;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.cache.LRUCache;
+import com.lucky.jacklamb.utils.file.ini.IniFilePars;
+import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 
 import java.lang.reflect.Method;
 
-public class CacheExpandPoint extends AopPoint {
-	
+public class CacheExpandPoint extends InjectionAopPoint {
+
 	private ApplicationBeans beans;
+
+	public CacheExpandPoint(){
+		setPriority(0);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public Object cacheResult(AopChain chain) throws Throwable {
@@ -83,6 +88,23 @@ public class CacheExpandPoint extends AopPoint {
 	private boolean redisIsExist(){
 		return new IniFilePars().isHasSection("Redis");
 	}
-	
+
+
+	@Override
+	public boolean pointCutMethod(Class<?> currClass, Method currMethod) {
+		return AnnotationUtils.isExist(currMethod,Cacheable.class);
+	}
+
+	@Override
+	public boolean pointCutClass(Class<?> currClass) {
+		Method[] declaredMethods = currClass.getDeclaredMethods();
+		for (Method method : declaredMethods) {
+			if (method.isAnnotationPresent(Cacheable.class)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

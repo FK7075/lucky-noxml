@@ -3,13 +3,13 @@ package com.lucky.jacklamb.servlet.core;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.exception.NotFindDocBaseFolderException;
-import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.servlet.LuckyWebContext;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
-import com.lucky.jacklamb.utils.base.JackLamb;
+import com.lucky.jacklamb.utils.base.ErrorPage;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -87,6 +90,13 @@ public class Model {
 
     private String baseDir;
 
+    public ServletOutputStream getOutputStream() throws IOException {
+        if(outputStream==null){
+            outputStream=resp.getOutputStream();
+        }
+        return outputStream;
+    }
+
     /**
      * Model构造器
      *
@@ -96,8 +106,7 @@ public class Model {
      * @param encod         解码方式
      * @throws IOException
      */
-    public Model(HttpServletRequest request, HttpServletResponse response, ServletConfig servletConfig, RequestMethod requestMethod, String encod)
-            throws IOException {
+    public Model(HttpServletRequest request, HttpServletResponse response, ServletConfig servletConfig, RequestMethod requestMethod, String encod) {
         this.servletConfig = servletConfig;
         this.encod = encod;
         req = request;
@@ -396,14 +405,10 @@ public class Model {
      */
     public void writer(Object info) {
         try {
-            if (outputStream == null) {
-                outputStream = resp.getOutputStream();
-            }
-            outputStream.write(info.toString().getBytes("UTF-8"));
+            getOutputStream().write(info.toString().getBytes("UTF-8"));
         } catch (IOException e) {
             error(e,Code.ERROR);
         }
-
     }
 
     /**
@@ -707,7 +712,7 @@ public class Model {
             String userAgent = req.getHeader("User-Agent");
             if(userAgent.startsWith("Mozilla/")){
                 resp.setContentType("text/html");
-                writer(JackLamb.exception(code, Message, Description));
+                writer(ErrorPage.exception(code, Message, Description));
             }else{
                 writerJson(new ExceptionMessage(code.code,code.errTitle,Description));
             }

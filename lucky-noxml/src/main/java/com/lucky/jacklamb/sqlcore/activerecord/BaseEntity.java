@@ -4,6 +4,7 @@ import com.lucky.jacklamb.annotation.orm.NoColumn;
 import com.lucky.jacklamb.annotation.orm.NoPackage;
 import com.lucky.jacklamb.conversion.annotation.NoConversion;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Page;
 import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
@@ -261,7 +262,7 @@ public abstract class BaseEntity<Entity> {
      * @param rows 每页记录数
      * @return
      */
-    public List<Entity> limit(Entity entity,int page,int rows){
+    public Page<Entity> limit(Entity entity, int page, int rows){
         return sqlCore.getPageList(entity,page,rows);
     }
 
@@ -271,8 +272,8 @@ public abstract class BaseEntity<Entity> {
      * @param rows 每页记录数
      * @return
      */
-    public List<Entity> limit(int page,int rows){
-        return (List<Entity>) sqlCore.getPageList(this,page,rows);
+    public Page<Entity> limit(int page,int rows){
+        return (Page<Entity>) sqlCore.getPageList(this,page,rows);
     }
 
     /**

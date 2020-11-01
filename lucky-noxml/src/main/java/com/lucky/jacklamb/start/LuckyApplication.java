@@ -5,6 +5,8 @@ import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.thymeleaf.utils.ThymeleafConfig;
+import com.lucky.jacklamb.thymeleaf.utils.ThymeleafListener;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -21,6 +23,7 @@ import static com.lucky.jacklamb.start.RunParam.isRunParam;
 public class LuckyApplication {
 
     private static Logger log;
+    private static final boolean isEnabled= ThymeleafConfig.getConf().isEnabled();
 
     static {
         System.setProperty("log4j.skipJansi","false");
@@ -49,6 +52,9 @@ public class LuckyApplication {
 
     private static void run() {
         ServerConfig serverCfg = AppConfig.getAppConfig().getServerConfig();
+        if(isEnabled){
+            serverCfg.addListener(new ThymeleafListener());
+        }
         Tomcat tomcat = new Tomcat();
         String runPort = System.getProperty(SERVER_PORT);
         if(runPort!=null) {

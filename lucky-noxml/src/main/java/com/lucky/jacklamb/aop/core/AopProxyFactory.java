@@ -1,9 +1,8 @@
 package com.lucky.jacklamb.aop.core;
 
 import com.lucky.jacklamb.annotation.aop.*;
-import com.lucky.jacklamb.aop.expandpoint.ShiroAccessControlPoint;
+import com.lucky.jacklamb.ioc.AspectAOP;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,60 +47,11 @@ public class AopProxyFactory {
      */
     public static Object Aspect(Map<String, PointRun> AspectMap, String iocCode, String beanid, Class<?> beanClass) {
         List<PointRun> findPointByBean = findPointbyBean(AspectMap, iocCode, beanid, beanClass);
-        if (!findPointByBean.isEmpty()||isCacheable(beanClass)
-                ||isTransaction(beanClass)||isShiroAnnotation(beanClass)) {
+        if (!findPointByBean.isEmpty()||AspectAOP.isAgent(beanClass)) {
             return PointRunFactory.createProxyFactory().getProxy(beanClass, findPointByBean);
         } else {
             return ClassUtils.newObject(beanClass);
         }
-    }
-
-    /**
-     * 判断当前组件是否有方法被@Cacheable注解标注
-     *
-     * @param beanClass
-     * @return
-     */
-    public static boolean isCacheable(Class<?> beanClass) {
-        Method[] declaredMethods = beanClass.getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            if (method.isAnnotationPresent(Cacheable.class)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断当前组件是否有方法被@Transaction注解标注
-     *
-     * @param beanClass
-     * @return
-     */
-    public static boolean isTransaction(Class<?> beanClass) {
-        if (AnnotationUtils.isExist(beanClass,Transaction.class)) {
-            return true;
-        }
-        Method[] declaredMethods = beanClass.getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            if (AnnotationUtils.isExist(method,Transaction.class)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isShiroAnnotation(Class<?> beanClass){
-        if (AnnotationUtils.isExistOrByArray(beanClass, ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)) {
-            return true;
-        }
-        Method[] declaredMethods = beanClass.getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            if (AnnotationUtils.isExistOrByArray(method,ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

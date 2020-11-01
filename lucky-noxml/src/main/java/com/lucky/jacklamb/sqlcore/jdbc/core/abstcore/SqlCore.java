@@ -1,10 +1,8 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
-import com.lucky.jacklamb.authority.shiro.entity.SysResource;
-import com.lucky.jacklamb.authority.shiro.entity.SysRole;
-import com.lucky.jacklamb.authority.shiro.entity.SysUser;
 import com.lucky.jacklamb.enums.PrimaryType;
 import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Page;
 import com.lucky.jacklamb.query.translator.Translator;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.fixedcoreImpl.GeneralObjectCoreBase;
 import com.lucky.jacklamb.sqlcore.abstractionlayer.transaction.Transaction;
@@ -385,13 +383,22 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	}
 
 	@Override
-	public <T> List<T> getPageList(T t, int page, int size) {
+	public <T> Page<T> getPageList(T t, int page, int size) {
 		QueryBuilder queryBuilder=new QueryBuilder();
 		queryBuilder.setDbname(getDbName());
 		queryBuilder.limit(page,size);
 		queryBuilder.setWheresql(getSqlGroup());
 		queryBuilder.addObject(t);
-		return (List<T>) query(queryBuilder,t.getClass());
+		Page<T> returnPage=new Page<>();
+		List<T> query = (List<T>) query(queryBuilder, t.getClass());
+		int count = count(t.getClass());
+		returnPage.setData(query);
+		returnPage.setCurrPage(page);
+		returnPage.setRows(size);
+		int totalPage=count%size==0?count/size:count/size+1;
+		returnPage.setTotalNum(count);
+		returnPage.setTotalPage(totalPage);
+		return returnPage;
 	}
 
 	public abstract SqlGroup getSqlGroup();

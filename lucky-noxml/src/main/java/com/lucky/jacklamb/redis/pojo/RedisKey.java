@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.redis.pojo;
 
+import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.redis.JedisFactory;
 import com.lucky.jacklamb.rest.LSON;
 import redis.clients.jedis.Jedis;
@@ -49,6 +50,8 @@ public abstract class RedisKey {
         setType();
         setPojoType();
         setKey(key);
+        formatKey();
+
     }
 
     /**
@@ -67,6 +70,7 @@ public abstract class RedisKey {
     public String rename(String newKey){
         String oldKey=getKey();
         setKey(newKey);
+        formatKey();
         return jedis.rename(oldKey,getKey());
     }
 
@@ -77,7 +81,8 @@ public abstract class RedisKey {
      */
     public Long renamenx(String newKey){
         String oldKey=getKey();
-        setKey(key);
+        setKey(newKey);
+        formatKey();
         return jedis.renamenx(oldKey,getKey());
     }
 
@@ -89,5 +94,9 @@ public abstract class RedisKey {
 
     public void setType(){
         type= ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    private void formatKey(){
+        MD5Utils.md5(key);
     }
 }

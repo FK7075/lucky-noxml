@@ -1,9 +1,10 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
+import com.lucky.jacklamb.query.QueryBuilder;
+import com.lucky.jacklamb.query.translator.Page;
+
 import java.util.Collection;
 import java.util.List;
-
-import com.lucky.jacklamb.query.QueryBuilder;
 
 /**
  * 各个关系型数据库特有的SQl语法对应的对象操作
@@ -54,7 +55,7 @@ public interface UniqueSqlCore {
 	 * 每页的记录数
 	 * @return
 	 */
-	<T> List<T> getPageList(T t, int page, int size) ;
+	<T> Page<T> getPageList(T t, int page, int size) ;
 	
 	/**
 	 * 添加数据

@@ -1,9 +1,7 @@
 package com.lucky.jacklamb.aop.expandpoint;
 
-import com.lucky.jacklamb.annotation.aop.Aspect;
-import com.lucky.jacklamb.annotation.aop.Before;
 import com.lucky.jacklamb.aop.core.AopChain;
-import com.lucky.jacklamb.aop.core.AopPoint;
+import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.proxy.TargetMethodSignature;
 import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import org.apache.shiro.SecurityUtils;
@@ -22,13 +20,17 @@ import java.util.List;
  * @author DELL
  *
  */
-public class ShiroAccessControlPoint extends AopPoint {
+public class ShiroAccessControlPoint extends InjectionAopPoint {
 
     public static final Class<? extends Annotation>[] AUTHZ_ANNOTATION_CLASSES =
             new Class[] {
                     RequiresPermissions.class, RequiresRoles.class,
                     RequiresUser.class, RequiresGuest.class, RequiresAuthentication.class
             };
+
+    public ShiroAccessControlPoint(){
+        setPriority(-1);
+    }
 
     @Override
     public Object proceed(AopChain chain) throws Throwable {
@@ -135,5 +137,25 @@ public class ShiroAccessControlPoint extends AopPoint {
             }
         }
         return anns;
+    }
+
+    @Override
+    public boolean pointCutMethod(Class<?> currClass, Method currMethod) {
+        return AnnotationUtils.isExistOrByArray(currClass, ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)||
+				AnnotationUtils.isExistOrByArray(currMethod,ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES);
+    }
+
+    @Override
+    public boolean pointCutClass(Class<?> currClass) {
+        if (AnnotationUtils.isExistOrByArray(currClass,AUTHZ_ANNOTATION_CLASSES)) {
+            return true;
+        }
+        Method[] declaredMethods = currClass.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            if (AnnotationUtils.isExistOrByArray(method,AUTHZ_ANNOTATION_CLASSES)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
