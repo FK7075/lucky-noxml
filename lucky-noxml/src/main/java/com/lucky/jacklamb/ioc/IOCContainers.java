@@ -3,11 +3,15 @@ package com.lucky.jacklamb.ioc;
 import com.lucky.jacklamb.annotation.ioc.Autowired;
 import com.lucky.jacklamb.annotation.ioc.SSH;
 import com.lucky.jacklamb.annotation.ioc.Value;
+import com.lucky.jacklamb.exception.AutoInjectionException;
 import com.lucky.jacklamb.exception.InjectionPropertiesException;
+import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.expression.$Expression;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.sqlcore.mapper.LuckyMapper;
+import com.lucky.jacklamb.sqlcore.mapper.LuckyService;
 import com.lucky.jacklamb.ssh.Remote;
 import com.lucky.jacklamb.ssh.SSHClient;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
@@ -20,8 +24,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 扫描所有配置包，将所有的IOC组件都加载到相应的IOC容器中
@@ -31,17 +38,11 @@ import java.util.Map.Entry;
 public final class IOCContainers {
 	
 	private AspectAOP AspectIOC;
-
 	private final static INIConfig ini=new INIConfig();
-	
 	private RepositoryIOC repositoryIOC;
-	
 	private ServiceIOC serviceIOC;
-	
 	private ComponentIOC appIOC;
-	
 	private ControllerIOC controllerIOC;
-
 	private BeansIOC beansIOC;
 
 	public BeansIOC getBeansIOC() {
@@ -256,7 +257,8 @@ public final class IOCContainers {
         SSH ssh;
         Remote remote;
         Class<?> componentClass=component.getClass();
-        Field[] fields= ClassUtils.getAllFields(componentClass);
+        List<Field> fields= Stream.of(ClassUtils.getAllFields(componentClass))
+				.filter(f-> !Modifier.isFinal(f.getModifiers())).collect(Collectors.toList());
         for(Field field:fields) {
             Class<?> fieldClass=field.getType();
             if(field.isAnnotationPresent(Autowired.class)) {
@@ -264,7 +266,17 @@ public final class IOCContainers {
                 String auval = auto.value();
                 if("".equals(auval)) {
 					//类型扫描
-                	FieldUtils.setValue(component,field,beans.getBean(fieldClass));
+					try {
+						if(LuckyService.class.isAssignableFrom(componentClass)&&fieldClass== LuckyMapper.class){
+							Class<?> aClass = ClassUtils.getGenericType(getCurrClass(componentClass).getGenericSuperclass())[0];
+							FieldUtils.setValue(component,field,beans.getBean(aClass));
+						}else{
+							FieldUtils.setValue(component,field,beans.getBean(fieldClass));
+						}
+					}catch (NotFindBeanException e){
+						throw new AutoInjectionException(getCurrClass(componentClass),field,e);
+					}
+
                 }else if(auval.contains("${")&&auval.contains("}")){
                     String key=auval.substring(2,auval.length()-1);
                     if(key.startsWith("S:")){
@@ -274,20 +286,42 @@ public final class IOCContainers {
                     }
                 }else{
 					//id注入
-					FieldUtils.setValue(component,field, beans.getBean(auto.value()));
+					try {
+						FieldUtils.setValue(component,field, beans.getBean(auto.value()));
+					}catch (NotFindBeanException e){
+						throw new AutoInjectionException(getCurrClass(componentClass),field,e);
+					}
                 }
             }else if(field.isAnnotationPresent(Value.class)) {
                 value=field.getAnnotation(Value.class);
                 String[] val = value.value();
                 if(val.length==0) {//类型扫描
-					FieldUtils.setValue(component,field,beans.getBean(fieldClass));
+                	try {
+						FieldUtils.setValue(component,field,beans.getBean(fieldClass));
+					}catch (NotFindBeanException e){
+						throw new AutoInjectionException(getCurrClass(componentClass),field,e);
+					}
                 }else {
                     if(fieldClass.isArray()) {//基本类型的数组类型
 						FieldUtils.setValue(component,field,JavaConversion.strArrToBasicArr(val, fieldClass));
                     }else if(List.class.isAssignableFrom(fieldClass)) {//List类型
-						FieldUtils.setValue(component,field,getList(beans,field,val));
+						try {
+							FieldUtils.setValue(component,field,getList(beans,field,val));
+						}catch (NotFindBeanException e){
+							if(componentClass.getSimpleName().equals("$$EnhancerByCGLIB$$")){
+								throw new AutoInjectionException(componentClass.getSuperclass(),field,e);
+							}
+							throw new AutoInjectionException(componentClass,field,e);
+						}
                     }else if(Set.class.isAssignableFrom(fieldClass)) {//Set类型
-						FieldUtils.setValue(component,field,new HashSet<>(getList(beans,field,val)));
+                    	try {
+							FieldUtils.setValue(component,field,new HashSet<>(getList(beans,field,val)));
+						}catch (NotFindBeanException e){
+							if(componentClass.getSimpleName().contains("$$EnhancerByCGLIB$$")){
+								throw new AutoInjectionException(componentClass.getSuperclass(),field,e);
+							}
+							throw new AutoInjectionException(componentClass,field,e);
+						}
                     }else if(Map.class.isAssignableFrom(fieldClass)) {//Map类型
                         Map<Object,Object> map=new HashMap<>();
                         String[] fx=FieldUtils.getStrGenericType(field);
@@ -296,17 +330,30 @@ public final class IOCContainers {
                         if(one&&two) {//K-V都不是基本类型
                             for(String z:val) {
                                 String[] kv=z.split(":");
-                                map.put(beans.getBean(kv[0]), beans.getBean(kv[1]));
+								try {
+									map.put(beans.getBean(kv[0]), beans.getBean(kv[1]));
+								}catch (NotFindBeanException e) {
+									throw new AutoInjectionException(getCurrClass(componentClass), field, e);
+								}
                             }
                         }else if(one&&!two) {//V是基本类型
                             for(String z:val) {
                                 String[] kv=z.split(":");
-                                map.put(beans.getBean(kv[0]), JavaConversion.strToBasic(kv[1], fx[1]));
+								try {
+									map.put(beans.getBean(kv[0]), JavaConversion.strToBasic(kv[1], fx[1]));
+								}catch (NotFindBeanException e){
+									throw new AutoInjectionException(getCurrClass(componentClass),field,e);
+								}
                             }
                         }else if(!one&&two) {//K是基本类型
                             for(String z:val) {
                                 String[] kv=z.split(":");
-                                map.put(JavaConversion.strToBasic(kv[0], fx[0]),beans.getBean(kv[1]));
+								try {
+									map.put(JavaConversion.strToBasic(kv[0], fx[0]),beans.getBean(kv[1]));
+								}catch (NotFindBeanException e){
+									throw new AutoInjectionException(getCurrClass(componentClass),field,e);
+								}
+
                             }
                         }else {//K-V都是基本类型
                             for(String z:val) {
@@ -327,6 +374,10 @@ public final class IOCContainers {
             }
         }
     }
+
+    private static Class<?> getCurrClass(Class<?> aClass){
+    	return aClass.getSimpleName().contains("$$EnhancerByCGLIB$$")?aClass.getSuperclass():aClass;
+	}
 
     private static List<Object> getList(ApplicationBeans beans,Field field,String[] val){
 		List<Object> list=new ArrayList<>();
