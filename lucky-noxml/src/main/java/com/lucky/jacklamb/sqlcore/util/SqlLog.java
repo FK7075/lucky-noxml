@@ -18,10 +18,12 @@ public class SqlLog {
 	private boolean showCompleteSQL;
 	private LuckyDataSource dataSource;
 	private String jdbcUrl;
+	private String dbname;
 	private SqlFormatUtil sqlFormatUtil;
 	private static final PrintStream loger= System.out;
 	
 	public SqlLog(String dbname) {
+		this.dbname=dbname;
 		dataSource= ReaderInI.getDataSource(dbname);
 		log=dataSource.getLog();
 		showCompleteSQL=dataSource.getShowCompleteSQL();
@@ -52,7 +54,7 @@ public class SqlLog {
 	}
 	
 	private void log(String sql, Object[] obj) {
-		StringBuilder sb=new StringBuilder("\nTime        : ").append(LuckyUtils.time()).append("\nDatabase    : ");
+		StringBuilder sb=new StringBuilder("\nTime        : ").append(LuckyUtils.time()).append("\nDatabase    : ").append("【"+dbname+"】");
 		sb.append(jdbcUrl).append("\n").append("SQL         : ").append(formatSql(sql));
 		if (obj == null||obj.length==0) {
 			sb.append("\nParameters  : { }");
@@ -74,7 +76,7 @@ public class SqlLog {
 	 * @param obj
 	 */
 	private void logBatch(String sql,Object obj[][]) {
-		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ");
+		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ").append("【"+dbname+"】");
 		sb.append(jdbcUrl).append("\n").append("SQL        : ").append(formatSql(sql));
 		if(obj==null||obj.length==0) {
 			sb.append("\nParameters : { }");
@@ -95,7 +97,7 @@ public class SqlLog {
 		for (String sql : sqls) {
 			sqlB.append(sql).append("\n");
 		}
-		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ").append(jdbcUrl).append("\n");
+		StringBuilder sb=new StringBuilder(  "\nTime       : ").append(LuckyUtils.time()).append("\nDatabase   : ").append("【"+dbname+"】").append(jdbcUrl).append("\n");
 		sb.append("SQL        : ").append("\n");
 		sb.append(sqlB.toString());
 		loger.println(sb.toString());
