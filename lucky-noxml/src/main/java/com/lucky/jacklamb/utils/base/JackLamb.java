@@ -2,6 +2,8 @@ package com.lucky.jacklamb.utils.base;
 
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
+import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.utils.file.Resources;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -82,6 +84,10 @@ public abstract class JackLamb {
         d += "\n\t\t" + getSameStr(java, maxLength) + javaversioin;
         d += "\n\t\t" + getSameStr(lucky, maxLength) + luckyversion + "\n\n";
         return d;
+    }
+
+    public static void welcome(Model model) throws IOException {
+        FileUtils.preview(model,Resources.getInputStream(StaticFile.LUCKY),"LUCKY.html");
     }
 
 }

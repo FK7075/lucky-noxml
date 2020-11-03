@@ -33,10 +33,16 @@ import com.lucky.jacklamb.enums.Rest;
 public @interface Controller {
 	
 	/**
+	 * 指定一个URL映射
+	 * @return
+	 */
+	String value() default "/";
+
+	/**
 	 * 为该Controller组件指定一个唯一ID，默认会使用[首字母小写类名]作为组件的唯一ID
 	 * @return
 	 */
-	String value() default "";
+	String id() default "";
 
 	/**
 	 *

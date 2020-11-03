@@ -2,7 +2,9 @@ package com.lucky.jacklamb.servlet;
 
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.Rest;
+import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.servlet.staticsource.StaticResourceManage;
 import com.lucky.jacklamb.thymeleaf.utils.ThymeleafConfig;
 import com.lucky.jacklamb.thymeleaf.utils.ThymeleafWrite;
 
@@ -18,8 +20,10 @@ import java.util.List;
  */
 public class ResponseControl {
 
-    private static final boolean isEnabled= ThymeleafConfig.getConf().isEnabled();
-
+    private static final boolean thEnabled= ThymeleafConfig.getConf().isEnabled();
+    private static final String thPrefix= ThymeleafConfig.getConf().getPrefix();
+    private static final String thSuffix= ThymeleafConfig.getConf().getSuffix();
+    private static final boolean isOpenStaticResourceManage= AppConfig.getAppConfig().getWebConfig().isOpenStaticResourceManage();
 
     /**
      * 响应当前请求
@@ -32,18 +36,18 @@ public class ResponseControl {
     private void toPage(Model model, String info, List<String> pre_suf) {
         String topage = "";
         if (info.contains("page:")) {//重定向到页面
-            info = info.replaceFirst("page:", "");
+            info = info.substring(5);
             topage = model.getRequest().getContextPath() + pre_suf.get(0) + info + pre_suf.get(1);
-            topage = topage.replaceFirst(" ", "");
+            topage = topage.replaceAll(" ", "");
             model.redirect(topage);
         } else if (info.contains("forward:")) {//转发到本Controller的某个方法
-            info = info.replaceFirst("forward:", "");
+            info = info.substring(8);
             model.forward(info);
         } else if (info.contains("redirect:")) {//重定向到本Controller的某个方法
-            info = info.replaceFirst("redirect:", "");
+            info = info.substring(9);
             model.redirect(info);
         } else {//转发到页面
-            if(isEnabled){
+            if(isOpenStaticResourceManage&&thEnabled){
                 ThymeleafWrite.write(model,info);
             }else{
                 topage = pre_suf.get(0) + info + pre_suf.get(1);

@@ -32,7 +32,7 @@ public class SectionKey {
 
 	public static final String SECTION_SERVICE="Service";
 	
-	public static final String SECTION_HANDLER_PREFIX_AND_SUFFIX="HandlerPrefixAndSuffix";
+//	public static final String SECTION_HANDLER_PREFIX_AND_SUFFIX="HandlerPrefixAndSuffix";
 	
 	public static final String SECTION_SPECIFIRESOURCESIPRESTRICT="SpecifiResourcesIpRestrict";
 }

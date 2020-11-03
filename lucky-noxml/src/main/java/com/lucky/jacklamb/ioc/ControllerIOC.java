@@ -13,7 +13,9 @@ import com.lucky.jacklamb.httpclient.luckyclient.LuckyClientControllerProxy;
 import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.servlet.mapping.Mapping;
 import com.lucky.jacklamb.servlet.mapping.MappingDetails;
+import com.lucky.jacklamb.utils.base.Assert;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,8 +57,9 @@ public class ControllerIOC {
 		this.handerMap = handerMap;
 	}
 	public void addHanderMap(URLAndRequestMethod uRLAndRequestMethod, ControllerAndMethod controllerAndMethod) {
-		if(this.handerMap.containsKey(uRLAndRequestMethod))
+		if(this.handerMap.containsKey(uRLAndRequestMethod)) {
 			throw new NotAddIOCComponent("URL-ControllerMethod(url映射)容器中已存在一个作用域相同的URLAndRequestMethod！同一个URL只能被不同类型的请求代理一次！请求类型" + uRLAndRequestMethod.getMethods() + "中的某一种已经将此URL代理了一次！URL:"+uRLAndRequestMethod.getUrl());
+		}
 		this.handerMap.put(uRLAndRequestMethod, controllerAndMethod);
 	}
 
@@ -74,8 +77,9 @@ public class ControllerIOC {
 	}
 	
 	public ControllerAndMethod getControllerAndMethod(URLAndRequestMethod uRLAndRequestMethod) {
-		if(!containHander(uRLAndRequestMethod))
+		if(!containHander(uRLAndRequestMethod)) {
 			throw new NotFindBeanException("在ControllerAndMethod(ioc)容器中找不到URL为:" + uRLAndRequestMethod.getUrl() + ",且请求类型代理为"+uRLAndRequestMethod.getMethods()+"的映射！");
+		}
 		return handerMap.get(uRLAndRequestMethod);
 	}
 
@@ -84,8 +88,9 @@ public class ControllerIOC {
 	}
 
 	public Object getControllerBean(String id) {
-		if (!containId(id))
+		if (!containId(id)) {
 			throw new NotFindBeanException("在Controller(ioc)容器中找不到ID为 \"" + id + "\" 的Bean...");
+		}
 		return controllerMap.get(id);
 	}
 
@@ -98,8 +103,9 @@ public class ControllerIOC {
 	}
 
 	public void addControllerMap(String id, Object object) {
-		if (containId(id))
+		if (containId(id)) {
 			throw new NotAddIOCComponent("Controller(ioc)容器中已存在ID为 \"" + id + "\" 的组件，无法重复添加（您可能配置了同名的@Controller组件，这将会导致异常的发生！）......");
+		}
 		controllerMap.put(id, object);
 		addControllerIDS(id);
 	}
@@ -127,16 +133,15 @@ public class ControllerIOC {
 		for (Class<?> controller : controllerClass) {
 			if (controller.isAnnotationPresent(Controller.class)) {
 				Controller cont = controller.getAnnotation(Controller.class);
-				if (!"".equals(cont.value())) {
-					beanID=cont.value();
-				}
-				else {
+				if (!Assert.isBlank(cont.id())) {
+					beanID=cont.id();
+				}else {
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
 				}
 				addControllerMap(beanID, AopProxyFactory.Aspect(AspectAOP.getAspectIOC().getAspectMap(), IOC_CODE, beanID, controller));
 			}else if(controller.isAnnotationPresent(CallController.class)){
 				CallController cont = controller.getAnnotation(CallController.class);
-				if (!"".equals(cont.id())) {
+				if (!Assert.isBlank(cont.id())) {
 					beanID=cont.id();
 				}else{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
@@ -145,7 +150,7 @@ public class ControllerIOC {
 				addControllerMap(beanID, CallControllerProxy.getCallControllerProxyObject(controller));
 			} else if(controller.isAnnotationPresent(LuckyClient.class)){
 				LuckyClient cont = controller.getAnnotation(LuckyClient.class);
-				if (!"".equals(cont.id())) {
+				if (!!Assert.isBlank(cont.id())) {
 					beanID=cont.id();
 				}else{
 					beanID=LuckyUtils.TableToClass1(controller.getSimpleName());
@@ -165,21 +170,13 @@ public class ControllerIOC {
 		for (Map.Entry<String, Object> entry : controllerMap.entrySet()) {
 			Object instance = entry.getValue();
 			Class<?> clzz = instance.getClass();
-			if(clzz.getSimpleName().contains("$$EnhancerByCGLIB$$"))
+			if(clzz.getSimpleName().contains("$$EnhancerByCGLIB$$")) {
 				clzz=clzz.getSuperclass();
-			String url_c;
-			if (clzz.isAnnotationPresent(RequestMapping.class)) {
-				RequestMapping crm = clzz.getAnnotation(RequestMapping.class);
-				url_c = crm.value();
-				if (!"/".equals(url_c)) {
-					if (!url_c.startsWith("/"))
-						url_c = "/" + url_c;
-					if (!url_c.endsWith("/"))
-						url_c += "/";
-				}
-			} else {
-				url_c = "/";
 			}
+			if(!AnnotationUtils.isExist(clzz,Controller.class)){
+				continue;
+			}
+			String url_c=getControllerUrl(clzz);
 			Method[] publicMethods = clzz.getDeclaredMethods();
 			String ip,ips,rest;
 			MappingDetails md;
@@ -192,16 +189,14 @@ public class ControllerIOC {
 					String[] mappingIps=md.ip;
 					come.addIds(controllerIps);
 					come.addIds(mappingIps);
-					if(clzz.getAnnotation(Controller.class).rest()!=Rest.NO)
-						come.setRest(clzz.getAnnotation(Controller.class).rest());
-					if(method.isAnnotationPresent(ResponseBody.class))
-						come.setRest(method.getAnnotation(ResponseBody.class).value());
+					come.setRest(getMethodRest(clzz,method));
 					come.setIpSection(clzz.getAnnotation(Controller.class).ipSection());
 					come.setIpSection(md.ipSection);
 					come.setController(entry.getValue());
 					String url_m=md.value;
-					if(url_m.startsWith("/"))
+					if(url_m.startsWith("/")) {
 						url_m=url_m.substring(1);
+					}
 					come.setMethod(method);
 					RequestMethod[] mappingRequestMethod = md.method;
 					come.setRequestMethods(mappingRequestMethod);
@@ -224,6 +219,33 @@ public class ControllerIOC {
 					continue;
 				}
 			}
+		}
+	}
+
+	private String getControllerUrl(Class<?> controllerClass){
+		String cUrl=null;
+		if (AnnotationUtils.isExist(controllerClass,RequestMapping.class)) {
+			RequestMapping mapping =AnnotationUtils.get(controllerClass,RequestMapping.class);
+			cUrl = mapping.value();
+			if (!"/".equals(cUrl)) {
+				if (!cUrl.startsWith("/")) {
+					cUrl = "/" + cUrl;
+				}
+				if (!cUrl.endsWith("/")) {
+					cUrl += "/";
+				}
+			}
+		} else {
+			cUrl = AnnotationUtils.get(controllerClass,Controller.class).value();
+		}
+		return cUrl;
+	}
+
+	private Rest getMethodRest(Class<?> controllerClass,Method controllerMethod){
+		if(AnnotationUtils.isExist(controllerMethod,ResponseBody.class)){
+			return AnnotationUtils.get(controllerMethod,ResponseBody.class).value();
+		}else{
+			return AnnotationUtils.get(controllerClass,Controller.class).rest();
 		}
 	}
 }

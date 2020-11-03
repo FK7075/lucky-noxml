@@ -17,7 +17,7 @@ public class ThymeleafConfig {
     private static ThymeleafConfig conf;
     private boolean enabled=false;
     private String encoding="UTF-8";
-    private String prefix="classpath:/webapps/templates/";
+    private String prefix="classpath:/templates/";
     private String suffix=".html";
     private boolean cache=false;
     private TemplateMode model=TemplateMode.HTML;

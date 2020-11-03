@@ -272,10 +272,10 @@ public class IniFilePars {
 			sectionMap = this.getSectionMap(SECTION_WEB);
 			webSetting(web,sectionMap);
 		}
-		if(this.isHasSection(SECTION_HANDLER_PREFIX_AND_SUFFIX)) {
-			sectionMap = this.getSectionMap(SECTION_HANDLER_PREFIX_AND_SUFFIX);
-			addPrefixAndSuffix(web,sectionMap);
-		}
+//		if(this.isHasSection(SECTION_HANDLER_PREFIX_AND_SUFFIX)) {
+//			sectionMap = this.getSectionMap(SECTION_HANDLER_PREFIX_AND_SUFFIX);
+//			addPrefixAndSuffix(web,sectionMap);
+//		}
 		if(this.isHasSection(SECTION_STATIC_HANDLER)) {
 			sectionMap = this.getSectionMap(SECTION_STATIC_HANDLER);
 			addStaticHander(web,sectionMap);
@@ -301,16 +301,16 @@ public class IniFilePars {
 		}
 	}
 	
-	private void addPrefixAndSuffix(WebConfig web,Map<String, String> sectionMap) {
-		String p="",s="";
-		if(sectionMap.containsKey("prefix")) {
-			p=$Expression.translation(sectionMap.get("prefix"));
-		}
-		if(sectionMap.containsKey("suffix")) {
-			s=$Expression.translation(sectionMap.get("suffix"));
-		}
-		web.setHanderPrefixAndSuffix(p, s);
-	}
+//	private void addPrefixAndSuffix(WebConfig web,Map<String, String> sectionMap) {
+//		String p="",s="";
+//		if(sectionMap.containsKey("prefix")) {
+//			p=$Expression.translation(sectionMap.get("prefix"));
+//		}
+//		if(sectionMap.containsKey("suffix")) {
+//			s=$Expression.translation(sectionMap.get("suffix"));
+//		}
+//		web.setHanderPrefixAndSuffix(p, s);
+//	}
 	
 	private void webSetting(WebConfig web,Map<String, String> sectionMap) {
 		if(sectionMap.containsKey("multipartMaxFileSize")){
@@ -345,6 +345,12 @@ public class IniFilePars {
 		}
 		if(sectionMap.containsKey("staticResourcesIpRestrict")) {
 			web.addStaticResourcesIpRestrict($Expression.translation(sectionMap.get("staticResourcesIpRestrict")).trim().split(","));
+		}
+		if(sectionMap.containsKey("suffix")){
+			web.setSuffix($Expression.translation(sectionMap.get("suffix")));
+		}
+		if(sectionMap.containsKey("prefix")){
+			web.setPrefix($Expression.translation(sectionMap.get("prefix")));
 		}
 	}
 	

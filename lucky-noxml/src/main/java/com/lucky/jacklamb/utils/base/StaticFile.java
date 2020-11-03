@@ -13,6 +13,7 @@ public class StaticFile {
     public final static String ERR_500="/lucky-config/config/500.html";
     public final static String USER_ERR_500="/conf/500.html";
     public final static String ERR_404="/lucky-config/config/404.html";
+    public final static String LUCKY="/lucky-config/config/LUCKY.html";
     public final static String USER_ERR_404="/conf/404.html";
     public final static String LOGO_FOLDER="/lucky-config/logo/";
     public final static String ICO_FILE="/lucky-config/static/favicon.ico";

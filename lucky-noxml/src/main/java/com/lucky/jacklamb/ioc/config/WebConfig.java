@@ -81,7 +81,7 @@ public class WebConfig  implements LuckyConfig  {
 	private int socketTimeout;
 
 	private WebConfig() {
-		webRoot="${classpath}/webapps";
+		webRoot="${classpath}/templates";
 		multipartMaxFileSize=1*1024;
 		multipartMaxRequestSize=10*1024;
 		encoding="UTF-8";
@@ -246,6 +246,14 @@ public class WebConfig  implements LuckyConfig  {
 		handerPrefixAndSuffix.clear();
 		handerPrefixAndSuffix.add(prefix);
 		handerPrefixAndSuffix.add(suffix);
+	}
+
+	public void setPrefix(String prefix){
+		handerPrefixAndSuffix.set(0,prefix);
+	}
+
+	public void setSuffix(String suffix){
+		handerPrefixAndSuffix.set(1,suffix);
 	}
 
 	public boolean isPostChangeMethod() {

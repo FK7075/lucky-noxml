@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.RequestMethod;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.base.JackLamb;
 
 public class URLAndRequestMethod {
 	
@@ -44,13 +45,16 @@ public class URLAndRequestMethod {
 
 	
 	public boolean myEquals(URLAndRequestMethod uRLAndRequestMethod) {
-		if(uRLAndRequestMethod==null)
+		if(uRLAndRequestMethod==null) {
 			return false;
-		if(!uRLAndRequestMethod.getUrl().equals(url))
+		}
+		if(!uRLAndRequestMethod.getUrl().equals(url)) {
 			return false;
+		}
 		for(RequestMethod urmRM:uRLAndRequestMethod.getMethods()) {
-			if(methods.contains(urmRM))
+			if(methods.contains(urmRM)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -65,10 +69,15 @@ public class URLAndRequestMethod {
 				}
 			}
 		}
-		if(!isPass)
+		if(!isPass) {
+			if("/".equals(url)){
+				JackLamb.welcome(model);
+				return null;
+			}
 			model.error(Code.NOTFOUND, "找不与请求相匹配的映射资,请检查您的URL是否正确！","不正确的url："+url);
-		else
+		} else {
 			model.error(Code.REFUSED,"您的请求类型"+this.methods+" , 当前方法并不支持！","不合法的请求类型"+this.methods);
+		}
 		return null;
 	}
 	
@@ -82,21 +91,25 @@ public class URLAndRequestMethod {
 		String[] mapArray=participle(mapstr);
 		String[] urlArray=participle(currurl);
 		if(mapstr.endsWith("}*")&&urlArray.length>=mapArray.length){
-			if("lucyxfl".equals(urlArray[0]))
+			if("lucyxfl".equals(urlArray[0])) {
 				return  false;
+			}
 			for(int i=0;i<mapArray.length-1;i++){
 				if(!mapArray[i].endsWith("}")&&!mapArray[i].startsWith("#{")){
-					if(!mapArray[i].equals(urlArray[i]))
+					if(!mapArray[i].equals(urlArray[i])) {
 						return false;
+					}
 				}
 			}
 			return true;
 		}
-		if(mapArray.length!=urlArray.length)
+		if(mapArray.length!=urlArray.length) {
 			return false;
+		}
 		boolean rest=true;
-		for(int i=0;i<mapArray.length;i++)
+		for(int i=0;i<mapArray.length;i++) {
 			rest=rest&&wordVerification(mapArray[i],urlArray[i]);
+		}
 		return rest;
 	}
 
@@ -116,11 +129,17 @@ public class URLAndRequestMethod {
 			return !Arrays.asList(split).contains(word);
 		}
 		if(template.startsWith("*"))//word必须以template结尾
+		{
 			return word.endsWith(template.substring(1));
+		}
 		if(template.endsWith("*"))//word必须以template开始
+		{
 			return word.startsWith(template.substring(0,template.length()-1));
+		}
 		if("?".equals(template)||(template.startsWith("#{")&&template.endsWith("}")))//参数项，任意word都匹配
+		{
 			return true;
+		}
 		return template.equals(word);//没有特殊符号，表示word必须为template
 	}
 	

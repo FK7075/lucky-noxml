@@ -6,6 +6,7 @@ import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.base.Assert;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.log4j.Logger;
 
@@ -171,18 +172,17 @@ public class DispatchServletExceptionInterceptor {
     }
 
     private String getControllerID() {
-        if (currClass.isAnnotationPresent(Controller.class)) {
-            Controller annotation = currClass.getAnnotation(Controller.class);
-            if (!"".equals(annotation.value()))
-                return currClass.getAnnotation(Controller.class).value();
-            return LuckyUtils.TableToClass1(currClass.getSimpleName());
-        } else {
-            String controllerClassName = LuckyUtils.TableToClass1(currClass.getSimpleName());
-            if(controllerClassName.contains("$$EnhancerByCGLIB$$")){
-                return LuckyUtils.TableToClass1(currClass.getSuperclass().getSimpleName());
-            }
-            return LuckyUtils.TableToClass1(currClass.getSimpleName());
+        Class<?> controllerClass=currClass;
+        if(currClass.getSimpleName().contains("$$EnhancerByCGLIB$$")){
+            controllerClass=currClass.getSuperclass();
         }
+        if (controllerClass.isAnnotationPresent(Controller.class)) {
+            Controller annotation = controllerClass.getAnnotation(Controller.class);
+            if (!Assert.isBlank(annotation.id()))
+                return controllerClass.getAnnotation(Controller.class).id();
+            return LuckyUtils.TableToClass1(controllerClass.getSimpleName());
+        }
+        return LuckyUtils.TableToClass1(controllerClass.getSimpleName());
     }
 }
 
