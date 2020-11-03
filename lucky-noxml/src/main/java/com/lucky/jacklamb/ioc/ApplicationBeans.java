@@ -4,8 +4,10 @@ import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.start.LuckyServerApplicationConfig;
+import com.lucky.jacklamb.utils.base.Assert;
 import com.lucky.jacklamb.utils.base.JackLamb;
 import com.lucky.jacklamb.utils.file.Resources;
+import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.logging.log4j.LogManager;
@@ -201,19 +203,38 @@ public class ApplicationBeans {
 			return false;
 		}
 	}
+
+	public Object getBean(Class<?> type){
+		return getBean(type,null);
+	}
 	
 	/**
 	 * 根据类型得到一个IOC组件
 	 * @param clzz
 	 * @return
 	 */
-	public Object getBean(Class<?> clzz) {
+	public Object getBean(Class<?> clzz,Class<?>locationClass ) {
 		List<Object> beans = getBeans(clzz);
 		if(beans.isEmpty()) {
 			throw new NotFindBeanException("在IOC容器中找不到类型为--"+clzz+"--的Bean...");
 		}
 		if(beans.size()==1) {
 			return beans.get(0);
+		}
+		if(!Assert.isNull(locationClass)&&
+				!Assert.isNull(ClassUtils.getGenericType(locationClass.getGenericSuperclass()))){
+			Class<?>[] genericTypes = ClassUtils.getGenericType(locationClass.getGenericSuperclass());
+			List<Object> filterBeans=new ArrayList<>();
+			for (Class<?> genericType : genericTypes) {
+				for (Object bean : beans) {
+					if(genericType.isAssignableFrom(bean.getClass())){
+						filterBeans.add(bean);
+					}
+				}
+			}
+			if(filterBeans.size()==1){
+				return filterBeans.get(0);
+			}
 		}
 		throw new NotFindBeanException("在IOC容器中类型为-"+clzz+"-的bean不是唯一的!  请使用@Value或者@Autowired的value属性指定bean的ID！");
 	}

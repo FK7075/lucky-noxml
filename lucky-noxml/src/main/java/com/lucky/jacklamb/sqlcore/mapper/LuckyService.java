@@ -20,7 +20,7 @@ public class LuckyService<M extends LuckyMapper<E>,E> {
     protected static final Logger log = LogManager.getLogger(LuckyService.class);
 
     @Autowired
-    private M luckyMapper;
+    protected M luckyMapper;
 
     public M getLuckyMapper() {
         return luckyMapper;

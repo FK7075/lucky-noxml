@@ -5,7 +5,7 @@
 
     <groupId>com.github.fk7075</groupId>
     <artifactId>lucky</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>Lucky</name>
     <description>Lucky是一个全场景轻量级的JavaEE框架</description>
     <url>https://gitee.com/Fk7075/lucky-noxml</url>

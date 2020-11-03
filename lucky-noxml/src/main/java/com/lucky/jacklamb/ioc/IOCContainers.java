@@ -267,12 +267,7 @@ public final class IOCContainers {
                 if("".equals(auval)) {
 					//类型扫描
 					try {
-						if(LuckyService.class.isAssignableFrom(componentClass)&&fieldClass== LuckyMapper.class){
-							Class<?> aClass = ClassUtils.getGenericType(getCurrClass(componentClass).getGenericSuperclass())[0];
-							FieldUtils.setValue(component,field,beans.getBean(aClass));
-						}else{
-							FieldUtils.setValue(component,field,beans.getBean(fieldClass));
-						}
+						FieldUtils.setValue(component,field,beans.getBean(fieldClass,getCurrClass(componentClass)));
 					}catch (NotFindBeanException e){
 						throw new AutoInjectionException(getCurrClass(componentClass),field,e);
 					}
@@ -297,7 +292,7 @@ public final class IOCContainers {
                 String[] val = value.value();
                 if(val.length==0) {//类型扫描
                 	try {
-						FieldUtils.setValue(component,field,beans.getBean(fieldClass));
+						FieldUtils.setValue(component,field,beans.getBean(fieldClass,getCurrClass(componentClass)));
 					}catch (NotFindBeanException e){
 						throw new AutoInjectionException(getCurrClass(componentClass),field,e);
 					}

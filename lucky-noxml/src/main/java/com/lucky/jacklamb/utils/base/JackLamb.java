@@ -75,7 +75,7 @@ public abstract class JackLamb {
         String java = ":: Java";
         String javaversioin = "           :: (v" + System.getProperty("java.version") + ")";
         String lucky = ":: Lucky";
-        String luckyversion = "           :: (v1.1.0.RELEASE)";
+        String luckyversion = "           :: (v1.1.1.RELEASE)";
         int maxLength = getMaxLength(os, java, lucky);
         String d = "";
         d += "\n\t\t" + getSameStr(os, maxLength) + osvsersion;
