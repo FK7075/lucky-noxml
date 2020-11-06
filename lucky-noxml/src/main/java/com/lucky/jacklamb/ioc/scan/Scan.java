@@ -11,6 +11,7 @@
  import com.lucky.jacklamb.httpclient.registry.RegistrationController;
  import com.lucky.jacklamb.httpclient.service.LuckyClientController;
  import com.lucky.jacklamb.ioc.AspectAOP;
+ import com.lucky.jacklamb.ioc.ComponentFilter;
  import com.lucky.jacklamb.ioc.config.AppConfig;
  import com.lucky.jacklamb.ioc.config.ApplicationConfig;
  import com.lucky.jacklamb.ioc.config.LuckyConfig;
@@ -39,7 +40,7 @@
  * @author fk-7075
  *
  */
-public abstract class Scan {
+public abstract class Scan implements ComponentFilter {
 
 	 private static final Logger log= LogManager.getLogger(Scan.class);
 //	 private static final InternalComponents internalComponents=InternalComponents.getInternalComponents();
@@ -188,6 +189,9 @@ public abstract class Scan {
 	  * @param fileClass
 	  */
 	public void load(Class<?> fileClass){
+		if(filter(fileClass)){
+			return;
+		}
 		if(fileClass.isAnnotationPresent(XStreamAllowType.class)){
 			deserializationXStream.add(fileClass);
 		}

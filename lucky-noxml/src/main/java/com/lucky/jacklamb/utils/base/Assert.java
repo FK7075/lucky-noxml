@@ -13,6 +13,10 @@ public abstract class Assert {
         return obj==null;
     }
 
+    public static boolean isNotNull(Object obj){
+        return !isNull(obj);
+    }
+
     public static boolean isEmpty(Collection<?> collection){
         return collection==null||collection.isEmpty();
     }

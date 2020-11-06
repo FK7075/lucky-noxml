@@ -28,15 +28,10 @@ import java.util.*;
 public class AspectAOP {
 
 	private static final Logger log= LogManager.getLogger(AspectAOP.class);
-
 	private static AspectAOP aspectAop;
-
 	private static Set<Class<?extends InjectionAopPoint>> injectionAopPointClass=new HashSet<>(10);
-
 	private static List<InjectionAopPoint> injectionAopPoints=new ArrayList<>(10);
-
 	private Map<String, PointRun> aspectMap;
-
 	private List<String> aspectIDS;
 
 	static {
