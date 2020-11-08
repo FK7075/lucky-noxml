@@ -30,6 +30,7 @@
  import javax.websocket.Endpoint;
  import javax.websocket.server.ServerApplicationConfig;
  import javax.websocket.server.ServerEndpoint;
+ import java.lang.annotation.Annotation;
  import java.lang.reflect.InvocationTargetException;
  import java.lang.reflect.Method;
  import java.util.*;
@@ -44,62 +45,62 @@ public abstract class Scan implements ComponentFilter {
 
 	 private static final Logger log= LogManager.getLogger(Scan.class);
 //	 private static final InternalComponents internalComponents=InternalComponents.getInternalComponents();
-
 	 protected LSON lson;
-	
 	/**
 	 * Map<iocCode,iocType>
 	 */
 	protected Map<String, List<Class<?>>> componentClassMap;
-	
 	/**
 	 * Controller组件
 	 */
 	protected List<Class<?>> controllerClass;
-	
 	/**
 	 * Service组件
 	 */
 	protected List<Class<?>> serviceClass;
-	
 	/**
 	 * Repository组件
 	 */
 	protected List<Class<?>> repositoryClass;
-	
 	/**
 	 * Component组件
 	 */
 	protected List<Class<?>> componentClass;
-	
 	/**
 	 * Aspect组件
 	 */
 	protected List<Class<?>> aspectClass;
-	
 	/**
 	 * WebSocket组件
 	 */
 	protected List<Class<?>> webSocketClass;
-
 	/** 配置类@Bean */
 	protected List<Class<?>> beanClass;
-	
 	/**
 	 * 配置类修改器
 	 */
 	protected ApplicationConfig appConfig;
-	
 	/**
 	 * 全局配置类
 	 */
 	private AppConfig configuration;
-
 	protected List<Class<?>> pojoClass;
-
 	protected List<Class<?>> deserializationXStream;
-	
 	protected boolean isFirst=true;
+	private static final Class<? extends Annotation>[] COMPONENT_ANNS=
+			 new Class[]{
+					 Component.class,ControllerExceptionHandler.class,LuckyServlet.class,
+					 LuckyFilter.class,LuckyListener.class,Conversion.class,QuartzJobs.class
+			 };
+	private static final Class<? extends Annotation>[] CONTROLLER_ANNS=
+			 new Class[]{
+					 Controller.class,CallController.class,LuckyClient.class
+			 };
+
+	private static final Class<? extends Annotation>[] REPOSITORY_ANNS=
+			 new Class[]{
+					 Repository.class,Mapper.class
+			 };
 	
 	public Scan() {
 		lson=new LSON();
@@ -127,7 +128,6 @@ public abstract class Scan implements ComponentFilter {
 			controllerClass.add(LuckyClientController.class);
 		}
 		if(configuration.getScanConfig().getScanMode()==com.lucky.jacklamb.enums.Scan.AUTO_SCAN) {
-			log.info("LUCKY-SCAN-MODE        => AUTO_SCAN");
 			autoScan();
 		}else {
 			suffixScan();
@@ -152,15 +152,15 @@ public abstract class Scan implements ComponentFilter {
 	 */
 	public void  suffixScan() {
 		ScanConfig scanConfig = configuration.getScanConfig();
-		log.info("LUCKY-SCAN-MODE =>   SUFFIX_SCAN");
-		log.info("CONTROLLER-PACK-SUFFIX : "+scanConfig.getControllerPackSuffix());
-		log.info("SERVICE-PACK-SUFFIX    : "+scanConfig.getServicePackSuffix());
-		log.info("REPOSITORY-PACK-SUFFIX : "+scanConfig.getRepositoryPackSuffix());
-		log.info("COMPONENT-PACK-SUFFIX  : "+scanConfig.getComponentPackSuffix());
-		log.info("ASPECT-PACK-SUFFIX     : "+scanConfig.getAspectPackSuffix());
-		log.info("WEBSOCKET-PACK-SUFFIX  : "+scanConfig.getWebSocketPackSuffix());
-		log.info("POJO-PACK-SUFFIX       : "+scanConfig.getPojoPackSuffix());
-		log.info("BEANS-PACK-SUFFIX      : "+scanConfig.getPojoPackSuffix());
+//		log.info("LUCKY-SCAN-MODE =>   SUFFIX_SCAN");
+//		log.info("CONTROLLER-PACK-SUFFIX : "+scanConfig.getControllerPackSuffix());
+//		log.info("SERVICE-PACK-SUFFIX    : "+scanConfig.getServicePackSuffix());
+//		log.info("REPOSITORY-PACK-SUFFIX : "+scanConfig.getRepositoryPackSuffix());
+//		log.info("COMPONENT-PACK-SUFFIX  : "+scanConfig.getComponentPackSuffix());
+//		log.info("ASPECT-PACK-SUFFIX     : "+scanConfig.getAspectPackSuffix());
+//		log.info("WEBSOCKET-PACK-SUFFIX  : "+scanConfig.getWebSocketPackSuffix());
+//		log.info("POJO-PACK-SUFFIX       : "+scanConfig.getPojoPackSuffix());
+//		log.info("BEANS-PACK-SUFFIX      : "+scanConfig.getPojoPackSuffix());
 		controllerClass=loadComponent(scanConfig.getControllerPackSuffix());
 		serviceClass=loadComponent(scanConfig.getServicePackSuffix());
 		repositoryClass=loadComponent(scanConfig.getRepositoryPackSuffix());
@@ -184,6 +184,7 @@ public abstract class Scan implements ComponentFilter {
 	 */
 	public abstract void findAppConfig();
 
+
 	 /**
 	  * 解析分类Class文件
 	  * @param fileClass
@@ -192,22 +193,16 @@ public abstract class Scan implements ComponentFilter {
 		if(filter(fileClass)){
 			return;
 		}
-		if(fileClass.isAnnotationPresent(XStreamAllowType.class)){
+		if(AnnotationUtils.isExist(fileClass,XStreamAllowType.class)){
 			deserializationXStream.add(fileClass);
 		}
-		if(fileClass.isAnnotationPresent(Controller.class)||fileClass.isAnnotationPresent(CallController.class)||fileClass.isAnnotationPresent(LuckyClient.class)) {
+		if(AnnotationUtils.isExistOrByArray(fileClass,CONTROLLER_ANNS)) {
 			controllerClass.add(fileClass);
 		} else if(fileClass.isAnnotationPresent(Service.class)) {
 			serviceClass.add(fileClass);
-		} else if(fileClass.isAnnotationPresent(Repository.class)||fileClass.isAnnotationPresent(Mapper.class)) {
+		} else if(AnnotationUtils.isExistOrByArray(fileClass,REPOSITORY_ANNS)) {
 			repositoryClass.add(fileClass);
-		} else if(fileClass.isAnnotationPresent(Component.class)
-				||fileClass.isAnnotationPresent(ControllerExceptionHandler.class)
-				||fileClass.isAnnotationPresent(LuckyServlet.class)
-				||fileClass.isAnnotationPresent(LuckyFilter.class)
-				||fileClass.isAnnotationPresent(LuckyListener.class)
-				|| fileClass.isAnnotationPresent(Conversion.class)
-				|| fileClass.isAnnotationPresent(QuartzJobs.class)) {
+		} else if(AnnotationUtils.isExistOrByArray(fileClass,COMPONENT_ANNS)) {
 			componentClass.add(fileClass);
 		} else if(fileClass.isAnnotationPresent(Table.class)) {
 			pojoClass.add(fileClass);
@@ -247,16 +242,16 @@ public abstract class Scan implements ComponentFilter {
 					method.setAccessible(true);
 					if (LuckyConfig.class.isAssignableFrom(returnType)) {
 						config = method.invoke(cfgObj);
-						info = new StringBuilder();
-						info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
-						log.info(info.toString());
+//						info = new StringBuilder();
+//						info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
+//						log.info(info.toString());
 					} else if(InjectionAopPoint.class.isAssignableFrom(returnType)){
 						InjectionAopPoint iap =(InjectionAopPoint) method.invoke(cfgObj);
 						boolean b = AspectAOP.addIAPoint(iap);
-						if(b){
-							log.info("@Bean$IAOP \"[ id=" + getBeanName(componentClass,method) + " priority="+iap.getPriority() +" class=" + returnType
-									+ "]\"");
-						}
+//						if(b){
+//							log.info("@Bean$IAOP \"[ id=" + getBeanName(componentClass,method) + " priority="+iap.getPriority() +" class=" + returnType
+//									+ "]\"");
+//						}
 					}else if (iocCode == IocCode.CONTROLLER) {
 						config = method.invoke(cfgObj);
 						if (returnType == Class.class) {

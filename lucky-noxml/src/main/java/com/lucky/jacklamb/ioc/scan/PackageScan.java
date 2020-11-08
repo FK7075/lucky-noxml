@@ -1,15 +1,13 @@
 package com.lucky.jacklamb.ioc.scan;
 
-import com.lucky.jacklamb.annotation.ioc.*;
+import com.lucky.jacklamb.annotation.ioc.Configuration;
 import com.lucky.jacklamb.ioc.config.ApplicationConfig;
-import com.lucky.jacklamb.rest.LSON;
 import com.lucky.jacklamb.sqlcore.mapper.xml.MapperXMLParsing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,8 +34,6 @@ public class PackageScan extends Scan {
 	public PackageScan() throws URISyntaxException {
 		super();
 		projectPath=PackageScan.class.getClassLoader().getResource("").toURI().getPath();
-		log.info("Project Start Path "+System.getProperty("user.dir"));
-		log.info("Class File Root Directory "+projectPath);
 		if(projectPath.endsWith("/classes/")) {
 			projectPath=projectPath.substring(0,projectPath.length()-8);
 		}else if(projectPath.endsWith("/test-classes/")) {

@@ -1,5 +1,6 @@
 package com.lucky.jacklamb.utils.base;
 
+import com.lucky.jacklamb.enums.Logo;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ScanConfig;
 import com.lucky.jacklamb.servlet.core.Model;
@@ -77,17 +78,22 @@ public abstract class JackLamb {
         String java = ":: Java";
         String javaversioin = "           :: (v" + System.getProperty("java.version") + ")";
         String lucky = ":: Lucky";
-        String luckyversion = "           :: (v1.1.1.RELEASE)";
+        String luckyversion = "           :: ("+Version.version()+")";
         int maxLength = getMaxLength(os, java, lucky);
         String d = "";
-        d += "\n\t\t" + getSameStr(os, maxLength) + osvsersion;
-        d += "\n\t\t" + getSameStr(java, maxLength) + javaversioin;
-        d += "\n\t\t" + getSameStr(lucky, maxLength) + luckyversion + "\n\n";
+        d += "\n    " + getSameStr(os, maxLength) + osvsersion;
+        d += "\n    " + getSameStr(java, maxLength) + javaversioin;
+        d += "\n    " + getSameStr(lucky, maxLength) + luckyversion + "\n";
         return d;
     }
 
     public static void welcome(Model model) throws IOException {
         FileUtils.preview(model,Resources.getInputStream(StaticFile.LUCKY),"LUCKY.html");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Logo.LUCKY.getLogo());
+        System.out.println(versionInfo());
     }
 
 }

@@ -1,22 +1,16 @@
 package com.lucky.jacklamb.start;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.EventListener;
-import java.util.Set;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.ServerConfig;
 import com.lucky.jacklamb.utils.base.Assert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.servlet.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.EventListener;
+import java.util.Set;
 
 public class LuckyServletContainerInitializer implements ServletContainerInitializer {
 	
@@ -40,7 +34,7 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			mapping=new String[sm.getRequestMapping().size()];
 			mapping=sm.getRequestMapping().toArray(mapping);
 			servlet.addMapping(mapping);
-			log.info("@Servlet \"[name="+sm.getServletName()+" mapping="+Arrays.toString(mapping)+" class="+sm.getServlet()+"]\"");
+			log.info("@Servlet \"[name="+sm.getServletName()+" mapping="+Arrays.toString(mapping)+" class="+sm.getServlet().getClass().getName()+"]\"");
 		}
 		
 		for(FilterMapping fm:serverCfg.getFilterList()) {
@@ -48,12 +42,12 @@ public class LuckyServletContainerInitializer implements ServletContainerInitial
 			mapping=new String[fm.getRequestMapping().size()];
 			mapping=fm.getRequestMapping().toArray(mapping);
 			filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true,mapping);
-			log.info("@Filter \"[name="+fm.getFilterName()+" mapping="+Arrays.toString(mapping)+" class="+ fm.getFilter()+"]\"");
+			log.info("@Filter \"[name="+fm.getFilterName()+" mapping="+Arrays.toString(mapping)+" class="+ fm.getFilter().getClass().getName()+"]\"");
 		}
 		
 		for(EventListener l:serverCfg.getListeners()) {
 			ctx.addListener(l);
-			log.info("@Listener \"[class="+l+"]\"");
+			log.info("@Listener \"[class="+l.getClass().getName()+"]\"");
 		}
 		log.info("Tomcat SessionTimeOut \"" +serverCfg.getSessionTimeout()+"min\"");
 		if(!Assert.isNull(serverCfg.getClosePort())){

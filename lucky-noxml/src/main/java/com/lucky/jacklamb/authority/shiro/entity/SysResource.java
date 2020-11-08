@@ -11,7 +11,7 @@ import com.lucky.jacklamb.enums.PrimaryType;
  * @date 2020/10/22 16:41
  */
 @Table("sys_resource")
-public class SysResource extends SysBase {
+public class SysResource extends SysBase implements NodeModel<Integer>{
 
     /** 资源ID*/
     @Id(value = "resource_id",type = PrimaryType.AUTO_INT,length = 11)
@@ -23,6 +23,10 @@ public class SysResource extends SysBase {
     /** 资源的父级资源ID*/
     @Column(value = "parent_id",length = 11)
     private Integer parentId=-1;
+
+    /** 资源路径*/
+    @Column(value = "path",length = 10)
+    private String path;
 
     /** 资源类型*/
     private String type;
@@ -57,6 +61,12 @@ public class SysResource extends SysBase {
         this.name = name;
     }
 
+    @Override
+    public Integer getId() {
+        return getResourceId();
+    }
+
+    @Override
     public Integer getParentId() {
         return parentId;
     }

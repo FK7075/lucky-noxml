@@ -18,9 +18,7 @@ import java.util.jar.JarFile;
 public class JarScan extends Scan {
 	
 	protected String jarpath;
-
 	private static final Logger log= LogManager.getLogger(JarScan.class);
-	
 	protected String prefix;
 
 
@@ -30,7 +28,6 @@ public class JarScan extends Scan {
 		String simpleName=clzz.getSimpleName();
 		prefix=allname.substring(0, allname.length()-simpleName.length()).replaceAll("\\.", "/");
 		jarpath=clzz.getResource("").getPath();
-		System.out.println(jarpath);
 		jarpath=jarpath.substring(5);
 		if(jarpath.contains(".jar!")){
 			if(jarpath.contains(":")){

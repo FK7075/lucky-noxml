@@ -7,14 +7,19 @@ import com.lucky.jacklamb.servlet.ServerStartRun;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
 import com.lucky.jacklamb.thymeleaf.utils.ThymeleafConfig;
 import com.lucky.jacklamb.thymeleaf.utils.ThymeleafListener;
+import com.lucky.jacklamb.utils.base.Assert;
+import com.lucky.jacklamb.utils.base.JackLamb;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.apache.tomcat.websocket.server.WsSci;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.util.Comparator;
 
 import static com.lucky.jacklamb.start.RunParam.SERVER_PORT;
@@ -23,11 +28,11 @@ import static com.lucky.jacklamb.start.RunParam.isRunParam;
 public class LuckyApplication {
 
     private static Logger log;
+    private static final RuntimeMXBean mxb = ManagementFactory.getRuntimeMXBean();
     private static final boolean isEnabled= ThymeleafConfig.getConf().isEnabled();
 
     static {
         System.setProperty("log4j.skipJansi","false");
-        log= LogManager.getLogger(LuckyApplication.class);
     }
 
 
@@ -38,6 +43,20 @@ public class LuckyApplication {
      * @param applicationClass
      */
     public static void run(Class<?> applicationClass,String[] args) {
+        long start = System.currentTimeMillis();
+        AppConfig.applicationClass = applicationClass;
+        log= LogManager.getLogger(applicationClass);
+        JackLamb.welcome();
+        String pid = mxb.getName().split("@")[0];
+        ThreadContext.put("pid", pid);
+        String classpath= Assert.isNotNull(applicationClass.getClassLoader().getResource(""))
+                ?applicationClass.getClassLoader().getResource("").getPath():applicationClass.getResource("").getPath();
+        log.info("Starting {} on localhost with PID {} ( {} started by {} in {} )"
+                ,applicationClass.getSimpleName()
+                ,pid
+                ,classpath
+                ,System.getProperty("user.name")
+                ,System.getProperty("user.dir"));
         for (String arg : args) {
             String[] mainKV = arg.split("=");
             if(isRunParam(mainKV[0].trim())){
@@ -45,12 +64,11 @@ public class LuckyApplication {
             }
         }
         doShutDownWork();
-        AppConfig.applicationClass = applicationClass;
-        run();
-//        new Thread(()->run(),"lucky").start();
+        run(applicationClass,start);
     }
 
-    private static void run() {
+    private static void run(Class<?> applicationClass, long start) {
+
         ServerConfig serverCfg = AppConfig.getAppConfig().getServerConfig();
         if(isEnabled){
             serverCfg.addListener(new ThymeleafListener());
@@ -90,10 +108,16 @@ public class LuckyApplication {
             System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", serverCfg.getRequestTargetAllow());
         }
         tomcat.getHost().addChild(context);
+
         try {
             tomcat.getConnector();
             tomcat.init();
             tomcat.start();
+            long end = System.currentTimeMillis();
+            log.info("Started {} in {} seconds (JVM running for {})"
+                    ,applicationClass.getSimpleName()
+                    ,(end-start)/1000.0
+                    ,mxb.getUptime()/1000.0);
             tomcat.getServer().await();
         } catch (LifecycleException e) {
             e.printStackTrace();
@@ -110,7 +134,6 @@ public class LuckyApplication {
             });
             LuckyDataSource.close();
         }));
-
     }
 
 }

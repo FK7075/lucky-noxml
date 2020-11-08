@@ -18,6 +18,7 @@ public class StaticFile {
     public final static String LOGO_FOLDER="/lucky-config/logo/";
     public final static String ICO_FILE="/lucky-config/static/favicon.ico";
     public final static String USER_ICO_FILE="/conf/favicon.ico";
+    public final static String LUCKY_VERSION="/lucky-config/config/version.txt";
 
 
 }

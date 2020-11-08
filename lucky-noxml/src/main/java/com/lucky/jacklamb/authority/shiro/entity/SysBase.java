@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @date 2020/10/28 10:07
  */
-public class SysBase {
+public abstract class SysBase {
 
     /** 创建时间*/
     @Column("create_time")
