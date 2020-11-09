@@ -38,7 +38,7 @@ public class QFilter {
 		Field[] fields= ClassUtils.getAllFields(pojoClass);
 		for(Field field:fields) {
 			if(!PojoManage.isNoColumn(field,dbname)) {
-				this.allFields.add(PojoManage.getTableField(dbname,field));
+				this.allFields.add("`"+PojoManage.getTableField(dbname,field)+"`");
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class QFilter {
 			Field[] pojoFields=ClassUtils.getAllFields(pojoClass);
 			for(Field field:pojoFields){
 				if(!PojoManage.isNoColumn(field,dbname)) {
-					allFields.add(PojoManage.tableAlias(pojoClass,dbname)+"."+PojoManage.getTableField(dbname,field));
+					allFields.add("`"+PojoManage.tableAlias(pojoClass,dbname)+"`.`"+PojoManage.getTableField(dbname,field)+"`");
 				}
 			}
 		}

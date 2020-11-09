@@ -1,6 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
 import com.lucky.jacklamb.enums.PrimaryType;
+import com.lucky.jacklamb.query.QFilter;
 import com.lucky.jacklamb.query.QueryBuilder;
 import com.lucky.jacklamb.query.translator.Page;
 import com.lucky.jacklamb.query.translator.Translator;
@@ -96,11 +97,13 @@ public abstract class SqlCore extends GeneralObjectCoreBase {
 	
 	/**
 	 * 查询class对应表中得所有数据
-	 * @param clzz
+	 * @param aClass
 	 * @return
 	 */
-	public <T> List<T> getList(Class<T> clzz){
-		return super.getList(clzz);
+	public <T> List<T> getList(Class<T> aClass){
+		StringBuilder sql=new StringBuilder("SELECT ");
+		sql.append(new QFilter(aClass,dbname).lines()).append(" FROM ").append("`").append(PojoManage.getTable(aClass,dbname)).append("`");
+		return getList(aClass,sql.toString());
 	}
 	
 	/**

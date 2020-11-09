@@ -1,5 +1,7 @@
 package com.lucky.jacklamb.sqlcore.jdbc.core.abstcore;
 
+import com.lucky.jacklamb.query.QFilter;
+import com.lucky.jacklamb.sqlcore.util.PojoManage;
 import com.lucky.jacklamb.utils.reflect.ClassUtils;
 import com.lucky.jacklamb.utils.reflect.FieldUtils;
 
@@ -73,13 +75,7 @@ public interface GeneralObjectCore {
      * @param t
      * @return
      */
-    default <T> List<T> getList(Class<T> t) {
-        try {
-            return getList(t.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("创建对象错误！Class:" + t);
-        }
-    }
+    <T> List<T> getList(Class<T> t);
 
 
     /**
