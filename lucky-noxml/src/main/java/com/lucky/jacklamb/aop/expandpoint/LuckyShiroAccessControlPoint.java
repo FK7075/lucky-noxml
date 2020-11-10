@@ -20,7 +20,7 @@ import java.util.List;
  * @author DELL
  *
  */
-public class ShiroAccessControlPoint extends InjectionAopPoint {
+public class LuckyShiroAccessControlPoint extends InjectionAopPoint {
 
     public static final Class<? extends Annotation>[] AUTHZ_ANNOTATION_CLASSES =
             new Class[] {
@@ -28,7 +28,7 @@ public class ShiroAccessControlPoint extends InjectionAopPoint {
                     RequiresUser.class, RequiresGuest.class, RequiresAuthentication.class
             };
 
-    public ShiroAccessControlPoint(){
+    public LuckyShiroAccessControlPoint(){
         setPriority(-1);
     }
 
@@ -141,8 +141,8 @@ public class ShiroAccessControlPoint extends InjectionAopPoint {
 
     @Override
     public boolean pointCutMethod(Class<?> currClass, Method currMethod) {
-        return AnnotationUtils.isExistOrByArray(currClass, ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)||
-				AnnotationUtils.isExistOrByArray(currMethod,ShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES);
+        return AnnotationUtils.isExistOrByArray(currClass, LuckyShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES)||
+				AnnotationUtils.isExistOrByArray(currMethod, LuckyShiroAccessControlPoint.AUTHZ_ANNOTATION_CLASSES);
     }
 
     @Override

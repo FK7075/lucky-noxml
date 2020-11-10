@@ -20,7 +20,7 @@ public class ThymeleafConfig {
     private String prefix="classpath:/templates/";
     private String suffix=".html";
     private boolean cache=false;
-    private TemplateMode model=TemplateMode.HTML;
+    private String model="HTML";
 
     private ThymeleafConfig(){
         init();
@@ -44,17 +44,7 @@ public class ThymeleafConfig {
                 cache=Boolean.parseBoolean(sectionMap.get("cache").trim());
             }
             if(sectionMap.containsKey("model")){
-                String[] models=sectionMap.get("model").trim().split(",");
-                for (String mod : models) {
-                    switch (mod.toUpperCase()){
-                        case "HTML"       : {model=TemplateMode.HTML;break;}
-                        case "XML"        : {model=TemplateMode.XML;break;}
-                        case "TEXT"       : {model=TemplateMode.TEXT;break; }
-                        case "JAVASCRIPT" : {model=TemplateMode.JAVASCRIPT;break;}
-                        case "CSS"        : {model=TemplateMode.CSS;break; }
-                        case "RAW"        : {model=TemplateMode.RAW;break;}
-                    }
-                }
+                model=sectionMap.get("model");
             }
         }
     }
@@ -89,7 +79,7 @@ public class ThymeleafConfig {
         return cache;
     }
 
-    public TemplateMode getModel() {
+    public String getModel() {
         return model;
     }
 }

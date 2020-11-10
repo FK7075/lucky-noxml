@@ -1,13 +1,17 @@
 package com.lucky.jacklamb.thymeleaf.utils;
 
 import com.lucky.jacklamb.annotation.mvc.LuckyListener;
+import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.thymeleaf.template.ClasspathTemplateResolver;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author fk7075
@@ -18,9 +22,13 @@ import javax.servlet.ServletContextListener;
 public class ThymeleafListener implements ServletContextListener {
 
    public final static ThymeleafConfig conf=ThymeleafConfig.getConf();
+   public final static List<Object> dialects= ApplicationBeans.createApplicationBeans().getBeans(IDialect.class);
 
     public void contextInitialized(ServletContextEvent sce) {
         TemplateEngine engine = templateEngine(sce.getServletContext());
+        for (Object obj : dialects) {
+            engine.addDialect((IDialect)obj);
+        }
         TemplateEngineUtil.storeTemplateEngine(sce.getServletContext(), engine);
     }
 

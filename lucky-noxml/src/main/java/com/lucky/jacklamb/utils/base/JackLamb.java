@@ -29,8 +29,8 @@ public abstract class JackLamb {
         if (logoStream != null) {
             first = false;
             try {
-                System.out.println(IOUtils.toString(logoStream));
-                System.out.println(versionInfo());
+                Console.white(IOUtils.toString(logoStream));
+                versionInfo();
                 return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -40,13 +40,13 @@ public abstract class JackLamb {
         sc = AppConfig.getAppConfig().getScanConfig();
         if (sc.getCustomLogo() != null) {
             first = false;
-            System.out.println(sc.getCustomLogo());
-            System.out.println(versionInfo());
+            Console.white(sc.getCustomLogo());
+            versionInfo();
             return;
         }
         first = false;
-        System.out.println(sc.getLogo().getLogo());
-        System.out.println(versionInfo());
+        Console.white(sc.getLogo().getLogo());
+        versionInfo();
     }
 
 
@@ -72,7 +72,7 @@ public abstract class JackLamb {
      * 获取版本信息(OS,Java,Lucky)
      * @return
      */
-    public static String versionInfo() {
+    public static void versionInfo() {
         String os = ":: " + System.getProperty("os.name");
         String osvsersion = "           :: (v" + System.getProperty("os.version") + ")";
         String java = ":: Java";
@@ -81,10 +81,9 @@ public abstract class JackLamb {
         String luckyversion = "           :: ("+Version.version()+")";
         int maxLength = getMaxLength(os, java, lucky);
         String d = "";
-        d += "\n    " + getSameStr(os, maxLength) + osvsersion;
-        d += "\n    " + getSameStr(java, maxLength) + javaversioin;
-        d += "\n    " + getSameStr(lucky, maxLength) + luckyversion + "\n";
-        return d;
+        Console.print("\n\n    ");Console.white( getSameStr(java, maxLength));Console.white(javaversioin);
+        Console.print("\n    ");Console.white( getSameStr(lucky, maxLength));Console.white(luckyversion);
+        Console.green("\n    ");Console.white( getSameStr(os, maxLength));Console.white(osvsersion+"\n\n");
     }
 
     public static void welcome(Model model) throws IOException {
@@ -93,7 +92,7 @@ public abstract class JackLamb {
 
     public static void main(String[] args) {
         System.out.println(Logo.LUCKY.getLogo());
-        System.out.println(versionInfo());
+        versionInfo();
     }
 
 }

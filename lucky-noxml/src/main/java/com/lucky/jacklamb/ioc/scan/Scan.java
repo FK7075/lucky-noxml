@@ -24,6 +24,7 @@
  import com.lucky.jacklamb.utils.base.Assert;
  import com.lucky.jacklamb.utils.base.LuckyUtils;
  import com.lucky.jacklamb.utils.reflect.AnnotationUtils;
+ import com.lucky.jacklamb.utils.reflect.ClassUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
 
@@ -152,15 +153,6 @@ public abstract class Scan implements ComponentFilter {
 	 */
 	public void  suffixScan() {
 		ScanConfig scanConfig = configuration.getScanConfig();
-//		log.info("LUCKY-SCAN-MODE =>   SUFFIX_SCAN");
-//		log.info("CONTROLLER-PACK-SUFFIX : "+scanConfig.getControllerPackSuffix());
-//		log.info("SERVICE-PACK-SUFFIX    : "+scanConfig.getServicePackSuffix());
-//		log.info("REPOSITORY-PACK-SUFFIX : "+scanConfig.getRepositoryPackSuffix());
-//		log.info("COMPONENT-PACK-SUFFIX  : "+scanConfig.getComponentPackSuffix());
-//		log.info("ASPECT-PACK-SUFFIX     : "+scanConfig.getAspectPackSuffix());
-//		log.info("WEBSOCKET-PACK-SUFFIX  : "+scanConfig.getWebSocketPackSuffix());
-//		log.info("POJO-PACK-SUFFIX       : "+scanConfig.getPojoPackSuffix());
-//		log.info("BEANS-PACK-SUFFIX      : "+scanConfig.getPojoPackSuffix());
 		controllerClass=loadComponent(scanConfig.getControllerPackSuffix());
 		serviceClass=loadComponent(scanConfig.getServicePackSuffix());
 		repositoryClass=loadComponent(scanConfig.getRepositoryPackSuffix());
@@ -230,116 +222,107 @@ public abstract class Scan implements ComponentFilter {
 	  */
 	public void registered(Class<?> componentClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
 		if(componentClass.isAnnotationPresent(Configuration.class)) {
-			Method[] beanMethods = componentClass.getDeclaredMethods();
+			List<Method> beanMethods = ClassUtils.getMethodByAnnotation(componentClass,Bean.class);
 			Object cfgObj = componentClass.newInstance();
 			Class<?> returnType;
 			Object config;
 			StringBuilder info;
 			for (Method method : beanMethods) {
 				returnType = method.getReturnType();
-				if (method.isAnnotationPresent(Bean.class)) {
-					IocCode iocCode = method.getAnnotation(Bean.class).iocCode();
-					method.setAccessible(true);
-					if (LuckyConfig.class.isAssignableFrom(returnType)) {
-						config = method.invoke(cfgObj);
-//						info = new StringBuilder();
-//						info.append("@").append(config.getClass().getSimpleName()).append(" \"").append(lson.toJson1(config)).append("\"");
-//						log.info(info.toString());
-					} else if(InjectionAopPoint.class.isAssignableFrom(returnType)){
-						InjectionAopPoint iap =(InjectionAopPoint) method.invoke(cfgObj);
-						boolean b = AspectAOP.addIAPoint(iap);
-//						if(b){
-//							log.info("@Bean$IAOP \"[ id=" + getBeanName(componentClass,method) + " priority="+iap.getPriority() +" class=" + returnType
-//									+ "]\"");
-//						}
-					}else if (iocCode == IocCode.CONTROLLER) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							controllerClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(controllerClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Controller组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.SERVICE) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							serviceClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(serviceClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Service组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.REPOSITORY) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							repositoryClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(repositoryClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Repository组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.JOB) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							this.componentClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(this.componentClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Job组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.TABLE) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							pojoClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(pojoClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Table组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.ASPECT) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							aspectClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(aspectClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					}else if(iocCode == IocCode.X_STREAM){
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							deserializationXStream.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(deserializationXStream::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@XStreamAllowType组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
-					} else if (iocCode == IocCode.WEBSOCKET) {
-						config = method.invoke(cfgObj);
-						if (returnType == Class.class) {
-							Class ctrlClass = (Class) config;
-							webSocketClass.add(ctrlClass);
-						} else if (returnType == Class[].class) {
-							Class[] ctrlClasses = (Class[]) config;
-							Stream.of(ctrlClasses).forEach(webSocketClass::add);
-						} else {
-							throw new RuntimeException("尝试创建一个@ServerEndpoint组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
-						}
+				IocCode iocCode = method.getAnnotation(Bean.class).iocCode();
+				method.setAccessible(true);
+				if (LuckyConfig.class.isAssignableFrom(returnType)) {
+					config = method.invoke(cfgObj);
+				} else if(InjectionAopPoint.class.isAssignableFrom(returnType)){
+					InjectionAopPoint iap =(InjectionAopPoint) method.invoke(cfgObj);
+					boolean b = AspectAOP.addIAPoint(iap);
+				}else if (iocCode == IocCode.CONTROLLER) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						controllerClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(controllerClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Controller组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.SERVICE) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						serviceClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(serviceClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Service组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.REPOSITORY) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						repositoryClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(repositoryClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Repository组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.JOB) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						this.componentClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(this.componentClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Job组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.TABLE) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						pojoClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(pojoClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Table组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.ASPECT) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						aspectClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(aspectClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Aspect组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				}else if(iocCode == IocCode.X_STREAM){
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						deserializationXStream.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(deserializationXStream::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@XStreamAllowType组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
+				} else if (iocCode == IocCode.WEBSOCKET) {
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						webSocketClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(webSocketClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@ServerEndpoint组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
 					}
 				}
 			}

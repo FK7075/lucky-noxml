@@ -5,7 +5,7 @@ import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
-import com.lucky.jacklamb.aop.expandpoint.ShiroAccessControlPoint;
+import com.lucky.jacklamb.aop.expandpoint.LuckyShiroAccessControlPoint;
 import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
@@ -37,7 +37,6 @@ public class AspectAOP {
 	static {
 		addIAPoint(new TransactionPoint());
 		addIAPoint(new CacheExpandPoint());
-		addIAPoint(new ShiroAccessControlPoint());
 	}
 
 
