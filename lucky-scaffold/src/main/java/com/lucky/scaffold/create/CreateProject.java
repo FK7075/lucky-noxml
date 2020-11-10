@@ -3,9 +3,13 @@ package com.lucky.scaffold.create;
 import com.lucky.scaffold.file.FileCopy;
 import com.lucky.scaffold.project.ProjectInFo;
 import org.apache.commons.io.IOUtils;
-import static com.lucky.scaffold.project.Constant.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static com.lucky.scaffold.project.Constant.*;
 
 /**
  * @author fk7075
@@ -62,7 +66,7 @@ public class CreateProject {
                     "        <dependency>\n" +
                     "            <groupId>com.github.fk7075</groupId>\n" +
                     "            <artifactId>lucky</artifactId>\n" +
-                    "            <version>1.0.0</version>\n" +
+                    "            <version>1.1.1</version>\n" +
                     "        </dependency>\n");
             System.out.println("----------------------------------------------------------------------------------------------------");
         }

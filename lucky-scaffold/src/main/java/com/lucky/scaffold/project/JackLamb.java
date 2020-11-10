@@ -1,10 +1,5 @@
 package com.lucky.scaffold.project;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * @author fk7075
  * @version 1.0
@@ -37,8 +32,8 @@ public abstract class JackLamb {
         String osvsersion = "           :: (v" + System.getProperty("os.version") + ")";
         String java = ":: Java";
         String javaversioin = "           :: (v" + System.getProperty("java.version") + ")";
-        String lucky = ":: Lucky";
-        String luckyversion = "           :: (v1.0.0.RELEASE)";
+        String lucky = ":: Lucky Scaffold";
+        String luckyversion = "           :: (v1.1.1)";
         int maxLength = getMaxLength(os, java, lucky);
         String d="";
         d += "\n\t\t" + getSameStr(os, maxLength) + osvsersion;

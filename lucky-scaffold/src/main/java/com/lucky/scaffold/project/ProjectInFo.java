@@ -1,13 +1,10 @@
 package com.lucky.scaffold.project;
 
-import com.lucky.scaffold.file.FileCopy;
 import lombok.Data;
 
-import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -25,6 +22,8 @@ public class ProjectInFo {
     private static Map<String,String> prompt;
 
     private static Map<String,String> localMavenMavenDependency;
+
+    private static Map<String,String> localMavenMavenDependencyAlias;
 
     private static Set<String> addMavenDependencyName=new HashSet<>();
 
@@ -52,6 +51,7 @@ public class ProjectInFo {
     static {
         try {
             localMavenMavenDependency=Constant.getMavenDependency();
+            localMavenMavenDependencyAlias=Constant.getMavenDependencyAlias();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,7 @@ public class ProjectInFo {
         prompt.put("v","请输入 version                  _> : ");
         prompt.put("m","请输入 MavenRepository          _> : ");
         prompt.put("p","请输入生成项目的父级目录           _> : ");
-        prompt.put("d",localMavenMavenDependency.keySet()+"\n在上表中选择您需要的Maven依赖      _> : ");
+        prompt.put("d",Constant.getMavenDependencyTables()+"\n在上表中选择您需要的Maven依赖      _> : ");
         prompt.put("o","所有必要配置已配置完成，请输入任意非命令字符结束输入 _>:");
     }
 
@@ -193,19 +193,28 @@ public class ProjectInFo {
                         String[] dArray=in.split(",");
                         List<String> errD=new ArrayList<>();
                         for (String d : dArray) {
-                            if(!localMavenMavenDependency.containsKey(d)){
-                                errD.add(d);
+                            if(d.startsWith("-")){
+                                if(!localMavenMavenDependencyAlias.containsKey(d)){
+                                    errD.add(d);
+                                }
+                            }else{
+                                if(!localMavenMavenDependency.containsKey(d)){
+                                    errD.add(d);
+                                }
                             }
                         }
                         if(errD.isEmpty()){
                             for (String d : dArray) {
+                                if(d.startsWith("-")){
+                                    d=localMavenMavenDependencyAlias.get(d);
+                                }
                                 if(!addMavenDependencyName.contains(d)){
                                     addMavenDependencyString.append(localMavenMavenDependency.get(d));
                                     addMavenDependencyName.add(d);
                                 }
                             }
                         }else{
-                            System.out.println("[error] -- 未收录的Maven依赖："+errD);
+                            System.out.println("[error] -- 本次录入失败，发现未收录的Maven依赖："+errD);
                             operating.push("d");
                         }
                     }
