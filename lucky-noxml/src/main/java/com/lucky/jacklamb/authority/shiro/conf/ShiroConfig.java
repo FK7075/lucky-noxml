@@ -6,7 +6,6 @@ import com.lucky.jacklamb.authority.shiro.entity.SysUser;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 
-import java.util.List;
 
 /**
  * @author fk7075

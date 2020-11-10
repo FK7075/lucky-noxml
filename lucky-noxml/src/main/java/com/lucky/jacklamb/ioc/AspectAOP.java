@@ -5,7 +5,6 @@ import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
 import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
-import com.lucky.jacklamb.aop.expandpoint.LuckyShiroAccessControlPoint;
 import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
