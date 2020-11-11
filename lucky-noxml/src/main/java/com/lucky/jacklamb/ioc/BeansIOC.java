@@ -76,10 +76,18 @@ public class BeansIOC implements IOC {
     public void registered(List<Class<?>> beanClass) {
         String beanID;
 
+        List<Object> beanList=new ArrayList<>(beanClass.size());
+        beanClass.forEach((aClass)->{
+            Object obj = ClassUtils.newObject(aClass);
+            //属性注入
+            IOCContainers.injection(obj);
+            beanList.add(obj);
+        });
+
         //第一次循环，注册所有无参的Bean方法返回的实例
-        for (Class<?> bean : beanClass) {
+        for (Object obj : beanList) {
+            Class<?> bean=obj.getClass();
             Configuration cfg = bean.getAnnotation(Configuration.class);
-            Object obj = ClassUtils.newObject(bean);
             if (!"".equals(cfg.section())) {
                 obj = new INIConfig(cfg.ini()).getObject(bean, cfg.section());
                 beanID = "".equals(cfg.value()) ? LuckyUtils.TableToClass1(bean.getSimpleName()) : cfg.value();
@@ -104,8 +112,8 @@ public class BeansIOC implements IOC {
         ApplicationBeans apps = ApplicationBeans.createApplicationBeans();
 
         //第二次循环，注册所有有参数的Bean方法的返回实例
-        for (Class<?> bean : beanClass) {
-            Object obj = ClassUtils.newObject(bean);
+        for (Object obj : beanList) {
+            Class<?> bean=obj.getClass();
             List<Method> haveParamMethods = ClassUtils.getMethodByAnnotation(bean, Bean.class)
                     .stream()
                     .filter((m) -> {

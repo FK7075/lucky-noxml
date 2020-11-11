@@ -27,7 +27,6 @@ public class LuckyFilterChainResolverFactory {
 
     private static transient final Logger log= LogManager.getLogger(LuckyFilterChainResolverFactory.class);
 
-
     private Map<String, Filter> filters;
 
     private Map<String, String> filterChainDefinitionMap; //urlPathExpression_to_comma-delimited-filter-chain-definition

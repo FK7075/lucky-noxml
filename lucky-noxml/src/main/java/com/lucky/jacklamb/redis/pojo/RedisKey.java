@@ -97,6 +97,6 @@ public abstract class RedisKey {
     }
 
     private void formatKey(){
-        MD5Utils.md5(key);
+        key=MD5Utils.md5(key);
     }
 }

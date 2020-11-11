@@ -20,11 +20,7 @@ public class LuckyService<M extends LuckyMapper<E>,E> {
     protected static final Logger log = LogManager.getLogger(LuckyService.class);
 
     @Autowired
-    protected M luckyMapper;
-
-    public M getLuckyMapper() {
-        return luckyMapper;
-    }
+    public M luckyMapper;
 
     /**
      * 根据ID得到一条记录

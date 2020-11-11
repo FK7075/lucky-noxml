@@ -7,9 +7,9 @@
   "redis"           : "        <dependency>\n            <groupId>redis.clients</groupId>\n            <artifactId>jedis</artifactId>\n            <version>3.1.0</version>\n        </dependency>\n\n",
   "ssh-client"      : "        <dependency>\n            <groupId>com.jcraft</groupId>\n            <artifactId>jsch</artifactId>\n            <version>0.1.54</version>\n        </dependency>\n\n",
   "email"           : "        <dependency>\n            <groupId>org.apache.commons</groupId>\n            <artifactId>commons-email</artifactId>\n            <version>1.5</version>\n        </dependency>\n\n",
-  "shiro"           : "        <dependency>\n            <groupId>org.apache.shiro</groupId>\n            <artifactId>shiro-core</artifactId>\n            <version>1.7.0</version>\n        </dependency>",
-  "shiro-web"       : "        <dependency>\n            <groupId>org.apache.shiro</groupId>\n            <artifactId>shiro-web</artifactId>\n            <version>1.7.0</version>\n       </dependency>",
-  "thymeleaf"       : "        <dependency>\n            <groupId>org.thymeleaf</groupId>\n            <artifactId>thymeleaf</artifactId>\n            <version>3.0.7.RELEASE</version>\n       </dependency>",
-  "thymeleaf-shiro" : "        <dependency>\n            <groupId>com.github.theborakompanioni</groupId>\n            <artifactId>thymeleaf-extras-shiro</artifactId>\n            <version>2.0.0</version>\n        </dependency>",
+  "shiro"           : "        <dependency>\n            <groupId>org.apache.shiro</groupId>\n            <artifactId>shiro-core</artifactId>\n            <version>1.7.0</version>\n        </dependency>\n\n",
+  "shiro-web"       : "        <dependency>\n            <groupId>org.apache.shiro</groupId>\n            <artifactId>shiro-web</artifactId>\n            <version>1.7.0</version>\n       </dependency>\n\n",
+  "thymeleaf"       : "        <dependency>\n            <groupId>org.thymeleaf</groupId>\n            <artifactId>thymeleaf</artifactId>\n            <version>3.0.7.RELEASE</version>\n       </dependency>\n\n",
+  "thymeleaf-shiro" : "        <dependency>\n            <groupId>com.github.theborakompanioni</groupId>\n            <artifactId>thymeleaf-extras-shiro</artifactId>\n            <version>2.0.0</version>\n        </dependency>\n\n",
   "hutool"          : "        <dependency>\n            <groupId>cn.hutool</groupId>\n            <artifactId>hutool-all</artifactId>\n            <version>5.4.2</version>\n        </dependency>\n\n"
 }
