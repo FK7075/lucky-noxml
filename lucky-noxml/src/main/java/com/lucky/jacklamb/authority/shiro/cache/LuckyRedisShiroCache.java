@@ -1,10 +1,8 @@
 package com.lucky.jacklamb.authority.shiro.cache;
 
 import com.lucky.jacklamb.redis.pojo.RHash;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 
 import java.util.*;
 
@@ -14,35 +12,41 @@ import java.util.*;
  * @version 1.0
  * @date 2020/11/11 16:15
  */
-public class LuckyRedisShiroCache implements Cache<SimplePrincipalCollection, SimpleAuthorizationInfo> {
+public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
 
 
-    private RHash<String, ShiroRedisValue> hash;
+    private RHash<K, V> hash;
+    private String key;
 
     public LuckyRedisShiroCache(String key){
-        hash=new RHash<String, ShiroRedisValue>(key){};
+        hash =new RHash<K, V>(key){};
+        this.key=key;
     }
 
 
     @Override
-    public SimpleAuthorizationInfo get(SimplePrincipalCollection simplePrincipalCollection) throws CacheException {
-        if(hash.hexists(simplePrincipalCollection.toString())){
-            return hash.hget(simplePrincipalCollection.toString()).getSimpleAuthorizationInfo();
+    public V get(K k) throws CacheException {
+        if(hash.hexists(k)){
+
+            return hash.hget(k);
         }
         return null;
     }
 
     @Override
-    public SimpleAuthorizationInfo put(SimplePrincipalCollection simplePrincipalCollection, SimpleAuthorizationInfo simpleAuthorizationInfo) throws CacheException {
-        hash.hset(simplePrincipalCollection.toString(),new ShiroRedisValue(simplePrincipalCollection,simpleAuthorizationInfo));
-        return simpleAuthorizationInfo;
+    public V put(K k, V v) throws CacheException {
+        hash.hset(k,v);
+        return v;
     }
 
     @Override
-    public SimpleAuthorizationInfo remove(SimplePrincipalCollection simplePrincipalCollection) throws CacheException {
-        SimpleAuthorizationInfo simpleAuthorizationInfo = get(simplePrincipalCollection);
-        hash.hdel(simplePrincipalCollection.toString());
-        return simpleAuthorizationInfo;
+    public V remove(K k) throws CacheException {
+        if(hash.hexists(k)){
+            V v = get(k);
+            hash.hdel(k);
+            return v;
+        }
+        return null;
     }
 
     @Override
@@ -52,51 +56,17 @@ public class LuckyRedisShiroCache implements Cache<SimplePrincipalCollection, Si
 
     @Override
     public int size() {
-        Long size = hash.size();
-        return size.intValue();
+        return hash.size().intValue();
     }
 
     @Override
-    public Set<SimplePrincipalCollection> keys() {
-        Set<SimplePrincipalCollection> result=new HashSet<>(size());
-        List<ShiroRedisValue> values = hash.hvals();
-        values.stream().forEach(v->result.add(v.getSimplePrincipalCollection()));
-        return result;
+    public Set<K> keys() {
+        return hash.hkeys();
     }
 
     @Override
-    public Collection<SimpleAuthorizationInfo> values() {
-        Collection<SimpleAuthorizationInfo> result=new ArrayList<>(size());
-        List<ShiroRedisValue> values = hash.hvals();
-        values.stream().forEach(v->result.add(v.getSimpleAuthorizationInfo()));
-        return result;
-    }
-}
-
-class ShiroRedisValue{
-
-   private SimplePrincipalCollection simplePrincipalCollection;
-   private SimpleAuthorizationInfo simpleAuthorizationInfo;
-
-    public ShiroRedisValue(SimplePrincipalCollection simplePrincipalCollection, SimpleAuthorizationInfo simpleAuthorizationInfo) {
-        this.simplePrincipalCollection = simplePrincipalCollection;
-        this.simpleAuthorizationInfo = simpleAuthorizationInfo;
-    }
-
-    public SimplePrincipalCollection getSimplePrincipalCollection() {
-        return simplePrincipalCollection;
-    }
-
-    public void setSimplePrincipalCollection(SimplePrincipalCollection simplePrincipalCollection) {
-        this.simplePrincipalCollection = simplePrincipalCollection;
-    }
-
-    public SimpleAuthorizationInfo getSimpleAuthorizationInfo() {
-        return simpleAuthorizationInfo;
-    }
-
-    public void setSimpleAuthorizationInfo(SimpleAuthorizationInfo simpleAuthorizationInfo) {
-        this.simpleAuthorizationInfo = simpleAuthorizationInfo;
+    public Collection<V> values() {
+        return hash.hvals();
     }
 }
 

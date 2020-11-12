@@ -2,9 +2,11 @@ package com.lucky.jacklamb.redis.pojo;
 
 import com.lucky.jacklamb.md5.MD5Utils;
 import com.lucky.jacklamb.redis.JedisFactory;
-import com.lucky.jacklamb.rest.LSON;
+import com.lucky.jacklamb.utils.serializable.JDKSerializationScheme;
+import com.lucky.jacklamb.utils.serializable.SerializationScheme;
 import redis.clients.jedis.Jedis;
 
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -13,17 +15,13 @@ import java.lang.reflect.Type;
  * @version 1.0
  * @date 2020/8/31 18:35
  */
-public abstract class RedisKey {
+public abstract class RedisKey extends RedisSerialization{
 
     protected String key;
-
-    protected Jedis jedis;
-
     protected Type type;
-
     protected Type pojoType;
 
-    protected static LSON lson=new LSON();
+    public RedisKey(){}
 
     public RedisKey(String key){
         init(key);
@@ -46,7 +44,6 @@ public abstract class RedisKey {
     }
 
     private void init(String key){
-        jedis= JedisFactory.getJedis();
         setType();
         setPojoType();
         setKey(key);
@@ -97,6 +94,7 @@ public abstract class RedisKey {
     }
 
     private void formatKey(){
-        key=MD5Utils.md5(key);
+        if(key!=null)
+            key=MD5Utils.md5(key);
     }
 }

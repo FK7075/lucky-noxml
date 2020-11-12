@@ -10,6 +10,7 @@ import com.lucky.jacklamb.servlet.LuckyWebContext;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.ErrorPage;
 import com.lucky.jacklamb.utils.file.MultipartFile;
+import com.lucky.jacklamb.utils.serializable.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,57 +39,60 @@ import java.util.Map.Entry;
 public class Model {
 
     private static final Logger log = LogManager.getLogger(Model.class);
-
+    private static JSONSerializationScheme jsonSerializationScheme=new GsonSerializationScheme();
+    private static XMLSerializationScheme xmlSerializationScheme=new XtreamSerializationScheme();
     private final Integer port=AppConfig.getAppConfig().getServerConfig().getPort();
-
     /**
      * 解码方式
      */
     private String encod = "ISO-8859-1";
-
     /**
      * Request对象
      */
     private HttpServletRequest req;
-
     /**
      * Response对象
      */
     private HttpServletResponse resp;
-
     /**
      * ServletConfig对象
      */
     private ServletConfig servletConfig;
-
     /**
      * url请求的方法
      */
     private RequestMethod requestMethod;
-
     /**
      * 页面参数集合Map<String,String[]>
      */
     private Map<String, String[]> parameterMap;
-
     /**
      * MultipartFile类型文件参数集合
      */
     private Map<String, MultipartFile[]> multipartFileMap;
-
     /**
      * File类型的文件参数集合
      */
     private Map<String, File[]> uploadFileMap;
-
     /**
      * Rest风格的参数集合Map<String,String>
      */
     private Map<String, String> restMap;
-
     private ServletOutputStream outputStream;
-
     private String baseDir;
+
+    public static void setJsonSerializationScheme(JSONSerializationScheme jsonSerializationScheme) {
+        Model.jsonSerializationScheme = jsonSerializationScheme;
+    }
+    public static void setXmlSerializationScheme(XMLSerializationScheme xmlSerializationScheme) {
+        Model.xmlSerializationScheme = xmlSerializationScheme;
+    }
+    public static JSONSerializationScheme getJsonSerializationScheme() {
+        return jsonSerializationScheme;
+    }
+    public static XMLSerializationScheme getXmlSerializationScheme() {
+        return xmlSerializationScheme;
+    }
 
     public ServletOutputStream getOutputStream() throws IOException {
         if(outputStream==null){
@@ -107,36 +111,25 @@ public class Model {
      * @throws IOException
      */
     public Model(HttpServletRequest request, HttpServletResponse response, ServletConfig servletConfig, RequestMethod requestMethod, String encod) {
+        init(request, response);
         this.servletConfig = servletConfig;
         this.encod = encod;
-        req = request;
-        resp = response;
         this.requestMethod = requestMethod;
-        this.parameterMap = getRequestParameterMap();
-        this.multipartFileMap = new HashMap<>();
-        this.restMap = new HashMap<>();
-        this.uploadFileMap = new HashMap<>();
-        baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
-    }
-
-    public Model(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        req = request;
-        resp = response;
-        this.parameterMap = getRequestParameterMap();
-        this.multipartFileMap = new HashMap<>();
-        restMap = new HashMap<>();
-        baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
 
     public Model(){
         LuckyWebContext currentContext = LuckyWebContext.getCurrentContext();
-        req = currentContext.getRequest();
-        resp = currentContext.getResponse();
+        init(currentContext.getRequest(),currentContext.getResponse());
         servletConfig=currentContext.getServletConfig();
         requestMethod=currentContext.getRequestMethod();
+    }
+
+    public void init(HttpServletRequest request, HttpServletResponse response){
+        req = request;
+        resp = response;
         this.parameterMap = getRequestParameterMap();
         this.multipartFileMap = new HashMap<>();
-        restMap = new HashMap<>();
+        this.restMap = new HashMap<>();
         this.uploadFileMap = new HashMap<>();
         baseDir = AppConfig.getAppConfig().getServerConfig().getBaseDir();
     }
@@ -378,11 +371,9 @@ public class Model {
      *
      * @param pojo (数组，对象，Collection,Map)
      */
-    public void writerJson(Object pojo) {
-        LSON lson = new LSON();
-        log.debug(lson.toJsonByGson(pojo));
+    public void writerJson(Object pojo) throws IOException {
         resp.setContentType("application/json");
-        writer(lson.toJsonByGson(pojo));
+        writer(jsonSerializationScheme.serialization(pojo));
     }
 
     /**
@@ -390,12 +381,9 @@ public class Model {
      *
      * @param pojo (数组，对象，Collection,Map)
      */
-    public void writerXml(Object pojo) {
-        LXML lxml = new LXML();
-        String xml=lxml.toXml(pojo);
-        log.debug(xml);
+    public void writerXml(Object pojo) throws IOException {
         resp.setContentType("application/xml");
-        writer(xml);
+        writer(xmlSerializationScheme.serialization(pojo));
     }
 
     /**

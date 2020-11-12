@@ -13,6 +13,6 @@ public class LuckyRedisShiroCacheManager implements CacheManager {
 
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
-        return (Cache<K, V>) new LuckyRedisShiroCache(s);
+        return new LuckyRedisShiroCache<K,V>(s);
     }
 }

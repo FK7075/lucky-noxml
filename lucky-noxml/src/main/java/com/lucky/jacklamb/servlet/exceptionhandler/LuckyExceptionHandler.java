@@ -14,6 +14,7 @@ import org.apache.http.HttpResponse;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -136,8 +137,12 @@ public abstract class LuckyExceptionHandler {
         if (!"".equals(ceh.suffix())) {
             globalprefixAndSuffix.set(1, ceh.suffix());
         }
-        responseControl.jump(model, rest, method, result, globalprefixAndSuffix);
-        return true;
+        try {
+            responseControl.jump(model, rest, method, result, globalprefixAndSuffix);
+            return true;
+        } catch (IOException ex) {
+            throw new RuntimeException("序列化失败",ex);
+        }
     }
 
     /**

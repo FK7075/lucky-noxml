@@ -30,8 +30,8 @@ public class LuckyRedisShiroSessionDAO extends CachingSessionDAO {
 
     @Override
     protected Serializable doCreate(Session session) {
-        Serializable sessionId = UUID.randomUUID().toString().toUpperCase().replaceAll("-","");
-//        assignSessionId(session, sessionId);
+        Serializable sessionId = "LUCKY"+UUID.randomUUID().toString().toUpperCase().replaceAll("-","");
+        assignSessionId(session, sessionId);
         return sessionId;
     }
 

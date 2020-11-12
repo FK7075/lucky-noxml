@@ -22,6 +22,11 @@ public enum Rest {
 	 * 返回XML格式数据
 	 */
 	XML
+
+//	/**
+//	 * 返回JDK序列化后的数据
+//	 */
+//	JDK
 	
 
 }

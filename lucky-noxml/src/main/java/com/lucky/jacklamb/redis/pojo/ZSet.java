@@ -50,7 +50,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Long zadd(double score,Pojo pojo){
-        return jedis.zadd(key, score, lson.toJsonByGson(pojo));
+        return jedis.zadd(key, score, serialization(pojo));
     }
 
     /**
@@ -61,7 +61,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Long zadd(double score, Pojo pojo, ZAddParams params){
-        return jedis.zadd(key, score, lson.toJsonByGson(pojo),params);
+        return jedis.zadd(key, score, serialization(pojo),params);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ZSet<Pojo> extends RedisKey{
     public Long zadd(Map<Pojo,Double> zmap){
         Map<String,Double> jmap=new HashMap<>();
         for(Map.Entry<Pojo,Double> entry:zmap.entrySet()){
-            jmap.put(lson.toJsonByGson(entry.getKey()),entry.getValue());
+            jmap.put(serialization(entry.getKey()),entry.getValue());
         }
         return jedis.zadd(key,jmap);
     }
@@ -86,7 +86,7 @@ public class ZSet<Pojo> extends RedisKey{
     public Long zadd(Map<Pojo,Double> zmap,ZAddParams zAddParams ){
         Map<String,Double> jmap=new HashMap<>();
         for(Map.Entry<Pojo,Double> entry:zmap.entrySet()){
-            jmap.put(lson.toJsonByGson(entry.getKey()),entry.getValue());
+            jmap.put(serialization(entry.getKey()),entry.getValue());
         }
         return jedis.zadd(key,jmap,zAddParams);
     }
@@ -118,7 +118,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Double zincrby(double increment,Pojo pojo){
-        return jedis.zincrby(key, increment, lson.toJsonByGson(pojo));
+        return jedis.zincrby(key, increment, serialization(pojo));
     }
 
     /**
@@ -129,7 +129,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Double zincrby(double increment, Pojo pojo, ZIncrByParams zIncrByParams){
-        return jedis.zincrby(key, increment, lson.toJsonByGson(pojo),zIncrByParams);
+        return jedis.zincrby(key, increment, serialization(pojo),zIncrByParams);
     }
 
     /**
@@ -183,7 +183,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> zrange = jedis.zrange(key, start, stop);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : zrange) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -198,7 +198,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByLex(key, min, max);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -215,7 +215,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByLex(key, min, max,offset,count);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -230,7 +230,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByScore(key, min, max);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -247,7 +247,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByScore(key, min, max,offset,count);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -262,7 +262,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByScore(key, min, max);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -279,7 +279,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrangeByScore(key, min, max,offset,count);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -290,7 +290,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Long zrank(Pojo pojo){
-        return jedis.zrank(key, lson.toJsonByGson(pojo));
+        return jedis.zrank(key, serialization(pojo));
     }
 
     /**
@@ -301,7 +301,7 @@ public class ZSet<Pojo> extends RedisKey{
     public Long zrem(Pojo...pojos){
         String[] jsonPojo=new String[pojos.length];
         for (int i = 0,j=pojos.length; i < j; i++) {
-            jsonPojo[i]=lson.toJsonByGson(pojos[i]);
+            jsonPojo[i]=serialization(pojos[i]);
         }
         return jedis.zrem(key, jsonPojo);
     }
@@ -346,7 +346,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrevrange(key, start, stop);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -361,7 +361,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrevrangeByScore(key,max,min);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -378,7 +378,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrevrangeByScore(key,max,min,offset,count);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -393,7 +393,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrevrangeByScore(key,max,min);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -410,7 +410,7 @@ public class ZSet<Pojo> extends RedisKey{
         Set<String> strings = jedis.zrevrangeByScore(key,max,min,offset,count);
         Set<Pojo> pojoSte=new HashSet<>();
         for (String jp : strings) {
-            pojoSte.add((Pojo) lson.fromJson(type,jp));
+            pojoSte.add((Pojo) deserialization(type,jp));
         }
         return pojoSte;
     }
@@ -421,7 +421,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Long zrevrank(Pojo pojo){
-        return jedis.zrevrank(key, lson.toJsonByGson(pojo));
+        return jedis.zrevrank(key, serialization(pojo));
     }
 
     /**
@@ -430,7 +430,7 @@ public class ZSet<Pojo> extends RedisKey{
      * @return
      */
     public Double zscore(Pojo pojo){
-        return jedis.zscore(key,lson.toJsonByGson(pojo));
+        return jedis.zscore(key,serialization(pojo));
     }
 
     /**

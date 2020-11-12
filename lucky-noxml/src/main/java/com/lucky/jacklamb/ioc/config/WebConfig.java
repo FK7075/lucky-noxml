@@ -1,5 +1,11 @@
 package com.lucky.jacklamb.ioc.config;
 
+import com.lucky.jacklamb.servlet.core.Model;
+import com.lucky.jacklamb.utils.serializable.GsonSerializationScheme;
+import com.lucky.jacklamb.utils.serializable.JSONSerializationScheme;
+import com.lucky.jacklamb.utils.serializable.XMLSerializationScheme;
+import com.lucky.jacklamb.utils.serializable.XtreamSerializationScheme;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +112,15 @@ public class WebConfig  implements LuckyConfig  {
 
 	public long getMultipartMaxFileSize() {
 		return multipartMaxFileSize;
+	}
+
+
+	public void setJsonSerializationScheme(JSONSerializationScheme jsonSerializationScheme) {
+		Model.setJsonSerializationScheme(jsonSerializationScheme);
+	}
+
+	public void setXmlSerializationScheme(XMLSerializationScheme xmlSerializationScheme) {
+		Model.setXmlSerializationScheme(xmlSerializationScheme);
 	}
 
 	/**

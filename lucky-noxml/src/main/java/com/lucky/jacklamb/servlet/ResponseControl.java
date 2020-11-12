@@ -67,7 +67,7 @@ public class ResponseControl {
      * @param obj    方法返回的结果
      * @param pre_suf 转发重定向操作的固定前后缀
      */
-    public void jump(Model model, Rest rest, Method method, Object obj,List<String> pre_suf) {
+    public void jump(Model model, Rest rest, Method method, Object obj,List<String> pre_suf) throws IOException {
         if (obj != null) {
             if (rest == Rest.JSON) {
                 model.writerJson(obj);
@@ -77,6 +77,7 @@ public class ResponseControl {
                 model.writerXml(obj);
                 return;
             }
+
             if (rest == Rest.TXT) {
                 model.writer(obj.toString());
                 return;

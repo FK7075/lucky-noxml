@@ -17,8 +17,8 @@ public class RKey {
 
     private Jedis jedis;
 
-    public RKey(){
-        jedis= JedisFactory.getJedis();
+    public RKey(Jedis jedis) {
+        this.jedis = jedis;
     }
 
     /**

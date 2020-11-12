@@ -9,6 +9,8 @@ import java.util.Set;
 
 public abstract class ClassUtils {
 
+    public static final Class<?>[] SIMPLE_CLASSES={String.class,Byte.class,Short.class,Integer.class,
+    Long.class,Float.class,Double.class,Boolean.class};
 
     /**
      * 得到一个类以及所有父类(不包括Object)的所有属性(Field)
@@ -161,5 +163,18 @@ public abstract class ClassUtils {
             }
         }
         return annMethods;
+    }
+
+    public static boolean isPrimitive(Class<?> aClass){
+        return aClass.isPrimitive();
+    }
+
+    public static boolean isSimple(Class<?> aClass){
+        for (Class<?> simpleClass : SIMPLE_CLASSES) {
+            if(aClass==simpleClass){
+                return true;
+            }
+        }
+        return false;
     }
 }

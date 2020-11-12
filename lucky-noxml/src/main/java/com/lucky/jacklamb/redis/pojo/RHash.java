@@ -4,7 +4,6 @@ import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public Long hincrBy(Field field,Long increment){
-        return jedis.hincrBy(key,lson.toJsonByGson(field),increment);
+        return jedis.hincrBy(key,serialization(field),increment);
     }
 
     /**
@@ -54,7 +53,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public Double hincrByFloat(Field field,double increment){
-        return jedis.hincrByFloat(key,lson.toJsonByGson(field),increment);
+        return jedis.hincrByFloat(key,serialization(field),increment);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public Long hset(Field field, Pojo pojo){
-        return jedis.hset(key,lson.toJsonByGson(field),lson.toJsonByGson(pojo));
+        return jedis.hset(key,serialization(field),serialization(pojo));
     }
 
     /**
@@ -79,7 +78,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public Pojo hget(Field field){
-        return (Pojo) lson.fromJson(pojoType,jedis.hget(key,lson.toJsonByGson(field)));
+        return (Pojo) deserialization(pojoType,jedis.hget(key,serialization(field)));
     }
 
     /**
@@ -88,7 +87,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public boolean hexists(Field field){
-        return jedis.hexists(key,lson.toJsonByGson(field));
+        return jedis.hexists(key,serialization(field));
     }
 
     /**
@@ -98,7 +97,7 @@ public class RHash<Field,Pojo> extends RedisKey {
     public Long hdel(Field...fields){
         String[] fieldStrs=new String[fields.length];
         for (int i = 0,j=fields.length; i < j; i++) {
-            fieldStrs[i]=lson.toJson(fields[i]);
+            fieldStrs[i]=serialization(fields[i]);
         }
         return jedis.hdel(key,fieldStrs);
     }
@@ -111,7 +110,7 @@ public class RHash<Field,Pojo> extends RedisKey {
         Set<Field> keySet= new HashSet<>();
         Set<String> strKeys = jedis.hkeys(key);
         for (String strKey : strKeys) {
-            keySet.add((Field) lson.fromJson(type,strKey));
+            keySet.add((Field) deserialization(type,strKey));
         }
         return keySet;
     }
@@ -132,10 +131,10 @@ public class RHash<Field,Pojo> extends RedisKey {
     public List<Pojo> hmget(Field...fields){
         String[] fieldStrs=new String[fields.length];
         for (int i = 0,j=fields.length; i < j; i++) {
-            fieldStrs[i]=lson.toJson(fields[i]);
+            fieldStrs[i]=serialization(fields[i]);
         }
         return jedis.hmget(key,fieldStrs).stream().map((k)->{
-            Pojo pojo= (Pojo) lson.fromJson(pojoType,k);
+            Pojo pojo= (Pojo) deserialization(pojoType,k);
             return pojo;
         }).collect(Collectors.toList());
     }
@@ -147,7 +146,7 @@ public class RHash<Field,Pojo> extends RedisKey {
     public String hmset(Map<Field,Pojo> map){
         Map<String,String> strMap=new HashMap<>();
         for(Map.Entry<Field,Pojo> entry:map.entrySet()){
-            strMap.put(lson.toJsonByGson(entry.getKey()),lson.toJson(entry.getValue()));
+            strMap.put(serialization(entry.getKey()),serialization(entry.getValue()));
         }
         return jedis.hmset(key,strMap);
     }
@@ -158,7 +157,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      */
     public List<Pojo> hvals(){
         return jedis.hvals(key).stream().map((p)->{
-            Pojo pojo= (Pojo) lson.fromJson(pojoType,p);
+            Pojo pojo= (Pojo) deserialization(pojoType,p);
             return pojo;
         }).collect(Collectors.toList());
     }
@@ -170,7 +169,7 @@ public class RHash<Field,Pojo> extends RedisKey {
      * @return
      */
     public Long hsetnx(Field field, Pojo pojo){
-        return jedis.hsetnx(key,lson.toJsonByGson(field),lson.toJsonByGson(pojo));
+        return jedis.hsetnx(key,serialization(field),serialization(pojo));
     }
 
     /**
@@ -181,7 +180,7 @@ public class RHash<Field,Pojo> extends RedisKey {
         Map<Field,Pojo> kvMap=new HashMap<>();
         Map<String, String> kvStrMap = jedis.hgetAll(key);
         for(Map.Entry<String,String> entry:kvStrMap.entrySet()){
-            kvMap.put((Field) lson.fromJson(type,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue()));
+            kvMap.put((Field) deserialization(type,entry.getKey()),(Pojo) deserialization(pojoType,entry.getValue()));
         }
         return kvMap;
     }
@@ -206,7 +205,7 @@ public class RHash<Field,Pojo> extends RedisKey {
         List<Map.Entry<String, String>> result = hscan.getResult();
         List<Map.Entry<Field, Pojo>> results = new ArrayList<Map.Entry<Field, Pojo>>();
         for (Map.Entry<String, String> entry : result) {
-            results.add(new AbstractMap.SimpleEntry<Field, Pojo>((Field) lson.fromJson(type,entry.getKey()),(Pojo) lson.fromJson(pojoType,entry.getValue())));
+            results.add(new AbstractMap.SimpleEntry<Field, Pojo>((Field) deserialization(type,entry.getKey()),(Pojo) deserialization(pojoType,entry.getValue())));
         }
         return new ScanResult<Map.Entry<Field,Pojo>>(cursor,results);
     }

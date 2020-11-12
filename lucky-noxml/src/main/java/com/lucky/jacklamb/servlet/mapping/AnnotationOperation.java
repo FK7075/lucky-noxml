@@ -6,19 +6,17 @@ import com.lucky.jacklamb.cglib.ASMUtil;
 import com.lucky.jacklamb.enums.Code;
 import com.lucky.jacklamb.enums.Rest;
 import com.lucky.jacklamb.exception.*;
-import com.lucky.jacklamb.utils.file.MultipartFile;
-import com.lucky.jacklamb.utils.file.FileUtils;
 import com.lucky.jacklamb.httpclient.HttpClientCall;
 import com.lucky.jacklamb.httpclient.callcontroller.Api;
 import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.config.AppConfig;
 import com.lucky.jacklamb.ioc.config.WebConfig;
 import com.lucky.jacklamb.md5.MD5Utils;
-import com.lucky.jacklamb.rest.LSON;
-import com.lucky.jacklamb.rest.LXML;
 import com.lucky.jacklamb.servlet.core.Model;
 import com.lucky.jacklamb.tcconversion.typechange.JavaConversion;
 import com.lucky.jacklamb.utils.base.LuckyUtils;
+import com.lucky.jacklamb.utils.file.FileUtils;
+import com.lucky.jacklamb.utils.file.MultipartFile;
 import com.lucky.jacklamb.utils.regula.Regular;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -48,10 +46,7 @@ public class AnnotationOperation {
     private static final Logger log = LogManager.getLogger(AnnotationOperation.class);
 
     private static final WebConfig webCfg= AppConfig.getAppConfig().getWebConfig();
-    
-    private static final LSON lson=new LSON();
 
-    private static final LXML lxml=new LXML();
     /**
      * 基于MultipartFile的多文件上传
      *
@@ -382,7 +377,7 @@ public class AnnotationOperation {
      * @throws IllegalAccessException
      */
     public Object[] getControllerMethodParam(Model model, Class<?> controllerClass, Method method)
-            throws IOException, InstantiationException, IllegalAccessException, FileTypeIllegalException, FileSizeCrossingException, FileUploadException, URISyntaxException, IllegalParameterException, RequestFileSizeCrossingException {
+            throws Exception {
         //获取当前Controller方法参数列表所有的参数名
         String[] paramNames = ASMUtil.getMethodParamNames(method);
         Parameter[] parameters = method.getParameters();
@@ -457,9 +452,9 @@ public class AnnotationOperation {
                     paramValue = model.getRequestParameter(paramNames[i]);
                 }
                 if(requestBody.value()==Rest.JSON){
-                    args[i] = lson.fromJson(parameters[i].getType(),paramValue);
+                    args[i] =Model.getJsonSerializationScheme().deserialization(parameters[i].getType(),paramValue);
                 }else if (requestBody.value()==Rest.XML){
-                    args[i]=lxml.fromXml(paramValue);
+                    args[i]=Model.getXmlSerializationScheme().deserialization(parameters[i].getType(),paramValue);
                 }else{
                     continue;
                 }
@@ -630,7 +625,7 @@ public class AnnotationOperation {
      */
     private Object httpClientParam(Class<?> controllerClass, Method method, Map<String, Object> pojoMap,
                                    Parameter currParameter, Model model, Parameter[] parameters,
-                                   String[] paramNames, String noParam) throws IOException, IllegalAccessException, URISyntaxException {
+                                   String[] paramNames, String noParam) throws Exception {
         String callResult;
         String api = getCallApi(controllerClass, method);
         Map<String, Object> requestMap = getHttpClientRequestParam(method, model, pojoMap, parameters, paramNames, noParam);
@@ -692,9 +687,9 @@ public class AnnotationOperation {
      * @param strResult     远程服务响应的String类型结果
      * @return
      */
-    private Object callRestAndBody(Parameter currParameter, String strResult) {
+    private Object callRestAndBody(Parameter currParameter, String strResult) throws Exception {
         if (currParameter.isAnnotationPresent(CallBody.class)) {
-            return lson.fromJson(currParameter.getType(), strResult);
+            return Model.getJsonSerializationScheme().deserialization(currParameter.getType(), strResult);
         }
         return JavaConversion.strToBasic(strResult, currParameter.getType());
     }

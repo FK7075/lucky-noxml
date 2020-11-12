@@ -53,7 +53,7 @@ public class RSet<Pojo> extends RedisKey{
     public Long sadd(Pojo...members){
         String[] strSet=new String[members.length];
         for (int i = 0; i < members.length; i++) {
-            strSet[i]=lson.toJson(members[i]);
+            strSet[i]=serialization(members[i]);
         }
         return jedis.sadd(key,strSet);
     }
@@ -79,7 +79,7 @@ public class RSet<Pojo> extends RedisKey{
     private Set<Pojo> getSet(Set<String> jsonSet){
         Set<Pojo> pojoSet=new HashSet<>();
         for (String json:jsonSet){
-            pojoSet.add((Pojo) lson.fromJson(type,json));
+            pojoSet.add((Pojo) deserialization(type,json));
         }
         return pojoSet;
     }
@@ -128,7 +128,7 @@ public class RSet<Pojo> extends RedisKey{
      * @return
      */
     public boolean sismember(Pojo pojo){
-        return jedis.sismember(key,lson.toJsonByGson(pojo));
+        return jedis.sismember(key,serialization(pojo));
     }
 
     /**
@@ -147,7 +147,7 @@ public class RSet<Pojo> extends RedisKey{
      */
     public Long smove(RSet<Pojo> destination,Pojo pojo){
         if(sismember(pojo)){
-            return jedis.smove(key,destination.getKey(),lson.toJsonByGson(pojo));
+            return jedis.smove(key,destination.getKey(),serialization(pojo));
         }
         throw new RuntimeException("集合\""+key+"\"中不存在该元素:["+pojo+"]，无法移动！");
     }
@@ -157,7 +157,7 @@ public class RSet<Pojo> extends RedisKey{
      * @return
      */
     public Pojo spop(){
-        return (Pojo) lson.fromJson(type,jedis.spop(key));
+        return (Pojo) deserialization(type,jedis.spop(key));
     }
 
     /**
@@ -174,7 +174,7 @@ public class RSet<Pojo> extends RedisKey{
      * @return
      */
     public Pojo srandmember(){
-        return (Pojo) lson.fromJson(type,jedis.srandmember(key));
+        return (Pojo) deserialization(type,jedis.srandmember(key));
     }
 
     /**
@@ -185,7 +185,7 @@ public class RSet<Pojo> extends RedisKey{
         List<Pojo> pojoList=new ArrayList<>();
         List<String> jsonList = jedis.srandmember(key, count);
         return jsonList.stream().map((j)->{
-           Pojo pojo= (Pojo) lson.fromJson(type,j);
+           Pojo pojo= (Pojo) deserialization(type,j);
            return pojo;
         }).collect(Collectors.toList());
     }
@@ -198,7 +198,7 @@ public class RSet<Pojo> extends RedisKey{
     public Long srem(Pojo...pojos){
         String[] jsonPojo=new String[pojos.length];
         for (int i = 0,j=pojos.length; i <j ; i++) {
-            jsonPojo[i]=lson.toJsonByGson(pojos[i]);
+            jsonPojo[i]=serialization(pojos[i]);
         }
         return jedis.srem(key,jsonPojo);
     }
@@ -240,7 +240,7 @@ public class RSet<Pojo> extends RedisKey{
     public ScanResult<Pojo> sscan(String cursor, ScanParams scanParams){
         ScanResult<String> sscan = jedis.sscan(key, cursor,scanParams);
         List<Pojo> pojoList=sscan.getResult().stream().map((j)->{
-            Pojo pojo= (Pojo) lson.fromJson(type,j);
+            Pojo pojo= (Pojo) deserialization(type,j);
             return pojo;
         }).collect(Collectors.toList());
         return new ScanResult<Pojo>(sscan.getCursor(),pojoList);

@@ -118,11 +118,11 @@ public class RList<Pojo> extends RedisKey{
         String[] jsonpojo=new String[pojoList.size()];
         if(isRev){
             for (int j=pojoList.size()-1,i =j; i >-1 ; i--) {
-                jsonpojo[j-i]=lson.toJsonByGson(pojoList.get(i));
+                jsonpojo[j-i]=serialization(pojoList.get(i));
             }
         }else{
             for (int i = 0,j=pojoList.size(); i <j ; i++) {
-                jsonpojo[i]=lson.toJsonByGson(pojoList.get(i));
+                jsonpojo[i]=serialization(pojoList.get(i));
             }
         }
         return jsonpojo;
@@ -135,7 +135,7 @@ public class RList<Pojo> extends RedisKey{
     public Long lpush(Pojo...pojo){
         String[] jsonpojo=new String[pojo.length];
         for (int i = 0,j=pojo.length; i <j ; i++) {
-            jsonpojo[i]=lson.toJsonByGson(pojo[i]);
+            jsonpojo[i]=serialization(pojo[i]);
         }
         return jedis.lpush(key,jsonpojo);
     }
@@ -163,7 +163,7 @@ public class RList<Pojo> extends RedisKey{
     public Long rpush(Pojo...pojo){
         String[] jsonpojo=new String[pojo.length];
         for (int i = 0,j=pojo.length; i <j ; i++) {
-            jsonpojo[i]=lson.toJsonByGson(pojo[i]);
+            jsonpojo[i]=serialization(pojo[i]);
         }
         return jedis.rpush(key,jsonpojo);
     }
@@ -201,7 +201,7 @@ public class RList<Pojo> extends RedisKey{
      * @param pojo 要移除的对象
      */
     public Long lremAll(Pojo pojo){
-        return jedis.lrem(key,0,lson.toJsonByGson(pojo));
+        return jedis.lrem(key,0,serialization(pojo));
     }
 
     /**
@@ -210,7 +210,7 @@ public class RList<Pojo> extends RedisKey{
      * @param count 存在多个相同元素时移除的个数
      */
     public Long lrem(Pojo pojo,int count){
-        return jedis.lrem(key,count,lson.toJsonByGson(pojo));
+        return jedis.lrem(key,count,serialization(pojo));
     }
 
     /**
@@ -219,7 +219,7 @@ public class RList<Pojo> extends RedisKey{
      * @return
      */
     public Pojo getByIndex(int index){
-        return (Pojo) lson.fromJson(type,jedis.lindex(key,index));
+        return (Pojo) deserialization(type,jedis.lindex(key,index));
     }
 
     /**
@@ -231,7 +231,7 @@ public class RList<Pojo> extends RedisKey{
     public List<Pojo> getByLimit(int start,int stop){
         List<String> strPojos = jedis.lrange(key, start, stop);
         return strPojos.stream().map((sp)->{
-            Pojo pojo = (Pojo) lson.fromJson(type, sp);
+            Pojo pojo = (Pojo) deserialization(type, sp);
             return pojo;
         }).collect(Collectors.toList());
     }
@@ -264,7 +264,7 @@ public class RList<Pojo> extends RedisKey{
      * @return
      */
     public Pojo lpop(){
-        return (Pojo) lson.fromJson(type,jedis.lpop(key));
+        return (Pojo) deserialization(type,jedis.lpop(key));
     }
 
     /**
@@ -274,7 +274,7 @@ public class RList<Pojo> extends RedisKey{
     public Pojo blpop(){
         List<String> blpop = jedis.blpop(key);
         if(blpop!=null&&!blpop.isEmpty()){
-            return (Pojo) lson.fromJson(type,blpop.get(0));
+            return (Pojo) deserialization(type,blpop.get(0));
         }
         return null;
     }
@@ -287,7 +287,7 @@ public class RList<Pojo> extends RedisKey{
     public Pojo blpop(int timout){
         List<String> blpop = jedis.blpop(timout,key);
         if(blpop!=null&&!blpop.isEmpty()){
-            return (Pojo) lson.fromJson(type,blpop.get(0));
+            return (Pojo) deserialization(type,blpop.get(0));
         }
         return null;
     }
@@ -297,7 +297,7 @@ public class RList<Pojo> extends RedisKey{
      * @return
      */
     public Pojo rpop(){
-        return (Pojo) lson.fromJson(type,jedis.rpop(key));
+        return (Pojo) deserialization(type,jedis.rpop(key));
     }
 
     /**
@@ -307,7 +307,7 @@ public class RList<Pojo> extends RedisKey{
     public Pojo brpop(){
         List<String> blpop = jedis.brpop(key);
         if(blpop!=null&&!blpop.isEmpty()){
-            return (Pojo) lson.fromJson(type,blpop.get(0));
+            return (Pojo) deserialization(type,blpop.get(0));
         }
         return null;
     }
@@ -320,7 +320,7 @@ public class RList<Pojo> extends RedisKey{
     public Pojo brpop(int timout){
         List<String> blpop = jedis.brpop(timout,key);
         if(blpop!=null&&!blpop.isEmpty()){
-            return (Pojo) lson.fromJson(type,blpop.get(0));
+            return (Pojo) deserialization(type,blpop.get(0));
         }
         return null;
     }
@@ -342,7 +342,7 @@ public class RList<Pojo> extends RedisKey{
      * @return
      */
     public Pojo brpoplpush(RList<Pojo> destinationPojo,int timout){
-        return (Pojo) lson.fromJson(type,jedis.brpoplpush(key,destinationPojo.getKey(),timout));
+        return (Pojo) deserialization(type,jedis.brpoplpush(key,destinationPojo.getKey(),timout));
     }
 
     /**
@@ -351,11 +351,11 @@ public class RList<Pojo> extends RedisKey{
      * @return
      */
     public Pojo rpoplpush(RList<Pojo> destinationPojo){
-        return (Pojo) lson.fromJson(type,jedis.rpoplpush(key,destinationPojo.getKey()));
+        return (Pojo) deserialization(type,jedis.rpoplpush(key,destinationPojo.getKey()));
     }
 
     public Long linsert(ListPosition listPosition,Pojo pivot,Pojo value){
-        return jedis.linsert(key,listPosition,lson.toJsonByGson(pivot),lson.toJsonByGson(value));
+        return jedis.linsert(key,listPosition,serialization(pivot),serialization(value));
     }
 
     /**
