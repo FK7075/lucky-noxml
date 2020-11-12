@@ -324,6 +324,17 @@ public abstract class Scan implements ComponentFilter {
 					} else {
 						throw new RuntimeException("尝试创建一个@ServerEndpoint组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
 					}
+				}else if(iocCode==IocCode.CONF_BEAN){
+					config = method.invoke(cfgObj);
+					if (returnType == Class.class) {
+						Class ctrlClass = (Class) config;
+						beanClass.add(ctrlClass);
+					} else if (returnType == Class[].class) {
+						Class[] ctrlClasses = (Class[]) config;
+						Stream.of(ctrlClasses).forEach(beanClass::add);
+					} else {
+						throw new RuntimeException("尝试创建一个@Configuration组件失败！不合法的返回值类型" + returnType + ",合法的返回值类型为Class和Class[]，错误位置：" + method);
+					}
 				}
 			}
 		}

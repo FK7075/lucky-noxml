@@ -130,15 +130,18 @@ public class BeansIOC implements IOC {
                 for (int i = 0,j=parameter.length; i < j; i++) {
                     List<Object> beans = apps.getBeans(parameter[i].getType());
                     if(beans.isEmpty()){
-                        throw new NotFindBeanException("无法执行的@Bean方法，参数注入注入失败，在IOC容器中找不到类型为--"+parameter[i].getType()+"--的Bean，错误位置："+haveParamMethod);
+                        params[i]=null;
+                        log.warn("无法执行的@Bean方法，参数注入注入失败，在IOC容器中找不到类型为--"+parameter[i].getType()+"--的Bean，警告位置："+haveParamMethod);
                     }else if(beans.size()==1){
                         params[i]=beans.get(0);
                     }else{
                         String iocId=Mapping.getParamName(parameter[i],paramNames[i]);
                         if(!apps.isIocBean(iocId)){
-                            throw new NotFindBeanException("无法执行的@Bean方法，参数注入注入失败，在IOC容器中找不到ID为--"+iocId+"--的Bean，错误位置："+haveParamMethod);
+                            params[i]=null;
+                            log.warn("无法执行的@Bean方法，参数注入注入失败，在IOC容器中找不到ID为--"+iocId+"--的Bean，警告位置："+haveParamMethod);
+                        }else{
+                            params[i]=apps.getBean(iocId);
                         }
-                        params[i]=apps.getBean(iocId);
                     }
                 }
                 Object invoke = MethodUtils.invoke(obj, haveParamMethod,params);

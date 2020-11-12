@@ -14,8 +14,9 @@ import java.util.UUID;
  */
 public class LuckyRedisShiroSessionDAO extends CachingSessionDAO {
 
-    public LuckyRedisShiroSessionDAO(){
-        setCacheManager(new LuckyRedisShiroCacheManager());
+
+    public LuckyRedisShiroSessionDAO(LuckyRedisShiroCacheManager luckyRedisShiroCacheManager) {
+        setCacheManager(luckyRedisShiroCacheManager);
     }
 
     @Override

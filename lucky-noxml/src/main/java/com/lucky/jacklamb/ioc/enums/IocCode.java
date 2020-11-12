@@ -60,6 +60,12 @@ public enum IocCode {
      * Xstream的允许类型
      * -@XStreamAllowType
      */
-    X_STREAM
+    X_STREAM,
+
+    /**
+     * Bean组件
+     * -@Configuration && @Bean
+     */
+    CONF_BEAN
 
 }

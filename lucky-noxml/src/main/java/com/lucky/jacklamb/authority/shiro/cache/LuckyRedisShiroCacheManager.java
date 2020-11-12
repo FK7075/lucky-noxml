@@ -11,8 +11,20 @@ import org.apache.shiro.cache.CacheManager;
  */
 public class LuckyRedisShiroCacheManager implements CacheManager {
 
+    private int timeout_second=0;
+
+    public void setTimeout_second(int timeout_second) {
+        this.timeout_second = timeout_second;
+    }
+
+    public LuckyRedisShiroCacheManager(){}
+
+    public LuckyRedisShiroCacheManager(int timeout_second) {
+        this.timeout_second = timeout_second;
+    }
+
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
-        return new LuckyRedisShiroCache<K,V>(s);
+        return new LuckyRedisShiroCache<K,V>(s,timeout_second);
     }
 }
