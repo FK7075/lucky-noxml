@@ -35,6 +35,9 @@ public class LuckyDispatcherServlet extends BaseServlet {
             String encoding = webCfg.getEncoding();
             requestMethod = urlParsMap.chagenMethod(req, resp, requestMethod, webCfg.isPostChangeMethod());
             String uri = req.getRequestURI();
+            if(uri.contains(";")){
+                uri=uri.substring(0,uri.indexOf(";"));
+            }
             uri = java.net.URLDecoder.decode(new String(uri.getBytes(encoding), req.getCharacterEncoding()), req.getCharacterEncoding());
             model = new Model(req, resp, this.getServletConfig(), requestMethod, encoding);
             urlParsMap.setLuckyWebContext(model);
