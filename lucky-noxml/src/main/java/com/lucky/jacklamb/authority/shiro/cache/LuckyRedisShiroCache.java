@@ -4,11 +4,10 @@ import com.lucky.jacklamb.redis.pojo.RString;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 /**
- * lUCKY-Shiro缓存
+ * LUCKY-SHIRO-REDIS缓存
  * @author fk7075
  * @version 1.0
  * @date 2020/11/11 16:15
@@ -16,12 +15,12 @@ import java.util.Set;
 public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
 
 
-    private RString<K, V> hash;
+    private RString<K, V> rstring;
     private String key;
 
     public LuckyRedisShiroCache(String key,int timeout_second){
-        hash =new RString<K, V>(){};
-        hash.setTimeout(timeout_second);
+        rstring =new RString<K, V>(){};
+        rstring.setTimeout(timeout_second);
         this.key=key;
     }
 
@@ -29,9 +28,9 @@ public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
     @Override
     public V get(K k) throws CacheException {
         String strKey=getKey(k);
-        V v=hash.get(strKey);
+        V v= rstring.get(strKey);
         if(v!=null){
-            hash.pexpire(strKey);
+            rstring.pexpire(strKey);
             return v;
         }
         return null;
@@ -40,7 +39,7 @@ public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
     @Override
     public V put(K k, V v) throws CacheException {
         String strKey=getKey(k);
-        hash.set(strKey,v);
+        rstring.set(strKey,v);
         return v;
     }
 
@@ -48,18 +47,21 @@ public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
     public V remove(K k) throws CacheException {
         String strKey=getKey(k);
         V v = get(k);
-        hash.getRkey().del(strKey);
+        rstring.getRkey().del(strKey);
         return v;
     }
 
     @Override
     public void clear() throws CacheException {
-
+        Set<String> keys = strKeys();
+        String[] keyArray=new String[keys.size()];
+        keys.toArray(keyArray);
+        rstring.getRkey().del(keyArray);
     }
 
     @Override
     public int size() {
-        return 0;
+        return strKeys().size();
     }
 
     @Override
@@ -69,7 +71,19 @@ public class LuckyRedisShiroCache<K,V> implements Cache<K, V> {
 
     @Override
     public Collection<V> values() {
-        return null;
+        Set<String> keys = strKeys();
+        List<V>  list=new ArrayList<>(keys.size());
+        keys.forEach(k->list.add(rstring.get(k)));
+        return list;
+    }
+
+    private Set<String> strKeys(){
+        Set<String> keySet=new HashSet<>();
+        rstring.getRkey().keys()
+                .stream()
+                .filter(k->k.startsWith(key+":"))
+                .forEach(keySet::add);
+        return keySet;
     }
 
     private String getKey(K k){
