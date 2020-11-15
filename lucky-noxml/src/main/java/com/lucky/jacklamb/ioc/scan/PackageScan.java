@@ -53,7 +53,7 @@ public class PackageScan extends Scan {
 	 * @param components
 	 * @param suffix
 	 */
-	public void loadComponent(List<Class<?>> components,String...suffix) {
+	public void loadComponent(Set<Class<?>> components,String...suffix) {
 		List<String> clist=new ArrayList<>();
 		findDafaultFolder(clist,projectPath,suffix);
 		addClassPath(components,clist);
@@ -64,10 +64,10 @@ public class PackageScan extends Scan {
 	 * @param suffixlist 自定义的包后缀名集合
 	 * @return
 	 */
-	public List<Class<?>> loadComponent(List<String> suffixlist) {
+	public Set<Class<?>> loadComponent(List<String> suffixlist) {
 		String[] suffix=new String[suffixlist.size()];
 		suffixlist.toArray(suffix);
-		List<Class<?>> components=new ArrayList<>();
+		Set<Class<?>> components=new HashSet<>(16);
 		List<String> clist=new ArrayList<>();
 		findDafaultFolder(clist,projectPath,suffix);
 		addClassPath(components,clist);
@@ -79,7 +79,7 @@ public class PackageScan extends Scan {
 	 * 找到所有Mapper组件所在文件夹的绝对路径，并存入到的集合中
 	 * @param mappers mapper接口组件
 	 */
-	public void loadMapper(List<Class<?>> mappers,String...suffix) {
+	public void loadMapper(Set<Class<?>> mappers,String...suffix) {
 		List<String> mlist=new ArrayList<>();
 		findDafaultFolder(mlist,projectPath,suffix);
 		addClassPath(mappers,mlist);
@@ -90,7 +90,7 @@ public class PackageScan extends Scan {
 	 * @param components 容器
 	 * @param paths 组件所在文件夹的绝对路径
 	 */
-	private void addClassPath(List<Class<?>> components,List<String> paths) {
+	private void addClassPath(Set<Class<?>> components,List<String> paths) {
 		for(String path:paths) {
 			File file=new File(path);
 			File[] listFiles = file.listFiles();

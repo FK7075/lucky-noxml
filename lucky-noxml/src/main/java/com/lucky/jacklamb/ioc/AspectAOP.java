@@ -4,8 +4,6 @@ import com.lucky.jacklamb.annotation.aop.*;
 import com.lucky.jacklamb.aop.core.AopPoint;
 import com.lucky.jacklamb.aop.core.InjectionAopPoint;
 import com.lucky.jacklamb.aop.core.PointRun;
-import com.lucky.jacklamb.aop.expandpoint.CacheExpandPoint;
-import com.lucky.jacklamb.aop.expandpoint.TransactionPoint;
 import com.lucky.jacklamb.exception.NotAddIOCComponent;
 import com.lucky.jacklamb.exception.NotFindBeanException;
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
@@ -17,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * 代理对象集合
@@ -32,12 +31,6 @@ public class AspectAOP {
 	private static List<InjectionAopPoint> injectionAopPoints=new ArrayList<>(10);
 	private Map<String, PointRun> aspectMap;
 	private List<String> aspectIDS;
-
-	static {
-		addIAPoint(new TransactionPoint());
-		addIAPoint(new CacheExpandPoint());
-	}
-
 
 	private AspectAOP() {
 		aspectMap = new HashMap<>();
@@ -58,6 +51,10 @@ public class AspectAOP {
 			return true;
 		}
 		return false;
+	}
+
+	public static <T extends InjectionAopPoint> void addAllIAPoint(T[] iaps){
+		Stream.of(iaps).forEach(AspectAOP::addIAPoint);
 	}
 
 	public static List<InjectionAopPoint> getIAPoint(){
@@ -118,7 +115,7 @@ public class AspectAOP {
 	 * @param AspectClass
 	 * @return
 	 */
-	public void initAspectIOC(List<Class<?>> AspectClass){
+	public void initAspectIOC(Set<Class<?>> AspectClass){
 		PointRun pointRun;
 		Constructor<?> constructor;
 		for (Class<?> aspect : AspectClass) {

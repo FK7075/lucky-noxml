@@ -5,6 +5,7 @@ import com.lucky.jacklamb.ioc.ApplicationBeans;
 import com.lucky.jacklamb.ioc.AspectAOP;
 import com.lucky.jacklamb.ioc.IOCContainers;
 import com.lucky.jacklamb.sqlcore.datasource.abs.LuckyDataSource;
+import com.lucky.jacklamb.start.Preprocessor;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -15,6 +16,7 @@ public class LuckyJUnit4ClassRunner extends BlockJUnit4ClassRunner{
 	
 	public LuckyJUnit4ClassRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
+		new Preprocessor(testClass).init();
 		ApplicationBeans.createApplicationBeans();
 	}
 

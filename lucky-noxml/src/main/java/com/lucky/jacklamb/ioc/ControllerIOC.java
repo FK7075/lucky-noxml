@@ -128,7 +128,7 @@ public class ControllerIOC {
 	 * @param controllerClass
 	 * @return
 	 */
-	public void registered(List<Class<?>> controllerClass) {
+	public void registered(Set<Class<?>> controllerClass) {
 		String beanID;
 		for (Class<?> controller : controllerClass) {
 			if (controller.isAnnotationPresent(Controller.class)) {

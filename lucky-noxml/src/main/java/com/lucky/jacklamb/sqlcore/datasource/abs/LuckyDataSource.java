@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -43,7 +44,7 @@ public abstract class LuckyDataSource implements DataSource{
     private String cacheExpiredTime;
     private Integer cacheCapacity;
     private Boolean formatSqlLog;
-    private List<Class<?>> createTable;
+    private Set<Class<?>> createTable;
     private String reversePack;
     private String srcPath;
 
@@ -167,11 +168,11 @@ public abstract class LuckyDataSource implements DataSource{
         }
     }
 
-    public List<Class<?>> getCreateTable() {
+    public Set<Class<?>> getCreateTable() {
         return createTable;
     }
 
-    public void setCreateTable(List<Class<?>> createTable) {
+    public void setCreateTable(Set<Class<?>> createTable) {
         this.createTable = createTable;
     }
 

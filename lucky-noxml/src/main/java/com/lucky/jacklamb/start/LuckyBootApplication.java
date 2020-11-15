@@ -25,7 +25,7 @@ import java.util.Comparator;
 import static com.lucky.jacklamb.start.RunParam.SERVER_PORT;
 import static com.lucky.jacklamb.start.RunParam.isRunParam;
 
-public class LuckyApplication {
+public class LuckyBootApplication {
 
     private static Logger log;
     private static final RuntimeMXBean mxb = ManagementFactory.getRuntimeMXBean();
@@ -46,6 +46,7 @@ public class LuckyApplication {
         long start = System.currentTimeMillis();
         AppConfig.applicationClass = applicationClass;
         log= LogManager.getLogger(applicationClass);
+        new Preprocessor(applicationClass).init();
         JackLamb.welcome();
         String pid = mxb.getName().split("@")[0];
         ThreadContext.put("pid", pid);

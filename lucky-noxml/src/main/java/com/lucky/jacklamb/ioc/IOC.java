@@ -1,7 +1,7 @@
 package com.lucky.jacklamb.ioc;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author fk7075
@@ -41,5 +41,5 @@ public interface IOC {
      * 注册，将所有用户组件注册到IOC容器中
      * @param beanClass
      */
-    void registered(List<Class<?>> beanClass);
+    void registered(Set<Class<?>> beanClass);
 }

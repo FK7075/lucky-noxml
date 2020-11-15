@@ -4,10 +4,7 @@ import com.lucky.jacklamb.sqlcore.datasource.ReaderInI;
 import com.lucky.jacklamb.sqlcore.jdbc.core.DefaultSqlActuator;
 import com.lucky.jacklamb.sqlcore.util.PojoManage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 /**
  * 建表SQL语句执行器
@@ -17,7 +14,7 @@ import java.util.stream.Stream;
  */
 public class CreateTableSqlExecute {
     private DefaultSqlActuator autoPackage;
-    private List<Class<?>> classlist;
+    private Set<Class<?>> classlist;
     private String dbname;
 
     public CreateTableSqlExecute(String dbname) {
@@ -43,7 +40,7 @@ public class CreateTableSqlExecute {
      * @param pojoClasses 实体Class
      */
     public void executeCreateTableSql(CreateTableSqlGenerate generate,Class<?>...pojoClasses){
-        List<Class<?>> pojoClassList= Arrays.asList(pojoClasses);
+        Set<Class<?>> pojoClassList= new HashSet<>(Arrays.asList(pojoClasses));
         createTable(pojoClassList,generate);
         delAndAddIndexKey(pojoClassList,generate);
     }
@@ -53,7 +50,7 @@ public class CreateTableSqlExecute {
      * @param pojoClasses
      * @param generate
      */
-    private void createTable(List<Class<?>> pojoClasses,CreateTableSqlGenerate generate){
+    private void createTable(Set<Class<?>> pojoClasses,CreateTableSqlGenerate generate){
         List<String> createTableSqlList=new ArrayList<>();
         pojoClasses.stream().forEach((clzz)->{
             createTableSqlList.add(generate.createTableSql(dbname,clzz));
@@ -66,7 +63,7 @@ public class CreateTableSqlExecute {
      * @param pojoClasses
      * @param generate
      */
-    private void delAndAddIndexKey(List<Class<?>> pojoClasses,CreateTableSqlGenerate generate){
+    private void delAndAddIndexKey(Set<Class<?>> pojoClasses,CreateTableSqlGenerate generate){
         List<String> deleteKeyAndIndexSqlList=new ArrayList<>();
         List<String> addKeyAndIndexSqlList=new ArrayList<>();
         pojoClasses.stream().forEach((clzz)->{

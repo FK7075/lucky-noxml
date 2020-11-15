@@ -2,10 +2,7 @@ package com.lucky.jacklamb.authority.shiro.realm;
 
 import com.lucky.jacklamb.authority.shiro.conf.ShiroConfig;
 import com.lucky.jacklamb.authority.shiro.entity.SysUser;
-import com.lucky.jacklamb.query.translator.Translator;
-import com.lucky.jacklamb.sqlcore.jdbc.SqlCoreFactory;
 import com.lucky.jacklamb.sqlcore.jdbc.core.abstcore.SqlCore;
-import com.lucky.jacklamb.start.LuckyApplication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.authc.*;

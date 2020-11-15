@@ -1,7 +1,6 @@
 package com.lucky.jacklamb.rest;
 
 import com.lucky.jacklamb.ioc.scan.ScanFactory;
-import com.lucky.jacklamb.utils.reflect.FieldUtils;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -9,13 +8,8 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
 
 public class LXML {
 
@@ -26,7 +20,7 @@ public class LXML {
     static {
         xstream = new XStream(new XppDriver(new XmlFriendlyNameCoder("_-", "_")));
         XStream.setupDefaultSecurity(xstream);
-        List<Class<?>> allowClasses = ScanFactory.createScan().getComponentClass("xStream");
+        Set<Class<?>> allowClasses = ScanFactory.createScan().getComponentClass("xStream");
         allowClasses.stream().forEach((c)-> {
             XStreamAllowType xst=c.getAnnotation(XStreamAllowType.class);
             String alias="XStream-XFL-FK@0922@0721".equals(xst.value())

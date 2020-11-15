@@ -18,10 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,7 +70,7 @@ public class BeansIOC implements IOC {
     }
 
     @Override
-    public void registered(List<Class<?>> beanClass) {
+    public void registered(Set<Class<?>> beanClass) {
         String beanID;
 
         List<Object> beanList=new ArrayList<>(beanClass.size());

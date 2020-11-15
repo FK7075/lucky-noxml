@@ -8,11 +8,7 @@ import com.lucky.jacklamb.utils.base.LuckyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 服务组件
@@ -59,7 +55,7 @@ public class ServiceIOC implements IOC{
 	}
 
 	@Override
-	public void registered(List<Class<?>> serviceClass){
+	public void registered(Set<Class<?>> serviceClass){
 		String beanID;
 		for (Class<?> service : serviceClass) {
 			if (service.isAnnotationPresent(Service.class)) {

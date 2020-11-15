@@ -39,8 +39,8 @@ public class JarScan extends Scan {
 
 	}
 
-	public List<Class<?>> loadComponent(List<String> suffixs) {
-		List<Class<?>> className = new ArrayList<>();
+	public Set<Class<?>> loadComponent(List<String> suffixs) {
+		Set<Class<?>> className = new HashSet<>(16);
 		JarFile jarFile = null;
 
 		try {

@@ -50,33 +50,33 @@ public abstract class Scan implements ComponentFilter {
 	/**
 	 * Map<iocCode,iocType>
 	 */
-	protected Map<String, List<Class<?>>> componentClassMap;
+	protected Map<String, Set<Class<?>>> componentClassMap;
 	/**
 	 * Controller组件
 	 */
-	protected List<Class<?>> controllerClass;
+	protected Set<Class<?>> controllerClass;
 	/**
 	 * Service组件
 	 */
-	protected List<Class<?>> serviceClass;
+	protected Set<Class<?>> serviceClass;
 	/**
 	 * Repository组件
 	 */
-	protected List<Class<?>> repositoryClass;
+	protected Set<Class<?>> repositoryClass;
 	/**
 	 * Component组件
 	 */
-	protected List<Class<?>> componentClass;
+	protected Set<Class<?>> componentClass;
 	/**
 	 * Aspect组件
 	 */
-	protected List<Class<?>> aspectClass;
+	protected Set<Class<?>> aspectClass;
 	/**
 	 * WebSocket组件
 	 */
-	protected List<Class<?>> webSocketClass;
+	protected Set<Class<?>> webSocketClass;
 	/** 配置类@Bean */
-	protected List<Class<?>> beanClass;
+	protected Set<Class<?>> beanClass;
 	/**
 	 * 配置类修改器
 	 */
@@ -85,8 +85,8 @@ public abstract class Scan implements ComponentFilter {
 	 * 全局配置类
 	 */
 	private AppConfig configuration;
-	protected List<Class<?>> pojoClass;
-	protected List<Class<?>> deserializationXStream;
+	protected Set<Class<?>> pojoClass;
+	protected Set<Class<?>> deserializationXStream;
 	protected boolean isFirst=true;
 	private static final Class<? extends Annotation>[] COMPONENT_ANNS=
 			 new Class[]{
@@ -106,18 +106,18 @@ public abstract class Scan implements ComponentFilter {
 	public Scan() {
 		lson=new LSON();
 		componentClassMap=new HashMap<>(16);
-		controllerClass=new ArrayList<>(16);
-		serviceClass=new ArrayList<>(16);
-		repositoryClass=new ArrayList<>(16);
-		componentClass=new ArrayList<>(16);
-		aspectClass=new ArrayList<>(16);
-		webSocketClass=new ArrayList<>(16);
-		pojoClass=new ArrayList<>(16);
-		deserializationXStream=new ArrayList<>(16);
-		beanClass=new ArrayList<>(16);
+		controllerClass=new HashSet<>(16);
+		serviceClass=new HashSet<>(16);
+		repositoryClass=new HashSet<>(16);
+		componentClass=new HashSet<>(16);
+		aspectClass=new HashSet<>(16);
+		webSocketClass=new HashSet<>(16);
+		pojoClass=new HashSet<>(16);
+		deserializationXStream=new HashSet<>(16);
+		beanClass=new HashSet<>(16);
 	}
 
-	public List<Class<?>> getPojoClass() {
+	public Set<Class<?>> getPojoClass() {
 		return pojoClass;
 	}
 
@@ -144,7 +144,7 @@ public abstract class Scan implements ComponentFilter {
 		componentClassMap.put("bean",beanClass);
 	}
 	
-	public List<Class<?>> getComponentClass(String iocCode){
+	public Set<Class<?>> getComponentClass(String iocCode){
 		return componentClassMap.get(iocCode);
 	}
 	
@@ -353,7 +353,7 @@ public abstract class Scan implements ComponentFilter {
 	 * @param suffixs
 	 * @return
 	 */
-	public abstract List<Class<?>> loadComponent(List<String> suffixs);
+	public abstract Set<Class<?>> loadComponent(List<String> suffixs);
 	
 	/**
 	 * 自动扫描

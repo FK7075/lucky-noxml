@@ -1,12 +1,11 @@
 package com.lucky.jacklamb.utils.reflect;
 
-import com.lucky.jacklamb.utils.base.Assert;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -196,6 +195,20 @@ public abstract class AnnotationUtils {
         }
     }
 
+    public static  <Ann extends Annotation> Object  getValue(Ann ann, String fileName) {
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(ann);
+        Field memberValues = FieldUtils.getDeclaredField(invocationHandler.getClass(),"memberValues");
+        memberValues.setAccessible(true);
+        Map map = null;
+        try {
+            map = (Map) memberValues.get(invocationHandler);
+            return map.get(fileName);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
+
     public static List<Annotation> getAnnotations(Class<?> aClass){
         return Stream.of(aClass.getAnnotations()).filter((a) -> {
             boolean r = a instanceof Retention;
@@ -206,23 +219,33 @@ public abstract class AnnotationUtils {
     }
 
     /**
+     * 得到目标类中包含的所有目标注解（包含组合注解中的目标注解）
+     * @param aClass 目标类
+     * @param annClass 目标注解
+     * @param <T> 目标注解的类型
+     * @return
+     */
+    public static <T extends Annotation> List<T> strengthenGet(Class<?> aClass,Class<T> annClass){
+        List<T> list=new ArrayList<>();
+        List<Annotation> annotations = getAnnotations(aClass);
+        for (Annotation annotation : annotations) {
+            if(annotation.annotationType()==annClass){
+                list.add((T) annotation);
+            }
+            list.addAll(strengthenGet(annotation.annotationType(),annClass));
+        }
+        return list;
+    }
+
+
+    /**
      * 加强版的类注解标注检查，针对组合注解的检查
      * @param aClass 目标类的Class
      * @param annClass 注解Class
      * @return true/false
      */
-    private static Annotation strengthenGet(Class<?> aClass,Class<?extends Annotation> annClass){
-        if(isExist(aClass, annClass)){
-            return get(aClass,annClass);
-        }
-        List<Annotation> allAnn = getAnnotations(aClass);
-        for (Annotation ann : allAnn) {
-            Annotation resultAnn=strengthenGet(ann.annotationType(),annClass);
-            if(Assert.isNotNull(resultAnn)){
-                return resultAnn;
-            }
-        }
-        return null;
+    public static <T extends Annotation>  boolean strengthenIsExist(Class<?> aClass,Class<T> annClass){
+        return !strengthenGet(aClass,annClass).isEmpty();
     }
 
 }
