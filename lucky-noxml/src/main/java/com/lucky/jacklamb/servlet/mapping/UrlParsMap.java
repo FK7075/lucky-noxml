@@ -40,30 +40,15 @@ public class UrlParsMap {
 	public void setCross(HttpServletRequest request, HttpServletResponse response, ControllerAndMethod come) {
 		if (come.getController().getClass().isAnnotationPresent(CrossOrigin.class)) {
 			CrossOrigin crso = come.getController().getClass().getAnnotation(CrossOrigin.class);
+			if(come.getMethod().isAnnotationPresent(CrossOrigin.class)){
+				crso=come.getMethod().getAnnotation(CrossOrigin.class);
+			}
 			String url = request.getHeader("Origin");
 			String[] url_v = crso.value();
 			String[] url_o = crso.origins();
 			if ((url_v.length != 0 && url_o.length != 0)
 					&& (!Arrays.asList(url_v).contains(url) && !Arrays.asList(url_o).contains(url)))
 				url = "fk-xfl-wl";
-			String isCookie = "false";
-			if (crso.allowCredentials())
-				isCookie = "true";
-			response.setHeader("Access-Control-Allow-Origin", url);
-			response.setHeader("Access-Control-Allow-Methods", crso.method());
-			response.setHeader("Access-Control-Max-Age", crso.maxAge() + "");
-			response.setHeader("Access-Control-Allow-Headers", crso.allowedHeaders());
-			response.setHeader("Access-Control-Allow-Credentials", isCookie);
-			response.setHeader("XDomainRequestAllowed", "1");
-		}
-		if (come.getMethod().isAnnotationPresent(CrossOrigin.class)) {
-			CrossOrigin crso = come.getMethod().getAnnotation(CrossOrigin.class);
-			String url = request.getHeader("Origin");
-			String[] url_v = crso.value();
-			String[] url_o = crso.origins();
-			if ((url_v.length != 0 && url_o.length != 0)
-					&& (!Arrays.asList(url_v).contains(url) && !Arrays.asList(url_o).contains(url)))
-				url = "fk-xfl-cl";
 			String isCookie = "false";
 			if (crso.allowCredentials())
 				isCookie = "true";
